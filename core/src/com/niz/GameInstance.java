@@ -1,0 +1,789 @@
+package com.niz;
+
+import com.badlogic.ashley.core.EngineNiz;
+import com.badlogic.ashley.core.EngineNiz.PooledEntity;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.AutoGibSystem;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatchNiz;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.Pools;
+import com.badlogic.gdx.utils.Scaling;
+import com.badlogic.gdx.utils.viewport.ScalingViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+import com.niz.action.ActionList;
+import com.niz.action.ProgressAction;
+import com.niz.actions.ANotRun;
+import com.niz.actions.AStand;
+import com.niz.anim.Animations;
+import com.niz.anim.SpriteCacheNiz;
+import com.niz.component.BooleanInput;
+import com.niz.component.Control;
+import com.niz.component.DragController;
+import com.niz.component.Physics;
+import com.niz.component.Player;
+import com.niz.component.Position;
+import com.niz.component.Race;
+import com.niz.component.SelectedPlayer;
+import com.niz.component.VectorInput;
+import com.niz.observer.Observer;
+import com.niz.observer.Subject;
+import com.niz.observer.Subject.Event;
+import com.niz.system.ActionSystem;
+import com.niz.system.AgentSystem;
+import com.niz.system.BitmaskedCollisionsSystem;
+import com.niz.system.BucketSystem;
+import com.niz.system.BufferEndSystem;
+import com.niz.system.BufferStartSystem;
+import com.niz.system.CameraSystem;
+import com.niz.system.DoorSystem;
+import com.niz.system.DragBlockSystem;
+import com.niz.system.DragControllerSystem;
+import com.niz.system.EntitySerializationSystem;
+import com.niz.system.InputSystem;
+import com.niz.system.InventorySystem;
+import com.niz.system.LightRenderSystem;
+import com.niz.system.LineBatchPostSystem;
+import com.niz.system.LineBatchSystem;
+import com.niz.system.LineMapCollisionSystem;
+import com.niz.system.MapCollisionSystem;
+import com.niz.system.MapRenderSystem;
+import com.niz.system.MapSystem;
+import com.niz.system.OnMapSystem;
+import com.niz.system.OverworldSystem;
+import com.niz.system.PathfindingSystem;
+import com.niz.system.Physics2dSystem;
+import com.niz.system.PickUpCollisionsSystem;
+import com.niz.system.PlaceAtStartSystem;
+import com.niz.system.PlayerInputSystem;
+import com.niz.system.PlayerSystem;
+import com.niz.system.ProgressBarSystem;
+import com.niz.system.RaceSystem;
+import com.niz.system.RandomMapUpdateSystem;
+import com.niz.system.RoomCatalogSystem;
+import com.niz.system.RoomSystem;
+import com.niz.system.SelectedPlayerSystem;
+import com.niz.system.ShaderSystem;
+import com.niz.system.ShapeRenderingSystem;
+import com.niz.system.SpeedLimitSystem;
+import com.niz.system.SpriteAnimationSystem;
+import com.niz.system.SpriteAnimationUpdateSystem;
+import com.niz.system.WeaponSensorSystem;
+import com.niz.system.WorkerSystem;
+import com.niz.system.ZoomSystem;
+import com.niz.ui.edgeUI.CharacterScreen;
+import com.niz.ui.edgeUI.InventoryScreen;
+import com.niz.ui.edgeUI.MainMenu;
+import com.niz.ui.edgeUI.SettingsScreen;
+
+public class GameInstance implements Screen, Observer {
+
+	
+	SpriteBatch batch;
+	public EngineNiz engine;
+	private OrthographicCamera gameCamera;
+	private OrthographicCamera uiCamera;
+	
+	public static float accum;
+	private float deltaTime;
+	private InputMultiplexer mux;
+	private Texture playerDiffuseTex;
+	private Texture playerNormalTex;
+	private Texture mapDiffuseTex;
+	private Texture mapNormalTex;
+	private String[] numberStrings = new String[1000];
+	private BitmapFont font;
+	private OrthographicCamera camera;
+	private Skin skin;
+	private Stage stage;
+	private PlayerInputSystem playerInput;
+	private TextureAtlas uiAtlas;
+	TextureAtlas playerAtlas;
+	private TextureAtlas atlas;
+	private static final String TAG = "game instance";
+
+	public static boolean pixelScrolling = false;
+	
+	Factory factory;
+	private boolean headless;
+	private boolean isServer = true;
+	private boolean isClient = true;
+	private Viewport viewport;
+	InventoryScreen invScreen;
+	private ShapeRenderer shapeR;
+	private Subject menuKeySubject;
+	private Subject invRefreshSubject;
+	private CharacterScreen charScreen;
+	BooleanInput invToggleComponent = new BooleanInput();
+	private MainMenu mainMenuScreen;
+	private SettingsScreen settingsScreen;
+	private Subject zoomSubject;
+	private ZoomInput zoomInput;
+	private SpriteBatch mapBatch;
+	private SpriteBatchNiz leftBatch;
+	private SpriteBatchNiz rightBatch;
+	private OrthographicCamera defaultCam;
+	private LightRenderSystem lights;
+	private Texture logo;
+	private ImmutableArray<Entity> playerEntities;
+	private InputSystem inputSys;
+
+
+	public void create (boolean headless, boolean newGame) {
+		//this.isServer = serverInst != null;
+		//this.isClient = clientInst != null;
+		//Log.DEBUG();
+		final GameInstance inst = this;
+		this.headless = headless;
+		batch = new SpriteBatch(50);
+		uiCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		engine = new EngineNiz();
+		logo = new Texture(Gdx.files.internal("logo.png"));
+		final WorkerSystem workSys = new WorkerSystem();
+		engine.addSystem(workSys);
+		ProgressBarSystem progBar = new ProgressBarSystem(uiCamera, batch);
+		progBar.priority = 1000000;
+		engine.addSystem(progBar);
+		engine.getSubject("worlddef").add(this);
+		playerEntities = engine.getEntitiesFor(Family.all(Player.class, Position.class).get());
+		inputSys = new InputSystem();
+		inputSys.addedToEngine(engine);
+
+		
+		workSys.addWorker(new ProgressAction(){
+
+			private ProgressBarSystem progressSys;
+			private int progress, total = 30;
+			private OrthographicCamera mapRenderCam;
+			private Texture blankNormalTexture;
+
+			@Override
+			public void update(float dt) {
+				switch (progress++){
+				case 1:
+				
+					factory = new PlatformerFactory();
+					
+					uiAtlas = new TextureAtlas(Gdx.files.internal("ui.atlas"));
+					break;case 2:
+					playerAtlas = new TextureAtlas(Gdx.files.internal("player.atlas"));
+					break;case 3:
+					atlas = new TextureAtlas(Gdx.files.internal("tiles.atlas"));
+					break;case 4:
+					SpriteCacheNiz.setAtlas(atlas);
+					Animations.init(playerAtlas, engine, uiAtlas, atlas);
+					blankNormalTexture = new Texture(Gdx.files.internal("blanknormaltexture.png"));
+					skin = new Skin();
+					camera = new OrthographicCamera();
+					camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+					mapRenderCam = new OrthographicCamera();
+					mapRenderCam.setToOrtho(true, OverworldSystem.SCROLLING_MAP_WIDTH * Main.PPM, OverworldSystem.SCROLLING_MAP_WIDTH * Main.PPM);
+					mapRenderCam.position.set(OverworldSystem.SCROLLING_MAP_WIDTH * Main.PPM / 2, OverworldSystem.SCROLLING_MAP_WIDTH * Main.PPM / 2, 0);
+					for (int i = 0; i < 1000; i++){
+						numberStrings [i] = ""+i;
+					}
+					font = new BitmapFont(Gdx.files.internal("font/Pixel-12.fnt"), Gdx.files.internal("font/pixelfonts.png"), false);
+					font.setUseIntegerPositions(false);
+					viewport = new ScreenViewport(uiCamera);
+
+					stage = new Stage(viewport, batch);		
+					
+					mapBatch = new SpriteBatch(10);
+					leftBatch = new SpriteBatchNiz(5460);
+					rightBatch = new SpriteBatchNiz(5460);
+					gameCamera = new OrthographicCamera(10, 10);//Main.PPM*Main.VIEWPORT_SIZE, (int)(Main.PPM*Main.VIEWPORT_SIZE/Main.ar));
+					
+					
+					
+					if (uiAtlas.createSprite("button") == null) throw new GdxRuntimeException("kjl");
+					Styles.makeSkin(skin, uiAtlas);
+					
+					//viewport = new ExtendViewport(100, 100, camera);
+					//viewport = new NoneViewport(uiCamera);
+					//viewport = new ScalingViewport(Scaling.fill, 1000, 1000, uiCamera);
+
+					playerDiffuseTex = playerAtlas.findRegion("diff/playertorso", 0).getTexture();
+					playerNormalTex = playerAtlas.findRegion("normal/playertorso", 0).getTexture();
+					//if () throw new GdxRuntimeException("kl");
+					Gdx.app.log(TAG,  "d " + playerDiffuseTex.getMagFilter() + playerDiffuseTex.getMinFilter() + playerDiffuseTex.getDepth());
+					Gdx.app.log(TAG,  "n " + playerNormalTex.getMagFilter() + playerNormalTex.getMinFilter() + playerNormalTex.getDepth());
+					mapDiffuseTex = atlas.findRegion("diff/tile", 1024).getTexture();
+
+					mapNormalTex = atlas.findRegion("normal/tile", 1024).getTexture();
+					mux = new InputMultiplexer();
+					mux.addProcessor(new InputProcessor(){
+						
+						@Override
+						public boolean keyDown(int keycode) {
+							switch (keycode){
+							case Keys.ESCAPE:case Keys.BACK:
+								//invRefreshSubject.notify(null, Event.INVENTORY_REFRESH, null);
+								invToggleComponent.value = false;
+								if (stage.getActors().contains(mainMenuScreen.getTable(), false)) return false;
+								menuKeySubject.notify(null, Event.INVENTORY_TOGGLE, invToggleComponent);
+								return true;
+							case Keys.C:
+								engine.getSystem(MapRenderSystem.class).setProcessing(false);
+								return true;
+							case Keys.X:
+								engine.getSystem(MapRenderSystem.class).setProcessing(true);
+								
+								return true;
+								
+							}
+							return false;				}
+						@Override
+						public boolean keyUp(int keycode) {return false;				}
+						@Override
+						public boolean keyTyped(char character) {return false;				}
+						@Override
+						public boolean touchDown(int screenX, int screenY, int pointer,	int button) {return false;				}
+						@Override
+						public boolean touchUp(int screenX, int screenY, int pointer, int button) {return false;				}
+						@Override
+						public boolean touchDragged(int screenX, int screenY,
+								int pointer) {return false;				}
+						@Override
+						public boolean mouseMoved(int screenX, int screenY) {return false;				}
+						@Override
+						public boolean scrolled(int amount) {
+							if (amount > 0) zoomInput.zoom = 1.2f;
+							else zoomInput.zoom = 1f/1.2f;
+							
+							zoomSubject.notify(null, null, zoomInput);
+							return false;				}
+						
+					});
+					mux.addProcessor(stage);
+					
+					Gdx.input.setInputProcessor(mux);
+					
+					defaultCam = new OrthographicCamera(1f, 1f);
+					defaultCam.setToOrtho(true, 1f, 1f);
+					
+					
+					
+					
+					menuKeySubject = engine.getSubject("inventoryToggle");
+					invRefreshSubject = engine.getSubject("inventoryRefresh");
+					zoomSubject = engine.getSubject("zoominput");
+					zoomInput = new ZoomInput();
+
+					
+					
+					
+					
+					engine.addSystem(new RoomSystem());
+					engine.addSystem(new RoomCatalogSystem());
+					engine.addSystem(new DragControllerSystem());
+					engine.addSystem(new SelectedPlayerSystem());
+					engine.addSystem(new PlaceAtStartSystem());
+
+					engine.addSystem(new OnMapSystem(atlas));
+					engine.addSystem(new PathfindingSystem());
+					engine.addSystem(new MapCollisionSystem());
+					engine.addSystem(new ActionSystem());
+					engine.addSystem(new SpriteAnimationUpdateSystem());
+					engine.addSystem(new Physics2dSystem());
+					engine.addSystem(new LineMapCollisionSystem());
+					break;case 5:
+					engine.addSystem(new BitmaskedCollisionsSystem());
+					engine.addSystem(new BucketSystem());
+					engine.addSystem(new PickUpCollisionsSystem());
+					engine.addSystem(new MapSystem());
+					OverworldSystem overworld = new OverworldSystem(atlas);
+					overworld.setProcessing(false);
+					engine.addSystem(overworld);
+					break;case 10:
+					engine.addSystem(new DoorSystem());
+					engine.addSystem(new SpeedLimitSystem());
+					engine.addSystem(new EntitySerializationSystem());
+					break;case 11:
+					engine.addSystem(new RandomMapUpdateSystem());
+					engine.addSystem(new ZoomSystem());
+					break;case 12:
+					engine.addSystem(new CameraSystem(gameCamera));
+					engine.addSystem(new BufferStartSystem());
+					break;case 13:
+					engine.addSystem(new ShaderSystem());						
+					break;case 14:
+					lights = new LightRenderSystem(mapRenderCam);
+					engine.addSystem(lights);		
+					break;case 15:
+					shapeR = new ShapeRenderer();			
+					engine.addSystem(new ShapeRenderingSystem());
+					break;case 16:
+					engine.addSystem(new MapRenderSystem(gameCamera, mapRenderCam ,  mapBatch, atlas, mapDiffuseTex, mapNormalTex));
+
+					break;case 17:
+					engine.addSystem(new RaceSystem());
+					engine.addSystem(new WeaponSensorSystem());
+					engine.addSystem(new LineBatchSystem(playerAtlas, playerDiffuseTex, playerNormalTex, lights));
+					break;case 18:
+					engine.addSystem(new SpriteAnimationSystem(gameCamera, rightBatch, leftBatch, playerDiffuseTex, playerNormalTex, lights, mapDiffuseTex, mapNormalTex));
+					break;case 19:
+					engine.addSystem(new LineBatchPostSystem());
+					engine.addSystem(new AutoGibSystem(gameCamera, rightBatch, leftBatch, playerDiffuseTex, playerNormalTex, lights, mapDiffuseTex, mapNormalTex));;
+					engine.addSystem(new BufferEndSystem(batch, blankNormalTexture));
+					resize();
+					break;case 20:
+					engine.addSystem(new DragBlockSystem());
+					engine.addSystem(new InventorySystem());
+					engine.addSystem(new AgentSystem());
+					//resize();
+					break;case 21:
+
+					
+					charScreen = new CharacterScreen(engine, skin, playerAtlas);
+					charScreen.create(skin, stage, engine);
+					charScreen.init(skin, stage, engine);
+					break;case 22:
+
+					//charScreen.addTo(stage);;
+					settingsScreen = new SettingsScreen(skin, engine);
+					settingsScreen.create(skin, stage, engine);
+					settingsScreen.init(skin, stage, engine);
+					settingsScreen.setObject(Main.prefs, "Settings");
+					break;case 23:
+
+					invScreen = new InventoryScreen(engine, skin, playerAtlas, charScreen, settingsScreen);
+					invScreen.create(skin, stage, engine);
+					invScreen.init(skin, stage, engine);
+					//invScreen.addTo(stage);
+					
+					charScreen.invScreen = invScreen;
+					settingsScreen.invScreen = invScreen;
+					break;case 24:
+
+					mainMenuScreen = new MainMenu(inst, skin);
+					mainMenuScreen.create(skin, stage, engine);
+					mainMenuScreen.init(skin, stage, engine);
+					mainMenuScreen.addTo(stage);
+
+					break;case 25:
+
+					playerInput = new PlayerInputSystem(engine, invScreen);
+					engine.addSystem(playerInput);
+					
+					engine.addSystem(new PlayerSystem());;
+					//break;case 26:
+
+					boolean newGame = true;
+					if (newGame){
+						Entity dragger = engine.createEntity();
+						DragController drag = Pools.obtain(DragController.class);
+						
+						dragger.add(drag);
+						Position pos = engine.createComponent(Position.class);
+						pos.pos.set(16 + PlatformerFactory.CHAR_SELECT_SPACING * .5f, 1);
+						dragger.add(pos);
+						drag.min = 16;
+						drag.max = PlatformerFactory.CHAR_SELECT_SPACING * PlatformerFactory.CHAR_SELECT_CHARACTERS + 16;
+						engine.addEntity(dragger);
+						
+						engine.addEntity(factory.createCamera(engine));
+						
+						OverworldSystem over = engine.getSystem(OverworldSystem.class);
+						over.setForNewGameScreen();
+						
+
+						ProgressAction lvlSelect = new ProgressAction(){
+
+							@Override
+							public void update(float dt) {
+								factory.makeLevelSelection(engine, worldDef);
+								isFinished = true;
+							}
+
+							@Override
+							public void onEnd() {
+								parent.engine.getSystem(ProgressBarSystem.class).deregisterProgressBar(progressBarIndex);
+							}
+
+							@Override
+							public void onStart() {
+							}
+							
+						};
+						workSys.addWorker(lvlSelect);
+					}
+					resize();
+					break;
+					case 30:
+					isFinished = true;
+					
+				}
+				float progressDelta = (float)progress / (float)total;
+				Gdx.app.log(TAG,  "creating engine " + progressDelta);
+				progressSys.setProgressBar(progressBarIndex, progressDelta );
+
+			}
+
+			
+
+			@Override
+			public void onStart() {
+				progress = 0;
+				super.onStart();
+				progressSys = parent.engine.getSystem(ProgressBarSystem.class);
+
+			}
+
+			@Override
+			public void onEnd() {
+				super.onEnd();
+				
+			}
+			
+			
+			
+			
+		});
+		
+		
+		resize();
+		
+	}
+	
+	protected void resize() {
+		int min = Math.max(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		int max = min + 1;
+		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), min, max);
+		
+	}
+
+	float highestDelta = 4f;
+	private float lowestDelta;
+	
+	//int[] tileHeights = {32, 28, 27, 25, 24,   20, 24};
+	
+	public void resize(int width, int height, int min, int max) {
+		Main.ar = (float)width/(float)height;
+		int lowestIndex = 0, lowestError = 9999999;
+		for (int i = max; i > min; i--){
+			
+			int error1 = width % (i)
+					, error2 = height % ((int)(i*Main.ar));
+			//error1 = Math.min(error1, i*Main.PPM-error1);
+			//error2 = Math.min(error2, i*Main.PPM-error2);
+			int error = error1 + error2;
+			if (error < lowestError){
+				lowestError = error;
+				lowestIndex = i;
+			}
+		}
+		//if (true) throw new GdxRuntimeException("jkl)");
+		//Gdx.app.log(TAG, "resize");
+		if (uiCamera != null){
+			uiCamera.setToOrtho(false, width, height);
+			uiCamera.position.set(width/2, height/2, 0);
+			//uiCamera.position.set(0, 0, 0);
+			uiCamera.update();
+		}
+		//Main.VIEWPORT_SIZE = lowestIndex;
+		//Gdx.app.log(TAG, "resize"+lowestIndex);
+		//BufferStartSystem.BUFFER_SIZE = lowestIndex*Main.PPM;
+		resC.v.x = lowestIndex;
+		if (stage != null){
+			//viewport.setScreenHeight(Gdx.graphics.getHeight());
+			//viewport.setScreenWidth(Gdx.graphics.getWidth());
+			//stage.setViewport(viewport);
+			//invScreen.invalidate();
+			//viewport = new NoneViewport(uiCamera);
+			viewport = new ScalingViewport(Scaling.none, width, height, uiCamera);
+
+			//viewport = new ScreenViewport(uiCamera);
+			//stage.clear();
+			//invScreen.getTable().remove();
+			stage.setViewport(viewport);
+			
+			stage.getViewport().update(width, height, true);
+			
+			//invScreen = new InventoryScreen(invScreen, engine, skin, atlas);
+			//invScreen.create(skin, stage, engine);
+			//invScreen.init(skin, stage, engine);
+			//stage.addActor(invScreen.getTable());
+			//invScreen.getTable().layout();
+			//invScreen.init(skin, stage, engine);
+		
+		}
+		engine.getSubject("resize").notify(null, Event.RESIZE, resC);
+		
+		//engine.getSubject("inventoryRefresh").notify(null, Event.INVENTORY_REFRESH, resC);
+
+	}
+	private VectorInput resC = new VectorInput();
+	private WorldDefinition worldDef;
+	private boolean showingLogo = true
+			;
+	@Override
+	public void dispose() {
+		if (playerDiffuseTex != null)playerDiffuseTex.dispose();// = playerAtlas.findRegion("diff/player", 0).getTexture();
+		if (playerNormalTex != null)playerNormalTex.dispose();// = playerAtlas.findRegion("normal/player", 0).getTexture();
+		if (mapDiffuseTex != null)mapDiffuseTex.dispose();// = atlas.findRegion("diff/tile", 0).getTexture();
+		if (mapNormalTex != null)mapNormalTex.dispose();// = atlas.findRegion("normal/tile", 0).getTexture();
+		engine.dispose();
+		if (atlas != null){
+			
+			atlas.dispose();
+			uiAtlas.dispose();
+			playerAtlas.dispose();
+		}
+	}
+
+	@Override
+	public void show() {
+		
+	}
+
+	@Override
+	public void render(float delta) {
+		if (headless) delta *= 8f;
+		//delta *= .1f;
+		//if (isClient){Gdx.app.log(TAG,  "render cl"+accum);} else Gdx.app.log(TAG,  "render serv"+accum);
+		{
+			Gdx.gl.glClearColor(0, 0, 0, 1);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			batch.setColor(Color.WHITE);
+			
+		}
+		
+		deltaTime = delta;//Gdx.graphics.getDeltaTime();
+		inputSys.update(deltaTime);
+		ActionSystem actionSys = engine.getSystem(ActionSystem.class);
+		if (actionSys != null && playerEntities.size() > 0){
+			actionSys.updateRender(delta);
+			boolean paused = false;
+			Entity player = playerEntities.get(0);
+			Control con = player.getComponent(Control.class);
+			ActionList act = player.getComponent(ActionList.class);
+			if (
+					(act.containsAction(AStand.class) && act.containsAction(ANotRun.class))
+					&& 
+					(!con.pressed[Input.JUMP] && !con.pressed[Input.WALK_LEFT] && !con.pressed[Input.WALK_RIGHT])
+					
+					) paused = true;
+			//if (paused) deltaTime = 0f;
+					
+		}
+		
+		
+		if (deltaTime > .1f) deltaTime = .1f;
+		
+		accum += deltaTime;
+		float timeStep = Main.timeStep;
+		while (accum > timeStep){
+			engine.tick++;
+			
+			accum -= timeStep;
+			//Gdx.app.log(TAG,  "render"+accum + isClient + deltaTime);;
+			
+			engine.update(timeStep);
+			if (engine.simulating ){
+				//Gdx.app.log(TAG,  "sim"+accum);;
+				//if (MathUtils.random(100) > 39)
+					//accum += timeStep;	
+			}
+		}
+		
+		engine.render(deltaTime);
+		if (!engine.getSystem(WorkerSystem.class).allPaused){
+			if (showingLogo ){
+				
+				float h = Gdx.graphics.getWidth()/20, w = h*3,  x = Gdx.graphics.getWidth()/2 - w/2, y = Gdx.graphics.getHeight()/2 - h/2;
+				batch.getProjectionMatrix().setToOrtho2D(0,  0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+				batch.begin();
+				batch.draw(logo, x, y, w, h);
+				batch.end();
+				//Gdx.app.log(TAG,  "render");
+				return;
+			}
+		} else showingLogo = false;//*/
+		//if (isClient)Gdx.app.log(TAG,  "stepped"); else Gdx.app.log(TAG,  "stepped server");
+
+		
+		if (camera != null){
+			
+			batch.setProjectionMatrix(camera.combined);
+			batch.setColor(Color.WHITE);;
+			batch.begin();
+			if (deltaTime < highestDelta || MathUtils.random(100) == 0){
+				highestDelta = deltaTime;
+			}
+			if (deltaTime < lowestDelta || MathUtils.random(100) == 0){
+				lowestDelta = deltaTime;
+			}
+			ImmutableArray<Entity> playerArr = engine.getEntitiesFor(Family.one(Player.class).get());
+			if (playerArr.size() != 0){
+				Entity player = playerArr.get(0);
+			
+//				String s = "fps:"+Gdx.graphics.getFramesPerSecond() + "\nx:"+
+//				String.format("%.2f", player.getComponent(Position.class).pos.x)
+//				+"\ny:" +String.format("%.2f", player.getComponent(Position.class).pos.y);
+				
+				String s = "";
+				if (player.getComponent(Physics.class) != null){
+					s += "\n"+ (player.getComponent(Physics.class).onGround?"ground":"");
+					s += "\n"+ (player.getComponent(Physics.class).wasOnGround2?"wasGround":"");
+					s += "\n"+ (player.getComponent(Physics.class).onSlope?"slope":"");
+					s += "\n"+ (player.getComponent(ActionList.class));
+					//String s = ""+Gdx.graphics.getFramesPerSecond() + "\n"+
+					s += String.format("%.1f", player.getComponent(Position.class).pos.x);
+					s += "," +String.format("%.1f", player.getComponent(Position.class).pos.y);
+					//s += "\n"+ (player.getComponent(Physics.class).onGround?"ground":"");
+					//s += "\n"+ (player.getComponent(Physics.class).wasOnGround2?"wasGround":"");
+					//s += "\n"+ (player.getComponent(Physics.class).onSlope?"slope":"");
+					//s += "fps:"+String.format("%.1f",1f/deltaTime);
+					
+				}
+				
+			s += "\n";
+			s += Gdx.app.getJavaHeap()>>20 ;
+			s += " ";
+			s += Gdx.app.getNativeHeap()>>20;
+			font.draw(batch, 
+						s, 100, font.getLineHeight()*8);
+				
+				
+			}
+			/*""
+					+ "  high"+(""+(1f/highestDelta)).substring(0,4)
+					+ " \n  low"+(""+(1f/lowestDelta)).substring(0,4)
+					+ (player.getComponent(ActionList.class).actions.get(AWallSlide.class) != null)
+					+ player.getComponent(Position.class).pos
+					+ "\n entities:"+engine.getEntities().size()
+					+ "\n tick:"+engine.tick
+					, 100, 100);//*/
+			batch.end();
+			
+			//uiAtlas.getTextures().iterator().next().bind();
+			//batch.setColor(Color.WHITE);
+			if (settingsScreen != null)settingsScreen.update();
+			camera.update();
+			if (shapeR != null)shapeR.setProjectionMatrix(uiCamera.combined);
+			//stage.setDebugAll(true);
+			//stage.act(1f);
+			if (stage != null)stage.act(delta);
+			stage.draw();
+			if (invScreen != null){
+				SpriteBatch bat = (SpriteBatch) stage.getBatch();
+				invScreen.update(delta);
+				invScreen.draw(shapeR, bat, Styles.inventoryFont);
+			}
+		}
+		
+		
+		//if (isClient)Gdx.app.log(TAG,  "drawn");
+		
+	}
+
+	@Override
+	public void pause() {
+		//factory.save(engine, invScreen.belt);
+		
+	}
+
+	@Override
+	public void resume() {
+		
+	}
+
+	@Override
+	public void hide() {
+		
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		
+	}
+
+	public void switchToCharacterGenScreen(WorldDefinition worldDef) {
+		stage.clear();
+		charScreen.startGameButton.setFor(this, worldDef, charScreen, new Race());
+		charScreen.addTo(stage);
+		
+	}
+	
+	public void startNewGame(WorldDefinition def){
+		stage.clear();
+		invScreen.addTo(stage);
+		invScreen.changeToHUD();
+		if (def.isRoomEditor){
+			invScreen.setRoomEditor(true);
+			
+		}
+		else {
+			invScreen.setRoomEditor(false);
+		}
+		factory.def = def;
+		//engine.getSystem(MapSystem.class).worldDef = def;
+		
+		engine.getSystem(EntitySerializationSystem.class).worldDef = def;
+		
+		OverworldSystem overworld = engine.getSystem(OverworldSystem.class);
+		overworld.simplexNoise = new SimplexNoise(def.seed);
+		overworld.setProcessing(true);
+		overworld.worldDef = def;
+		//engine.getSystem(ParallaxBackgroundSystem.class).setProcessing(true);
+		factory.startMap(engine);
+		playerArr = Data.entityArrayPool.obtain();
+		//if (playerFile == null){
+		factory.createPlayer(engine, playerArr, def);			
+		//} else {
+			//factory.loadPlayer(engine, playerFile, invScreen.belt, playerArr);			
+		//}
+		overworld.startLoadingChunksFor(playerArr);
+		//engine.getSystem(OverworldSystem.class).printHeights();
+		playerArr = null;
+	}
+	
+	Array<PooledEntity> playerArr;// = new Array<PooledEntity>();
+	@Override
+	public void onNotify(Entity e, Event event, Object c) {
+		if (event == Event.WORLD_DEFINITION_SET){
+			this.worldDef = (WorldDefinition)c;
+		}
+		
+	}
+
+	public void startWorld(WorldDefinition def) {
+		FileHandle playerFile = def.folder.child("player.e");
+		if (playerFile.exists()){
+			//loadGame(def, playerFile);//TODO
+		} else {
+			//switchToCharacterGenScreen(def);
+			startNewGame(def);
+			DragControllerSystem drag = engine.getSystem(DragControllerSystem.class);
+			Entity player = drag.getSelectedPlayerEntity();
+			SelectedPlayer sel = new SelectedPlayer();
+			sel.def = def;
+			player.add(sel);
+			
+			
+		}
+	}
+
+	
+
+}
