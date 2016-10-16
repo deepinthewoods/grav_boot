@@ -1,5 +1,6 @@
 package com.niz.ui.edgeUI;
 
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.MathUtils;
@@ -21,6 +22,7 @@ import com.niz.Data;
 import com.niz.GameInstance;
 import com.niz.Main;
 import com.niz.WorldDefinition;
+import com.niz.component.PathfinderPreLog;
 import com.niz.ui.elements.UIElement;
 
 public class MainMenuTable extends UIElement {
@@ -56,9 +58,15 @@ public class MainMenuTable extends UIElement {
 
 	private TextButton editorButton;
 
+	protected boolean startQueued;
+
+	private Family loggerCheckFamily;
+
+
 	public MainMenuTable(MainMenu mainMenu, final GameInstance game, final Skin skin){
 		this.mainMenu = mainMenu;
 		this.game = game;
+		loggerCheckFamily = Family.one(PathfinderPreLog.class).get();
 		changeWorldButton = new TextButton("Change World", skin, "mainmenu");
 		newGameButton = new TextButton("New World", skin, "mainmenu");
 		deleteButton = new TextButton("Delete All", skin, "mainmenu");
@@ -77,9 +85,32 @@ public class MainMenuTable extends UIElement {
 					worldSelectTable.row();
 					worldSelectTable.add(deleteButton);
 					worldSelectTable.add(worldPane);
+				} else {
+					if (startQueued ){
+						if (game.engine.getEntitiesFor(loggerCheckFamily).size() == 0){
+							startQueued = false;
+							GameButton butt =  (GameButton) gameGroup.getChecked();
+							if (butt == null){
+								
+							}
+							if (butt.folder == null) throw new GdxRuntimeException("exc "+butt);
+							
+							FileHandle worldFile = butt.folder.child(Data.WORLD_MAIN_FILE_NAME);
+							WorldDefinition worldDef = Data.json.fromJson(WorldDefinition.class, worldFile);
+							worldDef.folder = butt.folder;
+							//game.startGenerating(worldDef);
+							game.startWorld(worldDef);
+							Main.prefs.previously_launched_game = butt.folder.name();
+							
+						}else {
+							Gdx.app.log(TAG, "delaying for jump loggers");
+						}
+					
+					} 
 				}
 				//Gdx.app.log(TAG, "act press actor" + touchTime + "  " + (game.engine.tick + LONG_PRESS_TIME));
 			}
+			
 			
 		};
 		buttonPool = new Pool<GameButton>(){
@@ -202,6 +233,8 @@ public class MainMenuTable extends UIElement {
 
 
 
+			
+
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
@@ -220,21 +253,12 @@ public class MainMenuTable extends UIElement {
 					//Gdx.app.log(TAG, "long press");
 				} else {
 					//Gdx.app.log(TAG, "short press");
-					GameButton butt =  (GameButton) gameGroup.getChecked();
-					if (butt == null){
-						
-					}
-					if (butt.folder == null) throw new GdxRuntimeException("exc "+butt);
-					
-					FileHandle worldFile = butt.folder.child(Data.WORLD_MAIN_FILE_NAME);
-					WorldDefinition worldDef = Data.json.fromJson(WorldDefinition.class, worldFile);
-					worldDef.folder = butt.folder;
-					//game.startGenerating(worldDef);
-					game.startWorld(worldDef);
-					Main.prefs.previously_launched_game = butt.folder.name();
+					startQueued = true;
 				}
 				
 			}
+			
+			
 
 			
 			
@@ -312,5 +336,7 @@ public class MainMenuTable extends UIElement {
 		
 		
 	}
+	
+	
 	
 }

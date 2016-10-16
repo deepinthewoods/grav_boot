@@ -10,6 +10,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.RenderSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.pfa.indexed.AStar;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -585,6 +586,11 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 			}
 			for (int i = 0; i < NEW_GAME_MAP_WIDTH; i++){
 				newGameMap.set(i,  0, Blocks.STONE + MathUtils.random(64));
+				if (i <= 10)newGameMap.set(i,  AStar.PATHFINDING_INITIAL_Y_OFFSET-1, Blocks.STONE + MathUtils.random(64));
+
+			}
+			for (int i = 0; i < 16; i++){
+				newGameMap.set(0,  i + AStar.PATHFINDING_INITIAL_Y_OFFSET, Blocks.STONE + MathUtils.random(64));
 			}
 		}
 		int bit = 0;

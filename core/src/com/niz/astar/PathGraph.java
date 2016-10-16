@@ -8,7 +8,7 @@ import com.niz.system.OverworldSystem;
 public class PathGraph implements IndexedGraph<PathNode> {
 	Array<Connection<PathNode>> arr = new Array<Connection<PathNode>>();
 	private static final int w = OverworldSystem.SCROLLING_MAP_WIDTH , h = OverworldSystem.SCROLLING_MAP_HEIGHT;
-	PathNode[] nodes = new PathNode[w * h];
+	public PathNode[] nodes = new PathNode[w * h];
 	
 	public PathGraph(){
 		for (int i = 0; i < nodes.length; i++){

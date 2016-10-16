@@ -44,7 +44,9 @@ public class aFollowRunConnection extends Action implements Poolable{
 			Gdx.app.log(TAG, "left");
 			control.pressed[Input.WALK_LEFT] = true;
 		} else {//fall, this is a fail state
-			
+			isFinished = true;
+			Gdx.app.log(TAG, "RESULT IS FALLING, SHOULD BE SIDEWAYS");
+			return;
 		}
 	}
 

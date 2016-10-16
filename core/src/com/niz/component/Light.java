@@ -39,12 +39,12 @@ public class Light extends BinaryHeap.Node implements Component {
 	public Vector3[] falloff = {
 			new Vector3(.17953f, .00093f, 20f)
 			, new Vector3(.17953f, .00093f, 20f)
-			, new Vector3(.07517953f, .00093f, 8f)//map back layer
+			, new Vector3(.7517953f, .97300093f, 12f)//map back layer
 			, new Vector3(.17953f, .00093f, 20f)//map front
 			, new Vector3(.17953f, .00093f, 20f)//map lit
 			, new Vector3(.17953f, .00093f, 20f)}//map fg
 	;
-	public float[] yOffset = {Main.PX*2, Main.PX*2, Main.PX*8, Main.PX*2, Main.PX*2, Main.PX*2};
+	public float[] yOffset = {Main.PX*2, Main.PX*2, Main.PX*6.5f, Main.PX*2, Main.PX*2, Main.PX*2};
 
 	public float[] ambientIntensity = {0f, 0f, 0f, .3f, .3f, .3f};
 

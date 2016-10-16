@@ -32,6 +32,7 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.ReflectionPool;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.niz.Data;
+import com.niz.component.PathfinderPreLog;
 import com.niz.observer.Subject;
 
 /**
@@ -99,7 +100,7 @@ public class EngineNiz extends Engine{
  	}
 	
 	public EngineNiz(int entityPoolInitialSize, int entityPoolMaxSize, int componentPoolInitialSize, int componentPoolMaxSize){
-		entityPool = new EntityPool(entityPoolInitialSize, entityPoolMaxSize);
+		entityPool = new EntityPool(entityPoolInitialSize, entityPoolMaxSize, this);
 		componentPools = new ComponentPools(componentPoolInitialSize, componentPoolMaxSize);
 		entities = new Array<Entity>(false, 16);
 		immutableEntities = new ImmutableArray<Entity>(entities);
@@ -526,6 +527,11 @@ public class EngineNiz extends Engine{
 	public class PooledEntity extends Entity implements Poolable {
 		public int seed;
 		private boolean poolingDisabled;
+		public EngineNiz engine;
+		public PooledEntity(EngineNiz engine) {
+			this.engine = engine;
+		}
+
 		@Override
 		Component removeInternal (Class<? extends Component> componentType) {
 			if (poolingDisabled) return getComponent(componentType);
@@ -552,17 +558,26 @@ public class EngineNiz extends Engine{
 		public void setUUID(long eID) {
 			uuid = eID;
 		}
+
+		public <T extends Component> T add(Class<T> class1) {
+			T c = engine.createComponent(class1);
+			add(c);
+			return c;
+		}
 	}
 
 	private class EntityPool extends Pool<PooledEntity> {
 
-		public EntityPool (int initialSize, int maxSize) {
+		public EngineNiz engine;
+
+		public EntityPool (int initialSize, int maxSize, EngineNiz engine) {
 			super(initialSize, maxSize);
+			this.engine = engine;
 		}
 
 		@Override
 		protected PooledEntity newObject () {
-			return new PooledEntity();
+			return new PooledEntity(engine);
 		}
 	}
 

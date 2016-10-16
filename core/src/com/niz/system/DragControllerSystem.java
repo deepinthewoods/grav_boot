@@ -93,6 +93,8 @@ public class DragControllerSystem extends EntitySystem implements Observer {
 		else dy = -1f;
 		float scale = .01f;
 		pos.pos.y += dy * scale;
+		
+		//pos.pos.set(17, 0);
 	}
 
 	@Override

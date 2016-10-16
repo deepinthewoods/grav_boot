@@ -29,10 +29,10 @@ public class ANotRun extends Action {
 		if (con.pressed[Input.WALK_LEFT] || con.pressed[Input.WALK_RIGHT]){
 			boolean hasWallJump = parent.containsAction(AWallSlide.class);
 			if (hasWallJump && time < WALL_SLIDE_MOVE_AWAY_DELAY){
-				Gdx.app.log(TAG, "wallstick " + time);
+				//Gdx.app.log(TAG, "wallstick " + time);
 				return;
 			}
-			Gdx.app.log(TAG, "faillllstick " + time);
+			//Gdx.app.log(TAG, "faillllstick " + time);
 			isFinished = true;
 			this.addAfterMe(Pools.obtain(ARun.class));
 		} else {

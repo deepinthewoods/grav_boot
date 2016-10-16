@@ -10,10 +10,14 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.ai.pfa.indexed.AStar;
+import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.FloatArray;
+import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Pool;
+import com.niz.PlatformerFactory;
 import com.niz.astar.OutPath;
-import com.niz.astar.PathConnection;
 import com.niz.astar.PathGraph;
 import com.niz.astar.PathHeuristic;
 import com.niz.astar.PathNode;
@@ -32,8 +36,12 @@ public class PathfindingSystem extends EntitySystem {
 	ComponentMapper<Body> bodyM = ComponentMapper.getFor(Body.class);
 
 	private AStar<PathNode> finder;
-	private PathGraph graph;
+	public PathGraph graph;
 	public PathHeuristic heuristic;
+	
+	
+	
+
 	@Override
 	public void addedToEngine(Engine engine) {
 		family = Family.all(Position.class, Body.class, Pathfind.class).get();
@@ -78,10 +86,11 @@ public class PathfindingSystem extends EntitySystem {
 
 		@Override
 		protected OutPath newObject() {
-			// TODO Auto-generated method stub
 			return new OutPath();
 		}
 		
 	};
+	
+	
 	
 }

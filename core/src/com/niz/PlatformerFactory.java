@@ -5,19 +5,18 @@ package com.niz;
 import com.badlogic.ashley.core.EngineNiz;
 import com.badlogic.ashley.core.EngineNiz.PooledEntity;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.ai.pfa.indexed.AStar;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.IntMap.Values;
 import com.badlogic.gdx.utils.Pools;
 import com.niz.action.ActionList;
 import com.niz.actions.ACameraFollowPlayer;
 import com.niz.actions.AHold;
 import com.niz.actions.AJumpCharSelect;
 import com.niz.actions.ANotRun;
+import com.niz.actions.APathfindingJumpAndHold;
+import com.niz.actions.APathfindingPreRun;
 import com.niz.actions.ATailControl;
 import com.niz.actions.AUseInventory;
-import com.niz.actions.mapgen.AMapPlanner;
 import com.niz.anim.Animations;
 import com.niz.component.BitmaskedCollisions;
 import com.niz.component.Body;
@@ -30,15 +29,12 @@ import com.niz.component.Inventory;
 import com.niz.component.Light;
 import com.niz.component.MovementData;
 import com.niz.component.OnMap;
+import com.niz.component.PathfinderPreLog;
 import com.niz.component.Physics;
-import com.niz.component.Player;
 import com.niz.component.Position;
 import com.niz.component.Race;
 import com.niz.component.SpriteAnimation;
 import com.niz.component.TransientComponent;
-import com.niz.item.ItemDef;
-import com.niz.observer.Subject.Event;
-import com.niz.system.OverworldSystem;
 import com.niz.system.WorkerSystem;
 
 public class PlatformerFactory extends Factory {
@@ -46,10 +42,10 @@ public class PlatformerFactory extends Factory {
 	private static final String TAG = "platformer factory";
 	public static final int CHAR_SELECT_SPACING = 4;
 	
-	public Race[] charSelectRaces;
-	public Inventory[] charSelectInventories;
+	public Race[] charSelectRaces, pathfindingRaces;
+	public Inventory[] charSelectInventories, pathfindingInventories;
 	//private Map map;
-	public static final int CHAR_SELECT_CHARACTERS = 8;
+	public static final int CHAR_SELECT_CHARACTERS = 8, PATHFINDING_COUNT = APathfindingJumpAndHold.THRESHOLD.length * 2;
 	public PlatformerFactory(){
 		charSelectRaces = new Race[CHAR_SELECT_CHARACTERS];
 		for (int i = 0; i < charSelectRaces.length; i++){
@@ -89,6 +85,18 @@ public class PlatformerFactory extends Factory {
 		}
 		
 		//Inventory inv = charSelectInventories[0];
+		pathfindingRaces = new Race[PATHFINDING_COUNT];
+		pathfindingInventories = new Inventory[PATHFINDING_COUNT];
+		for (int i = 0; i < pathfindingInventories.length; i++){
+			Inventory inv = new Inventory();
+			pathfindingInventories[i] = inv;
+			inv.addItem(16, 6);
+		}
+		for (int i = 0; i < pathfindingRaces.length; i++){
+			pathfindingRaces[i] = new Race();
+		}
+		//pathfindingRaces[2].raceID[Race.BACK_ARM] = Race.RED_DRAGON;
+		//pathfindingRaces[2].raceID[Race.FRONT_ARM] = Race.RED_DRAGON;
 		
 	}
 	@Override
@@ -238,21 +246,52 @@ public class PlatformerFactory extends Factory {
 		
 		
 		
+		{
+			
+			PooledEntity selLight = engine.createEntity();
+			Light light = engine.createComponent(Light.class);
+			selLight.add(light);
+			ActionList act = engine.createComponent(ActionList.class);
+			ASelectedLight aSel = new ASelectedLight();
+			act.addToStart(aSel);
+			selLight.add(act);
+			selLight.add(engine.createComponent(Position.class));
+			engine.addEntity(selLight);
+		}
 		
-		PooledEntity selLight = engine.createEntity();
-		Light light = engine.createComponent(Light.class);
-		selLight.add(light);
-		ActionList act = engine.createComponent(ActionList.class);
-		ASelectedLight aSel = new ASelectedLight();
-		act.addToStart(aSel);
-		selLight.add(act);
-		selLight.add(engine.createComponent(Position.class));
-		engine.addEntity(selLight);
+		///////pathfinding stuff
+
+		for (int i = 0; i < PATHFINDING_COUNT; i++){
+			PooledEntity e = makePlayer(engine);
+			Race race = engine.createComponent(Race.class);
+			for (int r = 0; r < race.raceID.length; r++){
+				race.raceID[r] = pathfindingRaces[i % pathfindingRaces.length].raceID[r];
+			}
+			e.add(race);
+			race.dirtyLayers = true;
+			e.getComponent(Position.class).pos.set(1.5f, AStar.PATHFINDING_INITIAL_Y_OFFSET+2);
+			ActionList act = e.getComponent(ActionList.class);
+			int typeIndex = i / APathfindingJumpAndHold.THRESHOLD.length;
+			switch (typeIndex){
+			
+			}
+			APathfindingPreRun preRun = Pools.obtain(APathfindingPreRun.class);
+			preRun.index = i;
+			act.addToStart(preRun);
+			
+			Inventory inv = engine.createComponent(Inventory.class);
+			inv.copyFrom(pathfindingInventories[i % pathfindingInventories.length]);
+			e.add(inv);
+			
+			e.add(PathfinderPreLog.class);
+			
+			Light light = engine.createComponent(Light.class);
+			e.add(light);
+			
+			engine.addEntity(e);
+		}
 		
 		
-		//PooledEntity pl = engine.createEntity();
-		//pl.add(new Player());
-		//engine.addEntity(pl);;
 		
 	}
 

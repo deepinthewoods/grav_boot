@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.niz.Main;
@@ -17,6 +18,7 @@ import com.niz.component.Player;
 import com.niz.component.Position;
 import com.niz.observer.Observer;
 import com.niz.observer.Subject.Event;
+import com.niz.system.CameraSystem;
 
 public class ACameraFollowPlayer extends Action {
 	private static final float _SPEED_FACTOR = 0.03f;
@@ -31,6 +33,7 @@ public class ACameraFollowPlayer extends Action {
 	
 	private static final float FAST_TIME = 2f;
 	private static final float CAMERA_OFFSET = 6;
+	private float range = 8;
 	boolean moving;
 	float targetY;
 	private boolean free;
@@ -56,6 +59,7 @@ public class ACameraFollowPlayer extends Action {
 		}
 		ImmutableArray<Entity> entities = parent.engine.getEntitiesFor(playerFamily);
 		if (entities.size() == 0) return;
+		
 		player = entities.get(0);
 		//Gdx.app.log(TAG, "camera update");
 		Physics phys = physM.get(player);
@@ -63,6 +67,11 @@ public class ACameraFollowPlayer extends Action {
 		Vector2 pos = posM.get(parent.e).pos;
 		Vector2 playerPos = p;
 		p.set(posM.get(player).pos);//.add(0, CAMERA_OFFSET * zoom);
+		
+		
+		pos.y = Math.max(pos.y, playerPos.y - range * zoom);
+		pos.y = Math.min(pos.y, playerPos.y + range * zoom);
+		
 		float dst = Math.abs(targetY - playerPos.y );
 		if ((phys.onGround //&& dst > Y_DISTANCE_STAND_THRESHOLD
 				)
@@ -104,6 +113,8 @@ public class ACameraFollowPlayer extends Action {
 			//pos.scl(Main.PPM);
 		}
 		//pos.set(playerPos);
+		//playerPos = posM.get(player).pos;
+		
 	}
 
 
@@ -114,6 +125,7 @@ public class ACameraFollowPlayer extends Action {
 	private float zoom;
 
 	private boolean zoomedOut;
+	private OrthographicCamera cam;
 	@Override
 	public void onStart() {
 		fast = false;
@@ -133,7 +145,9 @@ public class ACameraFollowPlayer extends Action {
 			}
 		}
 		);
-	
+		cam = parent.engine.getSystem(CameraSystem.class).adjustedCamera;
+		range = Gdx.graphics.getHeight() / Main.PPM;
+		range /= 6;
 		
 	}
 

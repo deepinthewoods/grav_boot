@@ -1,5 +1,7 @@
 package com.niz.system;
 
+import java.io.IOException;
+
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
@@ -25,16 +27,24 @@ public class RoomCatalogSystem extends EntitySystem {
 	}
 	
 	private void readRooms(FileHandle child) {
+		try {
+			Gdx.app.log(TAG, "READ ROOMS" + child.file().getCanonicalPath());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		Json json = Data.json;
 		for (FileHandle f : child.list()){
+			if (!f.extension().equals("json"))continue;
 			Room r = json.fromJson(Room.class, f);
 			if (!r.calculatePoints()) throw new GdxRuntimeException("" + f.name());
 			Room flip = new Room(r);
 			flip.calculatePoints();
 			
-			//Gdx.app.log(TAG, "file " + f.name());
+			Gdx.app.log(TAG, "file " + f.name());
 			for (String s : r.tags){
-				//Gdx.app.log(TAG, "room " + s);
+				Gdx.app.log(TAG, "room " + s);
 				int hash = Data.hash(s);
 				if (!roomsByTag.containsKey(hash)) roomsByTag.put(hash, new Array<Room>());
 				Array<Room> arr = roomsByTag.get(hash);
@@ -44,6 +54,8 @@ public class RoomCatalogSystem extends EntitySystem {
 				
 			}
 		}
+		child.mkdirs();
+		child.child("TESTTEST.TEST").writeString("test!", false);
 	}
 	
 	public Array<Room> getRoomsForTag(int tag){

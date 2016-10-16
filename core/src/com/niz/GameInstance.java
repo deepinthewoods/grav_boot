@@ -72,6 +72,7 @@ import com.niz.system.MapSystem;
 import com.niz.system.OnMapSystem;
 import com.niz.system.OverworldSystem;
 import com.niz.system.PathfindingSystem;
+import com.niz.system.PathfindingUpdateSystem;
 import com.niz.system.Physics2dSystem;
 import com.niz.system.PickUpCollisionsSystem;
 import com.niz.system.PlaceAtStartSystem;
@@ -300,7 +301,6 @@ public class GameInstance implements Screen, Observer {
 					engine.addSystem(new PlaceAtStartSystem());
 
 					engine.addSystem(new OnMapSystem(atlas));
-					engine.addSystem(new PathfindingSystem());
 					engine.addSystem(new MapCollisionSystem());
 					engine.addSystem(new ActionSystem());
 					engine.addSystem(new SpriteAnimationUpdateSystem());
@@ -321,6 +321,9 @@ public class GameInstance implements Screen, Observer {
 					break;case 11:
 					engine.addSystem(new RandomMapUpdateSystem());
 					engine.addSystem(new ZoomSystem());
+					engine.addSystem(new PathfindingSystem());
+					engine.addSystem(new PathfindingUpdateSystem());
+
 					break;case 12:
 					engine.addSystem(new CameraSystem(gameCamera));
 					engine.addSystem(new BufferStartSystem());
@@ -756,6 +759,8 @@ public class GameInstance implements Screen, Observer {
 		overworld.startLoadingChunksFor(playerArr);
 		//engine.getSystem(OverworldSystem.class).printHeights();
 		playerArr = null;
+		
+		engine.getSystem(PathfindingSystem.class).setJumpPaths();
 	}
 	
 	Array<PooledEntity> playerArr;// = new Array<PooledEntity>();
