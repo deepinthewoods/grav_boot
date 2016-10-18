@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Pools;
 import com.niz.action.Action;
 import com.niz.component.Body;
 import com.niz.component.Position;
-import com.niz.system.PathfindingSystem;
+import com.niz.system.PathfindingUpdateSystem;
 
 public class APathfindingLogBlocks extends Action {
 	private static final String TAG = "apathlogblocks";
@@ -50,7 +50,7 @@ public class APathfindingLogBlocks extends Action {
 	@Override
 	public void onEnd() {
 		Gdx.app.log(TAG,  "end " + blocks.size);
-		PathfindingSystem aStar = parent.engine.getSystem(PathfindingSystem.class);
+		PathfindingUpdateSystem aStar = parent.engine.getSystem(PathfindingUpdateSystem.class);
 		aStar.registerJumpBlocks(blocks, blockTimes, index);
 	}
 

@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
@@ -20,6 +21,7 @@ import com.niz.component.Map;
 
 public class PathfindingUpdateSystem extends EntitySystem {
 	
+	private static final String TAG = "path upd sys";
 	private ComponentMapper<Map> mapM;
 	private ImmutableArray<Entity> entities;
 	private PathfindingSystem pathSys;
@@ -46,13 +48,14 @@ public class PathfindingUpdateSystem extends EntitySystem {
 			Entity e = entities.get(ind);
 			Map map = mapM.get(e);
 			if (map == null) return;
-			int index = map.dirtyPath.nextClearBit(0);
+			int index = map.dirtyPath.nextSetBit(0);
 			if (index != -1){
 				map.dirtyPath.clear(index);
 				int x = index % OverworldSystem.SCROLLING_MAP_WIDTH;
 				int y = index / OverworldSystem.SCROLLING_MAP_WIDTH;
 				makePath(map, index, pathSys.graph, x, y);
 			}
+			//TODO side/fall
 		}
 	}
 
@@ -81,18 +84,19 @@ public class PathfindingUpdateSystem extends EntitySystem {
 		for (int i = 1; i <= end; i++){
 			GridPoint2 block = blocks.get(i);
 			float time = times.get(i);
-			int b = map.get(x + block.x, y + block.y - 1);
-			int id = (b & map.ID_MASK) >> map.ID_BITS;
-			BlockDefinition def = map.defs[id];
-			if (def.isSolid){
-				PathNode to = graph.getNode(x + block.x, y + block.y);
-				JumpPathConnection c = Pools.obtain(JumpPathConnection.class);
-				c.from = from;
-				c.to = to;
-				c.index = jumpTypeIndex;
-				graph.nodes[index].connections.add(c);
-				
-			}
+			//int b = map.get(x + block.x, y + block.y - 1);
+			//int id = (b & map.ID_MASK) >> map.ID_BITS;
+			//B//lockDefinition def = map.defs[id];
+			//if (def.isSolid){
+			PathNode to = graph.getNode(x + block.x, y + block.y);
+			JumpPathConnection c = Pools.obtain(JumpPathConnection.class);
+			c.from = from;
+			c.to = to;
+			c.index = jumpTypeIndex;
+			c.cost = time;
+			graph.nodes[index].connections.add(c);
+			
+			//}
 		}
 	}
 
@@ -102,7 +106,7 @@ public class PathfindingUpdateSystem extends EntitySystem {
 	}
 
 	public void setJumpPaths() {
-		
+		Gdx.app.log(TAG,  "JUMP PATHS JUMP PATHSJUOMPPATHSSPJAU)POAMPAHS)APSYSWTHSHPSAPO ");
 		for (int i = 0; i < PlatformerFactory.PATHFINDING_COUNT; i++){
 			Array<GridPoint2> arr = b.get(i);
 			jumpBlocks[i] = arr;

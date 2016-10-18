@@ -11,6 +11,7 @@ import com.niz.BlockDefinition;
 import com.niz.anim.SpriteCacheNiz;
 import com.niz.system.MapRenderSystem;
 import com.niz.system.MapSystem;
+import com.niz.system.OverworldSystem;
 
 public class Map implements Component, Poolable {
 	public transient SpriteCacheNiz cache;// = new SpriteCacheNiz(atlas, shader, backShader);
@@ -31,7 +32,7 @@ public class Map implements Component, Poolable {
 	public BlockDefinition[] defs;
 	public Entity mapEntity;
 	public boolean free = true;
-	public Bits dirtyPath = new Bits(), dirtyDestroyed = new Bits();
+	public Bits dirtyPath = new Bits(OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_HEIGHT), dirtyDestroyed = new Bits(OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_HEIGHT);
 	public Map(int width, int height, TextureAtlas atlas, ShaderProgram shader, ShaderProgram backShader, ShaderProgram litShader, ShaderProgram fgShader){
 		
 		this.width = width;
@@ -254,6 +255,9 @@ public class Map implements Component, Poolable {
 //			cache = null;
 //		}
 		//Gdx.app.log(TAG, "RESET");
+		for (int i = 0; i < OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_HEIGHT; i++){
+			dirtyPath.set(i);;
+		}
 	}
 
 	

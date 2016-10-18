@@ -760,7 +760,7 @@ public class GameInstance implements Screen, Observer {
 		//engine.getSystem(OverworldSystem.class).printHeights();
 		playerArr = null;
 		
-		engine.getSystem(PathfindingSystem.class).setJumpPaths();
+		engine.getSystem(PathfindingUpdateSystem.class).setJumpPaths();
 	}
 	
 	Array<PooledEntity> playerArr;// = new Array<PooledEntity>();

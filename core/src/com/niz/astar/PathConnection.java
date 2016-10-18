@@ -4,11 +4,11 @@ import com.badlogic.gdx.ai.pfa.Connection;
 
 public abstract class PathConnection<N> implements Connection<N> {
 	public N from, to;
-	
+	public float cost;
 	@Override
 	public float getCost() {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return cost;
 	}
 
 	@Override
