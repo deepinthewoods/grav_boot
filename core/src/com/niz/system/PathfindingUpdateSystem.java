@@ -14,9 +14,11 @@ import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Pools;
 import com.niz.BlockDefinition;
 import com.niz.PlatformerFactory;
+import com.niz.astar.FallPathConnection;
 import com.niz.astar.JumpPathConnection;
 import com.niz.astar.PathGraph;
 import com.niz.astar.PathNode;
+import com.niz.astar.RunPathConnection;
 import com.niz.component.Map;
 
 public class PathfindingUpdateSystem extends EntitySystem {
@@ -55,27 +57,63 @@ public class PathfindingUpdateSystem extends EntitySystem {
 				int y = index / OverworldSystem.SCROLLING_MAP_WIDTH;
 				makePath(map, index, pathSys.graph, x, y);
 			}
-			//TODO side/fall
 		}
 	}
 
 	private void makePath(Map map, int index, PathGraph graph, int x, int y) {
 		PathNode node = graph.nodes[index];
 		node.connections.clear();
-		for (int i = 0; i < jumpBlocks.length; i++){
-			Array<GridPoint2> blocks = jumpBlocks[i];
-			FloatArray times = jumpTimes[i];
-			for (int c = 0; c < blocks.size; c++){
-				GridPoint2 block = blocks.get(c);
-				float time = times.get(c);
-				int b = map.get(x + block.x, y + block.y);
-				int id = (b & map.ID_MASK) >> map.ID_BITS;
+		BlockDefinition under = map.defs[(map.get(x, y-1) & map.ID_MASK) >> map.ID_BITS];
+		if (under.isSolid){
+			node.hasFloor = true;
+		} else {
+			node.hasFloor = false;
+		}
+		if (node.hasFloor){
+			
+			for (int i = 0; i < jumpBlocks.length; i++){
+				Array<GridPoint2> blocks = jumpBlocks[i];
+				FloatArray times = jumpTimes[i];
+				for (int c = 0; c < blocks.size; c++){
+					GridPoint2 block = blocks.get(c);
+					float time = times.get(c);
+					int b = map.get(x + block.x, y + block.y);
+					int id = (b & map.ID_MASK) >> map.ID_BITS;
 				BlockDefinition def = map.defs[id];
 				if (def.isSolid){
 					finishedPath(map, index, graph, x, y, blocks, times, c-1, i);
 					return;
 				}
+				}
 			}
+			//run side
+			BlockDefinition bl = map.defs[(map.get(x-1, y) & map.ID_MASK) >> map.ID_BITS];
+			if (x != 0 && !bl.isSolid){
+				RunPathConnection c = Pools.obtain(RunPathConnection.class);
+				c.from = node;
+				PathNode to = graph.getNode(x-1, y);
+				c.to = to;		
+				c.cost = 1f/20f;
+				graph.nodes[index].connections.add(c);
+				
+			}
+			BlockDefinition br = map.defs[(map.get(x+1, y) & map.ID_MASK) >> map.ID_BITS];
+			if (x != OverworldSystem.SCROLLING_MAP_WIDTH-1 && !br.isSolid){			
+				RunPathConnection c = Pools.obtain(RunPathConnection.class);
+				c.from = node;
+				PathNode to = graph.getNode(x+1, y);
+				c.to = to;		
+				c.cost = 1f/20f;
+				graph.nodes[index].connections.add(c);
+			}
+			
+		} else if (y != 0){//fall
+			FallPathConnection c = Pools.obtain(FallPathConnection.class);
+			c.from = node;
+			PathNode to = graph.getNode(x, y-1);
+			c.to = to;		
+			c.cost = 1f/20f;
+			graph.nodes[index].connections.add(c);
 		}
 	}
 	

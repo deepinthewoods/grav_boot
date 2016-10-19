@@ -11,7 +11,7 @@ import com.niz.component.Physics;
 
 public class ANotRun extends Action {
 	private static final String TAG = "not running action";
-	private static final float WALL_SLIDE_MOVE_AWAY_DELAY = .35f;
+	private static final float WALL_SLIDE_MOVE_AWAY_DELAY = .2f;
 	private static ComponentMapper<Control> controlM = ComponentMapper.getFor(Control.class);
 	private static ComponentMapper<Physics> physM = ComponentMapper.getFor(Physics.class);
 	private float time;

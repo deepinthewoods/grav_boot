@@ -24,7 +24,7 @@ public class Physics2dSystem extends EntitySystem implements EntityListener{
 	//Vector2[] p = new Vector2[10000];
 	//Bits bits = new Bits(10000/4), tmpBits = new Bits(10000/4);;
 	//int li, progress;
-	Vector2 gravity = new Vector2(0,-50);
+	Vector2 gravity = new Vector2(0,-30);
 	private Family family;
 	private ImmutableArray<Entity> entities;
 	private MapCollisionSystem collisions;

@@ -9,6 +9,7 @@ public class PathNode {
 	public int y;
 	public int index;
 	public Array<Connection<PathNode>> connections = new Array<Connection<PathNode>>();
+	public boolean hasFloor;
 
 	public PathNode(int x, int y) {
 		this.x = x;
