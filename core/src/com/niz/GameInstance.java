@@ -22,6 +22,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatchNiz;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
@@ -40,6 +42,7 @@ import com.niz.anim.SpriteCacheNiz;
 import com.niz.component.BooleanInput;
 import com.niz.component.Control;
 import com.niz.component.DragController;
+import com.niz.component.Pathfind;
 import com.niz.component.Physics;
 import com.niz.component.Player;
 import com.niz.component.Position;
@@ -148,7 +151,7 @@ public class GameInstance implements Screen, Observer {
 	private Texture logo;
 	private ImmutableArray<Entity> playerEntities;
 	private InputSystem inputSys;
-
+	private static Vector3 tmpV = new Vector3();
 
 	public void create (boolean headless, boolean newGame) {
 		//this.isServer = serverInst != null;
@@ -258,7 +261,20 @@ public class GameInstance implements Screen, Observer {
 						@Override
 						public boolean keyTyped(char character) {return false;				}
 						@Override
-						public boolean touchDown(int screenX, int screenY, int pointer,	int button) {return false;				}
+						public boolean touchDown(int screenX, int screenY, int pointer,	int button) {
+							if (engine.getSystem(PlayerSystem.class).getEntities().size() == 0) return false;
+							Entity player = engine.getSystem(PlayerSystem.class).getEntities().get(0);
+							ActionList plact = player.getComponent(ActionList.class);
+							Pathfind pathC = engine.createComponent(Pathfind.class);
+							Vector2 plpos = player.getComponent(Position.class).pos;
+							tmpV.set(screenX, screenY, 0);
+							engine.getSystem(CameraSystem.class).adjustedCamera.unproject(tmpV);
+							pathC.targetX = (int) tmpV.x / Main.PPM;
+							pathC.targetY = (int) tmpV.y / Main.PPM;
+							
+							player.add(pathC);
+							Gdx.app.log(TAG,  "path");
+							return false;				}
 						@Override
 						public boolean touchUp(int screenX, int screenY, int pointer, int button) {return false;				}
 						@Override
@@ -587,7 +603,7 @@ public class GameInstance implements Screen, Observer {
 					
 					) paused = true;
 			//if (paused) deltaTime = 0f;
-					
+			
 		}
 		
 		
@@ -651,7 +667,7 @@ public class GameInstance implements Screen, Observer {
 					s += "\n"+ (player.getComponent(Physics.class).onSlope?"slope":"");
 					s += "\n"+ (player.getComponent(ActionList.class));
 					//String s = ""+Gdx.graphics.getFramesPerSecond() + "\n"+
-					s += String.format("%.1f", player.getComponent(Position.class).pos.x);
+					s += "\n" + String.format("%.1f", player.getComponent(Position.class).pos.x);
 					s += "," +String.format("%.1f", player.getComponent(Position.class).pos.y);
 					//s += "\n"+ (player.getComponent(Physics.class).onGround?"ground":"");
 					//s += "\n"+ (player.getComponent(Physics.class).wasOnGround2?"wasGround":"");

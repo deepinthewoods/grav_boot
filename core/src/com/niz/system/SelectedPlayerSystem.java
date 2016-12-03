@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.IntMap.Values;
 import com.niz.action.ActionList;
 import com.niz.actions.AJumpCharSelect;
 import com.niz.actions.APlayer;
+import com.niz.actions.ai.AWaitForPath;
 import com.niz.component.DragOption;
 import com.niz.component.Inventory;
 import com.niz.component.Light;
@@ -52,7 +53,8 @@ public class SelectedPlayerSystem extends EntitySystem {
 			Entity e = entities.get(i);
 			e.getComponent(ActionList.class).remove(AJumpCharSelect.class);;
 			e.getComponent(ActionList.class).addToStart(APlayer.class);;
-
+			e.getComponent(ActionList.class).addToStart(AWaitForPath.class);;
+			
 			Player pl = engine.createComponent(Player.class);
 			e.add(pl);
 			e.add(new Light());

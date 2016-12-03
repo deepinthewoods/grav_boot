@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Pools;
-import com.niz.Blocks;
 import com.niz.action.Action;
 import com.niz.action.ProgressAction;
 import com.niz.anim.Animations;
@@ -22,6 +21,8 @@ import com.niz.component.Position;
 import com.niz.component.RoomDefinition;
 import com.niz.component.SpriteIsMapTexture;
 import com.niz.component.SpriteStatic;
+import com.niz.room.BlockDistribution;
+import com.niz.room.BlockDistributionArray;
 import com.niz.room.Room;
 import com.niz.system.OverworldSystem;
 import com.niz.system.ProgressBarSystem;
@@ -39,9 +40,9 @@ public class AAgentBuildMap extends ProgressAction {
 	public Map map;
 	private OverworldSystem overworld;
 	public int bit;
-	public final static int ITERATIONS = 128;
+	public final static int ITERATIONS = 64;
 	private static final String TAG = "build map action";
-	private static final int TOTAL_ROOMS_TARGET = 80;
+	private static final int TOTAL_ROOMS_TARGET = 2;
 	private int teleportDiameter = 50;
 	private Array<RoomEntry> main = new Array<RoomEntry>(true, 16), branch = new Array<RoomEntry>(true, 16)
 			, base = new Array<RoomEntry>(true, 16);
@@ -91,7 +92,7 @@ public class AAgentBuildMap extends ProgressAction {
 			break;
 		case 2://random walk
 			rooms = smallRooms;
-			boolean done = makeRooms(1000, 10);
+			boolean done = makeRooms(200, 2);
 		
 			if (done){
 				progress++;
@@ -177,12 +178,13 @@ public class AAgentBuildMap extends ProgressAction {
 			break;
 		
 		case 5://finalize
-			for (int x = 0; x < map.width; x++)
-				for (int y = 0; y < map.height; y++)
-					map.set(x, y, 0);
-			writeToMap(base, 1024, true);
 			//Gdx.app.log(TAG, "DONEFIFFNIFNIFNFINIFNIFNFINFNIODODODODONDONDONEONDOEOnDONEDOenDONEOEDNEDONEDONENOD");
 			for (int x = 0; x < map.width; x++)
+				for (int y = 0; y < map.height; y++)
+					map.set(x, y, 1024 + r.nextInt(64));
+			
+			writeToMap(base, 1024, true);
+			/*for (int x = 0; x < map.width; x++)
 				for (int y = 0; y < map.height; y++){
 					if (map.get(x, y) == 1024){
 						map.set(x, y, 0);
@@ -192,7 +194,7 @@ public class AAgentBuildMap extends ProgressAction {
 						//Gdx.app.log(TAG, "stne");
 						map.set(x, y, Blocks.STONE+5);
 					}
-				}
+				}*/
 			progress++;
 			break;
 		case 6:
@@ -332,14 +334,14 @@ public class AAgentBuildMap extends ProgressAction {
 	private void writeToMap(RoomEntry entry, int i) {
 		writeToMap(entry, i, false);
 	}
-	private void writeToMap(RoomEntry entry, int i, boolean passages) {
+	private void writeToMap(RoomEntry entry, int i, boolean finalPass) {
 
 		//Gdx.app.log(TAG, "write " + entry.offset + " " + entry.room.blocks[0].length + " , " + entry.room.blocks.length);
 		for (int x = 0; x < entry.room.blocks[0].length; x++)
 			for (int y = 0; y < entry.room.blocks.length; y++){
 				map.set(x+entry.offset.x, y + entry.offset.y, i);
 			}
-		if (passages){
+		if (finalPass){
 			for (int x = 0; x < entry.room.blocks[0].length; x++)
 				for (int y = 0; y < entry.room.blocks.length; y++){
 					map.setBG(x+entry.offset.x, y + entry.offset.y, i);
@@ -362,16 +364,54 @@ public class AAgentBuildMap extends ProgressAction {
 			}
 			
 			GridPoint2 exit = entry.room.exit.get(exitIndex);
-			if (passages){
+			if (finalPass){
 				if (entry.teleportOut[exitIndex]){
 					makeDoor(entry, exitIndex);
 				} else {
 					
 				}
-				map.set(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, i);
-				map.set(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, i);
-				map.setBG(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, i);
-				map.setBG(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, i);
+				
+				//write actual room blocks
+				for (int x = 0; x < entry.room.blocks[0].length; x++)
+					for (int y = 0; y < entry.room.blocks.length; y++){
+						int b = entry.room.blocks[entry.room.blocks.length-y-1][entry.room.blocks[0].length-1-x];
+						
+						BlockDistributionArray d = entry.room.distributions.get(b);
+						Gdx.app.log(TAG, "dist " + d);
+						
+						BlockDistributionArray srcDist = entry.room.distributions.get(b);
+						float total = srcDist.getTotalWeight();
+						
+						float targetWeight = r.nextFloat() * total;
+						total = 0f;
+						BlockDistribution result = srcDist.getItemAtWeight(targetWeight);
+						boolean done = false;
+						int blockID = 0;
+						switch (result.value){
+						case ENTRANCE:
+						case EXIT:
+							break;
+						case BLOCKA:
+						case BLOCKB:
+							blockID = blockAid + r.nextInt(64);
+							break;
+						case EMPTY:
+							blockID = 0;
+							break;
+						case LADDER:
+							blockID = 1024;
+							break;
+						}
+						
+						map.set(x+entry.offset.x, y + entry.offset.y, blockID);
+						//map.set(x+entry.offset.x, y + entry.offset.y, i);
+
+					}
+				map.set(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, 0);
+				map.set(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, 0);
+				map.setBG(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, 0);
+				map.setBG(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, 0);
+				
 			}
 		}
 	}
@@ -441,6 +481,8 @@ public class AAgentBuildMap extends ProgressAction {
 	private int sidePathIndex;
 	private int totalIterations;
 	private ProgressBarSystem progressSys;
+	private int blockAid;
+	private int blockBid;
 
 	@Override
 	public void onEnd() {
@@ -489,7 +531,8 @@ public class AAgentBuildMap extends ProgressAction {
 		base.add(re);
 		re.teleportOut[0] = true;
 		progressSys = parent.engine.getSystem(ProgressBarSystem.class);
-
+		blockAid = 1024;
+		blockBid = 1024+64;
 	}
 
 	/*private int generateBlock(int bx, int by) {

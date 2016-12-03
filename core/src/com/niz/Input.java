@@ -2,8 +2,6 @@ package com.niz;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.utils.IntIntMap;
-import com.badlogic.gdx.utils.IntMap;
-import com.sun.org.apache.bcel.internal.classfile.Code;
 /**
  * Created by niz on 29/06/2014.
  */

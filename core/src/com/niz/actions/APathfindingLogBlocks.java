@@ -49,7 +49,7 @@ public class APathfindingLogBlocks extends Action {
 
 	@Override
 	public void onEnd() {
-		Gdx.app.log(TAG,  "end " + blocks.size);
+		//Gdx.app.log(TAG,  "end " + blocks.size);
 		PathfindingUpdateSystem aStar = parent.engine.getSystem(PathfindingUpdateSystem.class);
 		aStar.registerJumpBlocks(blocks, blockTimes, index);
 	}

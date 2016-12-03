@@ -1,5 +1,7 @@
 package com.niz.system;
 
+import java.util.Iterator;
+
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -7,6 +9,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.RenderSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -20,6 +23,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.niz.Data;
 import com.niz.Main;
+import com.niz.action.ActionList;
+import com.niz.actions.ai.AFollowPath;
+import com.niz.astar.PathNode;
 import com.niz.component.BlockLine;
 import com.niz.component.BlockOutline;
 import com.niz.component.Body;
@@ -28,6 +34,7 @@ import com.niz.component.DragOption;
 import com.niz.component.Light;
 import com.niz.component.LineBody;
 import com.niz.component.PickUp;
+import com.niz.component.Player;
 import com.niz.component.Position;
 import com.niz.component.RoomDefinition;
 import com.niz.component.SpriteAnimation;
@@ -121,6 +128,7 @@ private ImmutableArray<Entity> allBodyEntities;
 private ImmutableArray<Entity> dragOptionEntities;
 private ImmutableArray<Entity> dragBlockEntities;
 private ImmutableArray<Entity> roomDefEntities;
+private ImmutableArray<Entity> playerEntities;
 
 /*
  * new Color(0f, 0f, 0f, 1f),
@@ -168,6 +176,8 @@ public void addedToEngine(Engine engine) {
 	dragBlockEntities = engine.getEntitiesFor(Family.all(DragBlock.class, Position.class).get());
 
 	roomDefEntities = engine.getEntitiesFor(Family.all(RoomDefinition.class).get());
+	
+	playerEntities = engine.getEntitiesFor(Family.all(Player.class).get());
 }
 
 @Override
@@ -288,6 +298,49 @@ public void drawLast(float deltaTime) {
 		check(lights);
 		
 	}
+	
+	
+	for (int i = 0; i < playerEntities.size(); i++){
+		Entity e = playerEntities.get(i);
+		//Body body = bodyM.get(e);
+		Position pos = posM.get(e);
+		//Gdx.app.log(TAG,  "render block outline "+pos.pos);
+		float w = .5f * Main.PPM;
+		float h = .5f * Main.PPM;
+		AFollowPath act = e.getComponent(ActionList.class).getAction(AFollowPath.class);
+		if (act == null) break;
+		Iterator<Connection<PathNode>> it = act.path.path.iterator();
+		while (it.hasNext()){
+			Connection<PathNode> con = it.next();
+			PathNode node = con.getFromNode();
+			float x =  (node.x * Main.PPM), y = (node.y * Main.PPM);
+			batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+			batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
+			batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+			batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+			//Gdx.app.log(TAG,  "render block outline "+x);
+			if (batch.isFull()){
+				batch.end();
+				batch.beginDraw();
+				lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_LEFT, shader);
+				batch.render();
+		}
+		
+//		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+//		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
+//		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+//		batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+//		
+
+			batch.end();
+			batch.clearCache();
+			batch.begin();
+		}
+		
+	}
+	
+	
+	
 	batch.end();
 }
 
@@ -528,6 +581,8 @@ public void update(float deltaTime) {
 		}
 		
 	}
+	
+	
 	
 	batch.setColor(Data.colorFloats[Data.CYAN_INDEX]);
 	for (int i = 0; i < dragBlockEntities.size(); i++){

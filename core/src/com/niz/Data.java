@@ -1,5 +1,7 @@
 package com.niz;
 
+import java.util.Iterator;
+
 import com.badlogic.ashley.core.EngineNiz.PooledEntity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -9,6 +11,7 @@ import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.Pool;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
@@ -99,7 +102,7 @@ public class Data {
 			
 
 			
-		});*/
+		});//*/
 		json.setSerializer(IntMap.class, new IntMapSerializer());
 	}
 	

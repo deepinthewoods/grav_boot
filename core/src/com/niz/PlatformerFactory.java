@@ -45,7 +45,7 @@ public class PlatformerFactory extends Factory {
 	public Race[] charSelectRaces, pathfindingRaces;
 	public Inventory[] charSelectInventories, pathfindingInventories;
 	//private Map map;
-	public static final int CHAR_SELECT_CHARACTERS = 8, PATHFINDING_COUNT = APathfindingJumpAndHold.THRESHOLD.length * 2;
+	public static final int CHAR_SELECT_CHARACTERS = 8, PATHFINDING_COUNT = 32;
 	public PlatformerFactory(){
 		charSelectRaces = new Race[CHAR_SELECT_CHARACTERS];
 		for (int i = 0; i < charSelectRaces.length; i++){
@@ -261,38 +261,34 @@ public class PlatformerFactory extends Factory {
 		
 		///////pathfinding stuff
 
-		for (int i = 0; i < PATHFINDING_COUNT; i++){
-			PooledEntity e = makePlayer(engine);
-			Race race = engine.createComponent(Race.class);
-			for (int r = 0; r < race.raceID.length; r++){
-				race.raceID[r] = pathfindingRaces[i % pathfindingRaces.length].raceID[r];
-			}
-			e.add(race);
-			race.dirtyLayers = true;
-			e.getComponent(Position.class).pos.set(1.5f, AStar.PATHFINDING_INITIAL_Y_OFFSET+2);
-			ActionList act = e.getComponent(ActionList.class);
-			int typeIndex = i / APathfindingJumpAndHold.THRESHOLD.length;
-			switch (typeIndex){
-			
-			}
-			APathfindingPreRun preRun = Pools.obtain(APathfindingPreRun.class);
-			preRun.index = i;
-			act.addToStart(preRun);
-			
-			Inventory inv = engine.createComponent(Inventory.class);
-			inv.copyFrom(pathfindingInventories[i % pathfindingInventories.length]);
-			e.add(inv);
-			
-			e.add(PathfinderPreLog.class);
-			
-			Light light = engine.createComponent(Light.class);
-			e.add(light);
-			
-			engine.addEntity(e);
+		for (int i = 0; i < 6; i++){
+			makePathfinder(engine, i, APathfindingJumpAndHold.NORMAL_JUMP);
 		}
 		
 		
 		
+	}
+	private void makePathfinder(EngineNiz engine, int i, int type) {
+		PooledEntity e = makePlayer(engine);
+		Race race = engine.createComponent(Race.class);
+		for (int r = 0; r < race.raceID.length; r++){
+			race.raceID[r] = pathfindingRaces[i % pathfindingRaces.length].raceID[r];
+		}
+		e.add(race);
+		race.dirtyLayers = true;
+		e.getComponent(Position.class).pos.set(1.5f, AStar.PATHFINDING_INITIAL_Y_OFFSET+2);
+		ActionList act = e.getComponent(ActionList.class);
+		
+		APathfindingPreRun preRun = Pools.obtain(APathfindingPreRun.class);
+		preRun.index = i | type;
+		act.addToStart(preRun);
+		Inventory inv = engine.createComponent(Inventory.class);
+		inv.copyFrom(pathfindingInventories[i % pathfindingInventories.length]);
+		e.add(inv);
+		e.add(PathfinderPreLog.class);
+		Light light = engine.createComponent(Light.class);
+		e.add(light);
+		engine.addEntity(e);
 	}
 
 }

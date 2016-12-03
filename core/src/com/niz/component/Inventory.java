@@ -182,7 +182,7 @@ public class Inventory implements Component, Poolable, KryoSerializable{
 		
 		
 		ItemDef defaultDef = new ItemDef("(nothing)"){
-
+			
 			
 		};
 		

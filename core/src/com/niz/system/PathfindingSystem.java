@@ -7,6 +7,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.ai.pfa.GraphPath;
 import com.badlogic.gdx.ai.pfa.indexed.AStar;
@@ -27,6 +28,7 @@ import com.niz.component.Pathfind;
 import com.niz.component.Position;
 
 public class PathfindingSystem extends EntitySystem {
+	private static final String TAG = "pathfinding sys";
 	private Family family;
 	private ImmutableArray<Entity> entities;
 	private EngineNiz engine;
@@ -64,19 +66,24 @@ public class PathfindingSystem extends EntitySystem {
 			Body body = bodyM.get(e);
 			int x = (int) pos.x;
 			int y = (int)(pos.y - body.height + .5f);
+			//Gdx.app.log(TAG, "path " +  " from " + x + "," + y + "  to " + path.targetX + "," + path.targetY);
 			PathNode startNode = graph.getNode(x, y);
-			PathNode endNode = graph.getNode(path.startX, path.startY);
+			PathNode endNode = graph.getNode(path.targetX, path.targetY);
 
 			//GraphPath<PathConnection<PathNode>> outPath = connectionPathPool.obtain();
 			
 			GraphPath<Connection<PathNode>> outPath = connectionPathPool.obtain();;
-			finder.searchConnectionPath(startNode, endNode, heuristic, outPath );
-			
+			boolean madePath = finder.searchConnectionPath(startNode, endNode, heuristic, outPath );
+			if (madePath)Gdx.app.log(TAG, "dkjlfsl);ksdj;lds");
 			e.remove(Pathfind.class);
-			PathResult result = engine.createComponent(PathResult.class);
-			result.path = outPath;
-			e.add(result);
-			
+			if (madePath){
+				PathResult result = engine.createComponent(PathResult.class);
+				result.path = outPath;
+				e.add(result);
+				
+			}
+			//Gdx.app.log(TAG, "path result " +  result.path.getCount() + "  " + startNode.connections.size);
+
 			return;
 		}
 	}

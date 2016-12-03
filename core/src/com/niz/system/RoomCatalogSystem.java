@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Json;
 import com.niz.Data;
 import com.niz.room.BlockDistribution;
+import com.niz.room.BlockDistributionArray;
 import com.niz.room.Dist;
 import com.niz.room.Room;
 
@@ -22,7 +23,7 @@ public class RoomCatalogSystem extends EntitySystem {
 	@Override
 	public void addedToEngine(Engine engine) {
 		super.addedToEngine(engine);
-		//writeTemplates();
+		writeTemplates();
 		readRooms(Gdx.files.external(Data.FILE_PATH_PREFIX).child("rooms"));
 	}
 	
@@ -50,7 +51,7 @@ public class RoomCatalogSystem extends EntitySystem {
 				Array<Room> arr = roomsByTag.get(hash);
 				arr.add(r);
 				arr.add(flip);
-				//Gdx.app.log(TAG, "room in " + s + arr.size + " " + arr);
+				Gdx.app.log(TAG, "room in " + s + arr.size + " " + r);
 				
 			}
 		}
@@ -77,7 +78,7 @@ public class RoomCatalogSystem extends EntitySystem {
 	
 	private void writeTemplates() {
 		Json json = Data.json;
-		Array<BlockDistribution> emptyArr = new Array<BlockDistribution>();
+		BlockDistributionArray emptyArr = new BlockDistributionArray();
 		BlockDistribution dr = new BlockDistribution();
 		dr.value = Dist.EMPTY;
 		
@@ -86,7 +87,7 @@ public class RoomCatalogSystem extends EntitySystem {
 			for (int y = 1; y < 80; y++){
 				Room room = new Room();
 				room.blocks = new int[x][y];
-				Array<BlockDistribution> arr = new Array<BlockDistribution>();
+				BlockDistributionArray arr = new BlockDistributionArray();
 				BlockDistribution d = new BlockDistribution();
 				d.value = Dist.ENTRANCE;
 				arr.add(d);
@@ -96,7 +97,7 @@ public class RoomCatalogSystem extends EntitySystem {
 				room.distributions.put(0, emptyArr);
 				room.distributions.put(8, arr);
 				
-				arr = new Array<BlockDistribution>();
+				arr = new BlockDistributionArray();
 				d = new BlockDistribution();
 				d.value = Dist.EXIT;
 				arr.add(d);
@@ -105,13 +106,13 @@ public class RoomCatalogSystem extends EntitySystem {
 				arr.add(d);
 				room.distributions.put(9, arr);
 
-				arr = new Array<BlockDistribution>();
+				arr = new BlockDistributionArray();
 				d = new BlockDistribution();
 				d.value = Dist.BLOCKA;
 				arr.add(d);
 				room.distributions.put(1, arr);
 				
-				arr = new Array<BlockDistribution>();
+				arr = new BlockDistributionArray();
 				d = new BlockDistribution();
 				d.value = Dist.BLOCKB;
 				arr.add(d);

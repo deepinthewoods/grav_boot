@@ -4,4 +4,6 @@ public class BlockDistribution {
 
 	public Dist value;
 	public float weight;
+	
+	
 }

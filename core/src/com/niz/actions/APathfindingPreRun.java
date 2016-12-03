@@ -24,13 +24,14 @@ public class APathfindingPreRun extends Action {
 	@Override
 	public void update(float dt) {//run to the right then jump after x == 10
 		time += dt;
-		Gdx.app.log(TAG,  "update " + index);
 		Position pos = posM.get(parent.e);
 		Control con = controlM.get(parent.e);
-		int typeIndex = index / APathfindingJumpAndHold.THRESHOLD.length;
+		int typeIndex = index & AStar.TYPE_MASK;
 		Physics phys;
+		Gdx.app.log(TAG,  "update " + index + " : " + typeIndex);
 		switch (typeIndex){
-		case APathfindingJumpAndHold.RUN:
+		case APathfindingJumpAndHold.NORMAL_JUMP:
+			Gdx.app.log(TAG,  "apex" + pos.pos);
 			con.pressed[Input.WALK_LEFT] = false;
 			con.pressed[Input.WALK_RIGHT] = true;
 			if (pos.pos.x > AStar.PATHFINDING_X_START + .5f){
@@ -39,6 +40,7 @@ public class APathfindingPreRun extends Action {
 				addAfterMe(pathfindingJumpAndHold);
 				isFinished = true;
 				APathfindingLogBlocks log = Pools.obtain(APathfindingLogBlocks.class);
+				log.index = index;
 				addAfterMe(log);
 				
 			}
@@ -55,6 +57,7 @@ public class APathfindingPreRun extends Action {
 				addBeforeMe(pathfindingJumpAndHold);
 				isFinished = true;
 				APathfindingLogBlocks log = Pools.obtain(APathfindingLogBlocks.class);
+				log.index = index;
 				addBeforeMe(log);
 				con.pressed[Input.JUMP] = false;
 

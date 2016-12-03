@@ -1,16 +1,17 @@
 package com.niz.room;
 
-import com.badlogic.gdx.Gdx;
+import java.util.Iterator;
+
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntMap;
+import com.badlogic.gdx.utils.IntMap.Entry;
 import com.badlogic.gdx.utils.Pools;
 
 public class Room {
 	public static final int LEFT = 1, UP = 2, RIGHT = 4, DOWN = 8;
 	public int[][] blocks;
-	public IntMap<Array<BlockDistribution>> distributions = new IntMap<Array<BlockDistribution>>();
+	public IntMap<BlockDistributionArray> distributions = new IntMap<BlockDistributionArray>();
 	public Array<String> tags = new Array<String>();
 	public transient Array<GridPoint2> entrance = new Array<GridPoint2>(), exit = new Array<GridPoint2>();
 	public transient boolean flipped = false;
@@ -35,7 +36,7 @@ public class Room {
 		for (int x = 0; x < blocks.length; x++)
 			for (int y = 0; y < blocks[0].length; y++){
 				int b = blocks[x][y];
-				Array<BlockDistribution> dista = distributions.get(b);
+				Array<BlockDistribution> dista = distributions.get(b).val;
 				for (int i = 0; i < dista.size; i++){
 					BlockDistribution dist = dista.get(i);
 					if (dist.value == Dist.ENTRANCE){
@@ -94,5 +95,17 @@ public class Room {
 		if (up) r += UP;
 		if (down) r += DOWN;
 		return r;
+	}
+	
+	public String toString(){
+		String s = "\n";
+		Iterator<Entry<BlockDistributionArray>> iter = distributions.iterator();
+		while (iter.hasNext()){
+			//Array<?> d = distributions.get(i).val;
+			Array<BlockDistribution> d = iter.next().value.val;
+			s += d;
+			s += "\n";
+		}
+		return s;
 	}
 }

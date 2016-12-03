@@ -35,4 +35,10 @@ public class PathGraph implements IndexedGraph<PathNode> {
 	public PathNode getNode(int x, int y){
 		return nodes[x + y * w];
 	}
+
+
+	public static int getIndex(int x, int y) {
+		return x + y * w;
+		
+	}
 }

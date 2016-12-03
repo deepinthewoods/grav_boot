@@ -7,13 +7,11 @@ public abstract class PathConnection<N> implements Connection<N> {
 	public float cost;
 	@Override
 	public float getCost() {
-		
 		return cost;
 	}
 
 	@Override
 	public N getFromNode() {
-		
 		return from;
 	}
 
@@ -23,6 +21,10 @@ public abstract class PathConnection<N> implements Connection<N> {
 		return to;
 	}
 
+	public String toString(){
+		return ""+ getClass().getSimpleName() +"from: " + from + "\n" + 
+				"to " + to + "\n" +  
+				" cost " + cost;
+	}
 	
-
 }

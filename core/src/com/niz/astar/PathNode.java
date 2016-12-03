@@ -14,7 +14,11 @@ public class PathNode {
 	public PathNode(int x, int y) {
 		this.x = x;
 		this.y = y;
+		index = PathGraph.getIndex(x, y);
 	}
-
+	
+	public String toString(){
+		return "x:"+x+" y:"+y+" index:"+index + (hasFloor?"hasFloor":""); 
+	}
 
 }
