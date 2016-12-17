@@ -29,6 +29,7 @@ public class ARun extends Action {
 			}
 			boolean change = phys.vel.x > 0;
 			if (phys.onGround){
+				if (phys.vel.x > 0f) phys.vel.x = 0f;
 				phys.applyForceToCenter(-mov.run_force*(change?mov.changeDirectionForceMultiplier:1f), 0);
 			}else {
 				phys.applyForceToCenter(-mov.jump_x_force*(change?mov.changeDirectionForceMultiplier:1f), 0);
@@ -36,6 +37,7 @@ public class ARun extends Action {
 		} else if (con.pressed[Input.WALK_RIGHT]){
 			boolean change = phys.vel.x < 0;
 			if (phys.onGround){
+				if (phys.vel.x < 0f) phys.vel.x = 0f;
 				phys.applyForceToCenter(mov.run_force*(change?mov.changeDirectionForceMultiplier:1f), 0);
 			}else{
 				phys.applyForceToCenter(mov.jump_x_force*(change?mov.changeDirectionForceMultiplier:1f), 0);

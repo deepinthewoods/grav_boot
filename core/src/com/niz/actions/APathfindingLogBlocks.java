@@ -24,6 +24,7 @@ public class APathfindingLogBlocks extends Action {
 	public Array<GridPoint2> blocks;
 
 	private FloatArray blockTimes;
+	public boolean stand;
 	
 	@Override
 	public void update(float dt) {
@@ -51,7 +52,7 @@ public class APathfindingLogBlocks extends Action {
 	public void onEnd() {
 		//Gdx.app.log(TAG,  "end " + blocks.size);
 		PathfindingUpdateSystem aStar = parent.engine.getSystem(PathfindingUpdateSystem.class);
-		aStar.registerJumpBlocks(blocks, blockTimes, index);
+		aStar.registerJumpBlocks(blocks, blockTimes, index, stand);
 	}
 
 	@Override

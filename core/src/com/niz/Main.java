@@ -12,7 +12,7 @@ public class Main extends ApplicationAdapter {
 	public static final int PPM = 16;
 	public static float ar;
 	//public static int VIEWPORT_SIZE = 32;//16;
-	public static float timeStep = 1f/128f;
+	public static float timeStep = 1f/256f;
 	//public static final int TILE_VIEW_MIN = 639;
 	//public static final int TILE_VIEW_MAX = 641;
 	public static final float PX = 1f/(float)PPM;

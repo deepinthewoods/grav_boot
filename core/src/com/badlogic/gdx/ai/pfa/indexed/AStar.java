@@ -26,6 +26,7 @@ import com.badlogic.gdx.ai.pfa.PathFinderRequest;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.BinaryHeap;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.niz.astar.PathConnection;
 
 /** A fully implemented {@link PathFinder} that can perform both interruptible and non-interruptible pathfinding.
  * <p>
@@ -57,15 +58,18 @@ public class AStar<N> implements PathFinder<N> {
 
 	/** The unique ID for each search run. Used to mark nodes. */
 	private int searchId;
+	private int mask;
 
 	private static final int UNVISITED = 0;
 	private static final int OPEN = 1;
 	private static final int CLOSED = 2;
-	public static final int PATHFINDING_INITIAL_Y_OFFSET = 5, PATHFINDING_DOWN_Y_OFFSET = 3, PATHFINDING_UP_Y_OFFSET = 10
+	public static final int PATHFINDING_INITIAL_Y_OFFSET = 5, PATHFINDING_DOWN_Y_OFFSET = 1, PATHFINDING_UP_Y_OFFSET = 10
 			, PATHFINDING_X_START = 5, PATHFINDING_WIDTH = 20;
 	public static final int MOVE_MASK = 0b01;
-	public static final int TYPE_MASK = 0b1111111000;
-	public static final int INDEX_MASK = 0b111;
+	public static final int TYPE_MASK = 0b11111110000;
+	public static final int INDEX_MASK = 0b1111;
+
+	
 
 	public AStar (IndexedGraph<N> graph) {
 		this(graph, false);
@@ -92,7 +96,12 @@ public class AStar<N> implements PathFinder<N> {
 
 		return found;
 	}
-
+	
+	public boolean searchConnectionPath (N startNode, N endNode, Heuristic<N> heuristic, GraphPath<Connection<N>> outPath, int mask) {
+		this.mask = mask;
+		return searchConnectionPath(startNode, endNode, heuristic, outPath);
+		
+	}
 	@Override
 	public boolean searchNodePath (N startNode, N endNode, Heuristic<N> heuristic, GraphPath<N> outPath) {
 
@@ -116,7 +125,7 @@ public class AStar<N> implements PathFinder<N> {
 			// Retrieve the node with smallest estimated total cost from the open list
 			current = openList.pop();
 			current.category = CLOSED;
-
+			
 			// Terminate if we reached the goal node
 			if (current.node == endNode) return true;
 
@@ -154,9 +163,7 @@ public class AStar<N> implements PathFinder<N> {
 			// Terminate if we reached the goal node; we've found a path.
 			if (current.node == request.endNode) {
 				request.pathFound = true;
-
 				generateNodePath(request.startNode, request.resultPath);
-
 				return true;
 			}
 
@@ -200,8 +207,8 @@ public class AStar<N> implements PathFinder<N> {
 		for (int i = 0; i < connections.size; i++) {
 			if (metrics != null) metrics.visitedNodes++;
 
-			Connection<N> connection = connections.get(i);
-
+			PathConnection<N> connection = (PathConnection<N>) connections.get(i);
+			//if ((connection.key & mask) == 0)continue;
 			// Get the cost estimate for the node
 			N node = connection.getToNode();
 			float nodeCost = current.costSoFar + connection.getCost();
@@ -328,7 +335,7 @@ public class AStar<N> implements PathFinder<N> {
 		}
 	}
 
-	/** A class used by {@link AStar} to collect search metrics.
+	/** A class used by {@link IndexedAStarPathFinder} to collect search metrics.
 	 * 
 	 * @author davebaol */
 	public static class Metrics {
@@ -346,4 +353,3 @@ public class AStar<N> implements PathFinder<N> {
 		}
 	}
 }
-

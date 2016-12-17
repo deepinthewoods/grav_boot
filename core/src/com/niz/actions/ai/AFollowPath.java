@@ -1,11 +1,15 @@
 package com.niz.actions.ai;
 
+import java.util.Iterator;
+
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.pfa.Connection;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pools;
 import com.niz.Input;
 import com.niz.action.Action;
+import com.niz.actions.AStopRunning;
 import com.niz.astar.FallPathConnection;
 import com.niz.astar.JumpPathConnection;
 import com.niz.astar.PathConnection;
@@ -55,42 +59,53 @@ public class AFollowPath extends Action {
 			//lr
 			con.pressed[Input.JUMP] = false;
 			float dx = from.x + .5f - pos.x;
-			if (dx < -.5F){
-				con.pressed[Input.WALK_LEFT] = true;
-				con.pressed[Input.WALK_RIGHT] = false;
-			} else if (dx > .5f){
-				con.pressed[Input.WALK_LEFT] = false;
-				con.pressed[Input.WALK_RIGHT] = true;
-				//Gdx.app.log(TAG, "INIT JUMP ");	
-			} else if (dx < 0){//
+			if (dx < 0F){
 				if (con.pressed[Input.WALK_RIGHT]){
 					//Gdx.app.log(TAG, "INIT JUMP " + from.x + " , " + from.y + "  " + pos + conn);
 					AFollowJump act = Pools.obtain(AFollowJump.class);
 					//act.index = jconn.key;
 					act.conn = jconn;
 					addBeforeMe(act);
+					if (jconn.stand){
+						AStopRunning stop = Pools.obtain(AStopRunning.class);
+						addBeforeMe(stop);
+					}
 					currentIndex++;
 					if (currentIndex >= path.path.getCount()){
 						//Gdx.app.log(TAG,  "FINISHED jump" + dx  );
 						isFinished = true;
 					}
 				}
+				
 			} else {
-				if (con.pressed[Input.WALK_LEFT]){
-					//Gdx.app.log(TAG, "INIT JUMPL ");
-					AFollowJump act = Pools.obtain(AFollowJump.class);
-					
-					act.conn = jconn;
-					addBeforeMe(act);
-					currentIndex++;
-					if (currentIndex >= path.path.getCount()){
-						isFinished = true;
-						//Gdx.app.log(TAG,  "FINISHED jump" + dx + " , " );
-
+				if (dx < 0F){
+					if (con.pressed[Input.WALK_RIGHT]){
+						//Gdx.app.log(TAG, "INIT JUMP " + from.x + " , " + from.y + "  " + pos + conn);
+						AFollowJump act = Pools.obtain(AFollowJump.class);
+						//act.index = jconn.key;
+						act.conn = jconn;
+						addBeforeMe(act);
+						if (jconn.stand){
+							AStopRunning stop = Pools.obtain(AStopRunning.class);
+							addBeforeMe(stop);
+						}
+						currentIndex++;
+						if (currentIndex >= path.path.getCount()){
+							//Gdx.app.log(TAG,  "FINISHED jump" + dx  );
+							isFinished = true;
+						}
 					}
+					
 				}
 			}
 			
+			if (dx < 0){//
+				con.pressed[Input.WALK_LEFT] = true;
+				con.pressed[Input.WALK_RIGHT] = false;
+			} else {
+				con.pressed[Input.WALK_LEFT] = false;
+				con.pressed[Input.WALK_RIGHT] = true;
+			}
 				
 			
 		} if (conn instanceof FallPathConnection){
@@ -130,14 +145,9 @@ public class AFollowPath extends Action {
 					currentIndex++;
 					if (currentIndex >= path.path.getCount()){
 						isFinished = true;
-						
-						//Gdx.app.log(TAG,  "FINISHED fall" + dx + " , " );
-
 					}
 				}
 			}
-			
-				
 			
 		} else {
 			float dx = to.x + .5f - pos.x;
@@ -150,7 +160,7 @@ public class AFollowPath extends Action {
 				con.pressed[Input.WALK_RIGHT] = true;
 			}
 			
-			if ((int)pos.x == to.x && (int)pos.y == to.y){
+			if ((int)pos.x == to.x){
 				//Gdx.app.log(TAG,  "FINISHED other" + dx + " , " );
 				currentIndex++;
 				if (currentIndex >= path.path.getCount()){
@@ -159,22 +169,36 @@ public class AFollowPath extends Action {
 			}
 		}
 		
-		
 	}
 
 	@Override
 	public void onEnd() {
-		path = null;
 		Control con = controlM.get(parent.e);
 		con.pressed[Input.WALK_LEFT] = false;
 		con.pressed[Input.WALK_RIGHT] = false;
 		//Gdx.app.log(TAG, "END ");
+		AFinishPath finish = Pools.obtain(AFinishPath.class);
+		addAfterMe(finish);
+		finish.x = path.path.get(path.path.getCount() - 1).getToNode().x; 
+		finish.y = path.path.get(path.path.getCount() - 1).getToNode().y; 
+
+		path = null;
 		parent.e.remove(PathResult.class);
 	}
 
 	@Override
 	public void onStart() {
 		currentIndex = 0;
+		String s = "";
+		Iterator<Connection<PathNode>> i = path.path.iterator();
+		while (i.hasNext()){
+			Connection<PathNode> val = i.next();
+			//s += val + "\n";
+			
+		}
+			
+		
+		//Gdx.app.log(TAG, "start path \n" + s);
 	}
 
 }

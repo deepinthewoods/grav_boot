@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.EngineNiz;
 import com.badlogic.ashley.core.EngineNiz.PooledEntity;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.pfa.indexed.AStar;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.niz.action.ActionList;
@@ -262,9 +263,14 @@ public class PlatformerFactory extends Factory {
 		///////pathfinding stuff
 
 		for (int i = 0; i < 6; i++){
-			makePathfinder(engine, i, APathfindingJumpAndHold.NORMAL_JUMP);
+			//makePathfinder(engine, i, APathfindingJumpAndHold.NORMAL_JUMP);
+			//makePathfinder(engine, i, APathfindingJumpAndHold.STANDING_JUMP);
+			
 		}
-		
+		for (int i = 0; i < 3; i++){
+			makePathfinder(engine, i, APathfindingJumpAndHold.STANDING_DELAYED_RUN_JUMP);
+			//makePathfinder(engine, i, APathfindingJumpAndHold.DELAYED_REVERSE_JUMP);
+		}
 		
 		
 	}
@@ -287,8 +293,11 @@ public class PlatformerFactory extends Factory {
 		e.add(inv);
 		e.add(PathfinderPreLog.class);
 		Light light = engine.createComponent(Light.class);
-		e.add(light);
+		//if (MathUtils.random(4) == 0)
+			e.add(light);
 		engine.addEntity(e);
+		Body body = e.getComponent(Body.class);
+		//body.height = .1f;
 	}
 
 }

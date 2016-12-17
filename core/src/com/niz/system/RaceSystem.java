@@ -527,7 +527,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		MovementData mov = moveM.get(e);
 		phys.limit.set(10,162, 17);
 		
-		mov.jump_impulse = 15.2f;
+		mov.jump_impulse = 17.2f;
 		mov.run_force = 25f;
 		mov.jump_y_force = .44f;
 		mov.jump_x_force = 65f;

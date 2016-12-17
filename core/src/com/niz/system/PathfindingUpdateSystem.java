@@ -17,7 +17,6 @@ import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.IntMap.Entry;
 import com.badlogic.gdx.utils.Pools;
 import com.niz.BlockDefinition;
-import com.niz.PlatformerFactory;
 import com.niz.astar.FallPathConnection;
 import com.niz.astar.JumpPathConnection;
 import com.niz.astar.PathGraph;
@@ -27,7 +26,7 @@ import com.niz.component.Map;
 
 public class PathfindingUpdateSystem extends EntitySystem {
 	
-	private static final float RUN_COST = 1f/200f;
+	private static final float RUN_COST = 0.0000001f;
 	private static final String TAG = "path upd sys";
 	private static final int REPS = 300;
 	private ComponentMapper<Map> mapM;
@@ -35,9 +34,14 @@ public class PathfindingUpdateSystem extends EntitySystem {
 	private PathfindingSystem pathSys;
 	IntMap<Array<GridPoint2>> b = new IntMap<Array<GridPoint2>>();
 	IntMap<FloatArray> t = new IntMap<FloatArray>();
+	IntMap<Boolean> stnd = new IntMap<Boolean>();
+	
+	
+
 	Array<GridPoint2>[] jumpBlocks;// = new Array[PlatformerFactory.PATHFINDING_COUNT];
 	FloatArray[] jumpTimes;// = new FloatArray[PlatformerFactory.PATHFINDING_COUNT];
 	int[] jumpKeys;// = new int[PlatformerFactory.PATHFINDING_COUNT];
+	boolean[] jumpStand;
 	@Override
 	public void addedToEngine(Engine engine) {
 		MapSystem map = engine.getSystem(MapSystem.class);
@@ -71,7 +75,6 @@ public class PathfindingUpdateSystem extends EntitySystem {
 
 	private void makePath(Map map, int nodeIndex, PathGraph graph, int x, int y) {
 		//Gdx.app.log(TAG, "make path" + index);
-
 		PathNode node = graph.nodes[nodeIndex];
 		//if (graph.getNode(x, y) != node) throw new GdxRuntimeException("JKLLK");
 		node.connections.clear();
@@ -83,27 +86,28 @@ public class PathfindingUpdateSystem extends EntitySystem {
 		}
 		BlockDefinition current = map.defs[(map.get(x, y) & map.ID_MASK) >> map.ID_BITS];
 		if (current.isSolid) return;
-		if (node.hasFloor){			
-			for (int i = 0; i < jumpBlocks.length; i++){
-				Array<GridPoint2> blocks = jumpBlocks[i];
-				FloatArray times = jumpTimes[i];
-				
-				for (int c = 0; c < blocks.size; c++){
-					GridPoint2 block = blocks.get(c);
-					//Gdx.app.log(TAG, "try " + block);
-					float time = times.get(c);
-					int b = map.get(x + block.x, y + block.y);
-					int id = (b & map.ID_MASK) >> map.ID_BITS;
-					BlockDefinition def = map.defs[id];
-					if (def.isSolid){
-						finishedPath(map, nodeIndex, graph, x, y, blocks, times, c-1, jumpKeys[i], i);
-						break;
-					}
-				}
-			}
-			//run side
-			BlockDefinition bl = map.defs[(map.get(x-1, y) & map.ID_MASK) >> map.ID_BITS];
-			BlockDefinition bbl = map.defs[(map.get(x-1, y-1) & map.ID_MASK) >> map.ID_BITS];
+		
+		//run side
+		BlockDefinition bl = map.defs[(map.get(x-1, y) & map.ID_MASK) >> map.ID_BITS];
+		BlockDefinition bbl = map.defs[(map.get(x-1, y-1) & map.ID_MASK) >> map.ID_BITS];
+		if (node.hasFloor){
+			
+		}
+		
+		
+		BlockDefinition bl2 = map.defs[(map.get(x-2, y) & map.ID_MASK) >> map.ID_BITS];
+		BlockDefinition bbl2 = map.defs[(map.get(x-2, y-1) & map.ID_MASK) >> map.ID_BITS];
+		BlockDefinition br2 = map.defs[(map.get(x+2, y) & map.ID_MASK) >> map.ID_BITS];
+		BlockDefinition bbr2 = map.defs[(map.get(x+2, y-1) & map.ID_MASK) >> map.ID_BITS];
+		BlockDefinition bl3 = map.defs[(map.get(x-3, y) & map.ID_MASK) >> map.ID_BITS];
+		BlockDefinition bbl3 = map.defs[(map.get(x-3, y-1) & map.ID_MASK) >> map.ID_BITS];
+		BlockDefinition br3 = map.defs[(map.get(x+3, y) & map.ID_MASK) >> map.ID_BITS];
+		BlockDefinition bbr3 = map.defs[(map.get(x+3, y-1) & map.ID_MASK) >> map.ID_BITS];
+		boolean runwayL = !bl2.isSolid && !bl3.isSolid && bbl2.isSolid && bbl3.isSolid;
+		boolean runwayR = !br2.isSolid && !br3.isSolid && bbr2.isSolid && bbr3.isSolid;
+		
+		
+		if (node.hasFloor){	
 			
 			if (x != 0 && !bl.isSolid && bbl.isSolid){
 				RunPathConnection c = Pools.obtain(RunPathConnection.class);
@@ -112,8 +116,10 @@ public class PathfindingUpdateSystem extends EntitySystem {
 				c.to = to;		
 				c.cost = RUN_COST;
 				graph.nodes[nodeIndex].connections.add(c);
-				//Gdx.app.log(TAG, "runl " + index + " " + x + "," + y);
-				
+				//c.index = 1;
+				//c.key = 1;
+				Gdx.app.log(TAG, "runl " +  " " + x + "," + y + c);
+				if (c.to.y != c.from.y) throw new GdxRuntimeException("err " + c);
 			}
 			BlockDefinition br = map.defs[(map.get(x+1, y) & map.ID_MASK) >> map.ID_BITS];
 			BlockDefinition bbr = map.defs[(map.get(x+1, y-1) & map.ID_MASK) >> map.ID_BITS];
@@ -125,13 +131,64 @@ public class PathfindingUpdateSystem extends EntitySystem {
 				c.to = to;		
 				c.cost = RUN_COST;
 				graph.nodes[nodeIndex].connections.add(c);
-				//Gdx.app.log(TAG, "runr " + index + " " + x + "," + y);
-				
+				Gdx.app.log(TAG, "runr " +  " " + x + "," + y + c);
+				if (c.to.y != c.from.y) throw new GdxRuntimeException("err " + c);
 			}
 			
+			///
+			for (int i = 0; i < jumpBlocks.length; i++){
+				Array<GridPoint2> blocks = jumpBlocks[i];
+				FloatArray times = jumpTimes[i];
+				boolean done = false;
+				for (int c = 0; c < blocks.size; c++){
+					GridPoint2 block = blocks.get(c);
+					//Gdx.app.log(TAG, "try " + block);
+					float time = times.get(c);
+					int b = map.get(x + block.x, y + block.y);
+					int id = (b & map.ID_MASK) >> map.ID_BITS;
+					BlockDefinition def = map.defs[id];
+					if (def.isSolid){
+						boolean st = jumpStand[i];
+						if (st || runwayL)
+						finishedJumpPath(map, nodeIndex, graph, x, y, blocks, times, c-1, jumpKeys[i], i, st, false);
+						done = true;
+						break;
+					}
+				}
+				if (!done){
+					boolean st = jumpStand[i];
+					if (st || runwayL)
+						finishedJumpPath(map, nodeIndex, graph, x, y, blocks, times, blocks.size-1-1, jumpKeys[i], i, st, false);
+					
+				}
+				
+			}
+			/*for (int i = 0; i < jumpBlocks.length; i++){
+				Array<GridPoint2> blocks = jumpBlocks[i];
+				FloatArray times = jumpTimes[i];
+				
+				for (int c = 0; c < blocks.size; c++){
+					GridPoint2 block = blocks.get(c);
+					//Gdx.app.log(TAG, "try " + block);
+					float time = times.get(c);
+					int b = map.get(x - block.x, y + block.y);
+					int id = (b & map.ID_MASK) >> map.ID_BITS;
+					BlockDefinition def = map.defs[id];
+					if (def.isSolid){
+						boolean st = jumpStand[i];
+						if (!st || runwayL)
+						finishedJumpPath(map, nodeIndex, graph, x, y, blocks, times, c-1, jumpKeys[i], i, st, true);
+						break;
+					}
+				}
+			}//*/
+			
+			
+			
+			
 		} else if (y != 0){//fall
-			BlockDefinition br = map.defs[(map.get(x, y-1) & map.ID_MASK) >> map.ID_BITS];
-			if (!br.isSolid){	
+			BlockDefinition bd = map.defs[(map.get(x, y-1) & map.ID_MASK) >> map.ID_BITS];
+			if (!bd.isSolid){	
 				
 				FallPathConnection c = Pools.obtain(FallPathConnection.class);
 				c.from = node;
@@ -144,10 +201,11 @@ public class PathfindingUpdateSystem extends EntitySystem {
 		}
 	}
 	
-	private void finishedPath(Map map, int nodeIndex, PathGraph graph, int x, int y, Array<GridPoint2> blocks, FloatArray times, int end, int jumpkey, int jumpIndex) {
+	private void finishedJumpPath(Map map, int nodeIndex, PathGraph graph, int x, int y, Array<GridPoint2> blocks, FloatArray times, int end, int jumpkey, int jumpIndex, boolean stand, boolean isLeft){
 		
 		
-		if (end > 0);// Gdx.app.log(TAG, "finish path " + end);
+		
+		if (end > 0);
 		else return;
 		PathNode from = graph.nodes[nodeIndex];
 		for (int i = 1; i <= end; i++){
@@ -158,25 +216,28 @@ public class PathfindingUpdateSystem extends EntitySystem {
 			//B//lockDefinition def = map.defs[id];
 			//if (def.isSolid){
 			
-			PathNode to = graph.getNode(x + block.x, y + block.y);
+			PathNode to = graph.getNode(x + block.x * (isLeft?-1:1), y + block.y);
 			JumpPathConnection c = Pools.obtain(JumpPathConnection.class);
 			c.from = from;
 			c.to = to;
 			c.key = jumpkey;
 			c.index = jumpIndex;
 			c.cost = time;
+			c.stand = stand;
+			c.isLeft = isLeft;
 			graph.nodes[nodeIndex].connections.add(c);
 			
 			//}
+			Gdx.app.log(TAG, "finish jump path " + end + "  " + time);
 		}
 	}
 
-	public void registerJumpBlocks(Array<GridPoint2> blocks, FloatArray blockTimes, int index) {
+	public void registerJumpBlocks(Array<GridPoint2> blocks, FloatArray blockTimes, int index, boolean stand) {
 		b.put(index, blocks);
 		t.put(index, blockTimes);
+		stnd.put(index, stand);
 		
 		//Gdx.app.log(TAG,  "register " + index + "  " + blocks.size);
-
 	}
 
 	public void setJumpPaths() {
@@ -186,6 +247,7 @@ public class PathfindingUpdateSystem extends EntitySystem {
 		jumpBlocks = new Array[b.size];
 		jumpTimes = new FloatArray[b.size];
 		jumpKeys = new int[b.size];
+		jumpStand = new boolean[b.size];
  		int i = 0;
 		while (it.hasNext()){
 			Entry<Array<GridPoint2>> val = it.next();
@@ -193,8 +255,10 @@ public class PathfindingUpdateSystem extends EntitySystem {
 			int key = val.key;
 			jumpBlocks[i] = arr;
 			FloatArray time = t.get(key);
+			boolean stand = stnd.get(key);
 			jumpTimes[i] = time;
 			jumpKeys[i] = key;
+			jumpStand[i] = stand;
 			//Gdx.app.log(TAG,  "hjgjh" + i);
 			//Gdx.app.log(TAG,  "hjgjh" + arr.size);
 			i++;

@@ -57,7 +57,7 @@ public class aFollowRunConnection extends Action implements Poolable{
 
 	@Override
 	public void onStart() {
-		
+		Gdx.app.log(TAG,  "start");
 	}
 	
 @Override
