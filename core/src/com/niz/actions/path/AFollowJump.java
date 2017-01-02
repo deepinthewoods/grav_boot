@@ -1,4 +1,4 @@
-package com.niz.actions.ai;
+package com.niz.actions.path;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.gdx.Gdx;
@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Pools;
 import com.niz.Input;
 import com.niz.action.Action;
 import com.niz.actions.APathfindingJumpAndHold;
+import com.niz.actions.AStand;
 import com.niz.astar.JumpPathConnection;
 import com.niz.component.Body;
 import com.niz.component.Control;
@@ -24,7 +25,6 @@ public class AFollowJump extends Action {
 	
 	private boolean jumping;
 	
-
 	public JumpPathConnection conn;
 
 	private float time, jumpTime;
@@ -61,18 +61,19 @@ public class AFollowJump extends Action {
 			
 		}
 
-		if (phys.onGround && !jumping){
+		if (phys.onGround && !jumping && parent.containsAction(AStand.class)){
 			boolean fastEnough = false;
 			//if (conn.stand) fastEnough = true;
 			
 			if (conn.isLeft){
-				if (phys.vel.x < -phys.limit.x * .8f) fastEnough = true;
+				if (phys.vel.x < -phys.limit.x * .68f) fastEnough = true;
 			} else {
-				if (phys.vel.x > phys.limit.x * .8f) fastEnough = true;
+				if (phys.vel.x > phys.limit.x * .68f) fastEnough = true;
 			}
 			if (fastEnough || conn.stand){
 				tmpV.set(conn.from.x + .5f, conn.from.y + .5f).sub(pos);
-				Gdx.app.log(TAG,  "start jumping" + conn.from + pos + tmpV);
+				Gdx.app.log(TAG,  "start jumping" + conn.from + pos + tmpV + " : " + parent.engine.tick + con.pressed[Input.JUMP]);
+				parent.getAction(AStand.class).pathJump = true;
 				jumping = true;
 				jumpTime = 0f;
 				if (!hasJumped){
@@ -103,7 +104,7 @@ public class AFollowJump extends Action {
 		if (jumping){
 			
 			//Gdx.app.log(TAG,  "jumping " +conn.index + "  " + jumpTimeTarget + " " + jumpTime + posM.get(parent.e).pos + conn.to.x + "," + conn.to.y);
-			//Gdx.app.log(TAG,  "jumping ");
+			Gdx.app.log(TAG,  "jumping "+ " : " + parent.engine.tick);
 			con.pressed[Input.JUMP] = true;
 			
 			if (
@@ -121,6 +122,7 @@ public class AFollowJump extends Action {
 			
 		} else {
 			con.pressed[Input.JUMP] = false;
+			//Gdx.app.log(TAG,  "not jumping "+ " : " + parent.engine.tick);
 		}
 		if (//!jumping && 
 				hasJumped){//steer towards goal
@@ -145,7 +147,7 @@ public class AFollowJump extends Action {
 			}*/
 			//CORRECT OVERSHOOT
 			/**/
-			if ((int)pos.x == conn.to.x && time > targetTime * 2223.98f){
+			if ((int)pos.x == conn.to.x && time > targetTime * .98f){
 				Gdx.app.log(TAG,  "OVERSHOOT ");
 				if (phys.vel.x > 0){
 					con.pressed[Input.WALK_LEFT] = true;
@@ -159,7 +161,7 @@ public class AFollowJump extends Action {
 		}
 		if (time > conn.cost + .005f){
 			isFinished = true;
-			Gdx.app.log(TAG,  "time over STOP");
+			Gdx.app.log(TAG,  "time over STOP" + conn.cost + " : " + parent.engine.tick);
 		}
 		//float dx = conn.to.x + .5f - pos.x;
 		if ((conn.key & APathfindingJumpAndHold.DELAYED_REVERSE_JUMP) != 0){
@@ -173,7 +175,7 @@ public class AFollowJump extends Action {
 			}
 		}
 	}
-
+	
 	@Override
 	public void onEnd() {
 		Control con = controlM.get(parent.e);
@@ -185,6 +187,7 @@ public class AFollowJump extends Action {
 		tmpV.set(pos).add(-conn.to.x - .5f, -conn.to.y - .5f);
 		//Gdx.app.log(TAG,  "end" + targetTime + conn.to + pos + "\n  = " + tmpV);
 	}
+	
 	static Vector2 tmpV = new Vector2();
 	@Override
 	public void onStart() {
@@ -197,9 +200,10 @@ public class AFollowJump extends Action {
 		int index = conn.key & AStar.INDEX_MASK;
 		heightGoal = APathfindingJumpAndHold.HEIGHT_GOAL[index] + pos.y + .0001f;
 		startHeight = pos.y;
-		targetTime = conn.cost - .5f;// + .2f;
+		targetTime = conn.cost - .05f;// + .2f;
 		tmpV.set(pos).add(-conn.from.x - .5f, -conn.from.y - .5f);
-		//Gdx.app.log(TAG,  "start" + targetTime + conn.from + pos + "\n  = " + tmpV);
+		if (Math.abs(tmpV.x) < .1f) pos.x -= tmpV.x;
+		Gdx.app.log(TAG,  "start" + targetTime + conn.from + pos + "\n  = " + tmpV);
 		reversed = false;
 		moveHeightGoal = pos.y + APathfindingJumpAndHold.MOVE_HEIGHT_GOAL[index];
 		startedRunning = true;

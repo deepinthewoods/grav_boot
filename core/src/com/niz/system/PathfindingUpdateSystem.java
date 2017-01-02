@@ -9,6 +9,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.pfa.indexed.AStar;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
@@ -17,6 +18,8 @@ import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.IntMap.Entry;
 import com.badlogic.gdx.utils.Pools;
 import com.niz.BlockDefinition;
+import com.niz.actions.AJumpCharSelect;
+import com.niz.actions.APathfindingJumpAndHold;
 import com.niz.astar.FallPathConnection;
 import com.niz.astar.JumpPathConnection;
 import com.niz.astar.PathGraph;
@@ -34,14 +37,12 @@ public class PathfindingUpdateSystem extends EntitySystem {
 	private PathfindingSystem pathSys;
 	IntMap<Array<GridPoint2>> b = new IntMap<Array<GridPoint2>>();
 	IntMap<FloatArray> t = new IntMap<FloatArray>();
-	IntMap<Boolean> stnd = new IntMap<Boolean>();
 	
 	
 
 	Array<GridPoint2>[] jumpBlocks;// = new Array[PlatformerFactory.PATHFINDING_COUNT];
 	FloatArray[] jumpTimes;// = new FloatArray[PlatformerFactory.PATHFINDING_COUNT];
 	int[] jumpKeys;// = new int[PlatformerFactory.PATHFINDING_COUNT];
-	boolean[] jumpStand;
 	@Override
 	public void addedToEngine(Engine engine) {
 		MapSystem map = engine.getSystem(MapSystem.class);
@@ -94,7 +95,8 @@ public class PathfindingUpdateSystem extends EntitySystem {
 			
 		}
 		
-		
+		BlockDefinition br = map.defs[(map.get(x+1, y) & map.ID_MASK) >> map.ID_BITS];
+		BlockDefinition bbr = map.defs[(map.get(x+1, y-1) & map.ID_MASK) >> map.ID_BITS];
 		BlockDefinition bl2 = map.defs[(map.get(x-2, y) & map.ID_MASK) >> map.ID_BITS];
 		BlockDefinition bbl2 = map.defs[(map.get(x-2, y-1) & map.ID_MASK) >> map.ID_BITS];
 		BlockDefinition br2 = map.defs[(map.get(x+2, y) & map.ID_MASK) >> map.ID_BITS];
@@ -118,11 +120,10 @@ public class PathfindingUpdateSystem extends EntitySystem {
 				graph.nodes[nodeIndex].connections.add(c);
 				//c.index = 1;
 				//c.key = 1;
-				Gdx.app.log(TAG, "runl " +  " " + x + "," + y + c);
+				//Gdx.app.log(TAG, "runl " +  " " + x + "," + y + c);
 				if (c.to.y != c.from.y) throw new GdxRuntimeException("err " + c);
 			}
-			BlockDefinition br = map.defs[(map.get(x+1, y) & map.ID_MASK) >> map.ID_BITS];
-			BlockDefinition bbr = map.defs[(map.get(x+1, y-1) & map.ID_MASK) >> map.ID_BITS];
+			
 			
 			if (x != OverworldSystem.SCROLLING_MAP_WIDTH-1 && !br.isSolid && bbr.isSolid){			
 				RunPathConnection c = Pools.obtain(RunPathConnection.class);
@@ -131,38 +132,19 @@ public class PathfindingUpdateSystem extends EntitySystem {
 				c.to = to;		
 				c.cost = RUN_COST;
 				graph.nodes[nodeIndex].connections.add(c);
-				Gdx.app.log(TAG, "runr " +  " " + x + "," + y + c);
+				//Gdx.app.log(TAG, "runr " +  " " + x + "," + y + c);
 				if (c.to.y != c.from.y) throw new GdxRuntimeException("err " + c);
 			}
 			
 			///
-			for (int i = 0; i < jumpBlocks.length; i++){
-				Array<GridPoint2> blocks = jumpBlocks[i];
-				FloatArray times = jumpTimes[i];
-				boolean done = false;
-				for (int c = 0; c < blocks.size; c++){
-					GridPoint2 block = blocks.get(c);
-					//Gdx.app.log(TAG, "try " + block);
-					float time = times.get(c);
-					int b = map.get(x + block.x, y + block.y);
-					int id = (b & map.ID_MASK) >> map.ID_BITS;
-					BlockDefinition def = map.defs[id];
-					if (def.isSolid){
-						boolean st = jumpStand[i];
-						if (st || runwayL)
-						finishedJumpPath(map, nodeIndex, graph, x, y, blocks, times, c-1, jumpKeys[i], i, st, false);
-						done = true;
-						break;
-					}
-				}
-				if (!done){
-					boolean st = jumpStand[i];
-					if (st || runwayL)
-						finishedJumpPath(map, nodeIndex, graph, x, y, blocks, times, blocks.size-1-1, jumpKeys[i], i, st, false);
-					
-				}
-				
-			}
+			makeJumpConnections(
+					(APathfindingJumpAndHold.NORMAL_JUMP | APathfindingJumpAndHold.DELAYED_REVERSE_JUMP 
+							| APathfindingJumpAndHold.STANDING_DELAYED_RUN_JUMP | APathfindingJumpAndHold.STANDING_JUMP)
+					, map, x, y, runwayL, nodeIndex, graph, 1);
+			makeJumpConnections(
+					(APathfindingJumpAndHold.NORMAL_JUMP | APathfindingJumpAndHold.DELAYED_REVERSE_JUMP 
+							| APathfindingJumpAndHold.STANDING_DELAYED_RUN_JUMP | APathfindingJumpAndHold.STANDING_JUMP)
+					, map, x, y, runwayR, nodeIndex, graph, -1);
 			/*for (int i = 0; i < jumpBlocks.length; i++){
 				Array<GridPoint2> blocks = jumpBlocks[i];
 				FloatArray times = jumpTimes[i];
@@ -186,22 +168,107 @@ public class PathfindingUpdateSystem extends EntitySystem {
 			
 			
 			
-		} else if (y != 0){//fall
-			BlockDefinition bd = map.defs[(map.get(x, y-1) & map.ID_MASK) >> map.ID_BITS];
-			if (!bd.isSolid){	
-				
-				FallPathConnection c = Pools.obtain(FallPathConnection.class);
-				c.from = node;
-				PathNode to = graph.getNode(x, y-1);
-				c.to = to;		
-				c.cost = 1f/20f;
-				graph.nodes[nodeIndex].connections.add(c);
-				//Gdx.app.log(TAG, "fall" + index);
+		} else{//no floor
+			if (y != 0){//fall
+				BlockDefinition bd = map.defs[(map.get(x, y-1) & map.ID_MASK) >> map.ID_BITS];
+				if (!bd.isSolid){	
+					
+					FallPathConnection c = Pools.obtain(FallPathConnection.class);
+					c.from = node;
+					PathNode to = graph.getNode(x, y-1);
+					c.to = to;		
+					c.cost = 1f/20f;
+					graph.nodes[nodeIndex].connections.add(c);
+					//Gdx.app.log(TAG, "fall" + index);
+				}
 			}
+			
+			//walljump
+			if (bl.isSolid){
+				makeJumpConnections(
+						(APathfindingJumpAndHold.WALLJUMP )
+						, map, x, y, runwayL, nodeIndex, graph, 1);
+			}
+			
+			if (br.isSolid){
+				makeJumpConnections(
+						(APathfindingJumpAndHold.WALLJUMP )
+						, map, x, y, runwayL, nodeIndex, graph, -1);
+			}
+			
 		}
 	}
 	
-	private void finishedJumpPath(Map map, int nodeIndex, PathGraph graph, int x, int y, Array<GridPoint2> blocks, FloatArray times, int end, int jumpkey, int jumpIndex, boolean stand, boolean isLeft){
+	private void makeJumpConnections(int possibleKeys, Map map, int x, int y, boolean runway, int nodeIndex, PathGraph graph, int flipX) {
+		for (int i = 0; i < jumpBlocks.length; i++){
+			int key = jumpKeys[i];
+			if ((key & possibleKeys) == 0){
+				//Gdx.app.log(TAG, "skip" + key + "  " + possibleKeys + " - " + (key & possibleKeys));
+				continue;
+			}
+			Array<GridPoint2> blocks = jumpBlocks[i];
+			FloatArray times = jumpTimes[i];
+			boolean done = false;
+			boolean st = isStand(key);
+			boolean needsHeadroom = needsHeadroom(key);
+			if (needsHeadroom){
+				for (int c = 0; c < blocks.size; c++){
+					GridPoint2 block = blocks.get(c);
+					//Gdx.app.log(TAG, "try " + block);
+					float time = times.get(c);
+					int b = map.get(x + block.x * flipX, y + block.y);
+					int id = (b & map.ID_MASK) >> map.ID_BITS;
+				BlockDefinition def = map.defs[id];
+				int topb = map.get(x + block.x * flipX, y + block.y + 1);
+				int topid = (topb & map.ID_MASK) >> map.ID_BITS;
+				BlockDefinition topDef = map.defs[topid];
+
+				if (def.isSolid || topDef.isSolid){
+					if (st || runway)
+						finishedJumpPath(map, nodeIndex, graph, x, y, blocks, times, c-1, jumpKeys[i], i, st, flipX);
+					done = true;
+					break;
+				}
+				}
+
+			} else {
+				
+				for (int c = 0; c < blocks.size; c++){
+					GridPoint2 block = blocks.get(c);
+					//Gdx.app.log(TAG, "try " + block);
+					float time = times.get(c);
+					int b = map.get(x + block.x * flipX, y + block.y);
+					int id = (b & map.ID_MASK) >> map.ID_BITS;
+				BlockDefinition def = map.defs[id];
+				if (def.isSolid){
+					if (st || runway)
+						finishedJumpPath(map, nodeIndex, graph, x, y, blocks, times, c-1, jumpKeys[i], i, st, flipX);
+					done = true;
+					break;
+				}
+				}
+			}
+			if (!done){
+				if (st || runway)
+					finishedJumpPath(map, nodeIndex, graph, x, y, blocks, times, blocks.size-1-1, jumpKeys[i], i, st, flipX);
+				
+			}
+			
+		}
+	}
+
+	private boolean needsHeadroom(int i) {
+		i &= AStar.TYPE_MASK;
+		return  (i & (APathfindingJumpAndHold.DELAYED_REVERSE_JUMP )) != 0;
+	}
+
+	private boolean isStand(int i) {
+		i &= AStar.TYPE_MASK;
+		return  (i & (APathfindingJumpAndHold.STANDING_DELAYED_RUN_JUMP | APathfindingJumpAndHold.STANDING_JUMP | APathfindingJumpAndHold.DELAYED_REVERSE_JUMP)) != 0;
+		
+	}
+
+	private void finishedJumpPath(Map map, int nodeIndex, PathGraph graph, int x, int y, Array<GridPoint2> blocks, FloatArray times, int end, int jumpkey, int jumpIndex, boolean stand, int flipX){
 		
 		
 		
@@ -216,7 +283,7 @@ public class PathfindingUpdateSystem extends EntitySystem {
 			//B//lockDefinition def = map.defs[id];
 			//if (def.isSolid){
 			
-			PathNode to = graph.getNode(x + block.x * (isLeft?-1:1), y + block.y);
+			PathNode to = graph.getNode(x + block.x * flipX, y + block.y);
 			JumpPathConnection c = Pools.obtain(JumpPathConnection.class);
 			c.from = from;
 			c.to = to;
@@ -224,30 +291,30 @@ public class PathfindingUpdateSystem extends EntitySystem {
 			c.index = jumpIndex;
 			c.cost = time;
 			c.stand = stand;
-			c.isLeft = isLeft;
+			c.isLeft = (flipX == -1);
 			graph.nodes[nodeIndex].connections.add(c);
 			
 			//}
-			Gdx.app.log(TAG, "finish jump path " + end + "  " + time);
+			//Gdx.app.log(TAG, "finish jump path " + end + "  " + time);
 		}
 	}
 
-	public void registerJumpBlocks(Array<GridPoint2> blocks, FloatArray blockTimes, int index, boolean stand) {
+	public void registerJumpBlocks(Array<GridPoint2> blocks, FloatArray blockTimes, int index) {
 		b.put(index, blocks);
 		t.put(index, blockTimes);
-		stnd.put(index, stand);
+	
 		
 		//Gdx.app.log(TAG,  "register " + index + "  " + blocks.size);
 	}
 
 	public void setJumpPaths() {
-		Gdx.app.log(TAG,  "JUMP PATHS JUMP PATHSJUOMPPATHSSPJAU)POAMPAHS)APSYSWTHSHPSAPO ");
+		//Gdx.app.log(TAG,  "JUMP PATHS JUMP PATHSJUOMPPATHSSPJAU)POAMPAHS)APSYSWTHSHPSAPO ");
 		Iterator<Entry<Array<GridPoint2>>> it = b.iterator();
 		
 		jumpBlocks = new Array[b.size];
 		jumpTimes = new FloatArray[b.size];
 		jumpKeys = new int[b.size];
-		jumpStand = new boolean[b.size];
+		
  		int i = 0;
 		while (it.hasNext()){
 			Entry<Array<GridPoint2>> val = it.next();
@@ -255,10 +322,8 @@ public class PathfindingUpdateSystem extends EntitySystem {
 			int key = val.key;
 			jumpBlocks[i] = arr;
 			FloatArray time = t.get(key);
-			boolean stand = stnd.get(key);
 			jumpTimes[i] = time;
 			jumpKeys[i] = key;
-			jumpStand[i] = stand;
 			//Gdx.app.log(TAG,  "hjgjh" + i);
 			//Gdx.app.log(TAG,  "hjgjh" + arr.size);
 			i++;

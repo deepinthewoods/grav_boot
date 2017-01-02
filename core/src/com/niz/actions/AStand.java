@@ -33,9 +33,11 @@ public class AStand extends Action {
 	private static ComponentMapper<Body> bodyM = ComponentMapper.getFor(Body.class);
 	private static ComponentMapper<Inventory> invM = ComponentMapper.getFor(Inventory.class);
 
-	boolean run = false, canJump;
+	boolean run = false;
+	private boolean canJump;
 	private transient MapSystem map;
 	public boolean earlyJump;
+	public boolean pathJump;
 	@Override
 	public void update(float dt) {
 		//Gdx.app.log(TAG, "update"+earlyJump);
@@ -84,7 +86,7 @@ public class AStand extends Action {
 			int lx = (int) (pos.x - body.width - AWallSlide.SMALL_AMOUNT), rx = (int) (pos.x + body.width + AWallSlide.SMALL_AMOUNT), y = (int) pos.y;
 						
 			if (con.pressed[Input.JUMP]){
-				if (canJump || earlyJump){
+				if (canJump || earlyJump || pathJump){
 					earlyJump = false;
 					MovementData mov = moveM.get(parent.e);
 					//Vector2 pos = posM.get(parent.e).pos;
@@ -97,6 +99,8 @@ public class AStand extends Action {
 					
 					Inventory inv = invM.get(parent.e);
 					
+				} else {
+					//Gdx.app.log(TAG, "cant ju,p" + canJump);
 				}
 				
 			} else {
@@ -140,6 +144,7 @@ public class AStand extends Action {
 		} else 
 			canJump = true;
 		//earlyJump = false;
+		//Gdx.app.log(TAG, "START");
 		map = parent.engine.getSystem(MapSystem.class);
 	}
 

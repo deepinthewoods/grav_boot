@@ -1,6 +1,8 @@
 package com.niz.actions;
 
 import com.badlogic.gdx.ai.pfa.indexed.AStar;
+import com.badlogic.gdx.math.MathUtils;
+import com.niz.Blocks;
 import com.niz.action.Action;
 import com.niz.system.OverworldSystem;
 
@@ -18,6 +20,9 @@ public class APathFindingDestroyMap extends Action {
 				int x = i;
 				int y = AStar.PATHFINDING_INITIAL_Y_OFFSET-1;
 				map.getMapFor(x,  y).set(x, y, 0);;
+			}
+			for (int i = 0; i < AStar.PATHFINDING_WALL_HEIGHT; i++){
+				map.getMapFor(0,  0).set(0,  i + AStar.PATHFINDING_INITIAL_Y_OFFSET, 0);
 			}
 		}
 	}

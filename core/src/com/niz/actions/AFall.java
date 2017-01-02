@@ -47,7 +47,7 @@ public class AFall extends Action {
 		Control con = controlM.get(parent.e);
 		if (phys.onGround){
 			AStand stand = Pools.obtain(AStand.class);
-			addBeforeMe(stand);
+			addAfterMe(stand);
 			if (held && parent.engine.tick - heldTime < EARLY_JUMP_THRESHOLD){
 				stand.earlyJump = true;
 				//Gdx.app.log(TAG, "early"+parent.engine.tick);

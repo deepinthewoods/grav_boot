@@ -68,6 +68,7 @@ public class AStar<N> implements PathFinder<N> {
 	public static final int MOVE_MASK = 0b01;
 	public static final int TYPE_MASK = 0b11111110000;
 	public static final int INDEX_MASK = 0b1111;
+	public static final int PATHFINDING_WALL_HEIGHT = 3;
 
 	
 

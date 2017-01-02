@@ -1,4 +1,4 @@
-package com.niz.actions.ai;
+package com.niz.actions.path;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.gdx.Gdx;
@@ -40,13 +40,21 @@ public class AFollowFall extends Action {
 		//lr
 		con.pressed[Input.JUMP] = false;
 		float dx = from.x + .5f - pos.x;
-		if (dx < -.005F){
+		if (dx < -.5F){
 			con.pressed[Input.WALK_LEFT] = true;
 			con.pressed[Input.WALK_RIGHT] = false;
-		} else if (dx > .005f){
+		} else if (dx > .5f){
 			con.pressed[Input.WALK_LEFT] = false;
 			con.pressed[Input.WALK_RIGHT] = true;
-		} else {}
+		} else {
+			if (phys.vel.x > 0){
+				con.pressed[Input.WALK_LEFT] = true;
+				con.pressed[Input.WALK_RIGHT] = false;
+			} else {
+				con.pressed[Input.WALK_LEFT] = false;
+				con.pressed[Input.WALK_RIGHT] = true;
+			}
+		}
 	}
 
 	@Override
@@ -54,6 +62,7 @@ public class AFollowFall extends Action {
 		Control con = controlM.get(parent.e);
 		con.pressed[Input.WALK_LEFT] = false;
 		con.pressed[Input.WALK_RIGHT] = false;
+		Gdx.app.log(TAG,  "end" + posM.get(parent.e).pos + (PathNode)conn.from);
 	}
 
 	@Override

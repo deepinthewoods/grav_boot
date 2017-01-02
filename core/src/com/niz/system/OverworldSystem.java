@@ -589,7 +589,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 				if (i <= AStar.PATHFINDING_X_START)newGameMap.set(i,  AStar.PATHFINDING_INITIAL_Y_OFFSET-1, Blocks.STONE + MathUtils.random(64));
 
 			}
-			for (int i = 0; i < 16; i++){
+			for (int i = 0; i < AStar.PATHFINDING_WALL_HEIGHT; i++){
 				newGameMap.set(0,  i + AStar.PATHFINDING_INITIAL_Y_OFFSET, Blocks.STONE + MathUtils.random(64));
 			}
 		}

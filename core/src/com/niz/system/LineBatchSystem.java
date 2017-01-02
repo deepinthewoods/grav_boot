@@ -24,7 +24,7 @@ import com.badlogic.gdx.utils.Array;
 import com.niz.Data;
 import com.niz.Main;
 import com.niz.action.ActionList;
-import com.niz.actions.ai.AFollowPath;
+import com.niz.actions.path.AFollowPath;
 import com.niz.astar.PathNode;
 import com.niz.component.BlockLine;
 import com.niz.component.BlockOutline;

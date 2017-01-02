@@ -12,8 +12,8 @@ import com.niz.component.Position;
 
 public class APathfindingJumpAndHold extends Action {
 	//public static final float[] THRESHOLD = {2f, 1f, .5f, .25f, .1f};
-	public static final float[] HEIGHT_GOAL = 		{1f,  6f, 3f,   4f,   2f,   5f,    6f,    5f, 4f, 2f};
-	public static final float[] MOVE_HEIGHT_GOAL = 	{.5f, 3f, 1.5f,   3.5f, 1.8f, 3.95f, 3.5f,  2f, 2f, 1f};
+	public static final float[] HEIGHT_GOAL = 		{6f, 3f,       5f,   4f,   6f,    5f, 4f, 2f};
+	public static final float[] MOVE_HEIGHT_GOAL = 	{4.5f, 2.75f,   4.2f, 3.3f, 3.5f,  2f, 2f, 1f};
 
 	private static final String TAG = "jump and hold path a";
 	public static final int NORMAL_JUMP = 1<<4, WALLJUMP = 1<<5;
@@ -75,7 +75,7 @@ public class APathfindingJumpAndHold extends Action {
 				con.pressed[Input.WALK_RIGHT] = false;
 				con.pressed[Input.WALK_LEFT] = true;
 			}
-
+			//con.pressed[Input.JUMP] = true;
 		} else if (typeIndex == STANDING_JUMP){
 			con.pressed[Input.WALK_LEFT] = false;
 			con.pressed[Input.WALK_RIGHT] = true;
@@ -102,7 +102,8 @@ public class APathfindingJumpAndHold extends Action {
 			con.pressed[Input.JUMP] = false;
 		
 		
-		if (typeIndex == NORMAL_JUMP || typeIndex == STANDING_JUMP|| typeIndex == STANDING_DELAYED_RUN_JUMP || typeIndex == DELAYED_REVERSE_JUMP || (typeIndex == WALLJUMP && aindex == 0)){
+		if (typeIndex == NORMAL_JUMP || typeIndex == STANDING_JUMP|| typeIndex == STANDING_DELAYED_RUN_JUMP || typeIndex == DELAYED_REVERSE_JUMP || (typeIndex == WALLJUMP //&& aindex == 0
+				)){
 			if (pos.y < AStar.PATHFINDING_INITIAL_Y_OFFSET - AStar.PATHFINDING_DOWN_Y_OFFSET - 1 
 					||
 					pos.x > AStar.PATHFINDING_X_START + AStar.PATHFINDING_WIDTH-1) {

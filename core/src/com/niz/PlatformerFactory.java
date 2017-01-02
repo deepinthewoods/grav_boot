@@ -262,14 +262,15 @@ public class PlatformerFactory extends Factory {
 		
 		///////pathfinding stuff
 
-		for (int i = 0; i < 6; i++){
+		for (int i = 0; i < 4; i++){
 			//makePathfinder(engine, i, APathfindingJumpAndHold.NORMAL_JUMP);
-			//makePathfinder(engine, i, APathfindingJumpAndHold.STANDING_JUMP);
+			makePathfinder(engine, i, APathfindingJumpAndHold.STANDING_JUMP);
 			
 		}
-		for (int i = 0; i < 3; i++){
-			makePathfinder(engine, i, APathfindingJumpAndHold.STANDING_DELAYED_RUN_JUMP);
+		for (int i = 0; i < 4; i++){
+			//makePathfinder(engine, i, APathfindingJumpAndHold.STANDING_DELAYED_RUN_JUMP);
 			//makePathfinder(engine, i, APathfindingJumpAndHold.DELAYED_REVERSE_JUMP);
+			makePathfinder(engine, i, APathfindingJumpAndHold.WALLJUMP);
 		}
 		
 		
@@ -297,7 +298,7 @@ public class PlatformerFactory extends Factory {
 			e.add(light);
 		engine.addEntity(e);
 		Body body = e.getComponent(Body.class);
-		//body.height = .1f;
+		body.height = .01f;
 	}
 
 }

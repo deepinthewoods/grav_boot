@@ -1,4 +1,4 @@
-package com.niz.actions.ai;
+package com.niz.actions.path;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.gdx.math.Vector2;

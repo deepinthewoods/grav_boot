@@ -34,8 +34,8 @@ public class APathfindingPreRun extends Action {
 		switch (typeIndex){
 		case APathfindingJumpAndHold.STANDING_DELAYED_RUN_JUMP:
 		case APathfindingJumpAndHold.STANDING_JUMP:
-			stand = true;
 		case APathfindingJumpAndHold.DELAYED_REVERSE_JUMP:
+			stand = true;
 		case APathfindingJumpAndHold.NORMAL_JUMP:
 			//Gdx.app.log(TAG,  "apex" + pos.pos);
 			con.pressed[Input.WALK_LEFT] = false;
@@ -47,7 +47,7 @@ public class APathfindingPreRun extends Action {
 				isFinished = true;
 				APathfindingLogBlocks log = Pools.obtain(APathfindingLogBlocks.class);
 				log.index = index;
-				log.stand = stand;
+				
 				addAfterMe(log);
 				if (stand){
 					AStopRunning stop = Pools.obtain(AStopRunning.class);
@@ -60,7 +60,7 @@ public class APathfindingPreRun extends Action {
 			con.pressed[Input.WALK_LEFT] = true;
 			con.pressed[Input.WALK_RIGHT] = false;
 			con.pressed[Input.JUMP] = true;
-			if (phys.vel.y < 0 && time > .1f && pos.pos.y < AStar.PATHFINDING_INITIAL_Y_OFFSET+2.5f){
+			if (pos.pos.y < AStar.PATHFINDING_INITIAL_Y_OFFSET+AStar.PATHFINDING_WALL_HEIGHT){
 				//Gdx.app.log(TAG,  "apex" + pos.pos);
 				APathfindingJumpAndHold pathfindingJumpAndHold = Pools.obtain(APathfindingJumpAndHold.class);
 				pathfindingJumpAndHold.index = index;

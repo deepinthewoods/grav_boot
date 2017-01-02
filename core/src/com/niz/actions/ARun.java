@@ -1,6 +1,7 @@
 package com.niz.actions;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Pools;
 import com.niz.Input;
 import com.niz.action.Action;
@@ -23,11 +24,13 @@ public class ARun extends Action {
 		MovementData mov = moveM.get(parent.e);
 		if (con.pressed[Input.WALK_LEFT]){
 			if (con.pressed[Input.WALK_RIGHT]){
+				
 				isFinished = true;
 				this.addAfterMe(Pools.obtain(ANotRun.class));
 				return;
 			}
 			boolean change = phys.vel.x > 0;
+			
 			if (phys.onGround){
 				if (phys.vel.x > 0f) phys.vel.x = 0f;
 				phys.applyForceToCenter(-mov.run_force*(change?mov.changeDirectionForceMultiplier:1f), 0);
