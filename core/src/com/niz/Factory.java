@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.niz.component.Race;
+import com.niz.component.SelectedPlayer;
 import com.niz.system.EntitySerializationSystem;
 import com.niz.system.OverworldSystem;
 import com.niz.system.WorkerSystem;
@@ -43,5 +44,9 @@ public abstract class Factory {
 
 
 	public abstract void makeLevelSelection(EngineNiz engine, WorldDefinition worldDef);
+
+
+
+	public abstract void selected(EngineNiz engine, SelectedPlayer sel);
 	
 }

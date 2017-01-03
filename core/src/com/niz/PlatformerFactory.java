@@ -9,6 +9,7 @@ import com.badlogic.gdx.ai.pfa.indexed.AStar;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
+import com.badlogic.gdx.utils.IntMap.Values;
 import com.niz.action.ActionList;
 import com.niz.actions.ACameraFollowPlayer;
 import com.niz.actions.AHold;
@@ -34,8 +35,11 @@ import com.niz.component.PathfinderPreLog;
 import com.niz.component.Physics;
 import com.niz.component.Position;
 import com.niz.component.Race;
+import com.niz.component.SelectedPlayer;
 import com.niz.component.SpriteAnimation;
 import com.niz.component.TransientComponent;
+import com.niz.item.ItemDef;
+import com.niz.system.OverworldSystem;
 import com.niz.system.WorkerSystem;
 
 public class PlatformerFactory extends Factory {
@@ -299,6 +303,23 @@ public class PlatformerFactory extends Factory {
 		engine.addEntity(e);
 		Body body = e.getComponent(Body.class);
 		body.height = .01f;
+	}
+	@Override
+	public void selected(EngineNiz engine, SelectedPlayer sel) {
+		if (sel.def.isRoomEditor){
+			Inventory inv = e.getComponent(Inventory.class);
+			Values<ItemDef> ie = Inventory.defs.values();
+			while (ie.hasNext){
+				ItemDef item = ie.next();
+				inv.addItem(item, 1000000);
+				
+			}
+			engine.getSystem(OverworldSystem.class).stopNewGameScreen();
+			engine.getSystem(OverworldSystem.class).changeToRoomEditor(sel.def);;
+		} else {
+			engine.getSystem(OverworldSystem.class).stopNewGameScreen();
+			engine.getSystem(OverworldSystem.class).changeLevel(1);;
+		}
 	}
 
 }

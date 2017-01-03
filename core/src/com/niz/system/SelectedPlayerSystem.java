@@ -9,6 +9,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntMap.Values;
+import com.niz.Factory;
 import com.niz.action.ActionList;
 import com.niz.actions.AJumpCharSelect;
 import com.niz.actions.APlayer;
@@ -28,7 +29,10 @@ public class SelectedPlayerSystem extends EntitySystem {
 	private WorkerSystem work;
 	private EngineNiz engine;
 	private ImmutableArray<Entity> dragEntities;
-	
+	private Factory factory;
+	public SelectedPlayerSystem(Factory factory) {
+		this.factory = factory;
+	}
 	@Override
 	public void addedToEngine(Engine engine) {
 		entities = engine.getEntitiesFor(Family.all(SelectedPlayer.class).get());
@@ -69,20 +73,7 @@ public class SelectedPlayerSystem extends EntitySystem {
 			//e.remove(Physics.class);
 			SelectedPlayer sel = e.getComponent(SelectedPlayer.class);
 			e.remove(SelectedPlayer.class);
-			if (sel.def.isRoomEditor){
-				Inventory inv = e.getComponent(Inventory.class);
-				Values<ItemDef> ie = Inventory.defs.values();
-				while (ie.hasNext){
-					ItemDef item = ie.next();
-					inv.addItem(item, 1000000);
-					
-				}
-				engine.getSystem(OverworldSystem.class).stopNewGameScreen();
-				engine.getSystem(OverworldSystem.class).changeToRoomEditor(sel.def);;
-			} else {
-				engine.getSystem(OverworldSystem.class).stopNewGameScreen();
-				engine.getSystem(OverworldSystem.class).changeLevel(1);;
-			}
+			factory.selected(engine, sel);
 			
 			//start loading next level
 			
