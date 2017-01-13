@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.niz.Blocks;
+import com.niz.Factory;
 import com.niz.LayerData;
 import com.niz.SimplexNoise;
 import com.niz.WorldDefinition;
@@ -107,15 +108,20 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 
 	private TextureAtlas atlas;
 
-	private ImmutableArray<Entity> playerEntities;;
+	private ImmutableArray<Entity> playerEntities;
+
+	private Factory factory;;
 	
-	public OverworldSystem(TextureAtlas atlas){
+	public OverworldSystem(TextureAtlas atlas, Factory factory){
 		this.atlas = atlas;
+		this.factory = factory;
 	}
 	
 	public Map getMapFor(int x, int y) {
+		//x = ((x % SCROLLING_MAP_WIDTH) )
+		x = (((x % SCROLLING_MAP_WIDTH) + SCROLLING_MAP_WIDTH) % SCROLLING_MAP_WIDTH);
 		if (x < 0) return null;
-		if (x > SCROLLING_MAP_WIDTH * SCROLLING_MAP_TOTAL_SIZE) return null;
+		//if (x > SCROLLING_MAP_WIDTH * SCROLLING_MAP_TOTAL_SIZE) return null;
 		int key = (int) (x) / SCROLLING_MAP_WIDTH;
 		key %= scrollingMaps.length;
 		Map map = scrollingMaps[key];
@@ -216,7 +222,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 			Gdx.app.log(TAG,  "start to load ");
 			int bit = shouldLoad.nextSetBit(0);
 			shouldLoad.clear(bit);
-			startMap(bit, engine);	
+			startMap(bit, engine);
 		}
 	}
 	private void createSaveMapEntity(Map map, EngineNiz engine, Entity e, int bit) {
@@ -260,11 +266,6 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 				Entity saver = engine.createEntity();
 				createSaveMapEntity(map, engine, saver, bit);
 				workSys.addWorker(saver);
-				
-				
-				
-				
-				
 				//engine.addEntity(saver);
 				//if (map.mapEntity == null) throw new GdxRuntimeException("null mapE"+map.offset);
 				//engine.removeEntity(map.mapEntity);
@@ -285,17 +286,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		abuild.def = worldDef;
 		return abuild;
 	}
-	private AGenerateEntities createEntityGenerationAgent(
-			 Map map, int x, int y, int w, int h) {
-		AGenerateEntities abuild = new AGenerateEntities();
-		abuild.x = x;
-		abuild.y = y;
-		abuild.w = w;
-		abuild.h = h;
-		abuild.map = map;
-		abuild.def = worldDef;
-		return abuild;
-	}
+	
 	private Action createEntityDeserializationAgent(
 			 Map map, int bit, FileHandle mapFile) {
 		ALoadEntities abuild = new ALoadEntities();
@@ -344,26 +335,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 	}
 	
 	private void createMapGenerationAgent(PooledEntity e, EngineNiz engine, Map map, int bit) {
-		Gdx.app.log(TAG,  "create gen agent " + bit);
-		Position pos = engine.createComponent(Position.class);
-		e.add(pos);
-		pos.pos.set(0,0);
-		
-		//e.add(engine.createComponent(SpriteAnimation.class).set(Animations.PLAYER));
-		ActionList act = Pools.obtain(ActionList.class);
-		
-		AAgentBuildMap abuild = new AAgentBuildMap();
-		abuild.bit = bit;
-		abuild.map = map;
-		abuild.z = currentZ;
-		abuild.after = createEntityGenerationAgent(map, (int)map.offset.x, (int)map.offset.y, map.width, map.height);
-		//map.e = e;
-		act.addToStart(abuild);
-		
-		e.add(act);
-		
-		
-		
+		factory.createMapGenerationAgent(e, engine, map, bit, currentZ);
 	}
 	
 	private void createMapDeserializationAgent(PooledEntity e, EngineNiz engine, Map map, int bit, FileHandle mapFile) {
@@ -395,6 +367,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 	public void startMap(int bit, EngineNiz engine){
 		//if (bit != 0 || true) return;
 		int x = bit * SCROLLING_MAP_WIDTH;
+		
 		FileHandle mapFile = worldDef.folder.child("map"+bit);
 		if (mapFile.exists()){
 			Map map = mapPool.obtain();
@@ -511,7 +484,15 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 
 	public void onFinishedMap(int bit, Map map) {
 		//Gdx.app.log(TAG, "onfinishMap"+map.offset + " " + bit);
-
+		
+		if (bit == 0){
+			map.duplicateRenderR = true;
+			Gdx.app.log(TAG, "DUPER");
+		} 
+		if (bit == SCROLLING_MAP_TOTAL_SIZE-1){
+			map.duplicateRenderL = true;
+			Gdx.app.log(TAG, "DUPEL");
+		}
 		loading.clear(bit);
 		loaded.set(bit);
 		scrollingMaps[bit] = map;
@@ -629,7 +610,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 			//	e.remove(Control.class);
 			//}
 			//e.remove(Position.class);
-			//Gdx.app.log(TAG, "rem player ent" + e.getId());
+			Gdx.app.log(TAG, "startpoint" + e.getId());
 
 			//engine.removeEntityNoPool((PooledEntity) e);
 			//arr.add((PooledEntity) e);

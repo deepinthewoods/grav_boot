@@ -180,7 +180,7 @@ static IntArray tmpLayerIDs = new IntArray(), tmpGuideIDs = new IntArray();
 		guideIDs.clear();
 		alignWithBodyBottom = true;
 		for (int i = 0; i < frameIndices.length; i++){
-			frameIndices[i] = 9012920;
+			frameIndices[i] = 0;
 		}
 		currentAnim.clear();
 		currentAnim.bitmask = 0;

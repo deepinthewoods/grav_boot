@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Bits;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.niz.BlockDefinition;
 import com.niz.anim.SpriteCacheNiz;
@@ -33,6 +34,8 @@ public class Map implements Component, Poolable {
 	public Entity mapEntity;
 	public boolean free = true;
 	public Bits dirtyPath = new Bits(OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_HEIGHT), dirtyDestroyed = new Bits(OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_HEIGHT);
+	public boolean duplicateRenderL;
+	public boolean duplicateRenderR;
 	public Map(int width, int height, TextureAtlas atlas, ShaderProgram shader, ShaderProgram backShader, ShaderProgram litShader, ShaderProgram fgShader){
 		
 		this.width = width;
@@ -78,10 +81,32 @@ public class Map implements Component, Poolable {
 	}
 	
 	private void setSibling(int x, int y, int val) {
+		if (mapSystem == null) throw new GdxRuntimeException("x " + x + "," + y + "  " + val + offset);
+		
 		Map map = mapSystem.getMapFor(x, y);
-		if (map != null)  map.set(x,  y, val);
+		if (map != null && map != this)  map.set(x,  y, val);
 		
 	}
+	
+	public void setLocal(int x, int y, int val) {
+		if (x < 0 || y < 0 || x >= width || y >= height) {
+			setSibling(x+(int)offset.x,  y+(int)offset.y, val);
+			return;
+		}
+		//x = (x % width + width) % width;
+		//y = (y % height + height) % height;
+		tiles[y+x*width] = val;
+		
+		int wx = x / MapRenderSystem.RENDER_SIZE;
+		int wy = y / MapRenderSystem.RENDER_SIZE;
+		
+		if (wx < 0) wx += (width / MapRenderSystem.RENDER_SIZE );
+		if (wy < 0) wy += (height / MapRenderSystem.RENDER_SIZE);
+
+		int index = wy + wx*(width / MapRenderSystem.RENDER_SIZE);
+		dirty[index] = true;
+	}
+	
 	public void set(int x, int y, int val){
 		x -= offset.x;
 		y -= offset.y;
@@ -128,6 +153,24 @@ public class Map implements Component, Poolable {
 		//dirtyRuns[x / MapRenderSystem.RENDER_SIZE] = true;
 		
 		//Gdx.app.log(TAG, "dirty index "+index+" x "+x);ww
+	}
+	
+	public void setBGLocal(int x, int y, int val){
+		if (x < 0 || y < 0 || x >= width || y >= height) {
+			setSibling(x+(int)offset.x,  y+(int)offset.y, val);
+			return;
+		}
+		backTiles[y+x*width] = val;
+		
+		int wx = x / MapRenderSystem.RENDER_SIZE;
+		int wy = y / MapRenderSystem.RENDER_SIZE;
+		
+		if (wx < 0) wx += (width / MapRenderSystem.RENDER_SIZE );
+		if (wy < 0) wy += (height / MapRenderSystem.RENDER_SIZE);
+
+		int index = wy + wx*(width / MapRenderSystem.RENDER_SIZE);
+		dirty[index] = true;
+		
 	}
 	
 	public boolean isSolid(int b) {
@@ -259,6 +302,9 @@ public class Map implements Component, Poolable {
 			dirtyPath.set(i);;
 		}
 	}
+
+
+	
 
 	
 }

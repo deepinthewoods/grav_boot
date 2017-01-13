@@ -86,7 +86,6 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	public void addedToEngine(Engine engine) {
 		shaderSys = engine.getSystem(ShaderSystem.class);
 		
-
 		//spriteShader = shaderSys.spriteShader;
 		backShader = shaderSys.mapBgShader;
 		shader = shaderSys.mapShader;
@@ -198,13 +197,12 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		normalTexture.bind(1);
 		diffTexture.bind(0);
 		
-		
 		boolean setAllDirty = false;
 		if (skipDraw != skippedDraw){
 			setAllDirty = true;
 		}
 		
-
+		x0 -= 1;//meh, dupe rendering doesn't work without this
 		{
 			for (int i = 0; i < entities.size(); i++){
 				Entity e = entities.get(i);
@@ -217,11 +215,26 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 				for (int x = x0; x <= x1; x++){
 					for (int y = y0; y <= y1; y++){
 						
-							
-						map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader);
-						map.cache.draw(x, y, lights, shader);
-						map.cache.drawLit(x, y, lights, shader);
-						map.cache.drawFG(x, y, lights, shader);
+						map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, 0);
+						//map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, true);
+						map.cache.draw(x, y, lights, shader, 0);
+						map.cache.drawLit(x, y, lights, shader, 0);
+						map.cache.drawFG(x, y, lights, shader, 0);
+						
+						int dupeOffset = OverworldSystem.SCROLLING_MAP_WIDTH* OverworldSystem.SCROLLING_MAP_TOTAL_SIZE * Main.PPM;
+						if (map.duplicateRenderL){
+							map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, -dupeOffset);
+							map.cache.draw(x, y, lights, shader, -dupeOffset);
+							map.cache.drawLit(x, y, lights, shader, -dupeOffset);
+							map.cache.drawFG(x, y, lights, shader, -dupeOffset);
+						}
+						if (map.duplicateRenderR){
+							map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, dupeOffset);
+							map.cache.draw(x, y, lights, shader, dupeOffset);
+							map.cache.drawLit(x, y, lights, shader, dupeOffset);
+							map.cache.drawFG(x, y, lights, shader, dupeOffset);
+						}
+						
 						
 						
 					}

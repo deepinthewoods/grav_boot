@@ -186,7 +186,7 @@ public class GameInstance implements Screen, Observer {
 				switch (progress++){
 				case 1:
 				
-					factory = new PlatformerFactory();
+					factory = new RunnerFactory();// new PlatformerFactory();//
 					
 					uiAtlas = new TextureAtlas(Gdx.files.internal("ui.atlas"));
 					break;case 2:
@@ -313,7 +313,7 @@ public class GameInstance implements Screen, Observer {
 					engine.addSystem(new RoomSystem());
 					engine.addSystem(new RoomCatalogSystem());
 					engine.addSystem(new DragControllerSystem());
-					engine.addSystem(new SelectedPlayerSystem());
+					engine.addSystem(new SelectedPlayerSystem(factory));
 					engine.addSystem(new PlaceAtStartSystem());
 
 					engine.addSystem(new OnMapSystem(atlas));
@@ -327,7 +327,7 @@ public class GameInstance implements Screen, Observer {
 					engine.addSystem(new BucketSystem());
 					engine.addSystem(new PickUpCollisionsSystem());
 					engine.addSystem(new MapSystem());
-					OverworldSystem overworld = new OverworldSystem(atlas);
+					OverworldSystem overworld = new OverworldSystem(atlas, factory);
 					overworld.setProcessing(false);
 					engine.addSystem(overworld);
 					break;case 10:

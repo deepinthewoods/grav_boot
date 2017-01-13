@@ -37,6 +37,7 @@ import com.niz.system.BufferStartSystem;
 import com.niz.system.LightRenderSystem;
 import com.niz.system.MapRenderSystem;
 import com.niz.system.MapSystem;
+import com.niz.system.OverworldSystem;
 
 
 public class SpriteCacheNiz{
@@ -54,7 +55,7 @@ public class SpriteCacheNiz{
 	private ShaderProgram shader;
 	private Matrix4 mat = new Matrix4();
 	private int[] backTiles;
-	private ShaderProgram bShader;;
+	private ShaderProgram bShader;
 	
 	private static Pool<SpriteBatchNiz> batchPool = new Pool<SpriteBatchNiz>(){
 
@@ -105,18 +106,31 @@ public class SpriteCacheNiz{
 		
 	}
 	
-	public void draw(Map map, int x, int y, int[] tiles, int[] backTiles, OrthographicCamera camera, LightRenderSystem lights, BufferStartSystem buffer, boolean setAllDirty, ShaderProgram shader) {
+	public void draw(Map map, int x, int y, int[] tiles, int[] backTiles, OrthographicCamera camera, LightRenderSystem lights, BufferStartSystem buffer, boolean setAllDirty, ShaderProgram shader, int xOffset) {
 		x -= map.offset.x/MapRenderSystem.RENDER_SIZE;
 		y -= map.offset.y/MapRenderSystem.RENDER_SIZE;
 		int wy =  y;//(int) (y -( map.offset.y/MapRenderSystem.RENDER_SIZE));
 		int wx =  x;//(int) (x -( map.offset.x/MapRenderSystem.RENDER_SIZE));
-		
-		int index = wy + wx*(map.width/MapRenderSystem.RENDER_SIZE);
-		if (wx < 0 || wy < 0 || wx >= map.width/MapRenderSystem.RENDER_SIZE || wy >= map.height/MapRenderSystem.RENDER_SIZE){
+		wx += xOffset / (MapRenderSystem.RENDER_SIZE * Main.PPM);
+		int v = (OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_TOTAL_SIZE )/ MapRenderSystem.RENDER_SIZE;
+		wx = ((wx % v) + v) % v;
+		if (xOffset < 0){
 			
-			return;
+			Gdx.app.log(TAG, "draw " + x + " wx:" + wx + " y:" + y);
+		}
+		if (wx < 0 || wy < 0 || wx >= map.width/MapRenderSystem.RENDER_SIZE || wy >= map.height/MapRenderSystem.RENDER_SIZE){
+			//int width = (OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_TOTAL_SIZE) / MapRenderSystem.RENDER_SIZE;
+			//wx = (((wx % width) + width) % width);
+			//if (wy == 0)
+			////Gdx.app.log(TAG, "draw afatwe " + x + " wx:" + wx + " y:" + y);
+			//if (wx < 0 || wy < 0 || wx >= map.width/MapRenderSystem.RENDER_SIZE || wy >= map.height/MapRenderSystem.RENDER_SIZE){
+				
+				return;
+				
+			//}  
 		}
 
+		int index = wy + wx*(map.width/MapRenderSystem.RENDER_SIZE);
 		
 		//x *= MapRenderSystem.RENDER_SIZE;
 		//y *= MapRenderSystem.RENDER_SIZE;
@@ -126,6 +140,9 @@ public class SpriteCacheNiz{
 		//if (x >= 0) return;
 		mat.set(camera.combined);
 		mat.translate(Main.PPM*(x)*(MapRenderSystem.RENDER_SIZE) +map.offset.x*Main.PPM, Main.PPM*(y)*(MapRenderSystem.RENDER_SIZE)+map.offset.y*Main.PPM, 0);
+		mat.translate(xOffset, 0, 0);
+		//if (moveX) 
+			//mat.translate(Main.PPM*(x)*(MapRenderSystem.RENDER_SIZE) +map.offset.x*Main.PPM, Main.PPM*(y)*(MapRenderSystem.RENDER_SIZE)+map.offset.y*Main.PPM, 0);
 		//Gdx.app.log(TAG,  "draw "+ "  index "+index + " wx "+(Main.PPM*(x)*(MapRenderSystem.RENDER_SIZE) +map.offset.x*Main.PPM)/Main.PPM+" wy"+(Main.PPM*(y)*(MapRenderSystem.RENDER_SIZE)+map.offset.y*Main.PPM)/Main.PPM + " tot");
 		//bshader.begin();
 		//bshader.end();
@@ -167,16 +184,16 @@ public class SpriteCacheNiz{
 		currentBBatch.render();
 		currentBBatch.end();
 		
-		
-		
 	}
 	
-	public void draw(int x, int y, LightRenderSystem lights, ShaderProgram shader){
+	public void draw(int x, int y, LightRenderSystem lights, ShaderProgram shader, int xOffset){
 		x -= map.offset.x/MapRenderSystem.RENDER_SIZE;
 		y -= map.offset.y/MapRenderSystem.RENDER_SIZE;
 		int wy =  y;//(int) (y -( map.offset.y/MapRenderSystem.RENDER_SIZE));
 		int wx =  x;//(int) (x -( map.offset.x/MapRenderSystem.RENDER_SIZE));
-		
+		wx += xOffset / (MapRenderSystem.RENDER_SIZE * Main.PPM);
+		int v = (OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_TOTAL_SIZE )/ MapRenderSystem.RENDER_SIZE;
+		wx = ((wx % v) + v) % v;
 		int index = wy + wx*(map.width/MapRenderSystem.RENDER_SIZE);
 		if (wx < 0 || wy < 0 || wx >= map.width/MapRenderSystem.RENDER_SIZE || wy >= map.height/MapRenderSystem.RENDER_SIZE){
 			
@@ -189,17 +206,17 @@ public class SpriteCacheNiz{
 		currentBatch.beginDraw();		
 		lights.setUniforms(Light.MAP_FRONT_LAYER, shader);
 		currentBatch.render();
-		currentBatch.end();
-		
-		
+		currentBatch.end();	
 	}
 	
-	public void drawLit(int x, int y, LightRenderSystem lights, ShaderProgram shader){
+	public void drawLit(int x, int y, LightRenderSystem lights, ShaderProgram shader, int xOffset){
 		x -= map.offset.x/MapRenderSystem.RENDER_SIZE;
 		y -= map.offset.y/MapRenderSystem.RENDER_SIZE;
 		int wy =  y;//(int) (y -( map.offset.y/MapRenderSystem.RENDER_SIZE));
 		int wx =  x;//(int) (x -( map.offset.x/MapRenderSystem.RENDER_SIZE));
-		
+		wx += xOffset / (MapRenderSystem.RENDER_SIZE * Main.PPM);
+		int v = (OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_TOTAL_SIZE )/ MapRenderSystem.RENDER_SIZE;
+		wx = ((wx % v) + v) % v;
 		int index = wy + wx*(map.width/MapRenderSystem.RENDER_SIZE);
 		if (wx < 0 || wy < 0 || wx >= map.width/MapRenderSystem.RENDER_SIZE || wy >= map.height/MapRenderSystem.RENDER_SIZE){
 			
@@ -212,19 +229,19 @@ public class SpriteCacheNiz{
 		currentLitBatch.beginDraw();		
 		lights.setUniforms(Light.MAP_LIT_LAYER, litShader);
 		currentLitBatch.render();
-		currentLitBatch.end();
-		
-		
+		currentLitBatch.end();		
 		
 	}
 	
-	public void drawFG(int x, int y, LightRenderSystem lights, ShaderProgram shader){
+	public void drawFG(int x, int y, LightRenderSystem lights, ShaderProgram shader, int xOffset){
 
 		x -= map.offset.x/MapRenderSystem.RENDER_SIZE;
 		y -= map.offset.y/MapRenderSystem.RENDER_SIZE;
 		int wy =  y;//(int) (y -( map.offset.y/MapRenderSystem.RENDER_SIZE));
 		int wx =  x;//(int) (x -( map.offset.x/MapRenderSystem.RENDER_SIZE));
-		
+		wx += xOffset / (MapRenderSystem.RENDER_SIZE * Main.PPM);
+		int v = (OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_TOTAL_SIZE )/ MapRenderSystem.RENDER_SIZE;
+		wx = ((wx % v) + v) % v;
 		int index = wy + wx*(map.width/MapRenderSystem.RENDER_SIZE);
 		if (wx < 0 || wy < 0 || wx >= map.width/MapRenderSystem.RENDER_SIZE || wy >= map.height/MapRenderSystem.RENDER_SIZE){
 			
@@ -241,7 +258,6 @@ public class SpriteCacheNiz{
 		currentFBatch.render();
 		currentFBatch.end();
 	}
-	
 	
 
 	private void populateCurrentBatches(int index) {
@@ -380,6 +396,17 @@ public class SpriteCacheNiz{
 		//Gdx.app.log(TAG,  "done create  "+i + " " + s.getU() + " v "+s.getV() + " u2:"+s.getU2() + ", " + s.getV2() );
 		return s;
 
+	}
+	public static void cloneSprite(int i, int src){
+		if (sprites[i] != null) return;
+		//Gdx.app.log(TAG,  "create"+i);
+		Sprite s = atlas.createSprite(SPRITE_FILENAME_PREFIX, src);
+		if (s == null) throw new GdxRuntimeException("null spr " + i + Data.getString(i));
+		s.setSize(Main.PPM*2, Main.PPM*2);
+		sprites[i] = s;
+		//Gdx.app.log(TAG,  "done create  "+i + " " + s.getU() + " v "+s.getV() + " u2:"+s.getU2() + ", " + s.getV2() );
+		//return s;
+		
 	}
 	Bits drawnBits = new Bits(), batchBits = new Bits(), bits = new Bits()
 			;

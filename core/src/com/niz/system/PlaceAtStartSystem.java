@@ -7,6 +7,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.niz.component.LevelEntrance;
 import com.niz.component.Physics;
@@ -56,7 +57,8 @@ public class PlaceAtStartSystem extends EntitySystem {
 		time += deltaTime;
 		
 		for (Entity e : entities){
-			
+			Gdx.app.log(TAG,  "PLACEUPD");
+
 			PlaceAtStartPoint place = placeM.get(e);
 			if (place.delay < time){
 				Vector2 startPos = null;
@@ -67,13 +69,14 @@ public class PlaceAtStartSystem extends EntitySystem {
 					}
 				}
 				if (startPos == null){
-					//Gdx.app.log(TAG,  "didn't find start point, using index 0");
+					Gdx.app.log(TAG,  "didn't find start point, using index 0");
 					startPos = posM.get(startEntities.get(0)).pos;
 					//return;
 				}
 				e.remove(PlaceAtStartPoint.class);
 				//engine.removeEntity(e);
 				posM.get(e).pos.set(startPos.x, startPos.y);
+				Gdx.app.log(TAG,  "SETSETSETSTSET " + posM.get(e).pos);
 				Physics phys = physM.get(e);
 				if (phys != null){
 					phys.vel.set(0,0);

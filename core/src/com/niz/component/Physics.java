@@ -12,6 +12,7 @@ public class Physics implements Component, Poolable{
 	public Vector2 vel = new Vector2();
 	public Vector2 acc = new Vector2();
 	public Vector3 limit = new Vector3(10,10, 10);//z is down
+	public Vector2 gravity = new Vector2();
 	public int bodyTypeID = 1;
 	public boolean onGround;
 	public boolean onWall;
@@ -31,6 +32,7 @@ public class Physics implements Component, Poolable{
 		onGround = false;
 		wasOnGround = false;
 		wasOnGround2 = false;
+		gravity.set(0, -30);
 	}
 
 	public void applyLinearImpulse(float x, float y) {

@@ -3,8 +3,16 @@ package com.niz;
 import com.badlogic.ashley.core.EngineNiz;
 import com.badlogic.ashley.core.EngineNiz.PooledEntity;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pools;
+import com.niz.action.Action;
+import com.niz.action.ActionList;
+import com.niz.actions.mapgen.AAgentBuildMap;
+import com.niz.actions.mapgen.AGenerateEntities;
+import com.niz.component.Map;
+import com.niz.component.Position;
 import com.niz.component.Race;
 import com.niz.component.SelectedPlayer;
 import com.niz.system.EntitySerializationSystem;
@@ -47,6 +55,18 @@ public abstract class Factory {
 
 
 
-	public abstract void selected(EngineNiz engine, SelectedPlayer sel);
+	public abstract void selected(EngineNiz engine, SelectedPlayer sel, Entity e);
+
+
+
+	public void createMapGenerationAgent() {}
+
+
+
+	public abstract void createMapGenerationAgent(PooledEntity e, EngineNiz engine, Map map, int bit, int z) ;
+
+
+
+	
 	
 }

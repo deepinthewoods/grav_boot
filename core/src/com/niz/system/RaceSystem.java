@@ -522,24 +522,44 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 			
 		anim.resume();
 		
-		///////////movement data
 		Physics phys = physM.get(e);
 		MovementData mov = moveM.get(e);
-		phys.limit.set(10,162, 17);
+		///////////movement data
+		switch (race.physicsID){
+		case Race.PHYSICS_NOrMAL:
+			phys.limit.set(10,162, 17);
+			phys.gravity.set(0, -30);
+			mov.jump_impulse = 17.2f;
+			mov.run_force = 25f;
+			mov.jump_y_force = .44f;
+			mov.jump_x_force = 65f;
+			mov.jump_y_force_decrement_rate = 59.4f;
+			mov.jump_y_force_time = 0.5f;
+			mov.jump_y_force_delay = .1f;
+			mov.walljump_x_impulse = 15;
+			mov.walljump_y_impulse = 16.2f;
+			mov.cancelLiftOnRelease = true;
+			mov.changeDirectionForceMultiplier = 1.6f;
+			break;
+		case Race.PHYSICS_RUNNER:
+			phys.limit.set(20,11162, 112997);
+			phys.gravity.set(0, -70);
+			mov.jump_impulse = 17.2f;
+			mov.run_force = 225f;
+			mov.jump_y_force = 44f;
+			mov.jump_x_force = 65f;
+			mov.jump_y_force_decrement_rate = 0f;
+			mov.jump_y_force_time = 1111111111110.5f;
+			mov.jump_y_force_delay = .001f;
+			mov.walljump_x_impulse = 15;
+			mov.walljump_y_impulse = 16.2f;
+			mov.cancelLiftOnRelease = true;
+			mov.changeDirectionForceMultiplier = 1.6f;
+			
+			break;
+			
+		}
 		
-		mov.jump_impulse = 17.2f;
-		mov.run_force = 25f;
-		mov.jump_y_force = .44f;
-		mov.jump_x_force = 65f;
-		mov.jump_y_force_decrement_rate = 59.4f;
-		mov.jump_y_force_time = 0.5f;
-		mov.jump_y_force_delay = .1f;
-		mov.walljump_x_impulse = 15;
-		//mov.walljump_x_impulse = 4f;
-		mov.walljump_y_impulse = 16.2f;
-		
-		mov.cancelLiftOnRelease = true;
-		mov.changeDirectionForceMultiplier = 1.6f;
 		
 	}
 	

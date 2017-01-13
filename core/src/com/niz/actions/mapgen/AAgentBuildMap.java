@@ -68,7 +68,7 @@ public class AAgentBuildMap extends ProgressAction {
 			
 			for (int x = 0; x < map.width; x++)
 				for (int y = 0; y < map.height; y++)
-					map.set(x, y, 0);
+					map.setLocal(x, y, 0);
 			progress++;
 			//rooms = smallRooms;
 			if (skipResetSeed){
@@ -181,18 +181,18 @@ public class AAgentBuildMap extends ProgressAction {
 			//Gdx.app.log(TAG, "DONEFIFFNIFNIFNFINIFNIFNFINFNIODODODODONDONDONEONDOEOnDONEDOenDONEOEDNEDONEDONENOD");
 			for (int x = 0; x < map.width; x++)
 				for (int y = 0; y < map.height; y++)
-					map.set(x, y, 1024 + r.nextInt(64));
+					map.setLocal(x, y, 1024 + r.nextInt(64));
 			
 			writeToMap(base, 1024, true);
 			/*for (int x = 0; x < map.width; x++)
 				for (int y = 0; y < map.height; y++){
 					if (map.get(x, y) == 1024){
-						map.set(x, y, 0);
+						map.setLocal(x, y, 0);
 						//Gdx.app.log(TAG, "air" + y);
 					}
 					else{
 						//Gdx.app.log(TAG, "stne");
-						map.set(x, y, Blocks.STONE+5);
+						map.setLocal(x, y, Blocks.STONE+5);
 					}
 				}*/
 			progress++;
@@ -339,12 +339,12 @@ public class AAgentBuildMap extends ProgressAction {
 		//Gdx.app.log(TAG, "write " + entry.offset + " " + entry.room.blocks[0].length + " , " + entry.room.blocks.length);
 		for (int x = 0; x < entry.room.blocks[0].length; x++)
 			for (int y = 0; y < entry.room.blocks.length; y++){
-				map.set(x+entry.offset.x, y + entry.offset.y, i);
+				map.setLocal(x+entry.offset.x, y + entry.offset.y, i);
 			}
 		if (finalPass){
 			for (int x = 0; x < entry.room.blocks[0].length; x++)
 				for (int y = 0; y < entry.room.blocks.length; y++){
-					map.setBG(x+entry.offset.x, y + entry.offset.y, i);
+					map.setBGLocal(x+entry.offset.x, y + entry.offset.y, i);
 				}
 		}
 		if (expand){
@@ -403,14 +403,14 @@ public class AAgentBuildMap extends ProgressAction {
 							break;
 						}
 						
-						map.set(x+entry.offset.x, y + entry.offset.y, blockID);
-						//map.set(x+entry.offset.x, y + entry.offset.y, i);
+						map.setLocal(x+entry.offset.x, y + entry.offset.y, blockID);
+						//map.setLocal(x+entry.offset.x, y + entry.offset.y, i);
 
 					}
-				map.set(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, 0);
-				map.set(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, 0);
-				map.setBG(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, 0);
-				map.setBG(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, 0);
+				map.setLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, 0);
+				map.setLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, 0);
+				map.setBGLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, 0);
+				map.setBGLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, 0);
 				
 			}
 		}
@@ -466,11 +466,11 @@ public class AAgentBuildMap extends ProgressAction {
 			e.add(parent.engine.createComponent(SpriteIsMapTexture.class));
 			//Door door = parent.engine.createComponent(Door.class);
 			RoomEntry next = entry.next[exitIndex];
-			//door.endPoint.set(next.offset);
+			//door.endPoint.setLocal(next.offset);
 			//e.add(door);
 			parent.engine.addEntity(e);
 		}
-		//map.set(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, i);										
+		//map.setLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, i);										
 		
 	}
 	public Action after;

@@ -24,7 +24,7 @@ public class Physics2dSystem extends EntitySystem implements EntityListener{
 	//Vector2[] p = new Vector2[10000];
 	//Bits bits = new Bits(10000/4), tmpBits = new Bits(10000/4);;
 	//int li, progress;
-	Vector2 gravity = new Vector2(0,-30);
+	//Vector2 gravity = new Vector2(0,-30);
 	private Family family;
 	private ImmutableArray<Entity> entities;
 	private MapCollisionSystem collisions;
@@ -46,11 +46,11 @@ public class Physics2dSystem extends EntitySystem implements EntityListener{
 			//enforceSpeedLimit(phys.vel, p[i+3]);
 			
 			tmpV.x =phys.vel.x*timestep;
-			tmpW.x = (phys.acc.x+gravity.x)*timestep*timestep*.5f;
+			tmpW.x = (phys.acc.x+phys.gravity.x)*timestep*timestep*.5f;
 			tmpV.x += tmpW.x;
 			pos.x += tmpV.x;
 			
-			tmpV.x = phys.acc.x + gravity.x;
+			tmpV.x = phys.acc.x + phys.gravity.x;
 			tmpV.x *= timestep;
 			phys.vel.x += tmpV.x;
 			
@@ -63,11 +63,11 @@ public class Physics2dSystem extends EntitySystem implements EntityListener{
 	public void stepY(float timestep , Physics phys, Vector2 pos){
 			
 			tmpV.y =phys.vel.y*timestep;
-			tmpW.y = (phys.acc.y+gravity.y)*timestep*timestep*.5f;
+			tmpW.y = (phys.acc.y+phys.gravity.y)*timestep*timestep*.5f;
 			tmpV.y += tmpW.y;
 			pos.y += tmpV.y;
 			
-			tmpV.y = phys.acc.y + gravity.y;
+			tmpV.y = phys.acc.y + phys.gravity.y;
 			tmpV.y *= timestep;
 			phys.vel.y += tmpV.y;
 			phys.acc.set(0,0);

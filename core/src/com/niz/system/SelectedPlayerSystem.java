@@ -57,7 +57,7 @@ public class SelectedPlayerSystem extends EntitySystem {
 			Entity e = entities.get(i);
 			e.getComponent(ActionList.class).remove(AJumpCharSelect.class);
 			e.getComponent(ActionList.class).addToStart(APlayer.class);
-			e.getComponent(ActionList.class).addToStart(AWaitForPath.class);
+			//e.getComponent(ActionList.class).addToStart(AWaitForPath.class);
 			
 			Player pl = engine.createComponent(Player.class);
 			e.add(pl);
@@ -72,8 +72,8 @@ public class SelectedPlayerSystem extends EntitySystem {
 			e.remove(DragOption.class);
 			//e.remove(Physics.class);
 			SelectedPlayer sel = e.getComponent(SelectedPlayer.class);
+			factory.selected(engine, sel, e);
 			e.remove(SelectedPlayer.class);
-			factory.selected(engine, sel);
 			
 			//start loading next level
 			
