@@ -202,7 +202,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 			setAllDirty = true;
 		}
 		
-		x0 -= 1;//meh, dupe rendering doesn't work without this
+		x0 -= 1;//meh, dupe rendering doesn't work without this4
 		{
 			for (int i = 0; i < entities.size(); i++){
 				Entity e = entities.get(i);

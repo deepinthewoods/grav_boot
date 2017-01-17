@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Pools;
+import com.niz.Blocks;
 import com.niz.action.Action;
 import com.niz.action.ProgressAction;
 import com.niz.anim.Animations;
@@ -184,17 +185,12 @@ public class AAgentBuildMap extends ProgressAction {
 					map.setLocal(x, y, 1024 + r.nextInt(64));
 			
 			writeToMap(base, 1024, true);
-			/*for (int x = 0; x < map.width; x++)
+			for (int x = 0; x < map.width; x++)
 				for (int y = 0; y < map.height; y++){
-					if (map.get(x, y) == 1024){
-						map.setLocal(x, y, 0);
-						//Gdx.app.log(TAG, "air" + y);
-					}
-					else{
-						//Gdx.app.log(TAG, "stne");
-						map.setLocal(x, y, Blocks.STONE+5);
-					}
-				}*/
+					
+					map.setBGLocal(x, y, Blocks.STONE+5);
+					
+				}
 			progress++;
 			break;
 		case 6:

@@ -74,10 +74,12 @@ void main() {
 		
 		//vec3 FinalColor = DiffuseColor.rgb * Diffuse;
 
-		Sum += Attenuation ;
+		//Sum += Attenuation ;
+		Sum = max(Sum, Attenuation);
 	}
 	
-	Sum += AmbientColor;
+	//Sum += AmbientColor;
+	Sum = max(Sum, AmbientColor);
 	//Here is where we apply some toon shading to the light
 	if (Sum < STEP_A) 
 		Sum = 0.0;

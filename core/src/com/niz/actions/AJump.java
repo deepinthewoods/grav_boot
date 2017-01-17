@@ -52,7 +52,7 @@ public class AJump extends Action{
 		if (phys.onGround){
 			this.addBeforeMe(Pools.obtain(AStand.class));
 			isFinished = true;
-			//
+			
 		} else if (mov.hasWallSlide){
 			//Gdx.app.log(TAG, "least ");
 			Map map = onMapM.get(parent.e).map;
@@ -96,10 +96,18 @@ public class AJump extends Action{
 			
 			
 			if (con.pressed[Input.JUMP] == false){
-				this.addAfterMe(Pools.obtain(AFall.class));
-				isFinished = true;
-				if (mov.cancelLiftOnRelease) phys.vel.y = Math.min(0, phys.vel.y);
-				Inventory inv = invM.get(parent.e);
+				
+				if (mov.recoilJump){
+					this.addAfterMe(Pools.obtain(AFallRecoil.class));
+					isFinished = true;
+					if (mov.cancelLiftOnRelease) phys.vel.y = Math.min(0, phys.vel.y);
+					Inventory inv = invM.get(parent.e);
+				} else {//normal fall
+					this.addAfterMe(Pools.obtain(AFall.class));
+					isFinished = true;
+					if (mov.cancelLiftOnRelease) phys.vel.y = Math.min(0, phys.vel.y);
+					Inventory inv = invM.get(parent.e);
+				}
 				/*if (inv != null){
 					Item item = inv.getActiveItem();
 					ItemDef def = item.getDef();

@@ -41,8 +41,6 @@ public class PathfindingSystem extends EntitySystem {
 	public PathGraph graph;
 	public PathHeuristic heuristic;
 	
-	
-	
 
 	@Override
 	public void addedToEngine(Engine engine) {
@@ -69,13 +67,13 @@ public class PathfindingSystem extends EntitySystem {
 			//Gdx.app.log(TAG, "path " +  " from " + x + "," + y + "  to " + path.targetX + "," + path.targetY);
 			PathNode startNode = graph.getNode(x, y);
 			PathNode endNode = graph.getNode(path.targetX, path.targetY);
-
+			
 			//GraphPath<PathConnection<PathNode>> outPath = connectionPathPool.obtain();
 			
-			GraphPath<Connection<PathNode>> outPath = connectionPathPool.obtain();;
+			GraphPath<Connection<PathNode>> outPath = connectionPathPool.obtain();
 			int mask = 0xffffffff;
 			boolean madePath = finder.searchConnectionPath(startNode, endNode, heuristic, outPath, mask);
-			if (madePath)Gdx.app.log(TAG, "made path");
+			if (madePath) Gdx.app.log(TAG, "made path");
 			e.remove(Pathfind.class);
 			if (madePath){
 				PathResult result = engine.createComponent(PathResult.class);

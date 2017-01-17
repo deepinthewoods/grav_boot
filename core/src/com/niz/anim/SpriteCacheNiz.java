@@ -43,12 +43,14 @@ import com.niz.system.OverworldSystem;
 public class SpriteCacheNiz{
 	private static final String 	TAG = "sprite cache";
 	private static final String SPRITE_FILENAME_PREFIX = "diff/tile";
+	private static final int CACHE_TOTAL_TARGET = 64;
 	
 	public SpriteBatchNiz[] batches// = new SpriteBatchNiz[((map.width/MapRenderSystem.RENDER_SIZE)*(map.height/MapRenderSystem.RENDER_SIZE))]
 			, bbatches// = new SpriteBatchNiz[((map.width/MapRenderSystem.RENDER_SIZE)*(map.height/MapRenderSystem.RENDER_SIZE))]
 					, fbatches;// = new SpriteBatchNiz[((map.width/MapRenderSystem.RENDER_SIZE)*(map.height/MapRenderSystem.RENDER_SIZE))];
 	public static Sprite[] sprites = new Sprite[34*512];;
-	public boolean hasCached;
+	public boolean hasCa2ched;
+	public int cachedTotal;
 	private static TextureAtlas atlas;
 	private SpriteBatchNiz currentBatch, currentBBatch, currentFBatch, currentLitBatch;
 	
@@ -116,7 +118,7 @@ public class SpriteCacheNiz{
 		wx = ((wx % v) + v) % v;
 		if (xOffset < 0){
 			
-			Gdx.app.log(TAG, "draw " + x + " wx:" + wx + " y:" + y);
+			//Gdx.app.log(TAG, "draw " + x + " wx:" + wx + " y:" + y);
 		}
 		if (wx < 0 || wy < 0 || wx >= map.width/MapRenderSystem.RENDER_SIZE || wy >= map.height/MapRenderSystem.RENDER_SIZE){
 			//int width = (OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_TOTAL_SIZE) / MapRenderSystem.RENDER_SIZE;
@@ -158,10 +160,10 @@ public class SpriteCacheNiz{
 		
 		
 			
-		if (!hasCached && (map.dirty[index] || setAllDirty)){
+		if (cachedTotal < CACHE_TOTAL_TARGET && (map.dirty[index] || setAllDirty)){
 			//map.dirtyRuns[wx] = true;
 			cacheChunk(map, index, tiles, backTiles);
-			hasCached = true;
+			cachedTotal++;
 			map.dirty[index] = false;
 		}
 		
@@ -441,7 +443,7 @@ public class SpriteCacheNiz{
 
 	public void beginDraw(boolean skipDraw) {
 		drawnBits.clear();
-		hasCached = false;
+		cachedTotal = 0;
 	}
 	
 

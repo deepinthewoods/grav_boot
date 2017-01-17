@@ -172,7 +172,6 @@ public class GameInstance implements Screen, Observer {
 		playerEntities = engine.getEntitiesFor(Family.all(Player.class, Position.class).get());
 		inputSys = new InputSystem();
 		inputSys.addedToEngine(engine);
-
 		
 		workSys.addWorker(new ProgressAction(){
 
@@ -186,7 +185,7 @@ public class GameInstance implements Screen, Observer {
 				switch (progress++){
 				case 1:
 				
-					factory = new RunnerFactory();// new PlatformerFactory();//
+					factory =  new PlatformerFactory();//new RunnerFactory();//
 					
 					uiAtlas = new TextureAtlas(Gdx.files.internal("ui.atlas"));
 					break;case 2:
@@ -272,8 +271,8 @@ public class GameInstance implements Screen, Observer {
 							pathC.targetX = (int) tmpV.x / Main.PPM;
 							pathC.targetY = (int) tmpV.y / Main.PPM;
 							
-							player.add(pathC);
-							Gdx.app.log(TAG,  "path");
+							//player.add(pathC);
+							//Gdx.app.log(TAG,  "path");
 							return false;				}
 						@Override
 						public boolean touchUp(int screenX, int screenY, int pointer, int button) {return false;				}

@@ -16,6 +16,7 @@ import com.niz.action.ActionList;
 import com.niz.actions.ACameraFollowPlayer;
 import com.niz.actions.AHold;
 import com.niz.actions.AJumpCharSelect;
+import com.niz.actions.ALoopAroundMap;
 import com.niz.actions.ANotRun;
 import com.niz.actions.APathfindingJumpAndHold;
 import com.niz.actions.APathfindingPreRun;
@@ -336,6 +337,9 @@ public class RunnerFactory extends Factory {
 			engine.getSystem(OverworldSystem.class).changeLevel(1);;
 			
 		}
+		ActionList act = e.getComponent(ActionList.class);
+		ALoopAroundMap loop = Pools.obtain(ALoopAroundMap.class);
+		act.addToStart(loop);
 	}
 	
 	public void createMapGenerationAgent(PooledEntity e, EngineNiz engine, Map map, int bit, int z) {
@@ -393,9 +397,9 @@ public class RunnerFactory extends Factory {
 		inv.copyFrom(pathfindingInventories[raceIndex % pathfindingInventories.length]);
 		e.add(inv);
 		e.add(PathfinderPreLog.class);
-		Light light = engine.createComponent(Light.class);
+		//Light light = engine.createComponent(Light.class);
 		//if (MathUtils.random(4) == 0)
-			e.add(light);
+			//e.add(light);
 		engine.addEntity(e);
 		Body body = e.getComponent(Body.class);
 		body.height = .01f;

@@ -27,10 +27,7 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 
 	public static final int BUFFER_SIZE = 512;
 
-
 	private static final String TAG = "light render system";
-
-
 
 	ComponentMapper<Light> lightM = ComponentMapper.getFor(Light.class);
 	ComponentMapper<Position> posM = ComponentMapper.getFor(Position.class);
@@ -154,9 +151,8 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 		// TODO Auto-generated method stub
 		super.removedFromEngine(engine);
 	}
-	BinaryHeap<Light> heap = new BinaryHeap<Light>();
+	BinaryHeap<Light> heap = new BinaryHeap<Light>(16, false);
 	@Override
-	
 	public void update(float deltaTime){
 		
 		//shader.begin();
@@ -181,6 +177,12 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 			Entity e = lights.get(i);
 			Vector2 pos = posM.get(e).pos;
 			Light light = lightM.get(e);
+			v.set(playerPos.x, playerPos.y, 0);
+			cam.project(v);
+			v.x /= w;
+			v.y /= h;
+			unprojectedPlayerPos.set(v.x, v.y);
+			
 			v.set(pos.x, pos.y, 0).scl(Main.PPM);
 			cam.project(v);
 			
@@ -189,24 +191,27 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 			//if (camSys.zoomedOut) v.y = 1f - v.y;
 			//Gdx.app.log(TAG, "light "+v);
 			light.position.set(v.x, v.y, 0);
-			heap.add(light, playerPos.dst2(v.x, v.y));
+			heap.add(light, unprojectedPlayerPos.dst2(v.x, v.y));
 			light.isOn = false;
 		}
 		
 		for (int i = 0; i < NUM_LIGHTS; i++){
 			if (heap.size == 0){
-				//Gdx.app.log(TAG,  "0 lights");
 				break;
 			}
 			Light l = heap.pop();
+			//Gdx.app.log(TAG,  "heap " + l.getValue() + " / " + heap.size);
 			
 			l.isOn = true;
 		}
 	}
+	
 	Vector3 v = new Vector3();
+	Vector2 unprojectedPlayerPos = new Vector2();
 	public void setUniforms(int layer, ShaderProgram shader) {
 		setUniforms(layer, shader, false);
 	}
+	
 	public void setUniforms(int layer, ShaderProgram shader, boolean zoomOut) {
 		if (shader == null) return;
 		//if (layer == this.MAP_BACK_LAYER){

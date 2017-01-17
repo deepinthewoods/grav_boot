@@ -17,6 +17,7 @@ public float walljump_x_impulse;
 private int doubleJumpsRemaining = 0;
 public int numberOFDoubleJumps = 0;
 public boolean hasWallSlide;
+public boolean recoilJump;
 
 public boolean hasDoubleJump() {
 	return doubleJumpsRemaining > 0;

@@ -60,11 +60,11 @@ public class AAgentRandomBuildPlatforms extends Action {
 		if (currentX != oldX){
 			Map map = overworld.getMapFor(currentX,  0);
 			for (int y = 0; y < OverworldSystem.SCROLLING_MAP_HEIGHT; y++){
-				map.set(currentX,  y, 0);
-				map.setBG(currentX,  y, Blocks.STONE + MathUtils.random(64));
+				map.set(currentX+1,  y, 0);
+				map.setBG(currentX+1,  y, Blocks.STONE + MathUtils.random(64));
 				
 			}
-			map.set(currentX,  1, Blocks.STONE + MathUtils.random(64));
+			map.set(currentX+1,  1, Blocks.STONE + MathUtils.random(64));
 		}
 		con.pressed[Input.WALK_RIGHT] = true;
 		

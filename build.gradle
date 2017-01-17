@@ -145,3 +145,4 @@ project(":core") {
 tasks.eclipse.doLast {
     delete ".project"
 }
+0

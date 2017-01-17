@@ -20,6 +20,7 @@ import com.niz.anim.SpriteCacheNiz;
 import com.niz.component.Body;
 import com.niz.component.Buckets;
 import com.niz.component.CollidesWithMap;
+import com.niz.component.Light;
 import com.niz.component.LineBody;
 import com.niz.component.Map;
 import com.niz.component.OnMap;
@@ -95,6 +96,9 @@ public void doThrow(LayerGuide guide, Entity parent,
 	//e.add(bitm);
 	e.add(onMap);
 
+	Light light = engine.createComponent(Light.class);
+	e.add(light);
+	
 	engine.addEntity(e);;
 	Gdx.app.log(TAG, "doThrow " + e.getId());
 	if (e.getComponent(PickUp.class) != null) throw new GdxRuntimeException("KJFD");

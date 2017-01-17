@@ -8,18 +8,16 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.badlogic.gdx.utils.IntMap.Values;
 import com.niz.Factory;
+import com.niz.Input;
 import com.niz.action.ActionList;
 import com.niz.actions.AJumpCharSelect;
 import com.niz.actions.APlayer;
-import com.niz.actions.path.AWaitForPath;
+import com.niz.component.Control;
 import com.niz.component.DragOption;
-import com.niz.component.Inventory;
 import com.niz.component.Light;
 import com.niz.component.Player;
 import com.niz.component.SelectedPlayer;
-import com.niz.item.ItemDef;
 
 public class SelectedPlayerSystem extends EntitySystem {
 	ComponentMapper<SelectedPlayer> playerM = ComponentMapper.getFor(SelectedPlayer.class);
@@ -70,6 +68,9 @@ public class SelectedPlayerSystem extends EntitySystem {
 				engine.removeEntity(re);
 			}
 			e.remove(DragOption.class);
+			
+			Control con = e.getComponent(Control.class);
+			con.pressed[Input.JUMP] = false;
 			//e.remove(Physics.class);
 			SelectedPlayer sel = e.getComponent(SelectedPlayer.class);
 			factory.selected(engine, sel, e);
