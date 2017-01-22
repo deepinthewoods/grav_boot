@@ -107,7 +107,7 @@ public class APathfindingJumpAndHold extends Action {
 			if (pos.y < AStar.PATHFINDING_INITIAL_Y_OFFSET - AStar.PATHFINDING_DOWN_Y_OFFSET - 1 
 					||
 					pos.x > AStar.PATHFINDING_X_START + AStar.PATHFINDING_WIDTH-1) {
-				Gdx.app.log(TAG,  "outside of border" + pos + parent.getAction(APathfindingLogBlocks.class).blocks.size);
+				//Gdx.app.log(TAG,  "outside of border" + pos + parent.getAction(APathfindingLogBlocks.class).blocks.size);
 				parent.engine.removeEntity(parent.e);
 			}			
 		} else if (typeIndex == WALLJUMP){
@@ -117,7 +117,7 @@ public class APathfindingJumpAndHold extends Action {
 			}
 		}//*/
 		else {
-			Gdx.app.log(TAG,  "no cat" + pos);
+			//Gdx.app.log(TAG,  "no cat" + pos);
 		}
 	}
 

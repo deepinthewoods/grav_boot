@@ -23,13 +23,17 @@ public class RoomCatalogSystem extends EntitySystem {
 	@Override
 	public void addedToEngine(Engine engine) {
 		super.addedToEngine(engine);
-		writeTemplates();
-		readRooms(Gdx.files.external(Data.FILE_PATH_PREFIX).child("rooms"));
+		//writeTemplates();
+		readRooms(Gdx.files.external(Data.FILE_PATH_PREFIX).child("rooms/"));
+		
+		//readRooms(Gdx.files.internal("assets/rooms"));
 	}
 	
 	private void readRooms(FileHandle child) {
+		child.mkdirs();
+		child.child("TESTTEST.TEST").writeString("test!", false);
 		try {
-			Gdx.app.log(TAG, "READ ROOMS" + child.file().getCanonicalPath());
+			Gdx.app.log(TAG, "READ ROOMS" + child.file().getCanonicalPath() + " " + child.list().length);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -55,8 +59,8 @@ public class RoomCatalogSystem extends EntitySystem {
 				
 			}
 		}
-		child.mkdirs();
-		child.child("TESTTEST.TEST").writeString("test!", false);
+		//child.mkdirs();
+		//child.child("TESTTEST.TEST").writeString("test!", false);
 	}
 	
 	public Array<Room> getRoomsForTag(int tag){
@@ -66,6 +70,7 @@ public class RoomCatalogSystem extends EntitySystem {
 	public Array<Room> getRoomsForTags(Array<Room> returnArr, String... tags){
 		returnArr.clear();
 		Array<Room> arr = roomsByTag.get(Data.hash(tags[0]));
+		//if (arr == null) return returnArr;
 		for (Room r : arr){
 			boolean found = true;
 			for (int i = 0; i < tags.length; i++){

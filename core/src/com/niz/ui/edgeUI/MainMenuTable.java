@@ -5,9 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -96,14 +94,17 @@ public class MainMenuTable extends UIElement {
 							if (butt.folder == null) throw new GdxRuntimeException("exc "+butt);
 							
 							FileHandle worldFile = butt.folder.child(Data.WORLD_MAIN_FILE_NAME);
+							Gdx.app.log(TAG, "world file " + worldFile.path());
+							
 							WorldDefinition worldDef = Data.json.fromJson(WorldDefinition.class, worldFile);
+							//WorldDefinition worldDef = new WorldDefinition();//Data.json.fromJson(WorldDefinition.class, worldFile);
 							worldDef.folder = butt.folder;
 							//game.startGenerating(worldDef);
 							game.startWorld(worldDef);
 							Main.prefs.previously_launched_game = butt.folder.name();
 							
 						}else {
-							Gdx.app.log(TAG, "delaying for jump loggers");
+							//Gdx.app.log(TAG, "delaying for jump loggers");
 						}
 					
 					} 
@@ -145,7 +146,7 @@ public class MainMenuTable extends UIElement {
 
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				FileHandle folder = Gdx.files.external(Data.FILE_PATH_PREFIX).child("_rooms");
+				FileHandle folder = Gdx.files.external(Data.FILE_PATH_PREFIX).child(Data.WORLDS_SUBFOLDER_PATH);
 
 				WorldDefinition worldDef = new WorldDefinition();
 				worldDef.isRoomEditor = true;
@@ -282,10 +283,13 @@ public class MainMenuTable extends UIElement {
 	}
 	
 	private void createNewGame() {
-		FileHandle folder = Gdx.files.external(Data.FILE_PATH_PREFIX);
+		FileHandle baseFolder = Gdx.files.external(Data.FILE_PATH_PREFIX);
+		if (!baseFolder.exists()) baseFolder.mkdirs();
+		FileHandle folder = baseFolder.child(Data.WORLDS_SUBFOLDER_PATH);
+		if (!folder.exists()) folder.mkdirs();
 		String worldName = "world " + MathUtils.random(100000);
 		FileHandle worldFolder = folder.child(worldName);
-		if (worldFolder.exists()) return;
+		if (worldFolder.exists()) throw new GdxRuntimeException("world name collision");
 		FileHandle worldFile = worldFolder.child(Data.WORLD_MAIN_FILE_NAME);
 		worldFolder.mkdirs();
 		//worldFile.mkdirs();
@@ -305,7 +309,11 @@ public class MainMenuTable extends UIElement {
 		gameGroup.clear();
 		
 		worldTable.clear();
-		FileHandle folder = Gdx.files.external(Data.FILE_PATH_PREFIX);
+		FileHandle baseFolder = Gdx.files.external(Data.FILE_PATH_PREFIX);
+		if (!baseFolder.exists()) baseFolder.mkdirs();
+		FileHandle folder = baseFolder.child(Data.WORLDS_SUBFOLDER_PATH);
+		if (!folder.exists()) folder.mkdirs();
+
 		FileHandle[] worldFolders = folder.list();
 		for (int i = 0; i < worldFolders.length; i++){
 			FileHandle worldFolder = worldFolders[i];

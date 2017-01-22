@@ -52,7 +52,6 @@ project(":desktop") {
         compile "com.badlogicgames.gdx:gdx-controllers-desktop:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers-platform:$gdxVersion:natives-desktop"
         compile "com.esotericsoftware:kryo:$kryoVersion"
-        compile "kryonet:kryonet:$kryonetVersion"
     }
 }
 
@@ -86,7 +85,6 @@ project(":android") {
         compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-controllers-android:$gdxVersion"
         compile "com.esotericsoftware:kryo:$kryoVersion"
-        compile "kryonet:kryonet:$kryonetVersion"
     }
 }
 
@@ -131,7 +129,6 @@ project(":core") {
 
 
     dependencies {
-    compile "com.esotericsoftware.kryo:kryo:2.21"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
