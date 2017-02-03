@@ -24,7 +24,7 @@ public class RoomCatalogSystem extends EntitySystem {
 	public void addedToEngine(Engine engine) {
 		super.addedToEngine(engine);
 		//writeTemplates();
-		readRooms(Gdx.files.external(Data.FILE_PATH_PREFIX).child("rooms/"));
+		readRooms(Gdx.files.external(Data.FILE_PATH_PREFIX).child("/rooms/"));
 		
 		//readRooms(Gdx.files.internal("assets/rooms"));
 	}
@@ -32,16 +32,19 @@ public class RoomCatalogSystem extends EntitySystem {
 	private void readRooms(FileHandle child) {
 		child.mkdirs();
 		child.child("TESTTEST.TEST").writeString("test!", false);
-		try {
-			Gdx.app.log(TAG, "READ ROOMS" + child.file().getCanonicalPath() + " " + child.list().length);
-		} catch (IOException e) {
+		//try {
+			Gdx.app.log(TAG, "READ ROOMS" + child.file().getAbsolutePath() + " " + child.list().length);
+		//} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			//e.printStackTrace();
+		//}
 		
 		Json json = Data.json;
 		for (FileHandle f : child.list()){
-			if (!f.extension().equals("json"))continue;
+			if (!f.extension().equals("json")){
+				Gdx.app.log(TAG, "skipping " + f.name());
+				continue;
+			}
 			Room r = json.fromJson(Room.class, f);
 			if (!r.calculatePoints()) throw new GdxRuntimeException("" + f.name());
 			Room flip = new Room(r);

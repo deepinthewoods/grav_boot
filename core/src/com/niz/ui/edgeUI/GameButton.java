@@ -11,7 +11,6 @@ public class GameButton extends TextButton {
 
 	public GameButton(Skin skin) {
 		super("ggg", skin, "mainmenuselectable");
-		// TODO Auto-generated constructor stub
 	}
 
 	public void set(FileHandle worldFolder) {

@@ -317,6 +317,8 @@ public class MainMenuTable extends UIElement {
 		FileHandle[] worldFolders = folder.list();
 		for (int i = 0; i < worldFolders.length; i++){
 			FileHandle worldFolder = worldFolders[i];
+			Gdx.app.log(TAG, "add "+worldFolder.file().getAbsolutePath());
+
 			if (!worldFolder.isDirectory() || worldFolder.nameWithoutExtension().charAt(0) == '_') continue;
 			worldFolder.list();
 			FileHandle mainFile = worldFolder.child(Data.WORLD_MAIN_FILE_NAME);
@@ -330,7 +332,6 @@ public class MainMenuTable extends UIElement {
 			worldTable.row();
 			
 			//if (butt.folder == null) throw new GdxRuntimeException("");
-			Gdx.app.log(TAG, "add "+butt);
 			gameGroup.add(butt);
 			if (Main.prefs.previously_launched_game.equals(worldFolder.name())){
 				butt.setChecked(true);

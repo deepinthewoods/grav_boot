@@ -28,7 +28,7 @@ public class Data {
 
 	public static final Color TRANSPARENT = new Color(0f, 0f, 0f, 0f);
 
-	public static final String WORLDS_SUBFOLDER_PATH = "_rooms";;
+	public static final String WORLDS_SUBFOLDER_PATH = "_worlds";;
 	
 	public static int BLACK_INDEX = 21 
 	, VERY_DARK_GREY_INDEX = 1 , VERY_DARK_BROWN_INDEX = 2 
