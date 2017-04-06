@@ -73,6 +73,9 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	public static final int BELT_SLOTS = 8;
 	private static final String TAG = "inv scre";
 	private static final int TOTAL_TOAST_LABELS = 16;
+	protected static final int TOAST_DELAY = 5;
+	private static final float TOAST_SPEED = 5f;
+
 	public BeltTable belt;
 	private ControllerButton btnPad;
 	private ControllerSliderBoolean slider;
@@ -283,15 +286,15 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		 btnPad.actor.setHeight(Main.prefs.control_button_height);
 		
 		toastTitleLabel = new Label("Item", skin, "iteminfotitle");
-		toastTitleLabel.setX(100);
-		toastTitleLabel.setY(350);
+		toastTitleLabel.setX(0);
+		toastTitleLabel.setY(Gdx.graphics.getHeight());
 		toastTitleLabel.setTouchable(Touchable.disabled);
 		//stage.addActor(toastTitleLabel);
 		
 		for (int i = 0; i < TOTAL_TOAST_LABELS; i++){
 			//Label lab = new Label("--"+i, skin, "iteminfo");
-			DoingLabel lab = new DoingLabel(i, skin);
-			lab.setTouchable(Touchable.disabled);
+			DoingLabel lab = new DoingLabel(i, skin, engine);
+			lab.setTouchable(Touchable.enabled);
 			stage.addActor(lab);
 			toastLabels.add(lab);
 		}
@@ -304,7 +307,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 			public void onNotify(Entity e, Event event, Object c) {
 				 if (event == Event.STOP_TOAST){
 					toastOn = false;
-					toastTimer = 0f;
+					toastTimer = -TOAST_DELAY;
 					//if (true)throw new GdxRuntimeException("hkl");
 
 				} else if (event == Event.CHANGE_DOING_SLOT) {
@@ -321,25 +324,32 @@ public class InventoryScreen extends EdgeUI implements Observer{
 					//toastSelectedIndex = input.value;
 					//for (int i = 0; i < toastLabels.size; i++){
 					//Gdx.app.log(TAG, "toast" + toastSelectedIndex+" "+input.value + "  "+ totalDoings);
-					toastSelectedIndex += input.value;
+					toastSelectedIndex = input.value;
 					if (toastSelectedIndex < 0) toastSelectedIndex += totalDoings;
 					if (toastSelectedIndex >= totalDoings) toastSelectedIndex -= totalDoings;
 					//Gdx.app.log(TAG, "toast" + toastSelectedIndex+" "+input.value);
 					//}
 					int adjustedIndex = 0;
 					for (int i = 0; i < toastLabels.size; i++){
-						float prevHeight, prevY;
+						float prevHeight, prevY, prevWidth, prevX;
+						DoingLabel lab = toastLabels.get(i);
 						if (i == 0){
 							prevHeight = toastTitleLabel.getHeight();
 							prevY = toastTitleLabel.getY();
+							prevY = Gdx.graphics.getHeight() - Main.prefs.inventory_button_height - lab.getHeight();
+							prevWidth = 0;//toastTitleLabel.getWidth();
+							prevX = 0;//toastTitleLabel.getX();
 						} else {
 							prevHeight = toastLabels.get(i-1).getHeight();
 							prevY = toastLabels.get(i-1).getY();
+							prevWidth =  toastLabels.get(i-1).getWidth();
+							prevX =  toastLabels.get(i-1).getX();
 						}
 						//Label prev = toastTitleLabel;
 						//if (i != 0) prev = toastLabels.get(i-1);
-						DoingLabel lab = toastLabels.get(i);
-						lab.setY(prevY - prevHeight);
+						Gdx.app.log(TAG, "prevw " +prevWidth + "  from " + prevX);
+						lab.setX(prevX + prevWidth);
+						lab.setY(prevY );
 						//lab.setX(0);;
 						//if (input.value == i) text += "* ";
 						//if (i < def.doings.size) text += def.doings.get(i).name;
@@ -348,7 +358,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 						if (adjustedIndex >= def.doings.size){
 							if (adjustedIndex == def.doings.size)totalDoings = i;
 							lab.setNotSelected(skinn);
-							lab.set(def, adjustedIndex, e, input.left);
+							lab.set(def, adjustedIndex, e, input.left, input.butt);
 							adjustedIndex++;
 							continue;
 						}
@@ -364,7 +374,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 						}
 						else lab.setNotSelected(skinn);
 						
-						lab.set(def, adjustedIndex, e, input.left);
+						lab.set(def, adjustedIndex, e, input.left, input.butt);
 						
 						adjustedIndex++;
 						Gdx.app.log(TAG, "done t " + toastSelectedIndex+" "+input.value + "  "+ totalDoings);
@@ -373,7 +383,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 					//table.invalidateHierarchy();
 				} else if (event == Event.BELT_TOUCH_START){
 					toastOn = true;
-					toastTimer = 0f;
+					toastTimer = -TOAST_DELAY;
 				}
 				
 			}
@@ -585,7 +595,6 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	}
 	
 	private static final String SPRITE_FILENAME_PREFIX = "diff/tile";
-	private static final float TOAST_SPEED = 5f;
 
 	private AtlasSprite getInventorySprite(ItemDef def) {
 		//Gdx.app.log(TAG, "inv spr"+def.id);

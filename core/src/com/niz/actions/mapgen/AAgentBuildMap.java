@@ -193,7 +193,7 @@ public class AAgentBuildMap extends ProgressAction {
 					
 				}
 			for (int x = 0; x < map.width; x++){
-				Gdx.app.log(TAG, "DFJHSKAFJDSKLFJASDKFJDSDLSKJSFDLKJFDSKLJFSDDKLF " + (int) overworld.getHeight((int) (x + map.offset.x)));
+				//Gdx.app.log(TAG, "DFJHSKAFJDSKLFJASDKFJDSDLSKJSFDLKJFDSKLJFSDDKLF " + (int) overworld.getHeight((int) (x + map.offset.x)));
 				
 				for (int y = (int) overworld.getHeight((int) (x + map.offset.x) )+1; y < map.height; y++){
 					

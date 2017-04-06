@@ -1,16 +1,21 @@
 package com.niz.system;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.DataInput;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Json;
 import com.niz.Data;
+import com.niz.Main;
 import com.niz.room.BlockDistribution;
 import com.niz.room.BlockDistributionArray;
 import com.niz.room.Dist;
@@ -24,25 +29,76 @@ public class RoomCatalogSystem extends EntitySystem {
 	public void addedToEngine(Engine engine) {
 		super.addedToEngine(engine);
 		//writeTemplates();
-		readRooms(Gdx.files.external(Data.FILE_PATH_PREFIX).child("/rooms/"));
+		//readRooms(Gdx.files.internal(Data.FILE_PATH_PREFIX).child("/rooms/"));
 		
-		//readRooms(Gdx.files.internal("assets/rooms"));
+		readRooms(Gdx.files.internal("assets/rooms"));
 	}
 	
 	private void readRooms(FileHandle child) {
-		child.mkdirs();
-		child.child("TESTTEST.TEST").writeString("test!", false);
+		//child.mkdirs();
+		/*FileHandle vfile = child.child("version.nfo");
+		boolean copy = false;
+		int version = 0;
+		if (!vfile.exists()){
+			copy = true;
+		} else {
+			DataInputStream vin = new DataInput(vfile.read());
+			
+			try {
+				version = vin.readInt();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				//ersion = 0;
+			}
+			if (version != Main.ROOMS_VERSION) copy = true;
+		}
+		if (copy){
+			DataOutputStream fout = new DataOutputStream(vfile.write(false));
+			try {
+				fout.writeInt(Main.ROOMS_VERSION);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+		}*/
+		//child.child("TESTTEST.TEST").writeString("test!", false);
 		//try {
 			Gdx.app.log(TAG, "READ ROOMS" + child.file().getAbsolutePath() + " " + child.list().length);
 		//} catch (IOException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
 		//}
+			
+		if (Gdx.app.getType() == ApplicationType.Desktop){
+				FileHandle roomF = Gdx.files.internal("rooms");
+				FileHandle roomEF = Gdx.files.absolute(roomF.file().getAbsolutePath());
+				String s = "";
+				for (FileHandle f : roomEF.list()){
+					if (f.isDirectory()){
+						for (FileHandle f2 : f.list()){
+							s += "rooms/"+ f2.name() + "/" + f.name();
+							s += "\n";
+						}
+					}
+					s += "rooms/"+f.name();
+					s += "\n";
+				}
+				FileHandle out = Gdx.files.internal("roomsList.txt");
+				FileHandle outA = Gdx.files.absolute(out.file().getAbsolutePath());
+				outA.writeString(s, false);
+				//Gdx.app.log(TAG, "list of rooms " + roomF.file().getAbsolutePath());
+		}
 		
 		Json json = Data.json;
-		for (FileHandle f : child.list()){
+		String fileList = Gdx.files.internal("roomslist.txt").readString();
+		String[] names = fileList.split("\n");
+		for (String name : names){
+			FileHandle f = Gdx.files.internal(name);
 			if (!f.extension().equals("json")){
-				Gdx.app.log(TAG, "skipping " + f.name());
+				//Gdx.app.log(TAG, "skipping " + f.name());
 				continue;
 			}
 			Room r = json.fromJson(Room.class, f);
@@ -50,15 +106,15 @@ public class RoomCatalogSystem extends EntitySystem {
 			Room flip = new Room(r);
 			flip.calculatePoints();
 			
-			Gdx.app.log(TAG, "file " + f.name());
+			//Gdx.app.log(TAG, "file " + f.name());
 			for (String s : r.tags){
-				Gdx.app.log(TAG, "room " + s);
+				//Gdx.app.log(TAG, "room " + s);
 				int hash = Data.hash(s);
 				if (!roomsByTag.containsKey(hash)) roomsByTag.put(hash, new Array<Room>());
 				Array<Room> arr = roomsByTag.get(hash);
 				arr.add(r);
 				arr.add(flip);
-				Gdx.app.log(TAG, "room in " + s + arr.size + " " + r);
+				//Gdx.app.log(TAG, "room in " + s + arr.size + " " + r);
 				
 			}
 		}

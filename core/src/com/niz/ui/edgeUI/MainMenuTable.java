@@ -94,7 +94,7 @@ public class MainMenuTable extends UIElement {
 							if (butt.folder == null) throw new GdxRuntimeException("exc "+butt);
 							
 							FileHandle worldFile = butt.folder.child(Data.WORLD_MAIN_FILE_NAME);
-							Gdx.app.log(TAG, "world file " + worldFile.path());
+							Gdx.app.log(TAG, "world file " + worldFile.path() + worldFile.exists());
 							
 							WorldDefinition worldDef = Data.json.fromJson(WorldDefinition.class, worldFile);
 							//WorldDefinition worldDef = new WorldDefinition();//Data.json.fromJson(WorldDefinition.class, worldFile);
@@ -148,7 +148,7 @@ public class MainMenuTable extends UIElement {
 			public void changed(ChangeEvent event, Actor actor) {
 				//if (true) throw new GdxRuntimeException("jdskl");
 
-				FileHandle folder = Gdx.files.external(Data.FILE_PATH_PREFIX).child(Data.WORLDS_SUBFOLDER_PATH);
+				FileHandle folder = Gdx.files.local(Data.FILE_PATH_PREFIX).child(Data.WORLDS_SUBFOLDER_PATH);
 
 				WorldDefinition worldDef = new WorldDefinition();
 				worldDef.isRoomEditor = true;
@@ -211,7 +211,7 @@ public class MainMenuTable extends UIElement {
 				//Gdx.app.log("newwordlbutton", "pressed"+event.toString());
 				//game.startGenerating(seed);
 				//mainMenu.showNewGameScreen();
-				FileHandle folder = Gdx.files.external(Data.FILE_PATH_PREFIX);
+				FileHandle folder = Gdx.files.local(Data.FILE_PATH_PREFIX);
 				for (FileHandle f : folder.list()){
 					f.deleteDirectory();
 				}
@@ -285,15 +285,16 @@ public class MainMenuTable extends UIElement {
 	}
 	
 	private void createNewGame() {
-		FileHandle baseFolder = Gdx.files.external(Data.FILE_PATH_PREFIX);
+		FileHandle baseFolder = Gdx.files.local(Data.FILE_PATH_PREFIX);
 		if (!baseFolder.exists()) baseFolder.mkdirs();
 		FileHandle folder = baseFolder.child(Data.WORLDS_SUBFOLDER_PATH);
 		if (!folder.exists()) folder.mkdirs();
 		String worldName = "world " + MathUtils.random(100000);
 		FileHandle worldFolder = folder.child(worldName);
 		if (worldFolder.exists()) throw new GdxRuntimeException("world name collision");
-		FileHandle worldFile = worldFolder.child(Data.WORLD_MAIN_FILE_NAME);
 		worldFolder.mkdirs();
+		FileHandle worldFile = worldFolder.child(Data.WORLD_MAIN_FILE_NAME);
+		
 		//worldFile.mkdirs();
 		Json json = Data.json;
 		
@@ -311,7 +312,7 @@ public class MainMenuTable extends UIElement {
 		gameGroup.clear();
 		
 		worldTable.clear();
-		FileHandle baseFolder = Gdx.files.external(Data.FILE_PATH_PREFIX);
+		FileHandle baseFolder = Gdx.files.local(Data.FILE_PATH_PREFIX);
 		if (!baseFolder.exists()) baseFolder.mkdirs();
 		FileHandle folder = baseFolder.child(Data.WORLDS_SUBFOLDER_PATH);
 		if (!folder.exists()) folder.mkdirs();

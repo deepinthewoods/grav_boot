@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatchNiz;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -43,7 +44,6 @@ import com.niz.component.BooleanInput;
 import com.niz.component.Control;
 import com.niz.component.DragController;
 import com.niz.component.Pathfind;
-import com.niz.component.Physics;
 import com.niz.component.Player;
 import com.niz.component.Position;
 import com.niz.component.Race;
@@ -74,8 +74,6 @@ import com.niz.system.MapRenderSystem;
 import com.niz.system.MapSystem;
 import com.niz.system.OnMapSystem;
 import com.niz.system.OverworldSystem;
-import com.niz.system.ParallaxBackgroundFrontLayersRenderingSystem;
-import com.niz.system.ParallaxBackgroundRenderNoBufferSystem;
 import com.niz.system.ParallaxBackgroundSystem;
 import com.niz.system.PathfindingSystem;
 import com.niz.system.PathfindingUpdateSystem;
@@ -160,6 +158,7 @@ public class GameInstance implements Screen, Observer {
 		//this.isServer = serverInst != null;
 		//this.isClient = clientInst != null;
 		//Log.DEBUG();
+		GLProfiler.enable();
 		final GameInstance inst = this;
 		this.headless = headless;
 		batch = new SpriteBatch(50);
@@ -662,12 +661,10 @@ public class GameInstance implements Screen, Observer {
 			ImmutableArray<Entity> playerArr = engine.getEntitiesFor(Family.one(Player.class).get());
 			if (playerArr.size() != 0){
 				Entity player = playerArr.get(0);
-			
-//				String s = "fps:"+Gdx.graphics.getFramesPerSecond() + "\nx:"+
 //				String.format("%.2f", player.getComponent(Position.class).pos.x)
 //				+"\ny:" +String.format("%.2f", player.getComponent(Position.class).pos.y);
 				
-				String s = "";
+				/*String s = "";
 				if (player.getComponent(Physics.class) != null){
 					s += "\n"+ (player.getComponent(Physics.class).onGround?"ground":"");
 					s += "\n"+ (player.getComponent(Physics.class).wasOnGround2?"wasGround":"");
@@ -680,9 +677,13 @@ public class GameInstance implements Screen, Observer {
 					//s += "\n"+ (player.getComponent(Physics.class).wasOnGround2?"wasGround":"");
 					//s += "\n"+ (player.getComponent(Physics.class).onSlope?"slope":"");
 					//s += "fps:"+String.format("%.1f",1f/deltaTime);
-					
-				}
-				
+					//
+				}*/
+			String s = "fps:"+Gdx.graphics.getFramesPerSecond() + " " + GLProfiler.calls + " drawc:" + GLProfiler.drawCalls;
+			s += " sw:"+GLProfiler.shaderSwitches;
+			s += " tex:"+GLProfiler.textureBindings;
+			s += " vert:"+GLProfiler.vertexCount.average;
+			GLProfiler.reset();
 			s += "\n";
 			s += Gdx.app.getJavaHeap()>>20 ;
 			s += " ";
@@ -691,7 +692,7 @@ public class GameInstance implements Screen, Observer {
 						s, 100, font.getLineHeight()*8);
 				
 				
-			}
+			}//*/
 			/*""
 					+ "  high"+(""+(1f/highestDelta)).substring(0,4)
 					+ " \n  low"+(""+(1f/lowestDelta)).substring(0,4)

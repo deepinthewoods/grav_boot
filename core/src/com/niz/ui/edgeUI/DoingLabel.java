@@ -1,19 +1,27 @@
 package com.niz.ui.edgeUI;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.EngineNiz;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.BeltButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.niz.Data;
 import com.niz.anim.Animations;
+import com.niz.component.Inventory;
+import com.niz.component.ItemInput;
 import com.niz.component.Race;
 import com.niz.item.Doing;
 import com.niz.item.ItemDef;
+import com.niz.observer.Subject;
+import com.niz.observer.Subject.Event;
 
 public class DoingLabel extends Stack{
 	
@@ -31,10 +39,15 @@ public class DoingLabel extends Stack{
 	private Actor leftPad;
 	private boolean left;
 	private TextureRegionDrawable typeDrawable;
-	
-	public DoingLabel(int i, Skin skin) {
+	protected ItemInput c = new ItemInput();
+	private Subject toastNotifier;
+	private BeltButton butt;
+
+	public DoingLabel(int i, Skin skin, EngineNiz engine) {
 		//super("--"+i, skin, "iteminfo");
 		super();
+		toastNotifier = engine.getSubject("toast");
+
 		index = i;
 		//typeImage = new Image(Animations.doingTypeImages[0]);
 		limbImage = new Image(Animations.doingLimbImages[0]);
@@ -55,7 +68,22 @@ public class DoingLabel extends Stack{
 		add(limbImage);//.center().fill();
 		add(typeImage);
 		//this.setFillParent(fillParent);
-		
+		this.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				DoingLabel l= (DoingLabel) event.getListenerActor();
+				BeltButton b = l.butt;
+				if (b.item == null) b.item = Inventory.defaultItem;
+				c.value = index;
+				c.item = b.item;
+				c.butt = b;
+				c.left = left;
+				Gdx.app.log("button", "doingslot after "+c.value);
+				toastNotifier.notify(b.e, Event.CHANGE_DOING_SLOT, c);
+				event.handle();
+				super.clicked(event, x, y);
+			}
+		});
 	}
 
 	public void setSelected(Skin skinn) {
@@ -81,12 +109,12 @@ public class DoingLabel extends Stack{
 		typeImage.setScale(.7f);
 	}
 
-	public boolean set(ItemDef def, int i, Entity e, boolean left) {
-		if (left)
-			setX((screenWidth/3) - w*.7f*.5f);  
-		else
-			setX((screenWidth/3)*2 - w*.7f*.5f);;  
-			
+	public boolean set(ItemDef def, int i, Entity e, boolean left, BeltButton but) {
+		//if (left)
+			//setX((screenWidth/3) - w*.7f*.5f);  
+		//else
+		//	setX((screenWidth/3)*2 - w*.7f*.5f);;  
+		butt = but;
 		this.left = left;
 		Race race = raceM.get(e);
 		setScale(1);

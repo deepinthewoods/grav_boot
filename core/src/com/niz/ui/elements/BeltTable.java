@@ -112,7 +112,7 @@ public class BeltTable extends UIElement {
 						c.butt = b;
 						c.left = left;
 						//Gdx.app.log("button", "doingslot after "+c.value);
-						toastNotifier.notify(b.e, Event.CHANGE_DOING_SLOT, c);
+						//toastNotifier.notify(b.e, Event.CHANGE_DOING_SLOT, c);
 					}
 					
 					
@@ -157,10 +157,10 @@ public class BeltTable extends UIElement {
 							inv.setActiveItem(0, 0);
 							//Gdx.app.log(TAG, "beltBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"+butt.hash);
 						}
-						inv.dirtyLimbs = true;
+						//inv.dirtyLimbs = true;
 						//throw new GdxRuntimeException("null button");
 						//toastNotifier.notify(null, Event.BELT_TOUCH_START, null);
-						toastNotifier.notify(butt.e, Event.CHANGE_DOING_SLOT, c);	
+						//toastNotifier.notify(butt.e, Event.CHANGE_DOING_SLOT, c);	
 						toastNotifier.notify(null, Event.STOP_TOAST, c);
 						
 					}

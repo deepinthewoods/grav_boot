@@ -204,6 +204,8 @@ public class SpriteCacheNiz{
 		currentBatch = batches[index];
 		currentBatch.setProjectionMatrix(mat);
 		currentBatch.disableBlending();
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+
 		currentBatch.setShader(shader);
 		currentBatch.beginDraw();		
 		lights.setUniforms(Light.MAP_FRONT_LAYER, shader);
@@ -227,6 +229,8 @@ public class SpriteCacheNiz{
 		currentLitBatch = litbatches[index];
 		currentLitBatch.setProjectionMatrix(mat);
 		currentLitBatch.disableBlending();
+		Gdx.gl.glDisable(GL20.GL_BLEND);
+
 		currentLitBatch.setShader(shader);
 		currentLitBatch.beginDraw();		
 		lights.setUniforms(Light.MAP_LIT_LAYER, litShader);

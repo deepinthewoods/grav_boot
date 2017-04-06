@@ -9,6 +9,7 @@ import com.niz.anim.SpriteCacheNiz;
 import com.niz.component.Inventory;
 public class Main extends ApplicationAdapter {
 	private static final String TAG = "Main";
+	public static final int ROOMS_VERSION = 1;
 	public static final int PPM = 16;
 	public static float ar;
 	//public static int VIEWPORT_SIZE = 32;//16;
@@ -23,8 +24,10 @@ public class Main extends ApplicationAdapter {
 	public static Prefs prefs;
 	@Override
 	public void create() {
+		Gdx.files.local(Data.FILE_PATH_PREFIX).child(Data.WORLDS_SUBFOLDER_PATH).deleteDirectory();
+		
 		Gdx.input.setCatchBackKey(true);
-		FileHandle prefsFile = Gdx.files.external(Data.FILE_PATH_PREFIX + "prefs");
+		FileHandle prefsFile = Gdx.files.local(Data.FILE_PATH_PREFIX + "prefs");
 		if (prefsFile.exists()){
 			//prefsFile.delete();
 			//if (true) return;
@@ -118,7 +121,7 @@ public class Main extends ApplicationAdapter {
 	}
 
 	public static void savePrefs() {
-		FileHandle prefsFile = Gdx.files.external(Data.FILE_PATH_PREFIX + "prefs");
+		FileHandle prefsFile = Gdx.files.local(Data.FILE_PATH_PREFIX + "/prefs");
 
 		Kryo kryo = Data.kryoPool.borrow();
 		com.esotericsoftware.kryo.io.Output output = new com.esotericsoftware.kryo.io.Output(100

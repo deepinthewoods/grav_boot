@@ -25,7 +25,7 @@ import com.niz.observer.Subject.Event;
 
 public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 	public static float zoom = 1f, zoomOutThreshold = 16f;
-	public static float ZOOM_OUT_MAX = 10000f;
+	public static float ZOOM_OUT_MAX = 4.5f;
 	public static final int PARALLAX_LAYERS = 6, PARALLAX_NEAR_LAYERS = 0;
 	public static final float[] LAYER_PARALLAX_FACTORS = new float[PARALLAX_LAYERS];
 	public static final float[] LAYER_PARALLAX_FACTORS_ZOOMED_IN = new float[PARALLAX_LAYERS];

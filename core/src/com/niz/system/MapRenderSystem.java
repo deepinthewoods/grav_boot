@@ -29,7 +29,7 @@ import com.niz.observer.Subject.Event;
 
 public class MapRenderSystem extends RenderSystem implements EntityListener, IDisposeable {
 	
-	public static final int RENDER_SIZE = 32;
+	public static final int RENDER_SIZE = 16;
 	private static final String TAG = "MapRenderSystem";
 	private static final Vector3 LIGHT_POS = new Vector3(53f,.753f,0.51075f);
 	private static final int OVERDRAW_PIXELS = 10;

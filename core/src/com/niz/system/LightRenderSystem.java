@@ -152,6 +152,7 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 		super.removedFromEngine(engine);
 	}
 	BinaryHeap<Light> heap = new BinaryHeap<Light>(16, false);
+	
 	@Override
 	public void update(float deltaTime){
 		
@@ -173,11 +174,12 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 		int w = Gdx.graphics.getWidth();
 		int h = Gdx.graphics.getHeight();
 		//shader.end();
+		
 		for (int i = 0; i < lights.size(); i++){
 			Entity e = lights.get(i);
 			Vector2 pos = posM.get(e).pos;
 			Light light = lightM.get(e);
-			v.set(playerPos.x, playerPos.y, 0);
+			v.set(playerPos.x, playerPos.y, 0).scl(Main.PPM);
 			cam.project(v);
 			v.x /= w;
 			v.y /= h;
@@ -189,9 +191,10 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 			v.x /= w;
 			v.y /= h;
 			//if (camSys.zoomedOut) v.y = 1f - v.y;
-			//Gdx.app.log(TAG, "light "+v);
+		//	Gdx.app.log(TAG, "light "+v + " dist " + playerPos.dst2(pos));
 			light.position.set(v.x, v.y, 0);
-			heap.add(light, unprojectedPlayerPos.dst2(v.x, v.y));
+			heap.add(light, playerPos.dst2(pos));
+			
 			light.isOn = false;
 		}
 		
@@ -200,7 +203,7 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 				break;
 			}
 			Light l = heap.pop();
-			//Gdx.app.log(TAG,  "heap " + l.getValue() + " / " + heap.size);
+			//Gdx.app.log(TAG,  "heap " + l.getValue() + " / " + heap.size + l.position);
 			
 			l.isOn = true;
 		}
@@ -225,7 +228,7 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 		for (int i = 0; i < lights.size(); i++){
 			Entity e = lights.get(i);
 			Light light = lightM.get(e);
-			if (i >= NUM_LIGHTS) break;
+			//if (index >= NUM_LIGHTS) break;
 			if (light.isOn){
 				//if (true) continue;
 				/*shader.setUniformf(posLoc[layer][index]
@@ -255,14 +258,14 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 				
 				pos[index*3] = light.position.x;
 				pos[index*3+1] = light.position.y;
-				pos[index*3+2] = light.position.z + light.yOffset[layer];
+				pos[index*3+2] = light.position.z +
+						light.yOffset[layer];
 				//Gdx.app.log(TAG, "falloff "+light.position + "  " + index);
 				index++;
 				maxAmbient = Math.max(maxAmbient, light.ambientIntensity[layer]);
 			}
 		}
 		for (;index < NUM_LIGHTS; index++){
-			//Gdx.app.log(TAG, "disabled light"+index);
 			/*shader.setUniformf(posLoc[layer][index]
 					
 					, 0f
@@ -272,8 +275,15 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 			//shader.setUniformf(7, 0f, 0, 0f);
 			shader.setUniformf(falloffLoc[layer][index], 11111111111111111f, 11111111111111111111f, 111111111111111111111111111111f);//*/
 			falloff[index*3] = 1111111f;
+			pos[index*3+2] = 0;
+			pos[index*3] = -10000;
 			
 		}
+		//String falloffs = "";
+		//for (int i = 0; i < NUM_LIGHTS; i++){
+			//falloffs += "falloff " + falloff[i*3] + ", " + falloff[i*3+1] + "," + falloff[i*3+2];
+		//}
+		//Gdx.app.log(TAG, "set uniforms for " + layer + " "+falloffs);
 		
 		//shader.setUniformf("Falloff[0]", 1111111f, 1111111111f, 1111111111111f);
 		//shader.setUniformf("Falloff[1]", 1111111f, 1111111111f, 1111111111111f);
@@ -294,7 +304,7 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 	@Override
 	public void onNotify(Entity e, Event event, Object c) {
 		VectorInput in = (VectorInput) c;
-		viewportSize = in.v.x;		
+		viewportSize = in.v.x * .25f;		
 		
 	}
 

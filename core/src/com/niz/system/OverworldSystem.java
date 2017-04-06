@@ -44,7 +44,7 @@ import com.niz.component.Position;
 public class OverworldSystem extends RenderSystem implements EntityListener {
 	public static final int SCROLLING_MAP_WIDTH = 256, SCROLLING_MAP_HEIGHT = 256;
 
-	public static final int SCROLLING_MAP_TOTAL_SIZE = 100;
+	public static final int SCROLLING_MAP_TOTAL_SIZE = 1;
 
 	private static final String TAG = "Overworld syatem";
 
@@ -487,11 +487,11 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		//Gdx.app.log(TAG, "onfinishMap"+map.offset + " " + bit);
 		
 		if (bit == 0){
-			map.duplicateRenderR = true;
+			map.duplicateRenderR = !true;
 			Gdx.app.log(TAG, "DUPER");
 		} 
 		if (bit == SCROLLING_MAP_TOTAL_SIZE-1){
-			map.duplicateRenderL = true;
+			map.duplicateRenderL = !true;
 			Gdx.app.log(TAG, "DUPEL");
 		}
 		loading.clear(bit);
@@ -620,7 +620,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 			e.add(placer);
 			e.remove(Buckets.class);
 			e.add(engine.createComponent(Buckets.class));
-			
+			if (worldDef.overworldLayers == null) throw new GdxRuntimeException("jdksfljfd;sl");
 		}
 		
 		workSys.setWaitToAddEntities(true);
