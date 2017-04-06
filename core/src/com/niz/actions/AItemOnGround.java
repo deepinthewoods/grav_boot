@@ -90,7 +90,7 @@ public class AItemOnGround extends Action {
 					}
 				}//8dir
 				if (found){
-					Gdx.app.log(TAG, "FOUND PLACE");
+					//Gdx.app.log(TAG, "FOUND PLACE");
 					pos.set(shortestX + .5f, shortestY + .5f);
 				} else {
 					count = 0;
