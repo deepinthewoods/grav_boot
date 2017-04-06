@@ -40,7 +40,7 @@ public class AItemMaybeOnGround extends Action {
 	private static Family itemFamLiney = Family.all(Position.class, PickUp.class, LineBody.class).exclude(Physics.class).get();
 	private static ComponentMapper<Item> itemM = ComponentMapper.getFor(Item.class);
 
-	private static final String TAG = "stuck in wall action ";
+	private static final String TAG = "item maybe on ground action ";
 	public GridPoint2 block = new GridPoint2();
 	boolean first;
 	private BucketSystem bucket;

@@ -198,7 +198,7 @@ public void drawLast(float deltaTime) {
 	normal.bind(1);
 	diffuse.bind(0);
 	Gdx.gl.glEnable(GL20.GL_BLEND);
-	Gdx.gl.glLineWidth(2f);
+	Gdx.gl.glLineWidth(1f);
 	
 
 	
