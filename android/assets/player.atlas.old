@@ -53726,28 +53726,28 @@ normal/cat1
   xy: 1730, 1883
   size: 20, 14
   orig: 144, 51
-  offset: 49, 1
+  offset: 1, 35
   index: 6
 normal/cat1
   rotate: false
   xy: 1752, 1900
   size: 20, 13
   orig: 144, 51
-  offset: 73, 1
+  offset: 1, 35
   index: 7
 normal/cat1
   rotate: false
   xy: 1774, 1959
   size: 20, 12
   orig: 144, 51
-  offset: 97, 1
+  offset: 1, 35
   index: 8
 normal/cat1
   rotate: false
   xy: 1774, 1945
   size: 20, 13
   orig: 144, 51
-  offset: 121, 35
+  offset: 1, 35
   index: 13
 normal/cat1
   rotate: false
@@ -53761,84 +53761,84 @@ normal/cat1
   xy: 1756, 1806
   size: 19, 15
   orig: 144, 51
-  offset: 25, 35
+  offset: 1, 35
   index: 1
 normal/cat1
   rotate: false
   xy: 1756, 1792
   size: 19, 13
   orig: 144, 51
-  offset: 1, 1
+  offset: 1, 35
   index: 4
 normal/cat1
   rotate: false
   xy: 1756, 1776
   size: 19, 15
   orig: 144, 51
-  offset: 25, 1
+  offset: 1, 35
   index: 5
 normal/cat1
   rotate: false
   xy: 1756, 1763
   size: 19, 12
   orig: 144, 51
-  offset: 121, 0
+  offset: 1, 34
   index: 9
 normal/cat1
   rotate: false
   xy: 1756, 1747
   size: 19, 15
   orig: 144, 51
-  offset: 74, 35
+  offset: 2, 35
   index: 11
 normal/cat1
   rotate: false
   xy: 1815, 1852
   size: 18, 15
   orig: 144, 51
-  offset: 1, 18
+  offset: 1, 35
   index: 14
 normal/cat1
   rotate: false
   xy: 1796, 1830
   size: 18, 14
   orig: 144, 51
-  offset: 25, 18
+  offset: 1, 35
   index: 15
 normal/cat1
   rotate: false
   xy: 1852, 1696
   size: 17, 14
   orig: 144, 51
-  offset: 97, 18
+  offset: 1, 35
   index: 2
 normal/cat1
   rotate: false
   xy: 1872, 1726
   size: 17, 15
   orig: 144, 51
-  offset: 121, 18
+  offset: 1, 35
   index: 3
 normal/cat1
   rotate: false
   xy: 283, 437
   size: 17, 15
   orig: 144, 51
-  offset: 49, 18
+  offset: 1, 35
   index: 16
 normal/cat1
   rotate: false
   xy: 301, 439
   size: 17, 15
   orig: 144, 51
-  offset: 73, 18
+  offset: 1, 35
   index: 17
 normal/cat1
   rotate: false
   xy: 1976, 1760
   size: 16, 14
   orig: 144, 51
-  offset: 99, 35
+  offset: 3, 35
   index: 12
 normal/cat1
   rotate: false
@@ -53852,28 +53852,28 @@ normal/cat2
   xy: 1795, 1957
   size: 20, 14
   orig: 144, 51
-  offset: 49, 1
+  offset: 1, 35
   index: 6
 normal/cat2
   rotate: false
   xy: 1816, 1958
   size: 20, 13
   orig: 144, 51
-  offset: 73, 1
+  offset: 1, 35
   index: 7
 normal/cat2
   rotate: false
   xy: 1774, 1932
   size: 20, 12
   orig: 144, 51
-  offset: 97, 1
+  offset: 1, 35
   index: 8
 normal/cat2
   rotate: false
   xy: 1795, 1943
   size: 20, 13
   orig: 144, 51
-  offset: 121, 35
+  offset: 1, 35
   index: 13
 normal/cat2
   rotate: false
@@ -53887,84 +53887,84 @@ normal/cat2
   xy: 1755, 1715
   size: 19, 15
   orig: 144, 51
-  offset: 25, 35
+  offset: 1, 35
   index: 1
 normal/cat2
   rotate: false
   xy: 1755, 1701
   size: 19, 13
   orig: 144, 51
-  offset: 1, 1
+  offset: 1, 35
   index: 4
 normal/cat2
   rotate: false
   xy: 1815, 1868
   size: 19, 15
   orig: 144, 51
-  offset: 25, 1
+  offset: 1, 35
   index: 5
 normal/cat2
   rotate: false
   xy: 1836, 1875
   size: 19, 12
   orig: 144, 51
-  offset: 121, 0
+  offset: 1, 34
   index: 9
 normal/cat2
   rotate: false
   xy: 1835, 1859
   size: 19, 15
   orig: 144, 51
-  offset: 74, 35
+  offset: 2, 35
   index: 11
 normal/cat2
   rotate: false
   xy: 1796, 1814
   size: 18, 15
   orig: 144, 51
-  offset: 1, 18
+  offset: 1, 35
   index: 14
 normal/cat2
   rotate: false
   xy: 1815, 1837
   size: 18, 14
   orig: 144, 51
-  offset: 25, 18
+  offset: 1, 35
   index: 15
 normal/cat2
   rotate: false
   xy: 301, 424
   size: 17, 14
   orig: 144, 51
-  offset: 97, 18
+  offset: 1, 35
   index: 2
 normal/cat2
   rotate: false
   xy: 314, 18
   size: 17, 15
   orig: 144, 51
-  offset: 121, 18
+  offset: 1, 35
   index: 3
 normal/cat2
   rotate: false
   xy: 308, 2
   size: 17, 15
   orig: 144, 51
-  offset: 49, 18
+  offset: 1, 35
   index: 16
 normal/cat2
   rotate: false
   xy: 302, 408
   size: 17, 15
   orig: 144, 51
-  offset: 73, 18
+  offset: 1, 35
   index: 17
 normal/cat2
   rotate: false
   xy: 1976, 1745
   size: 16, 14
   orig: 144, 51
-  offset: 99, 35
+  offset: 3, 35
   index: 12
 normal/cat2
   rotate: false
@@ -53978,28 +53978,28 @@ normal/cat3
   xy: 1816, 1943
   size: 20, 14
   orig: 144, 51
-  offset: 49, 1
+  offset: 1, 35
   index: 6
 normal/cat3
   rotate: false
   xy: 1837, 1945
   size: 20, 13
   orig: 144, 51
-  offset: 73, 1
+  offset: 1, 35
   index: 7
 normal/cat3
   rotate: false
   xy: 1774, 1919
   size: 20, 12
   orig: 144, 51
-  offset: 97, 1
+  offset: 1, 35
   index: 8
 normal/cat3
   rotate: false
   xy: 1795, 1929
   size: 20, 13
   orig: 144, 51
-  offset: 121, 35
+  offset: 1, 35
   index: 13
 normal/cat3
   rotate: false
@@ -54013,84 +54013,84 @@ normal/cat3
   xy: 1942, 1830
   size: 19, 15
   orig: 144, 51
-  offset: 25, 35
+  offset: 1, 35
   index: 1
 normal/cat3
   rotate: false
   xy: 1687, 1707
   size: 19, 13
   orig: 144, 51
-  offset: 1, 1
+  offset: 1, 35
   index: 4
 normal/cat3
   rotate: false
   xy: 1963, 1913
   size: 19, 15
   orig: 144, 51
-  offset: 25, 1
+  offset: 1, 35
   index: 5
 normal/cat3
   rotate: false
   xy: 1963, 1900
   size: 19, 12
   orig: 144, 51
-  offset: 121, 0
+  offset: 1, 34
   index: 9
 normal/cat3
   rotate: false
   xy: 1983, 1913
   size: 19, 15
   orig: 144, 51
-  offset: 74, 35
+  offset: 2, 35
   index: 11
 normal/cat3
   rotate: false
   xy: 1796, 1798
   size: 18, 15
   orig: 144, 51
-  offset: 1, 18
+  offset: 1, 35
   index: 14
 normal/cat3
   rotate: false
   xy: 1815, 1822
   size: 18, 14
   orig: 144, 51
-  offset: 25, 18
+  offset: 1, 35
   index: 15
 normal/cat3
   rotate: false
   xy: 302, 393
   size: 17, 14
   orig: 144, 51
-  offset: 97, 18
+  offset: 1, 35
   index: 2
 normal/cat3
   rotate: false
   xy: 302, 377
   size: 17, 15
   orig: 144, 51
-  offset: 121, 18
+  offset: 1, 35
   index: 3
 normal/cat3
   rotate: false
   xy: 326, 2
   size: 17, 15
   orig: 144, 51
-  offset: 49, 18
+  offset: 1, 35
   index: 16
 normal/cat3
   rotate: false
   xy: 1538, 1749
   size: 17, 15
   orig: 144, 51
-  offset: 73, 18
+  offset: 1, 35
   index: 17
 normal/cat3
   rotate: false
   xy: 1959, 1734
   size: 16, 14
   orig: 144, 51
-  offset: 99, 35
+  offset: 3, 35
   index: 12
 normal/cat3
   rotate: false
@@ -54104,28 +54104,28 @@ normal/cat4
   xy: 1816, 1928
   size: 20, 14
   orig: 144, 51
-  offset: 49, 1
+  offset: 1, 35
   index: 6
 normal/cat4
   rotate: false
   xy: 1837, 1931
   size: 20, 13
   orig: 144, 51
-  offset: 73, 1
+  offset: 1, 35
   index: 7
 normal/cat4
   rotate: false
   xy: 1795, 1916
   size: 20, 12
   orig: 144, 51
-  offset: 97, 1
+  offset: 1, 35
   index: 8
 normal/cat4
   rotate: false
   xy: 1816, 1914
   size: 20, 13
   orig: 144, 51
-  offset: 121, 35
+  offset: 1, 35
   index: 13
 normal/cat4
   rotate: false
@@ -54139,84 +54139,84 @@ normal/cat4
   xy: 1983, 1897
   size: 19, 15
   orig: 144, 51
-  offset: 25, 35
+  offset: 1, 35
   index: 1
 normal/cat4
   rotate: false
   xy: 1963, 1870
   size: 19, 13
   orig: 144, 51
-  offset: 1, 1
+  offset: 1, 35
   index: 4
 normal/cat4
   rotate: false
   xy: 1983, 1881
   size: 19, 15
   orig: 144, 51
-  offset: 25, 1
+  offset: 1, 35
   index: 5
 normal/cat4
   rotate: false
   xy: 1963, 1857
   size: 19, 12
   orig: 144, 51
-  offset: 121, 0
+  offset: 1, 34
   index: 9
 normal/cat4
   rotate: false
   xy: 1983, 1865
   size: 19, 15
   orig: 144, 51
-  offset: 74, 35
+  offset: 2, 35
   index: 11
 normal/cat4
   rotate: false
   xy: 1815, 1806
   size: 18, 15
   orig: 144, 51
-  offset: 1, 18
+  offset: 1, 35
   index: 14
 normal/cat4
   rotate: false
   xy: 1796, 1783
   size: 18, 14
   orig: 144, 51
-  offset: 25, 18
+  offset: 1, 35
   index: 15
 normal/cat4
   rotate: false
   xy: 1538, 1734
   size: 17, 14
   orig: 144, 51
-  offset: 97, 18
+  offset: 1, 35
   index: 2
 normal/cat4
   rotate: false
   xy: 1795, 1688
   size: 17, 15
   orig: 144, 51
-  offset: 121, 18
+  offset: 1, 35
   index: 3
 normal/cat4
   rotate: false
   xy: 1813, 1688
   size: 17, 15
   orig: 144, 51
-  offset: 49, 18
+  offset: 1, 35
   index: 16
 normal/cat4
   rotate: false
   xy: 1831, 1686
   size: 17, 15
   orig: 144, 51
-  offset: 73, 18
+  offset: 1, 35
   index: 17
 normal/cat4
   rotate: false
   xy: 1942, 1730
   size: 16, 14
   orig: 144, 51
-  offset: 99, 35
+  offset: 3, 35
   index: 12
 normal/cat4
   rotate: false
@@ -54230,28 +54230,28 @@ normal/cat5
   xy: 1837, 1916
   size: 20, 14
   orig: 144, 51
-  offset: 49, 1
+  offset: 1, 35
   index: 6
 normal/cat5
   rotate: false
   xy: 1221, 360
   size: 20, 13
   orig: 144, 51
-  offset: 73, 1
+  offset: 1, 35
   index: 7
 normal/cat5
   rotate: false
   xy: 1774, 1906
   size: 20, 12
   orig: 144, 51
-  offset: 97, 1
+  offset: 1, 35
   index: 8
 normal/cat5
   rotate: false
   xy: 1795, 1902
   size: 20, 13
   orig: 144, 51
-  offset: 121, 35
+  offset: 1, 35
   index: 13
 normal/cat5
   rotate: false
@@ -54265,84 +54265,84 @@ normal/cat5
   xy: 2003, 1878
   size: 19, 15
   orig: 144, 51
-  offset: 25, 35
+  offset: 1, 35
   index: 1
 normal/cat5
   rotate: false
   xy: 2003, 1864
   size: 19, 13
   orig: 144, 51
-  offset: 1, 1
+  offset: 1, 35
   index: 4
 normal/cat5
   rotate: false
   xy: 1963, 1841
   size: 19, 15
   orig: 144, 51
-  offset: 25, 1
+  offset: 1, 35
   index: 5
 normal/cat5
   rotate: false
   xy: 1983, 1852
   size: 19, 12
   orig: 144, 51
-  offset: 121, 0
+  offset: 1, 34
   index: 9
 normal/cat5
   rotate: false
   xy: 2003, 1848
   size: 19, 15
   orig: 144, 51
-  offset: 74, 35
+  offset: 2, 35
   index: 11
 normal/cat5
   rotate: false
   xy: 1815, 1790
   size: 18, 15
   orig: 144, 51
-  offset: 1, 18
+  offset: 1, 35
   index: 14
 normal/cat5
   rotate: false
   xy: 1796, 1768
   size: 18, 14
   orig: 144, 51
-  offset: 25, 18
+  offset: 1, 35
   index: 15
 normal/cat5
   rotate: false
   xy: 1849, 1681
   size: 17, 14
   orig: 144, 51
-  offset: 97, 18
+  offset: 1, 35
   index: 2
 normal/cat5
   rotate: false
   xy: 319, 435
   size: 17, 15
   orig: 144, 51
-  offset: 121, 18
+  offset: 1, 35
   index: 3
 normal/cat5
   rotate: false
   xy: 337, 435
   size: 17, 15
   orig: 144, 51
-  offset: 49, 18
+  offset: 1, 35
   index: 16
 normal/cat5
   rotate: false
   xy: 320, 419
   size: 17, 15
   orig: 144, 51
-  offset: 73, 18
+  offset: 1, 35
   index: 17
 normal/cat5
   rotate: false
   xy: 1976, 1730
   size: 16, 14
   orig: 144, 51
-  offset: 99, 35
+  offset: 3, 35
   index: 12
 normal/cat5
   rotate: false
@@ -54356,28 +54356,28 @@ normal/chicken1
   xy: 1902, 1639
   size: 12, 11
   orig: 82, 36
-  offset: 24, 24
+  offset: 0, 24
   index: 12
 normal/chicken1
   rotate: false
   xy: 1928, 1655
   size: 12, 10
   orig: 82, 36
-  offset: 36, 24
+  offset: 0, 24
   index: 14
 normal/chicken1
   rotate: false
   xy: 697, 230
   size: 12, 9
   orig: 82, 36
-  offset: 48, 24
+  offset: 0, 24
   index: 15
 normal/chicken1
   rotate: false
   xy: 710, 235
   size: 12, 10
   orig: 82, 36
-  offset: 60, 24
+  offset: 0, 24
   index: 16
 normal/chicken1
   rotate: false
@@ -54391,140 +54391,140 @@ normal/chicken1
   xy: 904, 249
   size: 11, 8
   orig: 82, 36
-  offset: 12, 24
+  offset: 0, 24
   index: 1
 normal/chicken1
   rotate: false
   xy: 78, 434
   size: 10, 9
   orig: 82, 36
-  offset: 72, 24
+  offset: 0, 24
   index: 17
 normal/chicken1
   rotate: false
   xy: 1658, 1718
   size: 7, 10
   orig: 82, 36
-  offset: 38, 12
+  offset: 2, 24
   index: 2
 normal/chicken1
   rotate: false
   xy: 1555, 2023
   size: 7, 9
   orig: 82, 36
-  offset: 50, 12
+  offset: 2, 24
   index: 3
 normal/chicken1
   rotate: false
   xy: 1044, 322
   size: 7, 10
   orig: 82, 36
-  offset: 62, 12
+  offset: 2, 24
   index: 4
 normal/chicken1
   rotate: false
   xy: 1406, 658
   size: 7, 9
   orig: 82, 36
-  offset: 74, 12
+  offset: 2, 24
   index: 5
 normal/chicken1
   rotate: false
   xy: 1671, 1576
   size: 7, 8
   orig: 82, 36
-  offset: 3, 0
+  offset: 3, 24
   index: 6
 normal/chicken1
   rotate: false
   xy: 819, 192
   size: 7, 8
   orig: 82, 36
-  offset: 15, 0
+  offset: 3, 24
   index: 7
 normal/chicken1
   rotate: false
   xy: 818, 180
   size: 7, 11
   orig: 82, 36
-  offset: 26, 0
+  offset: 2, 24
   index: 8
 normal/chicken1
   rotate: false
   xy: 818, 169
   size: 7, 10
   orig: 82, 36
-  offset: 38, 0
+  offset: 2, 24
   index: 9
 normal/chicken1
   rotate: false
   xy: 1008, 255
   size: 7, 9
   orig: 82, 36
-  offset: 50, 0
+  offset: 2, 24
   index: 10
 normal/chicken1
   rotate: false
   xy: 1016, 271
   size: 7, 10
   orig: 82, 36
-  offset: 62, 0
+  offset: 2, 24
   index: 11
 normal/chicken1
   rotate: false
   xy: 1052, 323
   size: 7, 9
   orig: 82, 36
-  offset: 74, 0
+  offset: 2, 24
   index: 13
 normal/chicken1
   rotate: false
   xy: 1008, 246
   size: 7, 8
   orig: 82, 36
-  offset: 3, 12
+  offset: 3, 24
   index: 18
 normal/chicken1
   rotate: false
   xy: 1016, 262
   size: 7, 8
   orig: 82, 36
-  offset: 15, 12
+  offset: 3, 24
   index: 19
 normal/chicken1
   rotate: false
   xy: 1008, 234
   size: 7, 11
   orig: 82, 36
-  offset: 26, 12
+  offset: 2, 24
   index: 20
 normal/chicken2
   rotate: false
   xy: 696, 218
   size: 12, 11
   orig: 82, 36
-  offset: 24, 24
+  offset: 0, 24
   index: 12
 normal/chicken2
   rotate: false
   xy: 696, 207
   size: 12, 10
   orig: 82, 36
-  offset: 36, 24
+  offset: 0, 24
   index: 14
 normal/chicken2
   rotate: false
   xy: 1915, 1637
   size: 12, 9
   orig: 82, 36
-  offset: 48, 24
+  offset: 0, 24
   index: 15
 normal/chicken2
   rotate: false
   xy: 1928, 1644
   size: 12, 10
   orig: 82, 36
-  offset: 60, 24
+  offset: 0, 24
   index: 16
 normal/chicken2
   rotate: false
@@ -54538,140 +54538,140 @@ normal/chicken2
   xy: 742, 89
   size: 11, 8
   orig: 82, 36
-  offset: 12, 24
+  offset: 0, 24
   index: 1
 normal/chicken2
   rotate: false
   xy: 2013, 1633
   size: 10, 9
   orig: 82, 36
-  offset: 72, 24
+  offset: 0, 24
   index: 17
 normal/chicken2
   rotate: false
   xy: 1016, 251
   size: 7, 10
   orig: 82, 36
-  offset: 38, 12
+  offset: 2, 24
   index: 2
 normal/chicken2
   rotate: false
   xy: 1008, 224
   size: 7, 9
   orig: 82, 36
-  offset: 50, 12
+  offset: 2, 24
   index: 3
 normal/chicken2
   rotate: false
   xy: 1016, 240
   size: 7, 10
   orig: 82, 36
-  offset: 62, 12
+  offset: 2, 24
   index: 4
 normal/chicken2
   rotate: false
   xy: 1016, 230
   size: 7, 9
   orig: 82, 36
-  offset: 74, 12
+  offset: 2, 24
   index: 5
 normal/chicken2
   rotate: false
   xy: 1008, 215
   size: 7, 8
   orig: 82, 36
-  offset: 3, 0
+  offset: 3, 24
   index: 6
 normal/chicken2
   rotate: false
   xy: 1016, 221
   size: 7, 8
   orig: 82, 36
-  offset: 15, 0
+  offset: 3, 24
   index: 7
 normal/chicken2
   rotate: false
   xy: 1467, 389
   size: 7, 11
   orig: 82, 36
-  offset: 26, 0
+  offset: 2, 24
   index: 8
 normal/chicken2
   rotate: false
   xy: 1467, 378
   size: 7, 10
   orig: 82, 36
-  offset: 38, 0
+  offset: 2, 24
   index: 9
 normal/chicken2
   rotate: false
   xy: 1467, 368
   size: 7, 9
   orig: 82, 36
-  offset: 50, 0
+  offset: 2, 24
   index: 10
 normal/chicken2
   rotate: false
   xy: 697, 1
   size: 7, 10
   orig: 82, 36
-  offset: 62, 0
+  offset: 2, 24
   index: 11
 normal/chicken2
   rotate: false
   xy: 827, 190
   size: 7, 9
   orig: 82, 36
-  offset: 74, 0
+  offset: 2, 24
   index: 13
 normal/chicken2
   rotate: false
   xy: 826, 181
   size: 7, 8
   orig: 82, 36
-  offset: 3, 12
+  offset: 3, 24
   index: 18
 normal/chicken2
   rotate: false
   xy: 826, 172
   size: 7, 8
   orig: 82, 36
-  offset: 15, 12
+  offset: 3, 24
   index: 19
 normal/chicken2
   rotate: false
   xy: 1012, 203
   size: 7, 11
   orig: 82, 36
-  offset: 26, 12
+  offset: 2, 24
   index: 20
 normal/chicken3
   rotate: false
   xy: 1928, 1632
   size: 12, 11
   orig: 82, 36
-  offset: 24, 24
+  offset: 0, 24
   index: 12
 normal/chicken3
   rotate: false
   xy: 696, 196
   size: 12, 10
   orig: 82, 36
-  offset: 36, 24
+  offset: 0, 24
   index: 14
 normal/chicken3
   rotate: false
   xy: 695, 186
   size: 12, 9
   orig: 82, 36
-  offset: 48, 24
+  offset: 0, 24
   index: 15
 normal/chicken3
   rotate: false
   xy: 695, 175
   size: 12, 10
   orig: 82, 36
-  offset: 60, 24
+  offset: 0, 24
   index: 16
 normal/chicken3
   rotate: false
@@ -54685,140 +54685,140 @@ normal/chicken3
   xy: 742, 80
   size: 11, 8
   orig: 82, 36
-  offset: 12, 24
+  offset: 0, 24
   index: 1
 normal/chicken3
   rotate: false
   xy: 2024, 1632
   size: 10, 9
   orig: 82, 36
-  offset: 72, 24
+  offset: 0, 24
   index: 17
 normal/chicken3
   rotate: false
   xy: 1012, 192
   size: 7, 10
   orig: 82, 36
-  offset: 38, 12
+  offset: 2, 24
   index: 2
 normal/chicken3
   rotate: false
   xy: 1012, 182
   size: 7, 9
   orig: 82, 36
-  offset: 50, 12
+  offset: 2, 24
   index: 3
 normal/chicken3
   rotate: false
   xy: 1012, 171
   size: 7, 10
   orig: 82, 36
-  offset: 62, 12
+  offset: 2, 24
   index: 4
 normal/chicken3
   rotate: false
   xy: 1012, 161
   size: 7, 9
   orig: 82, 36
-  offset: 74, 12
+  offset: 2, 24
   index: 5
 normal/chicken3
   rotate: false
   xy: 1012, 152
   size: 7, 8
   orig: 82, 36
-  offset: 3, 0
+  offset: 3, 24
   index: 6
 normal/chicken3
   rotate: false
   xy: 1679, 1574
   size: 7, 8
   orig: 82, 36
-  offset: 15, 0
+  offset: 3, 24
   index: 7
 normal/chicken3
   rotate: false
   xy: 1687, 1571
   size: 7, 11
   orig: 82, 36
-  offset: 26, 0
+  offset: 2, 24
   index: 8
 normal/chicken3
   rotate: false
   xy: 725, 71
   size: 7, 10
   orig: 82, 36
-  offset: 38, 0
+  offset: 2, 24
   index: 9
 normal/chicken3
   rotate: false
   xy: 733, 72
   size: 7, 9
   orig: 82, 36
-  offset: 50, 0
+  offset: 2, 24
   index: 10
 normal/chicken3
   rotate: false
   xy: 725, 60
   size: 7, 10
   orig: 82, 36
-  offset: 62, 0
+  offset: 2, 24
   index: 11
 normal/chicken3
   rotate: false
   xy: 733, 62
   size: 7, 9
   orig: 82, 36
-  offset: 74, 0
+  offset: 2, 24
   index: 13
 normal/chicken3
   rotate: false
   xy: 725, 51
   size: 7, 8
   orig: 82, 36
-  offset: 3, 12
+  offset: 3, 24
   index: 18
 normal/chicken3
   rotate: false
   xy: 733, 53
   size: 7, 8
   orig: 82, 36
-  offset: 15, 12
+  offset: 3, 24
   index: 19
 normal/chicken3
   rotate: false
   xy: 725, 39
   size: 7, 11
   orig: 82, 36
-  offset: 26, 12
+  offset: 2, 24
   index: 20
 normal/chicken4
   rotate: false
   xy: 695, 163
   size: 12, 11
   orig: 82, 36
-  offset: 24, 24
+  offset: 0, 24
   index: 12
 normal/chicken4
   rotate: false
   xy: 695, 152
   size: 12, 10
   orig: 82, 36
-  offset: 36, 24
+  offset: 0, 24
   index: 14
 normal/chicken4
   rotate: false
   xy: 710, 225
   size: 12, 9
   orig: 82, 36
-  offset: 48, 24
+  offset: 0, 24
   index: 15
 normal/chicken4
   rotate: false
   xy: 709, 214
   size: 12, 10
   orig: 82, 36
-  offset: 60, 24
+  offset: 0, 24
   index: 16
 normal/chicken4
   rotate: false
@@ -54832,140 +54832,140 @@ normal/chicken4
   xy: 760, 162
   size: 11, 8
   orig: 82, 36
-  offset: 12, 24
+  offset: 0, 24
   index: 1
 normal/chicken4
   rotate: false
   xy: 928, 299
   size: 10, 9
   orig: 82, 36
-  offset: 72, 24
+  offset: 0, 24
   index: 17
 normal/chicken4
   rotate: false
   xy: 733, 42
   size: 7, 10
   orig: 82, 36
-  offset: 38, 12
+  offset: 2, 24
   index: 2
 normal/chicken4
   rotate: false
   xy: 725, 29
   size: 7, 9
   orig: 82, 36
-  offset: 50, 12
+  offset: 2, 24
   index: 3
 normal/chicken4
   rotate: false
   xy: 733, 31
   size: 7, 10
   orig: 82, 36
-  offset: 62, 12
+  offset: 2, 24
   index: 4
 normal/chicken4
   rotate: false
   xy: 741, 70
   size: 7, 9
   orig: 82, 36
-  offset: 74, 12
+  offset: 2, 24
   index: 5
 normal/chicken4
   rotate: false
   xy: 741, 61
   size: 7, 8
   orig: 82, 36
-  offset: 3, 0
+  offset: 3, 24
   index: 6
 normal/chicken4
   rotate: false
   xy: 741, 52
   size: 7, 8
   orig: 82, 36
-  offset: 15, 0
+  offset: 3, 24
   index: 7
 normal/chicken4
   rotate: false
   xy: 741, 40
   size: 7, 11
   orig: 82, 36
-  offset: 26, 0
+  offset: 2, 24
   index: 8
 normal/chicken4
   rotate: false
   xy: 741, 29
   size: 7, 10
   orig: 82, 36
-  offset: 38, 0
+  offset: 2, 24
   index: 9
 normal/chicken4
   rotate: false
   xy: 707, 10
   size: 7, 9
   orig: 82, 36
-  offset: 50, 0
+  offset: 2, 24
   index: 10
 normal/chicken4
   rotate: false
   xy: 716, 15
   size: 7, 10
   orig: 82, 36
-  offset: 62, 0
+  offset: 2, 24
   index: 11
 normal/chicken4
   rotate: false
   xy: 1036, 312
   size: 7, 9
   orig: 82, 36
-  offset: 74, 0
+  offset: 2, 24
   index: 13
 normal/chicken4
   rotate: false
   xy: 705, 1
   size: 7, 8
   orig: 82, 36
-  offset: 3, 12
+  offset: 3, 24
   index: 18
 normal/chicken4
   rotate: false
   xy: 713, 1
   size: 7, 8
   orig: 82, 36
-  offset: 15, 12
+  offset: 3, 24
   index: 19
 normal/chicken4
   rotate: false
   xy: 1044, 310
   size: 7, 11
   orig: 82, 36
-  offset: 26, 12
+  offset: 2, 24
   index: 20
 normal/chicken5
   rotate: false
   xy: 709, 202
   size: 12, 11
   orig: 82, 36
-  offset: 24, 24
+  offset: 0, 24
   index: 12
 normal/chicken5
   rotate: false
   xy: 709, 191
   size: 12, 10
   orig: 82, 36
-  offset: 36, 24
+  offset: 0, 24
   index: 14
 normal/chicken5
   rotate: false
   xy: 708, 181
   size: 12, 9
   orig: 82, 36
-  offset: 48, 24
+  offset: 0, 24
   index: 15
 normal/chicken5
   rotate: false
   xy: 708, 170
   size: 12, 10
   orig: 82, 36
-  offset: 60, 24
+  offset: 0, 24
   index: 16
 normal/chicken5
   rotate: false
@@ -54979,112 +54979,112 @@ normal/chicken5
   xy: 760, 144
   size: 11, 8
   orig: 82, 36
-  offset: 12, 24
+  offset: 0, 24
   index: 1
 normal/chicken5
   rotate: false
   xy: 928, 289
   size: 10, 9
   orig: 82, 36
-  offset: 72, 24
+  offset: 0, 24
   index: 17
 normal/chicken5
   rotate: false
   xy: 1052, 312
   size: 7, 10
   orig: 82, 36
-  offset: 38, 12
+  offset: 2, 24
   index: 2
 normal/chicken5
   rotate: false
   xy: 1034, 302
   size: 7, 9
   orig: 82, 36
-  offset: 50, 12
+  offset: 2, 24
   index: 3
 normal/chicken5
   rotate: false
   xy: 1060, 321
   size: 7, 10
   orig: 82, 36
-  offset: 62, 12
+  offset: 2, 24
   index: 4
 normal/chicken5
   rotate: false
   xy: 1068, 322
   size: 7, 9
   orig: 82, 36
-  offset: 74, 12
+  offset: 2, 24
   index: 5
 normal/chicken5
   rotate: false
   xy: 1060, 312
   size: 7, 8
   orig: 82, 36
-  offset: 3, 0
+  offset: 3, 24
   index: 6
 normal/chicken5
   rotate: false
   xy: 1076, 323
   size: 7, 8
   orig: 82, 36
-  offset: 15, 0
+  offset: 3, 24
   index: 7
 normal/chicken5
   rotate: false
   xy: 1068, 310
   size: 7, 11
   orig: 82, 36
-  offset: 26, 0
+  offset: 2, 24
   index: 8
 normal/chicken5
   rotate: false
   xy: 1076, 312
   size: 7, 10
   orig: 82, 36
-  offset: 38, 0
+  offset: 2, 24
   index: 9
 normal/chicken5
   rotate: false
   xy: 1084, 325
   size: 7, 9
   orig: 82, 36
-  offset: 50, 0
+  offset: 2, 24
   index: 10
 normal/chicken5
   rotate: false
   xy: 1092, 324
   size: 7, 10
   orig: 82, 36
-  offset: 62, 0
+  offset: 2, 24
   index: 11
 normal/chicken5
   rotate: false
   xy: 1084, 315
   size: 7, 9
   orig: 82, 36
-  offset: 74, 0
+  offset: 2, 24
   index: 13
 normal/chicken5
   rotate: false
   xy: 1092, 315
   size: 7, 8
   orig: 82, 36
-  offset: 3, 12
+  offset: 3, 24
   index: 18
 normal/chicken5
   rotate: false
   xy: 1100, 320
   size: 7, 8
   orig: 82, 36
-  offset: 15, 12
+  offset: 3, 24
   index: 19
 normal/chicken5
   rotate: false
   xy: 749, 62
   size: 7, 11
   orig: 82, 36
-  offset: 26, 12
+  offset: 2, 24
   index: 20
 normal/cloak1
   rotate: false
@@ -55399,56 +55399,56 @@ normal/dog1
   xy: 1959, 1719
   size: 16, 14
   orig: 128, 32
-  offset: 16, 16
+  offset: 0, 16
   index: 1
 normal/dog1
   rotate: false
   xy: 1976, 1715
   size: 16, 14
   orig: 128, 32
-  offset: 48, 0
+  offset: 0, 16
   index: 3
 normal/dog1
   rotate: false
   xy: 1993, 1717
   size: 16, 14
   orig: 128, 32
-  offset: 80, 0
+  offset: 0, 16
   index: 5
 normal/dog1
   rotate: false
   xy: 1308, 361
   size: 16, 14
   orig: 128, 32
-  offset: 112, 0
+  offset: 0, 16
   index: 7
 normal/dog1
   rotate: false
   xy: 2010, 1792
   size: 16, 14
   orig: 128, 32
-  offset: 48, 16
+  offset: 0, 16
   index: 9
 normal/dog1
   rotate: false
   xy: 2010, 1777
   size: 16, 14
   orig: 128, 32
-  offset: 80, 16
+  offset: 0, 16
   index: 11
 normal/dog1
   rotate: false
   xy: 2010, 1762
   size: 16, 14
   orig: 128, 32
-  offset: 112, 16
+  offset: 0, 16
   index: 13
 normal/dog1
   rotate: false
   xy: 2010, 1747
   size: 16, 14
   orig: 128, 32
-  offset: 16, 0
+  offset: 0, 16
   index: 15
 normal/dog1
   rotate: false
@@ -55462,105 +55462,105 @@ normal/dog1
   xy: 420, 15
   size: 15, 14
   orig: 128, 32
-  offset: 32, 0
+  offset: 0, 16
   index: 2
 normal/dog1
   rotate: false
   xy: 436, 15
   size: 15, 14
   orig: 128, 32
-  offset: 65, 0
+  offset: 1, 16
   index: 4
 normal/dog1
   rotate: false
   xy: 452, 15
   size: 15, 14
   orig: 128, 32
-  offset: 97, 0
+  offset: 1, 16
   index: 6
 normal/dog1
   rotate: false
   xy: 1552, 1708
   size: 15, 14
   orig: 128, 32
-  offset: 32, 16
+  offset: 0, 16
   index: 8
 normal/dog1
   rotate: false
   xy: 1552, 1693
   size: 15, 14
   orig: 128, 32
-  offset: 65, 16
+  offset: 1, 16
   index: 10
 normal/dog1
   rotate: false
   xy: 1551, 1678
   size: 15, 14
   orig: 128, 32
-  offset: 97, 16
+  offset: 1, 16
   index: 12
 normal/dog1
   rotate: false
   xy: 1551, 1663
   size: 15, 14
   orig: 128, 32
-  offset: 0, 0
+  offset: 0, 16
   index: 14
 normal/dog2
   rotate: false
   xy: 2010, 1732
   size: 16, 14
   orig: 128, 32
-  offset: 16, 16
+  offset: 0, 16
   index: 1
 normal/dog2
   rotate: false
   xy: 2010, 1717
   size: 16, 14
   orig: 128, 32
-  offset: 48, 0
+  offset: 0, 16
   index: 3
 normal/dog2
   rotate: false
   xy: 2027, 1792
   size: 16, 14
   orig: 128, 32
-  offset: 80, 0
+  offset: 0, 16
   index: 5
 normal/dog2
   rotate: false
   xy: 2027, 1777
   size: 16, 14
   orig: 128, 32
-  offset: 112, 0
+  offset: 0, 16
   index: 7
 normal/dog2
   rotate: false
   xy: 2027, 1762
   size: 16, 14
   orig: 128, 32
-  offset: 48, 16
+  offset: 0, 16
   index: 9
 normal/dog2
   rotate: false
   xy: 2027, 1747
   size: 16, 14
   orig: 128, 32
-  offset: 80, 16
+  offset: 0, 16
   index: 11
 normal/dog2
   rotate: false
   xy: 2027, 1732
   size: 16, 14
   orig: 128, 32
-  offset: 112, 16
+  offset: 0, 16
   index: 13
 normal/dog2
   rotate: false
   xy: 2027, 1717
   size: 16, 14
   orig: 128, 32
-  offset: 16, 0
+  offset: 0, 16
   index: 15
 normal/dog2
   rotate: false
@@ -55574,105 +55574,105 @@ normal/dog2
   xy: 1551, 1633
   size: 15, 14
   orig: 128, 32
-  offset: 32, 0
+  offset: 0, 16
   index: 2
 normal/dog2
   rotate: false
   xy: 1551, 1618
   size: 15, 14
   orig: 128, 32
-  offset: 65, 0
+  offset: 1, 16
   index: 4
 normal/dog2
   rotate: false
   xy: 1551, 1603
   size: 15, 14
   orig: 128, 32
-  offset: 97, 0
+  offset: 1, 16
   index: 6
 normal/dog2
   rotate: false
   xy: 1568, 1701
   size: 15, 14
   orig: 128, 32
-  offset: 32, 16
+  offset: 0, 16
   index: 8
 normal/dog2
   rotate: false
   xy: 1568, 1686
   size: 15, 14
   orig: 128, 32
-  offset: 65, 16
+  offset: 1, 16
   index: 10
 normal/dog2
   rotate: false
   xy: 1567, 1671
   size: 15, 14
   orig: 128, 32
-  offset: 97, 16
+  offset: 1, 16
   index: 12
 normal/dog2
   rotate: false
   xy: 1567, 1656
   size: 15, 14
   orig: 128, 32
-  offset: 0, 0
+  offset: 0, 16
   index: 14
 normal/dog3
   rotate: false
   xy: 1327, 380
   size: 16, 14
   orig: 128, 32
-  offset: 16, 16
+  offset: 0, 16
   index: 1
 normal/dog3
   rotate: false
   xy: 1344, 383
   size: 16, 14
   orig: 128, 32
-  offset: 48, 0
+  offset: 0, 16
   index: 3
 normal/dog3
   rotate: false
   xy: 1325, 365
   size: 16, 14
   orig: 128, 32
-  offset: 80, 0
+  offset: 0, 16
   index: 5
 normal/dog3
   rotate: false
   xy: 1325, 350
   size: 16, 14
   orig: 128, 32
-  offset: 112, 0
+  offset: 0, 16
   index: 7
 normal/dog3
   rotate: false
   xy: 1344, 368
   size: 16, 14
   orig: 128, 32
-  offset: 48, 16
+  offset: 0, 16
   index: 9
 normal/dog3
   rotate: false
   xy: 1342, 353
   size: 16, 14
   orig: 128, 32
-  offset: 80, 16
+  offset: 0, 16
   index: 11
 normal/dog3
   rotate: false
   xy: 1361, 381
   size: 16, 14
   orig: 128, 32
-  offset: 112, 16
+  offset: 0, 16
   index: 13
 normal/dog3
   rotate: false
   xy: 1378, 381
   size: 16, 14
   orig: 128, 32
-  offset: 16, 0
+  offset: 0, 16
   index: 15
 normal/dog3
   rotate: false
@@ -55686,105 +55686,105 @@ normal/dog3
   xy: 1567, 1626
   size: 15, 14
   orig: 128, 32
-  offset: 32, 0
+  offset: 0, 16
   index: 2
 normal/dog3
   rotate: false
   xy: 1567, 1611
   size: 15, 14
   orig: 128, 32
-  offset: 65, 0
+  offset: 1, 16
   index: 4
 normal/dog3
   rotate: false
   xy: 1584, 1695
   size: 15, 14
   orig: 128, 32
-  offset: 97, 0
+  offset: 1, 16
   index: 6
 normal/dog3
   rotate: false
   xy: 1584, 1680
   size: 15, 14
   orig: 128, 32
-  offset: 32, 16
+  offset: 0, 16
   index: 8
 normal/dog3
   rotate: false
   xy: 1583, 1665
   size: 15, 14
   orig: 128, 32
-  offset: 65, 16
+  offset: 1, 16
   index: 10
 normal/dog3
   rotate: false
   xy: 1583, 1650
   size: 15, 14
   orig: 128, 32
-  offset: 97, 16
+  offset: 1, 16
   index: 12
 normal/dog3
   rotate: false
   xy: 1583, 1635
   size: 15, 14
   orig: 128, 32
-  offset: 0, 0
+  offset: 0, 16
   index: 14
 normal/dog4
   rotate: false
   xy: 1361, 366
   size: 16, 14
   orig: 128, 32
-  offset: 16, 16
+  offset: 0, 16
   index: 1
 normal/dog4
   rotate: false
   xy: 1378, 366
   size: 16, 14
   orig: 128, 32
-  offset: 48, 0
+  offset: 0, 16
   index: 3
 normal/dog4
   rotate: false
   xy: 1359, 351
   size: 16, 14
   orig: 128, 32
-  offset: 80, 0
+  offset: 0, 16
   index: 5
 normal/dog4
   rotate: false
   xy: 1376, 351
   size: 16, 14
   orig: 128, 32
-  offset: 112, 0
+  offset: 0, 16
   index: 7
 normal/dog4
   rotate: false
   xy: 1342, 338
   size: 16, 14
   orig: 128, 32
-  offset: 48, 16
+  offset: 0, 16
   index: 9
 normal/dog4
   rotate: false
   xy: 1359, 336
   size: 16, 14
   orig: 128, 32
-  offset: 80, 16
+  offset: 0, 16
   index: 11
 normal/dog4
   rotate: false
   xy: 1376, 336
   size: 16, 14
   orig: 128, 32
-  offset: 112, 16
+  offset: 0, 16
   index: 13
 normal/dog4
   rotate: false
   xy: 1395, 381
   size: 16, 14
   orig: 128, 32
-  offset: 16, 0
+  offset: 0, 16
   index: 15
 normal/dog4
   rotate: false
@@ -55798,105 +55798,105 @@ normal/dog4
   xy: 1583, 1605
   size: 15, 14
   orig: 128, 32
-  offset: 32, 0
+  offset: 0, 16
   index: 2
 normal/dog4
   rotate: false
   xy: 1567, 1596
   size: 15, 14
   orig: 128, 32
-  offset: 65, 0
+  offset: 1, 16
   index: 4
 normal/dog4
   rotate: false
   xy: 1583, 1590
   size: 15, 14
   orig: 128, 32
-  offset: 97, 0
+  offset: 1, 16
   index: 6
 normal/dog4
   rotate: false
   xy: 1600, 1694
   size: 15, 14
   orig: 128, 32
-  offset: 32, 16
+  offset: 0, 16
   index: 8
 normal/dog4
   rotate: false
   xy: 1600, 1679
   size: 15, 14
   orig: 128, 32
-  offset: 65, 16
+  offset: 1, 16
   index: 10
 normal/dog4
   rotate: false
   xy: 1599, 1664
   size: 15, 14
   orig: 128, 32
-  offset: 97, 16
+  offset: 1, 16
   index: 12
 normal/dog4
   rotate: false
   xy: 1599, 1649
   size: 15, 14
   orig: 128, 32
-  offset: 0, 0
+  offset: 0, 16
   index: 14
 normal/dog5
   rotate: false
   xy: 1395, 366
   size: 16, 14
   orig: 128, 32
-  offset: 16, 16
+  offset: 0, 16
   index: 1
 normal/dog5
   rotate: false
   xy: 1393, 351
   size: 16, 14
   orig: 128, 32
-  offset: 48, 0
+  offset: 0, 16
   index: 3
 normal/dog5
   rotate: false
   xy: 1393, 336
   size: 16, 14
   orig: 128, 32
-  offset: 80, 0
+  offset: 0, 16
   index: 5
 normal/dog5
   rotate: false
   xy: 1908, 1726
   size: 16, 14
   orig: 128, 32
-  offset: 112, 0
+  offset: 0, 16
   index: 7
 normal/dog5
   rotate: false
   xy: 1925, 1726
   size: 16, 14
   orig: 128, 32
-  offset: 48, 16
+  offset: 0, 16
   index: 9
 normal/dog5
   rotate: false
   xy: 1942, 1715
   size: 16, 14
   orig: 128, 32
-  offset: 80, 16
+  offset: 0, 16
   index: 11
 normal/dog5
   rotate: false
   xy: 1959, 1704
   size: 16, 14
   orig: 128, 32
-  offset: 112, 16
+  offset: 0, 16
   index: 13
 normal/dog5
   rotate: false
   xy: 1976, 1700
   size: 16, 14
   orig: 128, 32
-  offset: 16, 0
+  offset: 0, 16
   index: 15
 normal/dog5
   rotate: false
@@ -55910,56 +55910,56 @@ normal/dog5
   xy: 1599, 1619
   size: 15, 14
   orig: 128, 32
-  offset: 32, 0
+  offset: 0, 16
   index: 2
 normal/dog5
   rotate: false
   xy: 1599, 1604
   size: 15, 14
   orig: 128, 32
-  offset: 65, 0
+  offset: 1, 16
   index: 4
 normal/dog5
   rotate: false
   xy: 1599, 1589
   size: 15, 14
   orig: 128, 32
-  offset: 97, 0
+  offset: 1, 16
   index: 6
 normal/dog5
   rotate: false
   xy: 1616, 1693
   size: 15, 14
   orig: 128, 32
-  offset: 32, 16
+  offset: 0, 16
   index: 8
 normal/dog5
   rotate: false
   xy: 1616, 1678
   size: 15, 14
   orig: 128, 32
-  offset: 65, 16
+  offset: 1, 16
   index: 10
 normal/dog5
   rotate: false
   xy: 1615, 1663
   size: 15, 14
   orig: 128, 32
-  offset: 97, 16
+  offset: 1, 16
   index: 12
 normal/dog5
   rotate: false
   xy: 1615, 1648
   size: 15, 14
   orig: 128, 32
-  offset: 0, 0
+  offset: 0, 16
   index: 14
 normal/dogalt1
   rotate: false
   xy: 1993, 1706
   size: 16, 10
   orig: 126, 22
-  offset: 32, 0
+  offset: 0, 11
   index: 2
 normal/dogalt1
   rotate: false
@@ -55973,84 +55973,84 @@ normal/dogalt1
   xy: 1615, 1626
   size: 15, 10
   orig: 126, 22
-  offset: 16, 11
+  offset: 0, 11
   index: 1
 normal/dogalt1
   rotate: false
   xy: 1615, 1616
   size: 15, 9
   orig: 126, 22
-  offset: 48, 0
+  offset: 0, 11
   index: 3
 normal/dogalt1
   rotate: false
   xy: 1615, 1606
   size: 15, 9
   orig: 126, 22
-  offset: 80, 0
+  offset: 0, 11
   index: 5
 normal/dogalt1
   rotate: false
   xy: 1615, 1596
   size: 15, 9
   orig: 126, 22
-  offset: 16, 0
+  offset: 0, 11
   index: 15
 normal/dogalt1
   rotate: false
   xy: 485, 117
   size: 14, 10
   orig: 126, 22
-  offset: 64, 0
+  offset: 0, 11
   index: 4
 normal/dogalt1
   rotate: false
   xy: 485, 106
   size: 14, 10
   orig: 126, 22
-  offset: 32, 11
+  offset: 0, 11
   index: 8
 normal/dogalt1
   rotate: false
   xy: 485, 95
   size: 14, 10
   orig: 126, 22
-  offset: 48, 11
+  offset: 0, 11
   index: 9
 normal/dogalt1
   rotate: false
   xy: 485, 85
   size: 14, 9
   orig: 126, 22
-  offset: 65, 11
+  offset: 1, 11
   index: 10
 normal/dogalt1
   rotate: false
   xy: 485, 75
   size: 14, 9
   orig: 126, 22
-  offset: 81, 11
+  offset: 1, 11
   index: 11
 normal/dogalt1
   rotate: false
   xy: 485, 64
   size: 14, 10
   orig: 126, 22
-  offset: 1, 0
+  offset: 1, 11
   index: 14
 normal/dogalt1
   rotate: false
   xy: 655, 279
   size: 13, 9
   orig: 126, 22
-  offset: 98, 11
+  offset: 2, 11
   index: 12
 normal/dogalt1
   rotate: false
   xy: 655, 268
   size: 13, 10
   orig: 126, 22
-  offset: 113, 11
+  offset: 1, 11
   index: 13
 normal/dogalt1
   rotate: false
@@ -56071,7 +56071,7 @@ normal/dogalt2
   xy: 2010, 1706
   size: 16, 10
   orig: 126, 22
-  offset: 32, 0
+  offset: 0, 11
   index: 2
 normal/dogalt2
   rotate: false
@@ -56085,84 +56085,84 @@ normal/dogalt2
   xy: 1615, 1585
   size: 15, 10
   orig: 126, 22
-  offset: 16, 11
+  offset: 0, 11
   index: 1
 normal/dogalt2
   rotate: false
   xy: 1632, 1698
   size: 15, 9
   orig: 126, 22
-  offset: 48, 0
+  offset: 0, 11
   index: 3
 normal/dogalt2
   rotate: false
   xy: 1632, 1688
   size: 15, 9
   orig: 126, 22
-  offset: 80, 0
+  offset: 0, 11
   index: 5
 normal/dogalt2
   rotate: false
   xy: 1632, 1678
   size: 15, 9
   orig: 126, 22
-  offset: 16, 0
+  offset: 0, 11
   index: 15
 normal/dogalt2
   rotate: false
   xy: 485, 53
   size: 14, 10
   orig: 126, 22
-  offset: 64, 0
+  offset: 0, 11
   index: 4
 normal/dogalt2
   rotate: false
   xy: 485, 42
   size: 14, 10
   orig: 126, 22
-  offset: 32, 11
+  offset: 0, 11
   index: 8
 normal/dogalt2
   rotate: false
   xy: 468, 18
   size: 14, 10
   orig: 126, 22
-  offset: 48, 11
+  offset: 0, 11
   index: 9
 normal/dogalt2
   rotate: false
   xy: 485, 32
   size: 14, 9
   orig: 126, 22
-  offset: 65, 11
+  offset: 1, 11
   index: 10
 normal/dogalt2
   rotate: false
   xy: 501, 129
   size: 14, 9
   orig: 126, 22
-  offset: 81, 11
+  offset: 1, 11
   index: 11
 normal/dogalt2
   rotate: false
   xy: 516, 128
   size: 14, 10
   orig: 126, 22
-  offset: 1, 0
+  offset: 1, 11
   index: 14
 normal/dogalt2
   rotate: false
   xy: 655, 258
   size: 13, 9
   orig: 126, 22
-  offset: 98, 11
+  offset: 2, 11
   index: 12
 normal/dogalt2
   rotate: false
   xy: 670, 287
   size: 13, 10
   orig: 126, 22
-  offset: 113, 11
+  offset: 1, 11
   index: 13
 normal/dogalt2
   rotate: false
@@ -56183,7 +56183,7 @@ normal/dogalt3
   xy: 2027, 1706
   size: 16, 10
   orig: 126, 22
-  offset: 32, 0
+  offset: 0, 11
   index: 2
 normal/dogalt3
   rotate: false
@@ -56197,84 +56197,84 @@ normal/dogalt3
   xy: 1631, 1656
   size: 15, 10
   orig: 126, 22
-  offset: 16, 11
+  offset: 0, 11
   index: 1
 normal/dogalt3
   rotate: false
   xy: 1631, 1646
   size: 15, 9
   orig: 126, 22
-  offset: 48, 0
+  offset: 0, 11
   index: 3
 normal/dogalt3
   rotate: false
   xy: 1631, 1636
   size: 15, 9
   orig: 126, 22
-  offset: 80, 0
+  offset: 0, 11
   index: 5
 normal/dogalt3
   rotate: false
   xy: 1631, 1626
   size: 15, 9
   orig: 126, 22
-  offset: 16, 0
+  offset: 0, 11
   index: 15
 normal/dogalt3
   rotate: false
   xy: 500, 118
   size: 14, 10
   orig: 126, 22
-  offset: 64, 0
+  offset: 0, 11
   index: 4
 normal/dogalt3
   rotate: false
   xy: 500, 107
   size: 14, 10
   orig: 126, 22
-  offset: 32, 11
+  offset: 0, 11
   index: 8
 normal/dogalt3
   rotate: false
   xy: 500, 96
   size: 14, 10
   orig: 126, 22
-  offset: 48, 11
+  offset: 0, 11
   index: 9
 normal/dogalt3
   rotate: false
   xy: 500, 86
   size: 14, 9
   orig: 126, 22
-  offset: 65, 11
+  offset: 1, 11
   index: 10
 normal/dogalt3
   rotate: false
   xy: 500, 76
   size: 14, 9
   orig: 126, 22
-  offset: 81, 11
+  offset: 1, 11
   index: 11
 normal/dogalt3
   rotate: false
   xy: 500, 65
   size: 14, 10
   orig: 126, 22
-  offset: 1, 0
+  offset: 1, 11
   index: 14
 normal/dogalt3
   rotate: false
   xy: 669, 277
   size: 13, 9
   orig: 126, 22
-  offset: 98, 11
+  offset: 2, 11
   index: 12
 normal/dogalt3
   rotate: false
   xy: 669, 266
   size: 13, 10
   orig: 126, 22
-  offset: 113, 11
+  offset: 1, 11
   index: 13
 normal/dogalt3
   rotate: false
@@ -56295,7 +56295,7 @@ normal/dogalt4
   xy: 1993, 1695
   size: 16, 10
   orig: 126, 22
-  offset: 32, 0
+  offset: 0, 11
   index: 2
 normal/dogalt4
   rotate: false
@@ -56309,84 +56309,84 @@ normal/dogalt4
   xy: 1631, 1604
   size: 15, 10
   orig: 126, 22
-  offset: 16, 11
+  offset: 0, 11
   index: 1
 normal/dogalt4
   rotate: false
   xy: 1631, 1594
   size: 15, 9
   orig: 126, 22
-  offset: 48, 0
+  offset: 0, 11
   index: 3
 normal/dogalt4
   rotate: false
   xy: 1631, 1584
   size: 15, 9
   orig: 126, 22
-  offset: 80, 0
+  offset: 0, 11
   index: 5
 normal/dogalt4
   rotate: false
   xy: 1648, 1699
   size: 15, 9
   orig: 126, 22
-  offset: 16, 0
+  offset: 0, 11
   index: 15
 normal/dogalt4
   rotate: false
   xy: 500, 54
   size: 14, 10
   orig: 126, 22
-  offset: 64, 0
+  offset: 0, 11
   index: 4
 normal/dogalt4
   rotate: false
   xy: 500, 43
   size: 14, 10
   orig: 126, 22
-  offset: 32, 11
+  offset: 0, 11
   index: 8
 normal/dogalt4
   rotate: false
   xy: 500, 32
   size: 14, 10
   orig: 126, 22
-  offset: 48, 11
+  offset: 0, 11
   index: 9
 normal/dogalt4
   rotate: false
   xy: 515, 118
   size: 14, 9
   orig: 126, 22
-  offset: 65, 11
+  offset: 1, 11
   index: 10
 normal/dogalt4
   rotate: false
   xy: 515, 108
   size: 14, 9
   orig: 126, 22
-  offset: 81, 11
+  offset: 1, 11
   index: 11
 normal/dogalt4
   rotate: false
   xy: 515, 97
   size: 14, 10
   orig: 126, 22
-  offset: 1, 0
+  offset: 1, 11
   index: 14
 normal/dogalt4
   rotate: false
   xy: 669, 256
   size: 13, 9
   orig: 126, 22
-  offset: 98, 11
+  offset: 2, 11
   index: 12
 normal/dogalt4
   rotate: false
   xy: 655, 247
   size: 13, 10
   orig: 126, 22
-  offset: 113, 11
+  offset: 1, 11
   index: 13
 normal/dogalt4
   rotate: false
@@ -56407,7 +56407,7 @@ normal/dogalt5
   xy: 2010, 1695
   size: 16, 10
   orig: 126, 22
-  offset: 32, 0
+  offset: 0, 11
   index: 2
 normal/dogalt5
   rotate: false
@@ -56421,84 +56421,84 @@ normal/dogalt5
   xy: 1648, 1677
   size: 15, 10
   orig: 126, 22
-  offset: 16, 11
+  offset: 0, 11
   index: 1
 normal/dogalt5
   rotate: false
   xy: 1647, 1667
   size: 15, 9
   orig: 126, 22
-  offset: 48, 0
+  offset: 0, 11
   index: 3
 normal/dogalt5
   rotate: false
   xy: 1647, 1657
   size: 15, 9
   orig: 126, 22
-  offset: 80, 0
+  offset: 0, 11
   index: 5
 normal/dogalt5
   rotate: false
   xy: 1647, 1647
   size: 15, 9
   orig: 126, 22
-  offset: 16, 0
+  offset: 0, 11
   index: 15
 normal/dogalt5
   rotate: false
   xy: 515, 86
   size: 14, 10
   orig: 126, 22
-  offset: 64, 0
+  offset: 0, 11
   index: 4
 normal/dogalt5
   rotate: false
   xy: 515, 75
   size: 14, 10
   orig: 126, 22
-  offset: 32, 11
+  offset: 0, 11
   index: 8
 normal/dogalt5
   rotate: false
   xy: 515, 64
   size: 14, 10
   orig: 126, 22
-  offset: 48, 11
+  offset: 0, 11
   index: 9
 normal/dogalt5
   rotate: false
   xy: 515, 54
   size: 14, 9
   orig: 126, 22
-  offset: 65, 11
+  offset: 1, 11
   index: 10
 normal/dogalt5
   rotate: false
   xy: 515, 44
   size: 14, 9
   orig: 126, 22
-  offset: 81, 11
+  offset: 1, 11
   index: 11
 normal/dogalt5
   rotate: false
   xy: 515, 33
   size: 14, 10
   orig: 126, 22
-  offset: 1, 0
+  offset: 1, 11
   index: 14
 normal/dogalt5
   rotate: false
   xy: 669, 246
   size: 13, 9
   orig: 126, 22
-  offset: 98, 11
+  offset: 2, 11
   index: 12
 normal/dogalt5
   rotate: false
   xy: 641, 243
   size: 13, 10
   orig: 126, 22
-  offset: 113, 11
+  offset: 1, 11
   index: 13
 normal/dogalt5
   rotate: false
@@ -57471,98 +57471,98 @@ normal/germanshephard1
   xy: 1389, 770
   size: 24, 16
   orig: 150, 57
-  offset: 3, 0
+  offset: 3, 38
   index: 2
 normal/germanshephard1
   rotate: false
   xy: 120, 341
   size: 24, 16
   orig: 150, 57
-  offset: 33, 0
+  offset: 3, 38
   index: 3
 normal/germanshephard1
   rotate: false
   xy: 145, 355
   size: 24, 16
   orig: 150, 57
-  offset: 63, 0
+  offset: 3, 38
   index: 4
 normal/germanshephard1
   rotate: false
   xy: 1389, 753
   size: 24, 16
   orig: 150, 57
-  offset: 63, 38
+  offset: 3, 38
   index: 7
 normal/germanshephard1
   rotate: false
   xy: 120, 324
   size: 24, 16
   orig: 150, 57
-  offset: 93, 38
+  offset: 3, 38
   index: 8
 normal/germanshephard1
   rotate: false
   xy: 145, 338
   size: 24, 16
   orig: 150, 57
-  offset: 123, 38
+  offset: 3, 38
   index: 9
 normal/germanshephard1
   rotate: false
   xy: 1389, 736
   size: 24, 16
   orig: 150, 57
-  offset: 3, 19
+  offset: 3, 38
   index: 10
 normal/germanshephard1
   rotate: false
   xy: 120, 307
   size: 24, 16
   orig: 150, 57
-  offset: 33, 19
+  offset: 3, 38
   index: 11
 normal/germanshephard1
   rotate: false
   xy: 145, 321
   size: 24, 16
   orig: 150, 57
-  offset: 63, 19
+  offset: 3, 38
   index: 12
 normal/germanshephard1
   rotate: false
   xy: 1389, 719
   size: 24, 16
   orig: 150, 57
-  offset: 93, 19
+  offset: 3, 38
   index: 13
 normal/germanshephard1
   rotate: false
   xy: 120, 290
   size: 24, 16
   orig: 150, 57
-  offset: 123, 19
+  offset: 3, 38
   index: 14
 normal/germanshephard1
   rotate: false
   xy: 1667, 1986
   size: 23, 16
   orig: 150, 57
-  offset: 34, 38
+  offset: 4, 38
   index: 1
 normal/germanshephard1
   rotate: false
   xy: 257, 364
   size: 23, 17
   orig: 150, 57
-  offset: 94, 0
+  offset: 4, 38
   index: 5
 normal/germanshephard1
   rotate: false
   xy: 93, 37
   size: 23, 16
   orig: 150, 57
-  offset: 123, 1
+  offset: 3, 39
   index: 6
 normal/germanshephard2
   rotate: false
@@ -57576,98 +57576,98 @@ normal/germanshephard2
   xy: 1389, 702
   size: 24, 16
   orig: 150, 57
-  offset: 3, 0
+  offset: 3, 38
   index: 2
 normal/germanshephard2
   rotate: false
   xy: 120, 273
   size: 24, 16
   orig: 150, 57
-  offset: 33, 0
+  offset: 3, 38
   index: 3
 normal/germanshephard2
   rotate: false
   xy: 145, 287
   size: 24, 16
   orig: 150, 57
-  offset: 63, 0
+  offset: 3, 38
   index: 4
 normal/germanshephard2
   rotate: false
   xy: 1389, 685
   size: 24, 16
   orig: 150, 57
-  offset: 63, 38
+  offset: 3, 38
   index: 7
 normal/germanshephard2
   rotate: false
   xy: 120, 256
   size: 24, 16
   orig: 150, 57
-  offset: 93, 38
+  offset: 3, 38
   index: 8
 normal/germanshephard2
   rotate: false
   xy: 145, 270
   size: 24, 16
   orig: 150, 57
-  offset: 123, 38
+  offset: 3, 38
   index: 9
 normal/germanshephard2
   rotate: false
   xy: 1389, 668
   size: 24, 16
   orig: 150, 57
-  offset: 3, 19
+  offset: 3, 38
   index: 10
 normal/germanshephard2
   rotate: false
   xy: 120, 239
   size: 24, 16
   orig: 150, 57
-  offset: 33, 19
+  offset: 3, 38
   index: 11
 normal/germanshephard2
   rotate: false
   xy: 145, 253
   size: 24, 16
   orig: 150, 57
-  offset: 63, 19
+  offset: 3, 38
   index: 12
 normal/germanshephard2
   rotate: false
   xy: 120, 222
   size: 24, 16
   orig: 150, 57
-  offset: 93, 19
+  offset: 3, 38
   index: 13
 normal/germanshephard2
   rotate: false
   xy: 145, 236
   size: 24, 16
   orig: 150, 57
-  offset: 123, 19
+  offset: 3, 38
   index: 14
 normal/germanshephard2
   rotate: false
   xy: 1471, 1756
   size: 23, 16
   orig: 150, 57
-  offset: 34, 38
+  offset: 4, 38
   index: 1
 normal/germanshephard2
   rotate: false
   xy: 1444, 1713
   size: 23, 17
   orig: 150, 57
-  offset: 94, 0
+  offset: 4, 38
   index: 5
 normal/germanshephard2
   rotate: false
   xy: 1444, 1696
   size: 23, 16
   orig: 150, 57
-  offset: 123, 1
+  offset: 3, 39
   index: 6
 normal/germanshephard3
   rotate: false
@@ -57681,98 +57681,98 @@ normal/germanshephard3
   xy: 145, 219
   size: 24, 16
   orig: 150, 57
-  offset: 3, 0
+  offset: 3, 38
   index: 2
 normal/germanshephard3
   rotate: false
   xy: 120, 188
   size: 24, 16
   orig: 150, 57
-  offset: 33, 0
+  offset: 3, 38
   index: 3
 normal/germanshephard3
   rotate: false
   xy: 145, 202
   size: 24, 16
   orig: 150, 57
-  offset: 63, 0
+  offset: 3, 38
   index: 4
 normal/germanshephard3
   rotate: false
   xy: 120, 171
   size: 24, 16
   orig: 150, 57
-  offset: 63, 38
+  offset: 3, 38
   index: 7
 normal/germanshephard3
   rotate: false
   xy: 145, 185
   size: 24, 16
   orig: 150, 57
-  offset: 93, 38
+  offset: 3, 38
   index: 8
 normal/germanshephard3
   rotate: false
   xy: 120, 154
   size: 24, 16
   orig: 150, 57
-  offset: 123, 38
+  offset: 3, 38
   index: 9
 normal/germanshephard3
   rotate: false
   xy: 145, 168
   size: 24, 16
   orig: 150, 57
-  offset: 3, 19
+  offset: 3, 38
   index: 10
 normal/germanshephard3
   rotate: false
   xy: 120, 137
   size: 24, 16
   orig: 150, 57
-  offset: 33, 19
+  offset: 3, 38
   index: 11
 normal/germanshephard3
   rotate: false
   xy: 145, 151
   size: 24, 16
   orig: 150, 57
-  offset: 63, 19
+  offset: 3, 38
   index: 12
 normal/germanshephard3
   rotate: false
   xy: 120, 120
   size: 24, 16
   orig: 150, 57
-  offset: 93, 19
+  offset: 3, 38
   index: 13
 normal/germanshephard3
   rotate: false
   xy: 145, 134
   size: 24, 16
   orig: 150, 57
-  offset: 123, 19
+  offset: 3, 38
   index: 14
 normal/germanshephard3
   rotate: false
   xy: 1444, 1679
   size: 23, 16
   orig: 150, 57
-  offset: 34, 38
+  offset: 4, 38
   index: 1
 normal/germanshephard3
   rotate: false
   xy: 1444, 1661
   size: 23, 17
   orig: 150, 57
-  offset: 94, 0
+  offset: 4, 38
   index: 5
 normal/germanshephard3
   rotate: false
   xy: 1444, 1644
   size: 23, 16
   orig: 150, 57
-  offset: 123, 1
+  offset: 3, 39
   index: 6
 normal/germanshephard4
   rotate: false
@@ -57786,98 +57786,98 @@ normal/germanshephard4
   xy: 145, 117
   size: 24, 16
   orig: 150, 57
-  offset: 3, 0
+  offset: 3, 38
   index: 2
 normal/germanshephard4
   rotate: false
   xy: 120, 86
   size: 24, 16
   orig: 150, 57
-  offset: 33, 0
+  offset: 3, 38
   index: 3
 normal/germanshephard4
   rotate: false
   xy: 145, 100
   size: 24, 16
   orig: 150, 57
-  offset: 63, 0
+  offset: 3, 38
   index: 4
 normal/germanshephard4
   rotate: false
   xy: 120, 69
   size: 24, 16
   orig: 150, 57
-  offset: 63, 38
+  offset: 3, 38
   index: 7
 normal/germanshephard4
   rotate: false
   xy: 145, 83
   size: 24, 16
   orig: 150, 57
-  offset: 93, 38
+  offset: 3, 38
   index: 8
 normal/germanshephard4
   rotate: false
   xy: 120, 52
   size: 24, 16
   orig: 150, 57
-  offset: 123, 38
+  offset: 3, 38
   index: 9
 normal/germanshephard4
   rotate: false
   xy: 145, 66
   size: 24, 16
   orig: 150, 57
-  offset: 3, 19
+  offset: 3, 38
   index: 10
 normal/germanshephard4
   rotate: false
   xy: 170, 354
   size: 24, 16
   orig: 150, 57
-  offset: 33, 19
+  offset: 3, 38
   index: 11
 normal/germanshephard4
   rotate: false
   xy: 170, 337
   size: 24, 16
   orig: 150, 57
-  offset: 63, 19
+  offset: 3, 38
   index: 12
 normal/germanshephard4
   rotate: false
   xy: 170, 320
   size: 24, 16
   orig: 150, 57
-  offset: 93, 19
+  offset: 3, 38
   index: 13
 normal/germanshephard4
   rotate: false
   xy: 170, 303
   size: 24, 16
   orig: 150, 57
-  offset: 123, 19
+  offset: 3, 38
   index: 14
 normal/germanshephard4
   rotate: false
   xy: 117, 35
   size: 23, 16
   orig: 150, 57
-  offset: 34, 38
+  offset: 4, 38
   index: 1
 normal/germanshephard4
   rotate: false
   xy: 117, 17
   size: 23, 17
   orig: 150, 57
-  offset: 94, 0
+  offset: 4, 38
   index: 5
 normal/germanshephard4
   rotate: false
   xy: 141, 20
   size: 23, 16
   orig: 150, 57
-  offset: 123, 1
+  offset: 3, 39
   index: 6
 normal/germanshephard5
   rotate: false
@@ -57891,98 +57891,98 @@ normal/germanshephard5
   xy: 170, 269
   size: 24, 16
   orig: 150, 57
-  offset: 3, 0
+  offset: 3, 38
   index: 2
 normal/germanshephard5
   rotate: false
   xy: 170, 252
   size: 24, 16
   orig: 150, 57
-  offset: 33, 0
+  offset: 3, 38
   index: 3
 normal/germanshephard5
   rotate: false
   xy: 170, 235
   size: 24, 16
   orig: 150, 57
-  offset: 63, 0
+  offset: 3, 38
   index: 4
 normal/germanshephard5
   rotate: false
   xy: 170, 218
   size: 24, 16
   orig: 150, 57
-  offset: 63, 38
+  offset: 3, 38
   index: 7
 normal/germanshephard5
   rotate: false
   xy: 170, 201
   size: 24, 16
   orig: 150, 57
-  offset: 93, 38
+  offset: 3, 38
   index: 8
 normal/germanshephard5
   rotate: false
   xy: 170, 184
   size: 24, 16
   orig: 150, 57
-  offset: 123, 38
+  offset: 3, 38
   index: 9
 normal/germanshephard5
   rotate: false
   xy: 170, 167
   size: 24, 16
   orig: 150, 57
-  offset: 3, 19
+  offset: 3, 38
   index: 10
 normal/germanshephard5
   rotate: false
   xy: 170, 150
   size: 24, 16
   orig: 150, 57
-  offset: 33, 19
+  offset: 3, 38
   index: 11
 normal/germanshephard5
   rotate: false
   xy: 170, 133
   size: 24, 16
   orig: 150, 57
-  offset: 63, 19
+  offset: 3, 38
   index: 12
 normal/germanshephard5
   rotate: false
   xy: 170, 116
   size: 24, 16
   orig: 150, 57
-  offset: 93, 19
+  offset: 3, 38
   index: 13
 normal/germanshephard5
   rotate: false
   xy: 170, 99
   size: 24, 16
   orig: 150, 57
-  offset: 123, 19
+  offset: 3, 38
   index: 14
 normal/germanshephard5
   rotate: false
   xy: 1444, 1627
   size: 23, 16
   orig: 150, 57
-  offset: 34, 38
+  offset: 4, 38
   index: 1
 normal/germanshephard5
   rotate: false
   xy: 165, 15
   size: 23, 17
   orig: 150, 57
-  offset: 94, 0
+  offset: 4, 38
   index: 5
 normal/germanshephard5
   rotate: false
   xy: 189, 16
   size: 23, 16
   orig: 150, 57
-  offset: 123, 1
+  offset: 3, 39
   index: 6
 normal/goo1
   rotate: false
@@ -70400,28 +70400,28 @@ normal/kiwi1
   xy: 1156, 329
   size: 7, 7
   orig: 45, 9
-  offset: 10, 0
+  offset: 1, 0
   index: 1
 normal/kiwi1
   rotate: false
   xy: 1156, 321
   size: 7, 7
   orig: 45, 9
-  offset: 19, 0
+  offset: 1, 0
   index: 2
 normal/kiwi1
   rotate: false
   xy: 1156, 313
   size: 7, 7
   orig: 45, 9
-  offset: 28, 0
+  offset: 1, 0
   index: 3
 normal/kiwi1
   rotate: false
   xy: 1164, 338
   size: 7, 7
   orig: 45, 9
-  offset: 37, 0
+  offset: 1, 0
   index: 4
 normal/kiwi2
   rotate: false
@@ -70435,28 +70435,28 @@ normal/kiwi2
   xy: 1164, 321
   size: 7, 7
   orig: 45, 9
-  offset: 10, 0
+  offset: 1, 0
   index: 1
 normal/kiwi2
   rotate: false
   xy: 1164, 313
   size: 7, 7
   orig: 45, 9
-  offset: 19, 0
+  offset: 1, 0
   index: 2
 normal/kiwi2
   rotate: false
   xy: 724, 8
   size: 7, 7
   orig: 45, 9
-  offset: 28, 0
+  offset: 1, 0
   index: 3
 normal/kiwi2
   rotate: false
   xy: 1020, 207
   size: 7, 7
   orig: 45, 9
-  offset: 37, 0
+  offset: 1, 0
   index: 4
 normal/kiwi21
   rotate: false
@@ -70470,28 +70470,28 @@ normal/kiwi21
   xy: 790, 292
   size: 12, 8
   orig: 65, 9
-  offset: 13, 0
+  offset: 0, 0
   index: 1
 normal/kiwi21
   rotate: false
   xy: 790, 283
   size: 12, 8
   orig: 65, 9
-  offset: 26, 0
+  offset: 0, 0
   index: 2
 normal/kiwi21
   rotate: false
   xy: 692, 115
   size: 12, 8
   orig: 65, 9
-  offset: 39, 0
+  offset: 0, 0
   index: 3
 normal/kiwi21
   rotate: false
   xy: 691, 106
   size: 12, 8
   orig: 65, 9
-  offset: 52, 0
+  offset: 0, 0
   index: 4
 normal/kiwi22
   rotate: false
@@ -70505,28 +70505,28 @@ normal/kiwi22
   xy: 764, 269
   size: 12, 8
   orig: 65, 9
-  offset: 13, 0
+  offset: 0, 0
   index: 1
 normal/kiwi22
   rotate: false
   xy: 790, 274
   size: 12, 8
   orig: 65, 9
-  offset: 26, 0
+  offset: 0, 0
   index: 2
 normal/kiwi22
   rotate: false
   xy: 777, 266
   size: 12, 8
   orig: 65, 9
-  offset: 39, 0
+  offset: 0, 0
   index: 3
 normal/kiwi22
   rotate: false
   xy: 790, 265
   size: 12, 8
   orig: 65, 9
-  offset: 52, 0
+  offset: 0, 0
   index: 4
 normal/kiwi23
   rotate: false
@@ -70540,28 +70540,28 @@ normal/kiwi23
   xy: 751, 263
   size: 12, 8
   orig: 65, 9
-  offset: 13, 0
+  offset: 0, 0
   index: 1
 normal/kiwi23
   rotate: false
   xy: 764, 260
   size: 12, 8
   orig: 65, 9
-  offset: 26, 0
+  offset: 0, 0
   index: 2
 normal/kiwi23
   rotate: false
   xy: 736, 258
   size: 12, 8
   orig: 65, 9
-  offset: 39, 0
+  offset: 0, 0
   index: 3
 normal/kiwi23
   rotate: false
   xy: 736, 249
   size: 12, 8
   orig: 65, 9
-  offset: 52, 0
+  offset: 0, 0
   index: 4
 normal/kiwi24
   rotate: false
@@ -70575,28 +70575,28 @@ normal/kiwi24
   xy: 736, 231
   size: 12, 8
   orig: 65, 9
-  offset: 13, 0
+  offset: 0, 0
   index: 1
 normal/kiwi24
   rotate: false
   xy: 736, 222
   size: 12, 8
   orig: 65, 9
-  offset: 26, 0
+  offset: 0, 0
   index: 2
 normal/kiwi24
   rotate: false
   xy: 735, 213
   size: 12, 8
   orig: 65, 9
-  offset: 39, 0
+  offset: 0, 0
   index: 3
 normal/kiwi24
   rotate: false
   xy: 735, 204
   size: 12, 8
   orig: 65, 9
-  offset: 52, 0
+  offset: 0, 0
   index: 4
 normal/kiwi25
   rotate: false
@@ -70610,28 +70610,28 @@ normal/kiwi25
   xy: 735, 186
   size: 12, 8
   orig: 65, 9
-  offset: 13, 0
+  offset: 0, 0
   index: 1
 normal/kiwi25
   rotate: false
   xy: 734, 177
   size: 12, 8
   orig: 65, 9
-  offset: 26, 0
+  offset: 0, 0
   index: 2
 normal/kiwi25
   rotate: false
   xy: 734, 168
   size: 12, 8
   orig: 65, 9
-  offset: 39, 0
+  offset: 0, 0
   index: 3
 normal/kiwi25
   rotate: false
   xy: 734, 159
   size: 12, 8
   orig: 65, 9
-  offset: 52, 0
+  offset: 0, 0
   index: 4
 normal/kiwi3
   rotate: false
@@ -70645,28 +70645,28 @@ normal/kiwi3
   xy: 1020, 190
   size: 7, 7
   orig: 45, 9
-  offset: 10, 0
+  offset: 1, 0
   index: 1
 normal/kiwi3
   rotate: false
   xy: 1020, 182
   size: 7, 7
   orig: 45, 9
-  offset: 19, 0
+  offset: 1, 0
   index: 2
 normal/kiwi3
   rotate: false
   xy: 1020, 174
   size: 7, 7
   orig: 45, 9
-  offset: 28, 0
+  offset: 1, 0
   index: 3
 normal/kiwi3
   rotate: false
   xy: 1020, 166
   size: 7, 7
   orig: 45, 9
-  offset: 37, 0
+  offset: 1, 0
   index: 4
 normal/kiwi4
   rotate: false
@@ -70680,28 +70680,28 @@ normal/kiwi4
   xy: 1020, 149
   size: 7, 7
   orig: 45, 9
-  offset: 10, 0
+  offset: 1, 0
   index: 1
 normal/kiwi4
   rotate: false
   xy: 1020, 141
   size: 7, 7
   orig: 45, 9
-  offset: 19, 0
+  offset: 1, 0
   index: 2
 normal/kiwi4
   rotate: false
   xy: 1156, 305
   size: 7, 7
   orig: 45, 9
-  offset: 28, 0
+  offset: 1, 0
   index: 3
 normal/kiwi4
   rotate: false
   xy: 1164, 305
   size: 7, 7
   orig: 45, 9
-  offset: 37, 0
+  offset: 1, 0
   index: 4
 normal/kiwi5
   rotate: false
@@ -70715,28 +70715,28 @@ normal/kiwi5
   xy: 1156, 297
   size: 7, 7
   orig: 45, 9
-  offset: 10, 0
+  offset: 1, 0
   index: 1
 normal/kiwi5
   rotate: false
   xy: 1164, 297
   size: 7, 7
   orig: 45, 9
-  offset: 19, 0
+  offset: 1, 0
   index: 2
 normal/kiwi5
   rotate: false
   xy: 826, 164
   size: 7, 7
   orig: 45, 9
-  offset: 28, 0
+  offset: 1, 0
   index: 3
 normal/kiwi5
   rotate: false
   xy: 818, 161
   size: 7, 7
   orig: 45, 9
-  offset: 37, 0
+  offset: 1, 0
   index: 4
 normal/kultist1
   rotate: false

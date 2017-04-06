@@ -39,6 +39,7 @@ public class CharacterScreen extends EdgeUI implements Observer {
 		 //sides[0].min[0] = new ControllerPad();
 		 //table.row();
 		 startGameButton = new StartGameButton();
+		
 		 sides[1] = new UITable();
 		 sides[1].min = new UIElement[1];
 		 //sides[1].max = new UIElement[1];

@@ -44,6 +44,7 @@ public class AAgentBuildMap extends ProgressAction {
 	public final static int ITERATIONS = 64;
 	private static final String TAG = "build map action";
 	private static final int TOTAL_ROOMS_TARGET = 2;
+	private static final int TOP_FREE_SPACE = 40;
 	private int teleportDiameter = 50;
 	private Array<RoomEntry> main = new Array<RoomEntry>(true, 16), branch = new Array<RoomEntry>(true, 16)
 			, base = new Array<RoomEntry>(true, 16);
@@ -188,9 +189,18 @@ public class AAgentBuildMap extends ProgressAction {
 			for (int x = 0; x < map.width; x++)
 				for (int y = 0; y < map.height; y++){
 					
-					map.setBGLocal(x, y, Blocks.STONE+5);
+					//map.setBGLocal(x, y, Blocks.STONE+5);
 					
 				}
+			for (int x = 0; x < map.width; x++){
+				Gdx.app.log(TAG, "DFJHSKAFJDSKLFJASDKFJDSDLSKJSFDLKJFDSKLJFSDDKLF " + (int) overworld.getHeight((int) (x + map.offset.x)));
+				
+				for (int y = (int) overworld.getHeight((int) (x + map.offset.x) )+1; y < map.height; y++){
+					
+					map.setLocal(x, y, 0);
+					
+				}
+			}
 			progress++;
 			break;
 		case 6:
@@ -320,7 +330,7 @@ public class AAgentBuildMap extends ProgressAction {
 	private boolean mapIsClear(int ax, int ay, int w, int h) {
 		//Gdx.app.log(TAG, "clear " + w + " " + h + "  x " + ax + " , " + ay);
 		//if (ax < 1 || ay < 1 || ax + w >= map.width-1 || ay + h >= map.height-1) return false;
-		if (ax < 1 || ay < 1 || ax + w >= map.width-2 || ay + h >= map.height-2) return false;
+		if (ax < 1 || ay < 1 || ax + w >= map.width-2 || ay + h >= map.height-TOP_FREE_SPACE-1) return false;
 		for (int x = 0; x < w+2; x++)
 			for (int y = 0; y < h+2; y++){
 				if (map.get(x + ax - 1, y + ay - 1) != 0) return false;
@@ -340,7 +350,7 @@ public class AAgentBuildMap extends ProgressAction {
 		if (finalPass){
 			for (int x = 0; x < entry.room.blocks[0].length; x++)
 				for (int y = 0; y < entry.room.blocks.length; y++){
-					map.setBGLocal(x+entry.offset.x, y + entry.offset.y, i);
+					//map.setBGLocal(x+entry.offset.x, y + entry.offset.y, i);
 				}
 		}
 		if (expand){
@@ -373,7 +383,7 @@ public class AAgentBuildMap extends ProgressAction {
 						int b = entry.room.blocks[entry.room.blocks.length-y-1][entry.room.blocks[0].length-1-x];
 						
 						BlockDistributionArray d = entry.room.distributions.get(b);
-						Gdx.app.log(TAG, "dist " + d);
+					//Gdx.app.log(TAG, "dist " + d);
 						
 						BlockDistributionArray srcDist = entry.room.distributions.get(b);
 						float total = srcDist.getTotalWeight();
@@ -405,8 +415,8 @@ public class AAgentBuildMap extends ProgressAction {
 					}
 				map.setLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, 0);
 				map.setLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, 0);
-				map.setBGLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, 0);
-				map.setBGLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, 0);
+				//map.setBGLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, 0);
+				//map.setBGLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, 0);
 				
 			}
 		}
@@ -497,6 +507,10 @@ public class AAgentBuildMap extends ProgressAction {
 		//Gdx.app.log(TAG, "end"+map.offset + " " + bit);
 		parent.engine.removeEntity(parent.e);
 		overworld.onFinishedMap(bit, map);
+		
+		//progressSys.setProgressBar(progressBarIndex, 1f);
+		progressSys.deregisterProgressBar(progressBarIndex);
+
 		map = null;
 		addAfterMe(after);	
 	}
@@ -525,7 +539,7 @@ public class AAgentBuildMap extends ProgressAction {
 		totalIterations = 0;
 		re.offset.set(map.width/2, map.height/2);
 		base.add(re);
-		re.teleportOut[0] = true;
+//		re.teleportOut[0] = true;
 		progressSys = parent.engine.getSystem(ProgressBarSystem.class);
 		blockAid = 1024;
 		blockBid = 1024+64;

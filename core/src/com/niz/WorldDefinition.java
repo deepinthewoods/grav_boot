@@ -3,6 +3,7 @@ package com.niz;
 import java.util.Random;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.niz.system.ParallaxBackgroundSystem;
 
 public class WorldDefinition {
@@ -22,6 +23,8 @@ public class WorldDefinition {
 	
 	
 	public void set(int seed, String worldName){
+		//if (true) throw new GdxRuntimeException("jdskl");
+
 		this.seed = seed;
 		name = worldName;
 		r.setSeed(seed);

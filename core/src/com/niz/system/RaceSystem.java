@@ -160,8 +160,9 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		//if (true) throw new GdxRuntimeException("");
 		//entityAdded(e);
 		//Gdx.app.log(TAG, "notify"+event);
-		if (true) throw new GdxRuntimeException("n");
+		//if (true) throw new GdxRuntimeException("n");
 		raceM.get(e).dirtyLayers = true;
+		invM.get(e).dirtyLimbs = true;
 	}
 
 	@Override

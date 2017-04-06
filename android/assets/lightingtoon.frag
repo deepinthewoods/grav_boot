@@ -22,7 +22,7 @@ uniform vec3 Falloff[N_LIGHTS];      //attenuation coefficients
 uniform vec4 LightColor[N_LIGHTS];   //light RGBA -- alpha is intensity
 uniform float Zoom;
 //Flat shading in four steps
-#define STEP_A 0.3
+#define STEP_A 0.2
 #define STEP_B 0.55
 #define STEP_C 1.0
 #define STEP_D 1.4

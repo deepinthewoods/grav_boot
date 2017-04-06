@@ -39,4 +39,21 @@ public class Race implements Component, Poolable {
 		dirtyLayers = false;
 	}
 
+	public void setFrom(Race race) {
+		limbTotals = new int[race.limbTotals.length];
+		oldLimbTotals = new int[race.oldLimbTotals.length];
+		raceID = new int[race.raceID.length];
+		enabledLimb = new boolean[race.enabledLimb.length];
+		for (int i = 0; i < limbTotals.length; i++)
+			limbTotals[i] = race.limbTotals[i];
+		for (int i = 0; i < oldLimbTotals.length; i++)
+			oldLimbTotals[i] = race.oldLimbTotals[i];
+		for (int i = 0; i < raceID.length; i++)
+			raceID[i] = race.raceID[i];
+		for (int i = 0; i < enabledLimb.length; i++)
+			enabledLimb[i] = race.enabledLimb[i];
+		physicsID = race.physicsID;
+		dirtyLayers = race.dirtyLayers;
+	}
+
 }

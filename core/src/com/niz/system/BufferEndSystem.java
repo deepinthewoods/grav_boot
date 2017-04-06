@@ -91,6 +91,8 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 			//batch.setShader(shader);
 			blankNormalTexture.bind(1);
 			startBuffer.currentBuffer.getColorBufferTexture().bind(0);
+			batch.enableBlending();
+			batch.setShader(null);;
 			batch.begin();
 			lightSys.setUniforms(Light.MAP_FRONT_LAYER, shader, true);
 			
@@ -98,7 +100,6 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 			
 			batch.draw(startBuffer.currentBuffer.getColorBufferTexture(), 0, 0, OverworldSystem.SCROLLING_MAP_WIDTH * Main.PPM, OverworldSystem.SCROLLING_MAP_HEIGHT * Main.PPM);
 			batch.end();
-			batch.setShader(null);;
 			spriteSys.drawLowLOD();
 		} else {
 

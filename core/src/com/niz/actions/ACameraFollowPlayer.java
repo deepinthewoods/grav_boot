@@ -26,7 +26,7 @@ public class ACameraFollowPlayer extends Action {
 	transient Entity player;
 	private static ComponentMapper<Position> posM = ComponentMapper.getFor(Position.class);
 	private static ComponentMapper<Physics> physM = ComponentMapper.getFor(Physics.class);
-	public static final float MOVE_SPEED = 8f * Main.timeStep;
+	public static final float MIN_MOVE_SPEED =18f * Main.timeStep;
 	private static final float FAST_THRESHOLD = 8;
 	
 	private static final int Y_DISTANCE_ON_GROUND_THRESHOLD = 2;
@@ -100,11 +100,17 @@ public class ACameraFollowPlayer extends Action {
 		pos.x = playerPos.x;
 		boolean up = dy < 0;
 		float diy = Math.abs(dy);
-				
+		
 		float v = dy;
 		if (diy < .1f) return;
 		
 		v *= -_SPEED_FACTOR;
+		if (Math.abs(v) < MIN_MOVE_SPEED){
+			float factor = Math.abs(v) / MIN_MOVE_SPEED;
+			//Gdx.app.log(TAG, "move before " + v);
+			v /= factor;
+			//Gdx.app.log(TAG, "move after " + v + " / " + MIN_MOVE_SPEED);
+		}
 		pos.y += v;
 		if (v != v) throw new GdxRuntimeException("nan"+targetY + pos);
 		

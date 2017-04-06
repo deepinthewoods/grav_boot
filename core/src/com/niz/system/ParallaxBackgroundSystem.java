@@ -26,14 +26,12 @@ import com.niz.observer.Subject.Event;
 public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 	public static float zoom = 1f, zoomOutThreshold = 16f;
 	public static float ZOOM_OUT_MAX = 10000f;
-	public static final int PARALLAX_LAYERS = 13, PARALLAX_NEAR_LAYERS = 3;
+	public static final int PARALLAX_LAYERS = 6, PARALLAX_NEAR_LAYERS = 0;
 	public static final float[] LAYER_PARALLAX_FACTORS = new float[PARALLAX_LAYERS];
 	public static final float[] LAYER_PARALLAX_FACTORS_ZOOMED_IN = new float[PARALLAX_LAYERS];
 	public static final float[] LAYER_PARALLAX_FACTORS_ZOOMED_OUT = new float[PARALLAX_LAYERS];
 	public static final float[] LAYER_PARALLAX_OFFSETS = new float[PARALLAX_LAYERS];
-	public static final float[] LAYER_PARALLAX_OFFSETS_ZOOMED_IN = new float[PARALLAX_LAYERS];
-	public static final float[] LAYER_PARALLAX_OFFSETS_ZOOMED_OUT = new float[PARALLAX_LAYERS];
-	public static final float[] LAYER_PARALLAX_OFFSETS_SPACED = new float[PARALLAX_LAYERS];
+
 
 	private static final Color[] LAYER_COLORS = new Color[PARALLAX_LAYERS] ;
 
@@ -60,6 +58,9 @@ public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 	private ImmutableArray<Entity> camEntities;
 	public int startZ;
 	public boolean drawSelfLayer;
+	public ParallaxBackgroundSystem() {
+		this.setProcessing(false);
+	}
 	@Override
 	public void addedToEngine(Engine engine) {
 		for (int i = 0; i < LAYER_COLORS.length; i++){
@@ -81,6 +82,7 @@ public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 		overworld = engine.getSystem(OverworldSystem.class); 
 		cameraSystem = engine.getSystem(CameraSystem.class);
 		cameraSystem.parallaxSys = this;
+		engine.getSystem(ParallaxBackgroundRenderNoBufferSystem.class).par = this;
 		this.engine = (EngineNiz) engine;
 		for (int x = 0; x < slices.length; x++){
 			//Slice[] arr = slices[x];
@@ -122,6 +124,14 @@ public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 
 	@Override
 	public void update(float deltaTime) {
+		if (!cameraSystem.zoomedOut){
+			draw();
+		}
+		
+	}
+	
+	public void draw(){
+
 		/*for (int i = 0; i < mapEntities.size(); i++){
 			Entity e = mapEntities.get(i);
 			Map map = mapM.get(e);
@@ -134,11 +144,13 @@ public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 			}
 			
 		}*/
-		
+		if (cameraSystem.zoomedOut){
+			//buffer.currentBuffer.end();
+		}
 		float originalZoom = cameraSystem.camera.zoom;
 		if (originalZoom > 1){
 			cameraSystem.camera.zoom = 1f;
-			
+			//Gdx.app.log(TAG,  "zoom bigger than 1");
 			//LAYER_PARALLAX_FACTORS[0] = 1f/zoom;
 			
 			
@@ -147,7 +159,7 @@ public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 		startZ = overworld.currentZ;
 		//float zoom = cameraSystem.camera.zoom;
 		
-		if (zoom < zoomOutThreshold){
+		if (true || zoom < zoomOutThreshold){
 			//lerp 
 			float zm = zoom;
 			float alpha = zm - 1f;
@@ -164,7 +176,6 @@ public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 			for (int i = 0; i < PARALLAX_LAYERS; i++){
 				LAYER_PARALLAX_FACTORS[i] = MathUtils.lerp(LAYER_PARALLAX_FACTORS_ZOOMED_IN[i], LAYER_PARALLAX_FACTORS_ZOOMED_OUT[i], alpha);
 				
-				LAYER_PARALLAX_OFFSETS[i] = MathUtils.lerp(LAYER_PARALLAX_OFFSETS_ZOOMED_IN[i], LAYER_PARALLAX_OFFSETS_ZOOMED_OUT[i], alpha);
 				//if (i == 7){
 					//Gdx.app.log(TAG, "dist  " + alpha + "  " + i + " " + LAYER_PARALLAX_OFFSETS[i]);
 				//}
@@ -173,45 +184,19 @@ public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 					LAYER_PARALLAX_FACTORS[i] = MathUtils.lerp(LAYER_PARALLAX_FACTORS_ZOOMED_IN[i], LAYER_PARALLAX_FACTORS_ZOOMED_OUT[i], alpha);
 					
 			}
-		} else {
-			float zm = zoom;
-			float alpha = zm - zoomOutThreshold;
-			alpha = alpha / (ZOOM_OUT_MAX - zoomOutThreshold);
-			if (1 < startZ) alpha *= 2.2f;
-			alpha = Math.min(1f, alpha);
-			alpha = Math.max(0f, alpha);
-			//((x) * (x) * (3 - 2 * (x)))
-			float alphas = alpha * alpha * (3-2*alpha);//smoothstep
-			
-			float alphap = alpha;
-			//alphap = alphap / (zoomOutThreshold*2);
-			
-			alphap = 1 - (1 - alphap) * (1 - alphap);
-			//alphap = 1 - (1 - alphap) * (1 - alphap);
-			//alphap = 1 - (1 - alphap) * (1 - alphap);
-			//Gdx.app.log(TAG, "alphap "+alphap + "  zoom"+zoom);
-			float alphap2 = alpha * alpha;
-			for (int i = 0; i < PARALLAX_LAYERS; i++){
-				//LAYER_PARALLAX_FACTORS[i] = MathUtils.lerp(1f/ZOOM_OUT_MAX*.5f, 1f/ZOOM_OUT_MAX, alphap);
-				LAYER_PARALLAX_FACTORS[i] = MathUtils.lerp(LAYER_PARALLAX_FACTORS_ZOOMED_OUT[i], 1f/zoom, alpha);
-
-				LAYER_PARALLAX_OFFSETS[i] = MathUtils.lerp(LAYER_PARALLAX_OFFSETS_ZOOMED_OUT[i], LAYER_PARALLAX_OFFSETS_SPACED[i], alpha);
-
-			}
-			
-		}
+		} 
 		
 		
-		setFactors(startZ);
-		LAYER_PARALLAX_FACTORS[startZ] = 1f/zoom;
+		setFactors(startZ, originalZoom);
+		//LAYER_PARALLAX_FACTORS[startZ] = 1f/zoom;
 		for (int i = 0; i < PARALLAX_LAYERS; i++){
-			if (i > startZ && 
-					LAYER_PARALLAX_FACTORS[i] > 1f/zoom){
-				LAYER_PARALLAX_FACTORS[i] = 1f/zoom;
-			}
+			//if (i > startZ && 
+					//LAYER_PARALLAX_FACTORS[i] > 1f/zoom){
+			//	LAYER_PARALLAX_FACTORS[i] = 1f/zoom;
+			//}
 		}
 		
-		if (zoom > 4f){
+		if (cameraSystem.zoomedOut){
 			drawSelfLayer = true;
 		} else {
 			drawSelfLayer = false;
@@ -222,7 +207,7 @@ public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 		//startZ = 0;
 		cameraSystem.camera.update();
 		shaper.rend.setProjectionMatrix(cameraSystem.camera.combined);
-		
+		//shaper.rend.getProjectionMatrix().scale(1,  -1,  1);
 		
 		
 		for (int i = 0; i < entities.size(); i++){
@@ -324,6 +309,9 @@ public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 		//cameraSystem.camera.position.y += 1000;
 		//Gdx.app.log(TAG, "cam y adjust "+LAYER_PARALLAX_OFFSETS[zValue]);
 		cameraSystem.camera.update();
+		if (cameraSystem.zoomedOut){
+			//buffer.currentBuffer.begin();
+		}
 	}
 	
 	public void drawFront(){
@@ -363,80 +351,61 @@ public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 	int[] nearbgColors = {Data.LIGHT_BLUEISH_GREY_INDEX, Data.DARK_BROWN_INDEX, Data.DARK_GREY_INDEX, Data.PURPLE_INDEX};
 	int[] backColors = {Data.BLUE_INDEX, Data.RED_INDEX, Data.YELLOW_INDEX, Data.BRIGHT_GREEN_INDEX, Data.DARK_OLIVE_BROWN_INDEX, Data.DARK_OLIVE_INDEX, Data.ORANGE_INDEX, Data.RED_INDEX, Data.LIGHT_GREY_INDEX, Data.DARK_OLIVE_BROWN_INDEX, Data.VERY_DARK_BROWN_INDEX, Data.LIGHT_RED_INDEX};
 	private int zValue;
-	public void setFactors(int startZ){
+	public void setFactors(int startZ, float originalZoom){
 		this.zValue = startZ;
 		float heightM = Gdx.graphics.getHeight() * Main.PX;
 		float space = heightM/ (float)(PARALLAX_LAYERS - PARALLAX_NEAR_LAYERS ) * Main.PPM * .8f;
 		for (int i = 0; i < LAYER_PARALLAX_FACTORS.length; i++){
-			if (i < startZ + PARALLAX_NEAR_LAYERS+1 && i >= startZ){//player plane a few in front
-				int distance = i - startZ;
-				
-				float outFactor = .1f;
-				float inFactor = .85f;
-				for (int f = 0; f < distance; f++){
-					inFactor *= .35f;
-					outFactor *= .25f;
-				}
 				if (i == startZ){
-					//inFactor = 1f;
-					//outFactor = 1f;
-				} else {
-					float alpha = (distance) / (float)(PARALLAX_NEAR_LAYERS);
-					alpha = Math.max(0f,  alpha);
-					alpha = Math.max(0f,  alpha);
-					//outFactor = .01f;
-					//outFactor = MathUtils.lerp(.08f, .01f, alpha);
-					outFactor = .04f;
-					inFactor = MathUtils.lerp(.4f, .04f, alpha);
-					//Gdx.app.log(TAG, "distance "+alpha + "factor "+inFactor);
+					LAYER_PARALLAX_FACTORS_ZOOMED_IN[i] = 1f/originalZoom;
+					LAYER_PARALLAX_FACTORS_ZOOMED_OUT[i] = 1f/originalZoom;
+					LAYER_PARALLAX_OFFSETS[i] = -16 / originalZoom;
+					LAYER_Z_SOURCES[i] = startZ ;
+					LAYER_COLORS[i].set(Data.colors[Data.MEDIUM_GREY_INDEX]);
+					LAYER_COLORS[i].mul(1f);
+				} else
+				{ //back layers
+					int distance = i - startZ - PARALLAX_NEAR_LAYERS - 1;
+					//distance = 0;
+					float outFactor = .17f;
+					float inFactor = .25f;
+					for (int f = 0; f < distance; f++){
+						outFactor *= .2357885f;
+						inFactor *= .4f;
+					}
+					//inFactor = 2f;
+					//outFactor = inFactor;
+					LAYER_PARALLAX_FACTORS_ZOOMED_IN[i] = inFactor;
+					LAYER_PARALLAX_FACTORS_ZOOMED_OUT[i] = outFactor;
+					LAYER_PARALLAX_OFFSETS[i] = (space) * (distance+1)  * .1f + space;
+	
+					//LAYER_COLORS[i].set(Data.colors[backColors[distance]]);
+					LAYER_Z_SOURCES[i] = startZ - distance;
+					
+					switch (i){
+					case 0:
+						LAYER_COLORS[i].set(Data.colors[Data.MEDIUM_GREY_INDEX]);
+						LAYER_COLORS[i].mul(1f);
+						break;
+					case 1: 
+						LAYER_COLORS[i].set(Data.colors[Data.DARK_OLIVE_INDEX]);
+						LAYER_COLORS[i].mul(1f);
+						
+						break;
+					case 2: 
+						LAYER_COLORS[i].set(Data.colors[Data.DARK_PURPLE_INDEX]);
+						LAYER_COLORS[i].mul(1f);
+						break;
+					case 3: 
+						LAYER_COLORS[i].set(Data.colors[Data.VERY_DARK_BLUEISH_GREY_INDEX]);
+						LAYER_COLORS[i].mul(1f);
+						break;
+					case 4: 
+						LAYER_COLORS[i].set(Data.colors[Data.LIGHT_GREY_INDEX]);
+						LAYER_COLORS[i].mul(.55f);
+						break;
+					}
 				}
-				
-				LAYER_PARALLAX_FACTORS_ZOOMED_IN[i] = inFactor;
-				LAYER_PARALLAX_FACTORS_ZOOMED_OUT[i] = outFactor;
-				LAYER_PARALLAX_OFFSETS_ZOOMED_IN[i] = distance*2;
-				LAYER_PARALLAX_OFFSETS_ZOOMED_OUT[i] = 0;
-				LAYER_COLORS[i].set(Data.colors[nearbgColors[distance]]);
-				LAYER_Z_SOURCES[i] = startZ;
-
-				LAYER_PARALLAX_OFFSETS_SPACED[i] =  - space * .5f * (PARALLAX_LAYERS - PARALLAX_NEAR_LAYERS - startZ) + space*startZ*.5f;
-
-			}else 
-			if (i < startZ){//front
-				int distance = startZ - i;
-				float outFactor = .0005f;
-				float inFactor = .0005f;
-				for (int f = 0; f <= distance; f++){
-					//outFactor *= .5f;
-				//inFactor *= .5f;
-				}
-				LAYER_PARALLAX_FACTORS_ZOOMED_IN[i] = inFactor;
-				LAYER_PARALLAX_FACTORS_ZOOMED_OUT[i] = outFactor;
-				LAYER_PARALLAX_OFFSETS_ZOOMED_IN[i] = -50;
-				LAYER_PARALLAX_OFFSETS_ZOOMED_OUT[i] = -50;//-10*distance+20;
-				LAYER_COLORS[i].set(Data.colors[backColors[distance]]);
-				LAYER_PARALLAX_OFFSETS_SPACED[i] = -((space) * distance)  - space * .5f * (PARALLAX_LAYERS - PARALLAX_NEAR_LAYERS - startZ) + space*startZ*.5f;
-				//Gdx.app.log(TAG, "dist  " + distance + "  " + inFactor + "  " + outFactor);
-				LAYER_Z_SOURCES[i] = i;
-
-			} else { //back layers
-				int distance = i - startZ - PARALLAX_NEAR_LAYERS - 1;
-				//distance = 0;
-				float outFactor = .007f;
-				float inFactor = .005f;
-				for (int f = 0; f < distance; f++){
-					outFactor *= .885f;
-					inFactor *= .8426f;
-				}
-				//inFactor = 2f;
-				//outFactor = inFactor;
-				LAYER_PARALLAX_FACTORS_ZOOMED_IN[i] = inFactor;
-				LAYER_PARALLAX_FACTORS_ZOOMED_OUT[i] = outFactor;
-				LAYER_PARALLAX_OFFSETS_ZOOMED_IN[i] = distance*2 + 16;
-				LAYER_PARALLAX_OFFSETS_ZOOMED_OUT[i] = 10 * distance ;
-				LAYER_COLORS[i].set(Data.colors[backColors[distance]]);
-				LAYER_PARALLAX_OFFSETS_SPACED[i] = (space) * (distance+1) - space * .5f * (PARALLAX_LAYERS - PARALLAX_NEAR_LAYERS - startZ)  + space*startZ*.5f;
-				LAYER_Z_SOURCES[i] = startZ - distance;
-			}
 		}
 	}
 	

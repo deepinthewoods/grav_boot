@@ -51,7 +51,7 @@ public class AStand extends Action {
 		}
 		
 		if (Gdx.input.isKeyJustPressed(Keys.H)){
-			parent.e.getComponent(Position.class).pos.y = 200;;
+			parent.e.getComponent(Position.class).pos.y = 255;;
 			//parent.e.getComponent(Inventory.class).addItem(Inventory.defs.get(1), 5);
 			//parent.e.getComponent(Inventory.class).addItem(Inventory.defs.get(0), 1);
 			//parent.engine.getSubject("inventoryRefresh").notify(parent.e, Event.INVENTORY_REFRESH, parent.e.getComponent(Inventory.class));

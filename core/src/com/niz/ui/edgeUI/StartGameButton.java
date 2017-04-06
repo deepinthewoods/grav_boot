@@ -37,9 +37,9 @@ public class StartGameButton extends UIElement {
 		public CharacterScreen charScreen;
 		@Override
 		public void changed(ChangeEvent event, Actor actor) {
-			if (charScreen == null) throw new GdxRuntimeException("");
-			charScreen.raceSelector.set(race);
-			game.startNewGame(def);
+			//if (charScreen == null) throw new GdxRuntimeException("NULL CHARSCREEN");
+			//charScreen.raceSelector.set(race);
+			//game.startNewGame(def);
 		}
 		
 	}

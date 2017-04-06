@@ -55,7 +55,8 @@ public class WaterBlockDef extends BlockDefinition {
 				halfBlock <<= Map.DATA_BITS;
 				halfBlock |= Blocks.SLOPE_WITH_LIQUID;
 				int variant = (bottom & Map.VARIANT_MASK) / 64;
-				int slopeType = variant / 8;
+				int slopeType =((bottom & Map.VARIANT_MASK) >> 3 ) & 7;
+				
 				Gdx.app.log(TAG,  "slope liquid"+variant+"  "+slopeType);
 				halfBlock += variant*64 + slopeType*8;
 				halfBlock += LIQUID_INDEX;//lava is the second
@@ -106,8 +107,8 @@ public class WaterBlockDef extends BlockDefinition {
 				halfBlock <<= Map.DATA_BITS;
 				halfBlock |= Blocks.SLOPE_WITH_LIQUID;
 				int variant = (bottom & Map.VARIANT_MASK) / 64;
-				int slopeType = variant / 8;
-				Gdx.app.log(TAG,  "slope liquid"+variant+"  "+slopeType);
+				int slopeType =((bottom & Map.VARIANT_MASK) >> 3 ) & 7;
+				//Gdx.app.log(TAG,  "slope liquid"+variant+"  "+slopeType);
 				halfBlock += variant*64 + slopeType*8;
 				halfBlock += LIQUID_INDEX;//lava is the second
 				map.set(x, y-1, halfBlock);
@@ -138,7 +139,7 @@ public class WaterBlockDef extends BlockDefinition {
 				halfBlock <<= Map.DATA_BITS;
 				halfBlock |= Blocks.SLOPE_WITH_LIQUID;
 				int variant = (side & Map.VARIANT_MASK) / 64;
-				int slopeType = variant / 8;
+				int slopeType =((side & Map.VARIANT_MASK) >> 3 ) & 7;
 				//Gdx.app.log(TAG,  "slope liquid"+variant+"  "+slopeType);
 				halfBlock += variant*64 + slopeType*8;
 				halfBlock += LIQUID_INDEX;//lava is the second

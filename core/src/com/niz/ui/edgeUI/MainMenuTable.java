@@ -146,6 +146,8 @@ public class MainMenuTable extends UIElement {
 
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				//if (true) throw new GdxRuntimeException("jdskl");
+
 				FileHandle folder = Gdx.files.external(Data.FILE_PATH_PREFIX).child(Data.WORLDS_SUBFOLDER_PATH);
 
 				WorldDefinition worldDef = new WorldDefinition();

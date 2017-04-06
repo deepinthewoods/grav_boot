@@ -44,7 +44,7 @@ import com.niz.component.Position;
 public class OverworldSystem extends RenderSystem implements EntityListener {
 	public static final int SCROLLING_MAP_WIDTH = 256, SCROLLING_MAP_HEIGHT = 256;
 
-	public static final int SCROLLING_MAP_TOTAL_SIZE = 1;
+	public static final int SCROLLING_MAP_TOTAL_SIZE = 100;
 
 	private static final String TAG = "Overworld syatem";
 
@@ -98,7 +98,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 
 	private EngineNiz engine;
 
-	int currentZ = 5;
+	int currentZ = 0;
 
 	//private float[] parallaxZOffsets = {1f, 2f, 4f, 8f, 16f, 32f};
 
@@ -431,7 +431,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 	private boolean newGameScreen;
 
 	public float getHeight(int x, int z, float factor){ 
-		if (true) return 4;
+		//if (true) return 4;
 		if (x < 0 )return getHeight(0, z, factor) + x ;
 		
 		
@@ -460,21 +460,22 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		
 		float multiplier = 16f, xmultiplier = 1f/64f, zMultiplier = 1f/16f;
 		float noise = 0f;
-		
+		//if (worldDef == null) throw new GdxRuntimeException("null worlddef");
+		//else Gdx.app.log(TAG, "worlddef not null " + worldDef.overworldLayers.length + " z " + z);
 		LayerData data = worldDef.overworldLayers[z];
 		int fx = x / SCROLLING_MAP_WIDTH;
-		
+		//Gdx.app.log(TAG, "h " + fx + "  " + data.heights.length);
 		int height = lerp(data.heights[fx], data.heights[fx+1], x % SCROLLING_MAP_WIDTH);
 		//seed = 0f;
 		noise += simplexNoise.noise(x * xmultiplier, z * zMultiplier) * multiplier;
 		
 		noise += multiplier;
-		xmultiplier /= 2f;
-		multiplier /= 2f;	
-		//noise += 5;
-		
-		return height * factor;//
-		//(noise+128 ) * factor ;
+		//xmultiplier /= 2f;
+		//multiplier /= 2f;	
+		noise += 220;
+		//height += 100;
+		return //height * factor;//
+		(noise ) * factor ;
 	}
 	private int lerp(int i, int j, int k) {
 		int r = j * k + i * (SCROLLING_MAP_WIDTH - k-1);

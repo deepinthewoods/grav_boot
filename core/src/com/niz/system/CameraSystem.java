@@ -125,7 +125,7 @@ public OrthographicCamera adjustedCamera;
 			onePixel = -vA.x;
 			onePixel /= Main.PPM;
 			camera.position.set((pos2.x*Main.PPM), (camHeight + 2) * Main.PPM, 0);//*/
-			camera.position.set((4 * Main.PPM), 10 * Main.PPM, 0);//*/
+			//camera.position.set((4 * Main.PPM), 10 * Main.PPM, 0);//*/
 			//camera.position.set((int)(pos2.x*Main.PPM), (int)(pos2.y*Main.PPM), 0);//*/
 			camera.update();
 			//Gdx.app.log(TAG, "drag controller" + camera.zoom);

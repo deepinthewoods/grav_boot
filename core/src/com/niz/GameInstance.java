@@ -74,6 +74,9 @@ import com.niz.system.MapRenderSystem;
 import com.niz.system.MapSystem;
 import com.niz.system.OnMapSystem;
 import com.niz.system.OverworldSystem;
+import com.niz.system.ParallaxBackgroundFrontLayersRenderingSystem;
+import com.niz.system.ParallaxBackgroundRenderNoBufferSystem;
+import com.niz.system.ParallaxBackgroundSystem;
 import com.niz.system.PathfindingSystem;
 import com.niz.system.PathfindingUpdateSystem;
 import com.niz.system.Physics2dSystem;
@@ -340,7 +343,10 @@ public class GameInstance implements Screen, Observer {
 					engine.addSystem(new PathfindingUpdateSystem());
 
 					break;case 12:
+					engine.addSystem(new PreRenderSystem());
 					engine.addSystem(new CameraSystem(gameCamera));
+					//engine.addSystem(new ParallaxBackgroundRenderNoBufferSystem());
+
 					engine.addSystem(new BufferStartSystem());
 					break;case 13:
 					engine.addSystem(new ShaderSystem());						
@@ -350,6 +356,7 @@ public class GameInstance implements Screen, Observer {
 					break;case 15:
 					shapeR = new ShapeRenderer();			
 					engine.addSystem(new ShapeRenderingSystem());
+					//engine.addSystem(new ParallaxBackgroundSystem());
 					break;case 16:
 					engine.addSystem(new MapRenderSystem(gameCamera, mapRenderCam ,  mapBatch, atlas, mapDiffuseTex, mapNormalTex));
 
@@ -361,6 +368,7 @@ public class GameInstance implements Screen, Observer {
 					engine.addSystem(new SpriteAnimationSystem(gameCamera, rightBatch, leftBatch, playerDiffuseTex, playerNormalTex, lights, mapDiffuseTex, mapNormalTex));
 					break;case 19:
 					engine.addSystem(new LineBatchPostSystem());
+					//engine.addSystem(new ParallaxBackgroundFrontLayersRenderingSystem());
 					engine.addSystem(new AutoGibSystem(gameCamera, rightBatch, leftBatch, playerDiffuseTex, playerNormalTex, lights, mapDiffuseTex, mapNormalTex));;
 					engine.addSystem(new BufferEndSystem(batch, blankNormalTexture));
 					resize();
@@ -763,7 +771,10 @@ public class GameInstance implements Screen, Observer {
 		overworld.simplexNoise = new SimplexNoise(def.seed);
 		overworld.setProcessing(true);
 		overworld.worldDef = def;
-		//engine.getSystem(ParallaxBackgroundSystem.class).setProcessing(true);
+		//if (overworld.worldDef == null) throw new GdxRuntimeException("jfkds");
+		//else  if (true)throw new GdxRuntimeException("jfkds");
+		ParallaxBackgroundSystem parall = engine.getSystem(ParallaxBackgroundSystem.class);
+		if (parall != null) parall.setProcessing(true);
 		factory.startMap(engine);
 		playerArr = Data.entityArrayPool.obtain();
 		//if (playerFile == null){
@@ -793,7 +804,6 @@ public class GameInstance implements Screen, Observer {
 			//loadGame(def, playerFile);//TODO
 		} else {
 			//switchToCharacterGenScreen(def);
-			startNewGame(def);
 			DragControllerSystem drag = engine.getSystem(DragControllerSystem.class);
 			Entity player = drag.getSelectedPlayerEntity();
 			SelectedPlayer sel = new SelectedPlayer();
@@ -802,6 +812,7 @@ public class GameInstance implements Screen, Observer {
 			
 			
 		}
+		startNewGame(def);
 	}
 
 	

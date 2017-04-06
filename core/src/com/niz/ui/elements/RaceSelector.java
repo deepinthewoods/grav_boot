@@ -25,6 +25,8 @@ public class RaceSelector extends UIElement {
 	}
 
 	public void setFrom(Race race){
+		this.race = new Race();
+		this.race.setFrom(race);
 		for (int i = 0; i < Race.TOTAL_BODY_PARTS; i++){
 			buttons[i].current = race.raceID[i];
 			//Gdx.app.log(TAG, "limb "+i+": "+buttons[i].current);
@@ -33,6 +35,7 @@ public class RaceSelector extends UIElement {
 	
 
 	public void set(Race race) {
+		//this.race = race;
 		for (int i = 0; i < Race.TOTAL_BODY_PARTS; i++){
 			race.raceID[i] = buttons[i].current;
 			//Gdx.app.log(TAG, "limb "+i+": "+buttons[i].current);

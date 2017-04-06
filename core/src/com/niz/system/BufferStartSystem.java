@@ -67,7 +67,6 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 		// TODO Auto-generated method stub
 		super.removedFromEngine(engine);
 	}
-
 	Vector3 tmpV = new Vector3();
 	private float viewportSize;
 	@Override
@@ -90,7 +89,11 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 		camSys.adjustedCamera.update();
 		
 		currentBuffer.begin();
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		if (!camSys.zoomedOut){
+			Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
+			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+			
+		}
 		
 		
 		
