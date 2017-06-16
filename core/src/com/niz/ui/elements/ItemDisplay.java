@@ -234,7 +234,7 @@ public class ItemDisplay extends UIElement {
 		
 	};
 	public void setFor(Inventory inv, Entity e){
-		Gdx.app.log(TAG,  "setting "+ inv.items.size);
+		//Gdx.app.log(TAG,  "setting "+ inv.items.size);
 
 		this.e = e;
 		this.inv = inv;
@@ -267,7 +267,7 @@ public class ItemDisplay extends UIElement {
 	//		if (s != null){
 			butt.setFrom(item, e);
 			
-			Gdx.app.log(TAG,  "added "+def.id);
+			//Gdx.app.log(TAG,  "added "+def.id);
 		//	}
 			//else {//TODO set blank
 				//butt.drawable.getSprite().setAlpha(0f);

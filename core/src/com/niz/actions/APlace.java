@@ -1,8 +1,8 @@
 package com.niz.actions;
 
 import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.EngineNiz.PooledEntity;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EngineNiz.PooledEntity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Bresenham2;
 import com.badlogic.gdx.math.GridPoint2;

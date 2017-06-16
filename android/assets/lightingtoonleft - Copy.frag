@@ -3,7 +3,7 @@ precision mediump float;
 #endif
 
 //fixed number of lights
-#define N_LIGHTS 4
+#define N_LIGHTS 2
 
 //attributes from vertex shader
 varying vec4 vColor;
@@ -22,10 +22,10 @@ uniform vec3 Falloff[N_LIGHTS];      //attenuation coefficients
 uniform vec4 LightColor[N_LIGHTS];   //light RGBA -- alpha is intensity
 uniform float Zoom;
 //Flat shading in four steps
-#define STEP_A 0.2
-#define STEP_B 0.55
-#define STEP_C 1.0
-#define STEP_D 1.4
+#define STEP_A 0.3
+#define STEP_B 1.0
+#define STEP_C 1.4
+
 
 // uniform float Test[2];
 
@@ -81,7 +81,12 @@ void main() {
 	//Sum += AmbientColor;
 	Sum = max(Sum, AmbientColor);
 	//Here is where we apply some toon shading to the light
-	
+	if (Sum < STEP_A) 
+		Sum = 0.0;
+	else if (Sum < STEP_B) 
+		Sum = STEP_B;
+	else 
+		Sum = STEP_C;
 
 	gl_FragColor = vec4(DiffuseColor.rgb * Sum, DiffuseColor.a);
 }

@@ -126,7 +126,7 @@ public class MainMenuTable extends UIElement {
 						Gdx.app.log(TAG, "changed");
 						worldSelectTable.clear();
 						worldSelectTable.add(startButton);
-						worldSelectTable.add(editorButton);
+						//worldSelectTable.add(editorButton);
 
 					}
 					
@@ -271,7 +271,7 @@ public class MainMenuTable extends UIElement {
 		
 		
 		worldSelectTable.add(startButton);
-		worldSelectTable.add(editorButton);
+		//worldSelectTable.add(editorButton);
 		worldTable = new Table();
 		worldPane = new ScrollPane(worldTable);
 		//

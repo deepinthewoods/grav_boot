@@ -91,9 +91,10 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 			//batch.setShader(shader);
 			blankNormalTexture.bind(1);
 			startBuffer.currentBuffer.getColorBufferTexture().bind(0);
-			batch.enableBlending();
+			//batch.enableBlending();
 			batch.disableBlending();
 			batch.setShader(null);;
+			
 			batch.begin();
 			lightSys.setUniforms(Light.MAP_FRONT_LAYER, shader, true);
 			

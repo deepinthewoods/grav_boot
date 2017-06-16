@@ -2,8 +2,8 @@ package com.niz.actions.mapgen;
 
 import java.util.Random;
 
-import com.badlogic.ashley.core.EngineNiz.PooledEntity;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EngineNiz.PooledEntity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.MathUtils;
@@ -189,7 +189,7 @@ public class AAgentBuildMap extends ProgressAction {
 			for (int x = 0; x < map.width; x++)
 				for (int y = 0; y < map.height; y++){
 					
-					//map.setBGLocal(x, y, Blocks.STONE+5);
+					map.setBGLocal(x, y, Blocks.STONE+5);
 					
 				}
 			for (int x = 0; x < map.width; x++){

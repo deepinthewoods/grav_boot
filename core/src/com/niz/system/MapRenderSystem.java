@@ -29,7 +29,7 @@ import com.niz.observer.Subject.Event;
 
 public class MapRenderSystem extends RenderSystem implements EntityListener, IDisposeable {
 	
-	public static final int RENDER_SIZE = 16;
+	public static final int RENDER_SIZE = 		64;
 	private static final String TAG = "MapRenderSystem";
 	private static final Vector3 LIGHT_POS = new Vector3(53f,.753f,0.51075f);
 	private static final int OVERDRAW_PIXELS = 10;
@@ -50,7 +50,6 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	private Family family;
 	private ComponentMapper<Map> mapM;
 	private ImmutableArray<Entity> entities;
-	ShaderProgram backShader;
 	private TextureAtlas atlas;
 	private ShaderSystem shaderSys;
 	private EngineNiz engine;
@@ -58,8 +57,6 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	public boolean hasRendered;
 	private boolean skippedDraw;
 	private MapSystem mapSys;
-	private ShaderProgram fgShader;
-	private ShaderProgram litShader;
 	private OrthographicCamera renderCamera;
 	private CameraSystem camSys;
 	private OrthographicCamera zoomOutCamera;
@@ -87,10 +84,9 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		shaderSys = engine.getSystem(ShaderSystem.class);
 		
 		//spriteShader = shaderSys.spriteShader;
-		backShader = shaderSys.mapBgShader;
-		shader = shaderSys.mapShader;
-		litShader = shaderSys.mapLitShader;
-		fgShader = shaderSys.mapFgShader;
+		
+		shader = shaderSys.shader;
+		
 		lights = engine.getSystem(LightRenderSystem.class);
 		buffer = engine.getSystem(BufferStartSystem.class);
 		family = Family.one(Map.class).get();
@@ -111,13 +107,10 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		mapSys = engine.getSystem(MapSystem.class);
 		OnMapSystem onMap = engine.getSystem(OnMapSystem.class);
 		onMap.shader = shader;
-		onMap.backShader = shader;
 		
 		OverworldSystem over = engine.getSystem(OverworldSystem.class);
 		over.shader = shader;
-		over.backShader = backShader;
-		over.fgShader = fgShader;
-		over.litShader = litShader;
+		
 		
 		Map[] maps = new Map[3];
 		for (int i = 0; i < maps.length; i++){
@@ -136,7 +129,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 
 	@Override
 	public void update(float deltaTime) {
-		///if (true) return;
+		//if (true) return;
 		//if (zoom > 1f) return;
 		boolean skipDraw = false;//zoom > Main.PPM+.1f;//1.001f;
 		if (skipDraw){
@@ -203,7 +196,10 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		}
 		
 		x0 -= 1;//meh, dupe rendering doesn't work without this4
+		
+		int count = 0;
 		{
+			
 			for (int i = 0; i < entities.size(); i++){
 				Entity e = entities.get(i);
 				Map map = mapM.get(e);
@@ -211,40 +207,72 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 				int[] tiles = map.tiles, backTiles = map.backTiles;
 
 				map.cache.beginDraw(skipDraw);
-				//if (false)                                                                                                                                       
-				for (int x = x0; x <= x1; x++){
-					for (int y = y0; y <= y1; y++){
-						
-						map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, 0);
-						//map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, true);
-						map.cache.draw(x, y, lights, shader, 0);
-						map.cache.drawLit(x, y, lights, shader, 0);
-						map.cache.drawFG(x, y, lights, shader, 0);
-						
-						int dupeOffset = OverworldSystem.SCROLLING_MAP_WIDTH* OverworldSystem.SCROLLING_MAP_TOTAL_SIZE * Main.PPM;
-						if (map.duplicateRenderL){
-							map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, -dupeOffset);
-							map.cache.draw(x, y, lights, shader, -dupeOffset);
-							map.cache.drawLit(x, y, lights, shader, -dupeOffset);
-							map.cache.drawFG(x, y, lights, shader, -dupeOffset);
+				map.cache.beginDrawBack(lights);
+				//if (false)                                                           
+				endbp:
+				{
+					for (int x = x0; x <= x1; x++){
+						for (int y = y0; y <= y1; y++){
+							map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, 0);
+							//if (count++ > 6) break endbp;
+							int dupeOffset = OverworldSystem.SCROLLING_MAP_WIDTH* OverworldSystem.SCROLLING_MAP_TOTAL_SIZE * Main.PPM;
+							if (map.duplicateRenderL){
+								//map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, -dupeOffset);
+							}
+							if (map.duplicateRenderR){
+								//map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, dupeOffset);
+							}
 						}
-						if (map.duplicateRenderR){
-							map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, dupeOffset);
-							map.cache.draw(x, y, lights, shader, dupeOffset);
-							map.cache.drawLit(x, y, lights, shader, dupeOffset);
-							map.cache.drawFG(x, y, lights, shader, dupeOffset);
+					}
+					//map.cache.endDraw();//*/
+					map.cache.beginDrawMiddle(lights);
+					//map.cache.beginDraw(skipDraw);
+					//if (false)                                                                                                                                       
+					for (int x = x0; x <= x1; x++){
+						for (int y = y0; y <= y1; y++){
+							map.cache.draw(x, y, lights, shader, 0, renderCamera);
+							int dupeOffset = OverworldSystem.SCROLLING_MAP_WIDTH* OverworldSystem.SCROLLING_MAP_TOTAL_SIZE * Main.PPM;
+							if (map.duplicateRenderL){
+								//map.cache.draw(x, y, lights, shader, -dupeOffset, renderCamera);
+							}
+							if (map.duplicateRenderR){
+								//map.cache.draw(x, y, lights, shader, dupeOffset, renderCamera);
+							}
 						}
-						
-						
-						
+					}
+					map.cache.beginDrawLit(lights);
+					for (int x = x0; x <= x1; x++){
+						for (int y = y0; y <= y1; y++){
+							map.cache.drawLit(x, y, lights, shader, 0, renderCamera);
+							int dupeOffset = OverworldSystem.SCROLLING_MAP_WIDTH* OverworldSystem.SCROLLING_MAP_TOTAL_SIZE * Main.PPM;
+							if (map.duplicateRenderL){
+								//map.cache.drawLit(x, y, lights, shader, -dupeOffset, renderCamera);
+							}
+							if (map.duplicateRenderR){
+								//map.cache.drawLit(x, y, lights, shader, dupeOffset, renderCamera);
+							}
+						}
+					}
+					map.cache.beginDrawFG(lights);
+					for (int x = x0; x <= x1; x++){
+						for (int y = y0; y <= y1; y++){
+							map.cache.drawFG(x, y, lights, shader, 0, renderCamera);
+							int dupeOffset = OverworldSystem.SCROLLING_MAP_WIDTH* OverworldSystem.SCROLLING_MAP_TOTAL_SIZE * Main.PPM;
+							if (map.duplicateRenderL){
+								//map.cache.drawFG(x, y, lights, shader, -dupeOffset, renderCamera);
+							}
+							if (map.duplicateRenderR){
+								//map.cache.drawFG(x, y, lights, shader, dupeOffset, renderCamera);
+							}
+						}
 					}
 				}
 				
+				map.cache.endDraw();
+			
 				if (skipDraw){
 					batch.end();
 				}
-				map.cache.endDraw();
-			
 			}
 			camera.zoom = originalZoom;
 			camera.update();

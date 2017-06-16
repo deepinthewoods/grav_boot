@@ -13,20 +13,20 @@ import com.niz.observer.Observer;
 import com.niz.observer.Subject.Event;
 
 public class ShaderSystem extends RenderSystem implements Observer {
-	ShaderProgram spriteShader;
+	//ShaderProgram spriteShader;
 
-	ShaderProgram backShader;
+	//ShaderProgram backShader;
 	ShaderProgram shader;
 
 	public ShaderProgram lShader;
 
-	public ShaderProgram mapFgShader;
+	//public ShaderProgram mapFgShader;
 
-	public ShaderProgram mapBgShader;
+	//public ShaderProgram mapBgShader;
 
-	public ShaderProgram mapShader;
+	//public ShaderProgram mapShader;
 
-	public ShaderProgram mapLitShader;
+	//public ShaderProgram mapLitShader;
 	
 	private static final Vector3 LIGHT_COLOR = new Vector3(1f,1f,1f);
 	//private static final float[] lightArr = {1f, 1f, 1f, 1f};
@@ -79,8 +79,7 @@ public class ShaderSystem extends RenderSystem implements Observer {
 
 		shader.end();
 		
-		backShader = shader;
-		spriteShader = shader;
+		
 		/*backShader = new ShaderProgram(Gdx.files.internal("lighting.vert"), Gdx.files.internal("lighting.frag"));
 		//Gdx.app.log(TAG,  "shader \n"+FRAG + "\n\n\n vert  \n\n\n"+VERT);
 		if (!backShader.isCompiled())
@@ -143,10 +142,9 @@ public class ShaderSystem extends RenderSystem implements Observer {
 
 		lShader.end();
 
-		mapFgShader = makeShader();
-		mapBgShader = makeShader();
-		mapShader = makeShader();
-		mapLitShader = makeShader();
+		//shader = null;
+		//lShader = null;
+		
 	}
 
 	private ShaderProgram makeShader() {
@@ -176,15 +174,11 @@ public class ShaderSystem extends RenderSystem implements Observer {
 	public void onNotify(Entity e, Event event, Object c) {
 		VectorInput in =  (VectorInput) c;
 		int resolution = (int) in.v.x;
-		backShader.begin();
-		backShader.setUniformf("Resolution", resolution/2f, resolution/2f);
-		backShader.end();
+		if (shader == null) return;
 		lShader.begin();
 		lShader.setUniformf("Resolution", resolution/2f, resolution/2f);
 		lShader.end();
-		spriteShader.begin();
-		spriteShader.setUniformf("Resolution", resolution/2f, resolution/2f);
-		spriteShader.end();
+		
 		shader.begin();
 		shader.setUniformf("Resolution", resolution/2f, resolution/2f);
 		shader.end();

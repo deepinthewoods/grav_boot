@@ -1,9 +1,9 @@
 package com.niz;
 
 import com.badlogic.ashley.core.EngineNiz;
-import com.badlogic.ashley.core.EngineNiz.PooledEntity;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.core.EngineNiz.PooledEntity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -158,7 +158,7 @@ public class GameInstance implements Screen, Observer {
 		//this.isServer = serverInst != null;
 		//this.isClient = clientInst != null;
 		//Log.DEBUG();
-		GLProfiler.enable();
+		//GLProfiler.enable();
 		final GameInstance inst = this;
 		this.headless = headless;
 		batch = new SpriteBatch(50);
@@ -680,19 +680,20 @@ public class GameInstance implements Screen, Observer {
 					//
 				}*/
 			String s = "fps:"+Gdx.graphics.getFramesPerSecond() + " " + GLProfiler.calls + " drawc:" + GLProfiler.drawCalls;
-			s += " sw:"+GLProfiler.shaderSwitches;
+			/*s += " sw:"+GLProfiler.shaderSwitches;
 			s += " tex:"+GLProfiler.textureBindings;
 			s += " vert:"+GLProfiler.vertexCount.average;
 			GLProfiler.reset();
-			s += "\n";
+			/*s += "\n";
 			s += Gdx.app.getJavaHeap()>>20 ;
 			s += " ";
-			s += Gdx.app.getNativeHeap()>>20;
+			s += Gdx.app.getNativeHeap()>>20;*/
 			font.draw(batch, 
 						s, 100, font.getLineHeight()*8);
 				
-				
-			}//*/
+			
+			//*/
+			}
 			/*""
 					+ "  high"+(""+(1f/highestDelta)).substring(0,4)
 					+ " \n  low"+(""+(1f/lowestDelta)).substring(0,4)

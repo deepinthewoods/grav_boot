@@ -170,6 +170,7 @@ public class SpriteBatchNiz implements Batch, Poolable {
 		renderCalls = 0;
 
 		Gdx.gl.glDepthMask(false);
+		//Gdx.gl.glDisable(GL20.GL_BLEND);
 		if (customShader != null)
 			customShader.begin();
 		else

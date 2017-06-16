@@ -72,7 +72,7 @@ public class RoomCatalogSystem extends EntitySystem {
 			//e.printStackTrace();
 		//}
 			
-		if (Gdx.app.getType() == ApplicationType.Desktop){
+		if (Gdx.app.getType() == ApplicationType.Desktop && !Main.isRelease){
 				FileHandle roomF = Gdx.files.internal("rooms");
 				FileHandle roomEF = Gdx.files.absolute(roomF.file().getAbsolutePath());
 				String s = "";
@@ -95,6 +95,7 @@ public class RoomCatalogSystem extends EntitySystem {
 		Json json = Data.json;
 		String fileList = Gdx.files.internal("roomslist.txt").readString();
 		String[] names = fileList.split("\n");
+		Gdx.app.log(TAG, "ttitititi " + fileList.length());
 		for (String name : names){
 			FileHandle f = Gdx.files.internal(name);
 			if (!f.extension().equals("json")){
@@ -140,7 +141,7 @@ public class RoomCatalogSystem extends EntitySystem {
 		return returnArr;
 	}
 	
-	private void writeTemplates() {
+	private void writeTempla3tes() {
 		Json json = Data.json;
 		BlockDistributionArray emptyArr = new BlockDistributionArray();
 		BlockDistribution dr = new BlockDistribution();

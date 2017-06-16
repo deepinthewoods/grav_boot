@@ -57,7 +57,6 @@ public class SpriteCacheNiz{
 	private ShaderProgram shader;
 	private Matrix4 mat = new Matrix4();
 	private int[] backTiles;
-	private ShaderProgram bShader;
 	
 	private static Pool<SpriteBatchNiz> batchPool = new Pool<SpriteBatchNiz>(){
 
@@ -84,30 +83,30 @@ public class SpriteCacheNiz{
 	
 	private SpriteBatchNiz[] litbatches;
 	private Map map;
-	private ShaderProgram litShader;
-	private ShaderProgram fgShader;
 	
-	public SpriteCacheNiz(Map map, TextureAtlas atlas, ShaderProgram shader, ShaderProgram bshader, ShaderProgram litShader, ShaderProgram fgShader){
+	private int middleDrawCount;
+	private int backdrawCount;
+	
+	public SpriteCacheNiz(Map map, TextureAtlas atlas, ShaderProgram shader){
 		this.shader = shader;
-		this.bShader = bshader;
-		this.litShader = litShader;
-		this.fgShader = fgShader;
+		
 		this.map = map;
 		batches = new SpriteBatchNiz[((map.width/MapRenderSystem.RENDER_SIZE)*(map.height/MapRenderSystem.RENDER_SIZE))];
 		fbatches = new SpriteBatchNiz[((map.width/MapRenderSystem.RENDER_SIZE)*(map.height/MapRenderSystem.RENDER_SIZE))];
 		bbatches = new SpriteBatchNiz[((map.width/MapRenderSystem.RENDER_SIZE)*(map.height/MapRenderSystem.RENDER_SIZE))];
 		litbatches = new SpriteBatchNiz[((map.width/MapRenderSystem.RENDER_SIZE)*(map.height/MapRenderSystem.RENDER_SIZE))];
 
-		
 		int len = batches.length /(MapRenderSystem.RENDER_SIZE*MapRenderSystem.RENDER_SIZE);
 		Texture tex = atlas.getTextures().first();
 		for (int i = 0; i < batches.length; i++){
 			
 		}
-		
-		
 	}
 	
+	public void beginDrawBack(LightRenderSystem lights) {
+		backdrawCount = 0;
+	}
+
 	public void draw(Map map, int x, int y, int[] tiles, int[] backTiles, OrthographicCamera camera, LightRenderSystem lights, BufferStartSystem buffer, boolean setAllDirty, ShaderProgram shader, int xOffset) {
 		x -= map.offset.x/MapRenderSystem.RENDER_SIZE;
 		y -= map.offset.y/MapRenderSystem.RENDER_SIZE;
@@ -143,12 +142,12 @@ public class SpriteCacheNiz{
 		mat.set(camera.combined);
 		mat.translate(Main.PPM*(x)*(MapRenderSystem.RENDER_SIZE) +map.offset.x*Main.PPM, Main.PPM*(y)*(MapRenderSystem.RENDER_SIZE)+map.offset.y*Main.PPM, 0);
 		mat.translate(xOffset, 0, 0);
+		map.renderMatrix.set(mat);
 		//if (moveX) 
 			//mat.translate(Main.PPM*(x)*(MapRenderSystem.RENDER_SIZE) +map.offset.x*Main.PPM, Main.PPM*(y)*(MapRenderSystem.RENDER_SIZE)+map.offset.y*Main.PPM, 0);
 		//Gdx.app.log(TAG,  "draw "+ "  index "+index + " wx "+(Main.PPM*(x)*(MapRenderSystem.RENDER_SIZE) +map.offset.x*Main.PPM)/Main.PPM+" wy"+(Main.PPM*(y)*(MapRenderSystem.RENDER_SIZE)+map.offset.y*Main.PPM)/Main.PPM + " tot");
 		//bshader.begin();
 		//bshader.end();
-		
 			
 		currentBBatch = bbatches[index];
 		if (currentBBatch == null) {
@@ -157,9 +156,6 @@ public class SpriteCacheNiz{
 			if (currentBBatch == null) {return;}
 		}
 		
-		
-		
-			
 		if (cachedTotal < CACHE_TOTAL_TARGET && (map.dirty[index] || setAllDirty)){
 			//map.dirtyRuns[wx] = true;
 			cacheChunk(map, index, tiles, backTiles);
@@ -167,28 +163,35 @@ public class SpriteCacheNiz{
 			map.dirty[index] = false;
 		}
 		
-		
-		
 		//Gdx.gl.glDisable(GL20.GL_BLEND);
 		drawnBits.set(index);
-		
 		
 		//if (shader == null){
 		//	currentBBatch.setColor(.3f, .3f, .3f, 1f);
 		//}else currentBBatch.setColor(1f,  1f,  1f,  1f);
-		if (shader == null) return;
+		//if (shader == null) return;
 
 		currentBBatch.setProjectionMatrix(mat);
+		batches[index].setProjectionMatrix(mat);
+		fbatches[index].setProjectionMatrix(mat);
+		litbatches[index].setProjectionMatrix(mat);
+		
 		currentBBatch.disableBlending();
 		currentBBatch.setShader(shader);
 		currentBBatch.beginDraw();		
-		lights.setUniforms(Light.MAP_BACK_LAYER, bShader);
-		currentBBatch.render();
+		if (backdrawCount++ == 0)
+			lights.setUniforms(Light.MAP_BACK_LAYER, shader);
+
+		if (shader != null) currentBBatch.render();
 		currentBBatch.end();
 		
 	}
 	
-	public void draw(int x, int y, LightRenderSystem lights, ShaderProgram shader, int xOffset){
+	public void beginDrawMiddle(LightRenderSystem lights) {
+		middleDrawCount = 0;
+	}
+
+	public void draw(int x, int y, LightRenderSystem lights, ShaderProgram shader, int xOffset, OrthographicCamera camera){
 		x -= map.offset.x/MapRenderSystem.RENDER_SIZE;
 		y -= map.offset.y/MapRenderSystem.RENDER_SIZE;
 		int wy =  y;//(int) (y -( map.offset.y/MapRenderSystem.RENDER_SIZE));
@@ -198,22 +201,33 @@ public class SpriteCacheNiz{
 		wx = ((wx % v) + v) % v;
 		int index = wy + wx*(map.width/MapRenderSystem.RENDER_SIZE);
 		if (wx < 0 || wy < 0 || wx >= map.width/MapRenderSystem.RENDER_SIZE || wy >= map.height/MapRenderSystem.RENDER_SIZE){
-			
+			//Gdx.app.log(TAG, "SKIP");
 			return;
 		}
 		currentBatch = batches[index];
-		currentBatch.setProjectionMatrix(mat);
-		currentBatch.disableBlending();
-		Gdx.gl.glDisable(GL20.GL_BLEND);
+		mat.set(camera.combined);
+		mat.translate(Main.PPM*(x)*(MapRenderSystem.RENDER_SIZE) +map.offset.x*Main.PPM, Main.PPM*(y)*(MapRenderSystem.RENDER_SIZE)+map.offset.y*Main.PPM, 0);
+		mat.translate(xOffset, 0, 0);
+		//currentBatch.setProjectionMatrix(mat);
+		//currentBatch.disableBlending();
+		//Gdx.gl.glDisable(GL20.GL_BLEND);
 
-		currentBatch.setShader(shader);
+		//currentBatch.setShader(shader);
+		//shader.begin();
 		currentBatch.beginDraw();		
-		lights.setUniforms(Light.MAP_FRONT_LAYER, shader);
+		if (middleDrawCount++ == 0)
+			lights.setUniforms(Light.MAP_FRONT_LAYER, shader);
 		currentBatch.render();
 		currentBatch.end();	
+		//shader.end();
 	}
 	
-	public void drawLit(int x, int y, LightRenderSystem lights, ShaderProgram shader, int xOffset){
+	public void beginDrawLit(LightRenderSystem lights) {
+		lights.setUniforms(Light.MAP_LIT_LAYER, shader);
+		
+	}
+
+	public void drawLit(int x, int y, LightRenderSystem lights, ShaderProgram shader, int xOffset, OrthographicCamera camera){
 		x -= map.offset.x/MapRenderSystem.RENDER_SIZE;
 		y -= map.offset.y/MapRenderSystem.RENDER_SIZE;
 		int wy =  y;//(int) (y -( map.offset.y/MapRenderSystem.RENDER_SIZE));
@@ -227,19 +241,24 @@ public class SpriteCacheNiz{
 			return;
 		}
 		currentLitBatch = litbatches[index];
-		currentLitBatch.setProjectionMatrix(mat);
-		currentLitBatch.disableBlending();
-		Gdx.gl.glDisable(GL20.GL_BLEND);
+		//currentLitBatch.setProjectionMatrix(mat);
+		//currentLitBatch.disableBlending();
+		//Gdx.gl.glDisable(GL20.GL_BLEND);
 
-		currentLitBatch.setShader(shader);
+		//currentLitBatch.setShader(shader);
 		currentLitBatch.beginDraw();		
-		lights.setUniforms(Light.MAP_LIT_LAYER, litShader);
 		currentLitBatch.render();
 		currentLitBatch.end();		
 		
 	}
 	
-	public void drawFG(int x, int y, LightRenderSystem lights, ShaderProgram shader, int xOffset){
+	public void beginDrawFG(LightRenderSystem lights) {
+		// TODO Auto-generated method stub
+		
+		
+	}
+
+	public void drawFG(int x, int y, LightRenderSystem lights, ShaderProgram shader, int xOffset, OrthographicCamera camera){
 
 		x -= map.offset.x/MapRenderSystem.RENDER_SIZE;
 		y -= map.offset.y/MapRenderSystem.RENDER_SIZE;
@@ -254,13 +273,13 @@ public class SpriteCacheNiz{
 			return;
 		}
 		currentFBatch = fbatches[index];
-		currentFBatch.setProjectionMatrix(mat);
-		currentFBatch.enableBlending();
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		currentFBatch.setShader(shader);
-		currentFBatch.beginDraw();		
-		lights.setUniforms(Light.MAP_FOREGROUND_LAYER, fgShader);
+		//currentFBatch.setProjectionMatrix(mat);
+		///currentFBatch.enableBlending();
+		//Gdx.gl.glEnable(GL20.GL_BLEND);
+		//Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		//currentFBatch.setShader(shader);
+		currentFBatch.beginDraw();
+		lights.setUniforms(Light.MAP_FOREGROUND_LAYER, shader);
 		currentFBatch.render();
 		currentFBatch.end();
 	}
@@ -272,10 +291,10 @@ public class SpriteCacheNiz{
 		fbatches[index] = batchPool.obtain();
 		litbatches[index] = batchPool.obtain();
 		
-		bbatches[index].setShader(bShader);;
+		bbatches[index].setShader(shader);;
 		batches[index].setShader(shader);;
-		fbatches[index].setShader(fgShader);;
-		litbatches[index].setShader(litShader);;
+		fbatches[index].setShader(shader);;
+		litbatches[index].setShader(shader);;
 		
 		bbatches[index].disableBlending();
 		batches[index].disableBlending();;// = batchPool.obtain();
@@ -479,6 +498,8 @@ public class SpriteCacheNiz{
 			
 		}
 	}
+
+	
 
 	
 	

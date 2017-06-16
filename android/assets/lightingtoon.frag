@@ -81,14 +81,7 @@ void main() {
 	//Sum += AmbientColor;
 	Sum = max(Sum, AmbientColor);
 	//Here is where we apply some toon shading to the light
-	if (Sum < STEP_A) 
-		Sum = 0.0;
-	else if (Sum < STEP_B) 
-		Sum = STEP_B;
-	else if (Sum < STEP_C) 
-		Sum = STEP_C;
-	else 
-		Sum = STEP_D;
+	
 
 	gl_FragColor = vec4(DiffuseColor.rgb * Sum, DiffuseColor.a);
 }

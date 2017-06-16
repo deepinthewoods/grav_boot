@@ -102,7 +102,7 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 	public void onNotify(Entity e, Event event, Object c) {
 		VectorInput in = (VectorInput) c;
 		if (viewportSize != in.v.x){
-			viewportSize = in.v.x * .25f;
+			viewportSize = in.v.x;// * .25f;
 			if (buffer != null){
 				buffer.dispose();
 			}

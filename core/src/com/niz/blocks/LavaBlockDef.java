@@ -12,11 +12,12 @@ public class LavaBlockDef extends BlockDefinition {
 		this.isSolid = false;
 		this.isSeeThrough = true;
 		this.isLit = true;
+		
 	}
 	public static int LEFT_MASK = 1 << Map.DATA_BITS, LEFT_BITS = Map.DATA_BITS;
 	static final int[] dxa = {-1, 1, 0, 0}, dya = {0, 0, -1, 1};
 	private static final String TAG = "Lava block def";
-	private static final int HALF_BLOCK = Blocks.LAVA , FULL_BLOCK = Blocks.LAVA + 32;;
+	private static final int HALF_BLOCK = Blocks.WATER , FULL_BLOCK = Blocks.WATER + 32;;
 	private static final boolean CLUMPS = false;
 	private static final int LIQUID_INDEX = 1;
 	int bottom;
@@ -54,10 +55,11 @@ public class LavaBlockDef extends BlockDefinition {
 				halfBlock <<= Map.DATA_BITS;
 				halfBlock |= Blocks.SLOPE_WITH_LIQUID;
 				int variant = (bottom & Map.VARIANT_MASK) / 64;
-				int slopeType = variant / 8;
+				int slopeType =((bottom & Map.VARIANT_MASK) >> 3 ) & 7;
+				
 				Gdx.app.log(TAG,  "slope liquid"+variant+"  "+slopeType);
 				halfBlock += variant*64 + slopeType*8;
-				halfBlock += 1;//lava is the second
+				halfBlock += LIQUID_INDEX;//lava is the second
 				map.set(x, y-1, halfBlock);
 				map.set(x, y, 0);
 				return;
@@ -105,10 +107,10 @@ public class LavaBlockDef extends BlockDefinition {
 				halfBlock <<= Map.DATA_BITS;
 				halfBlock |= Blocks.SLOPE_WITH_LIQUID;
 				int variant = (bottom & Map.VARIANT_MASK) / 64;
-				int slopeType = variant / 8;
-				Gdx.app.log(TAG,  "slope liquid"+variant+"  "+slopeType);
+				int slopeType =((bottom & Map.VARIANT_MASK) >> 3 ) & 7;
+				//Gdx.app.log(TAG,  "slope liquid"+variant+"  "+slopeType);
 				halfBlock += variant*64 + slopeType*8;
-				halfBlock += 1;//lava is the second
+				halfBlock += LIQUID_INDEX;//lava is the second
 				map.set(x, y-1, halfBlock);
 				map.set(x, y, b-32);
 				return;
@@ -137,7 +139,7 @@ public class LavaBlockDef extends BlockDefinition {
 				halfBlock <<= Map.DATA_BITS;
 				halfBlock |= Blocks.SLOPE_WITH_LIQUID;
 				int variant = (side & Map.VARIANT_MASK) / 64;
-				int slopeType = variant / 8;
+				int slopeType =((side & Map.VARIANT_MASK) >> 3 ) & 7;
 				//Gdx.app.log(TAG,  "slope liquid"+variant+"  "+slopeType);
 				halfBlock += variant*64 + slopeType*8;
 				halfBlock += LIQUID_INDEX;//lava is the second

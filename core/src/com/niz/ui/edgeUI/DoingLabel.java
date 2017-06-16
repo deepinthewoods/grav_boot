@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.BeltButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -108,6 +109,7 @@ public class DoingLabel extends Stack{
 		limbImage.setScale(.7f);
 		typeImage.setScale(.7f);
 	}
+	
 
 	public boolean set(ItemDef def, int i, Entity e, boolean left, BeltButton but) {
 		//if (left)
@@ -123,6 +125,7 @@ public class DoingLabel extends Stack{
 			limbDrawable.setRegion(Animations.doingLimbImages[doing.limbIndex]);
 			typeDrawable.setRegion(Animations.doingTypeImages[doing.doingTypeIndex]);
 			disableDraw = false;
+			this.setTouchable(Touchable.enabled);
 			//setSize(w, h);
 			if (!race.enabledLimb[doing.limbIndex]){
 				disableDraw = true;
@@ -134,6 +137,7 @@ public class DoingLabel extends Stack{
 			disableDraw = true;
 			limbImage.setScale(0, 0);
 			typeImage.setScale(0, 0);
+			this.setTouchable(Touchable.disabled);
 		}
 		
 		return disableDraw;

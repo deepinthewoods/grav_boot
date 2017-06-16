@@ -31,7 +31,6 @@ public class OnMapSystem extends EntitySystem implements Observer, EntityListene
 	private ComponentMapper<Position> posM;
 	private EngineNiz engine;
 	ShaderProgram shader;
-	ShaderProgram backShader;
 	private TextureAtlas atlas;
 	public OnMapSystem(TextureAtlas atlas){
 		
@@ -49,7 +48,7 @@ public class OnMapSystem extends EntitySystem implements Observer, EntityListene
 		
 		bucketSystem = engine.getSystem(BucketSystem.class);
 		((EngineNiz)engine).getSubject("changeLargeBuckets").add(this);;
-		emptyMap = new Map(1, 1, atlas, shader, backShader, null, null);
+		emptyMap = new Map(1, 1, atlas, shader);
 		engine.addEntityListener(this);
 		this.engine = (EngineNiz) engine;
 		

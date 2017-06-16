@@ -40,9 +40,7 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 
 	private ShaderSystem shaderSys;
 
-	private ShaderProgram spriteShader;
-
-	private ShaderProgram backShader;
+	
 
 	private ShaderProgram shader;
 
@@ -52,7 +50,6 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 
 	private CameraSystem camSys;
 
-	private ShaderProgram litShader;
 
 	private OrthographicCamera zoomOutCamera;
 
@@ -70,46 +67,48 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 	@Override
 	public void addedToEngine(Engine engine) {
 		shaderSys = engine.getSystem(ShaderSystem.class);
-		spriteShader = shaderSys.spriteShader;
-		backShader = shaderSys.backShader;
+		
 		shader = shaderSys.shader;
 		lShader = shaderSys.lShader;
-		litShader = shaderSys.shader;
-		String[] att = shader.getUniforms();
-		for (String s : att){
+
+		if (shader != null){
+			String[] att = shader.getUniforms();
+			for (String s : att){
+				
+				//Gdx.app.log(TAG,  ""+s);;
+			}
 			
-			//Gdx.app.log(TAG,  ""+s);;
+				posLoc[1] = shader.getUniformLocation("LightPos[0]");
+				colorLoc[1] = shader.getUniformLocation("LightColor[0]");
+				falloffLoc[1] = shader.getUniformLocation("Falloff[0]");
+				ambientLoc[1] = shader.getUniformLocation("AmbientColor");
+				
+				posLoc[0] = lShader.getUniformLocation("LightPos[0]");
+				colorLoc[0] = lShader.getUniformLocation("LightColor[0]");
+				falloffLoc[0] = lShader.getUniformLocation("Falloff[0]");
+				ambientLoc[0] = lShader.getUniformLocation("AmbientColor");
+				
+				posLoc[2] = shader.getUniformLocation("LightPos[0]");
+				colorLoc[2] = shader.getUniformLocation("LightColor[0]");
+				falloffLoc[2] = shader.getUniformLocation("Falloff[0]");
+				ambientLoc[2] = shader.getUniformLocation("AmbientColor");
+				
+				posLoc[3] = shader.getUniformLocation("LightPos[0]");
+				colorLoc[3] = shader.getUniformLocation("LightColor[0]");
+				falloffLoc[3] = shader.getUniformLocation("Falloff[0]");
+				ambientLoc[3] = shader.getUniformLocation("AmbientColor");
+				
+				posLoc[4] = shader.getUniformLocation("LightPos[0]");
+				colorLoc[4] = shader.getUniformLocation("LightColor[0]");
+				falloffLoc[4] = shader.getUniformLocation("Falloff[0]");
+				ambientLoc[4] = shader.getUniformLocation("AmbientColor");
+				
+				posLoc[5] = shader.getUniformLocation("LightPos[0]");
+				colorLoc[5] = shader.getUniformLocation("LightColor[0]");
+				falloffLoc[5] = shader.getUniformLocation("Falloff[0]");
+				ambientLoc[5] = shader.getUniformLocation("AmbientColor");
 		}
 		
-			posLoc[1] = spriteShader.getUniformLocation("LightPos[0]");
-			colorLoc[1] = spriteShader.getUniformLocation("LightColor[0]");
-			falloffLoc[1] = spriteShader.getUniformLocation("Falloff[0]");
-			ambientLoc[1] = spriteShader.getUniformLocation("AmbientColor");
-			
-			posLoc[0] = lShader.getUniformLocation("LightPos[0]");
-			colorLoc[0] = lShader.getUniformLocation("LightColor[0]");
-			falloffLoc[0] = lShader.getUniformLocation("Falloff[0]");
-			ambientLoc[0] = lShader.getUniformLocation("AmbientColor");
-			
-			posLoc[2] = backShader.getUniformLocation("LightPos[0]");
-			colorLoc[2] = backShader.getUniformLocation("LightColor[0]");
-			falloffLoc[2] = backShader.getUniformLocation("Falloff[0]");
-			ambientLoc[2] = backShader.getUniformLocation("AmbientColor");
-			
-			posLoc[3] = shader.getUniformLocation("LightPos[0]");
-			colorLoc[3] = shader.getUniformLocation("LightColor[0]");
-			falloffLoc[3] = shader.getUniformLocation("Falloff[0]");
-			ambientLoc[3] = shader.getUniformLocation("AmbientColor");
-			
-			posLoc[4] = litShader.getUniformLocation("LightPos[0]");
-			colorLoc[4] = litShader.getUniformLocation("LightColor[0]");
-			falloffLoc[4] = litShader.getUniformLocation("Falloff[0]");
-			ambientLoc[4] = litShader.getUniformLocation("AmbientColor");
-			
-			posLoc[5] = shader.getUniformLocation("LightPos[0]");
-			colorLoc[5] = shader.getUniformLocation("LightColor[0]");
-			falloffLoc[5] = shader.getUniformLocation("Falloff[0]");
-			ambientLoc[5] = shader.getUniformLocation("AmbientColor");
 			
 		
 		
@@ -155,7 +154,7 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 	
 	@Override
 	public void update(float deltaTime){
-		
+		if (shader == null) return;
 		//shader.begin();
 		
 		heap.clear();
@@ -214,12 +213,15 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 	public void setUniforms(int layer, ShaderProgram shader) {
 		setUniforms(layer, shader, false);
 	}
-	
+	float[] resolutionArr = {0,0};
 	public void setUniforms(int layer, ShaderProgram shader, boolean zoomOut) {
+		//if (true) return;
 		if (shader == null) return;
 		//if (layer == this.MAP_BACK_LAYER){
+		resolutionArr[0] = viewportSize;
+		resolutionArr[1] = viewportSize;
 			if (startBuffer.hasStarted)
-				shader.setUniformf("Resolution", viewportSize, viewportSize);
+				shader.setUniform2fv("Resolution", resolutionArr, 0, 2);
 			else shader.setUniformf("Resolution", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		//}
 		int index = 0;
@@ -230,26 +232,6 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 			Light light = lightM.get(e);
 			//if (index >= NUM_LIGHTS) break;
 			if (light.isOn){
-				//if (true) continue;
-				/*shader.setUniformf(posLoc[layer][index]
-						//, (int)(Main.PPM * light.position.x*BufferStartSystem.BUFFER_SIZE)/(Main.PPM*BufferStartSystem.BUFFER_SIZE)
-						//, (int)(Main.PPM * light.position.y*BufferStartSystem.BUFFER_SIZE)/(Main.PPM*BufferStartSystem.BUFFER_SIZE)
-						, light.position.x
-						, light.position.y
-						, light.position.z + light.yOffset[layer]);//*/
-				
-				//shader.setUniformf(colorLoc[layer][index], light.color[layer].x, light.color[layer].y, light.color[layer].z, light.intensity[layer]);
-				//shader.setUniformf(falloffLoc[layer][index], light.falloff[layer].x, light.falloff[layer].y, light.falloff[layer].z);
-				//shader.setUniformf(ambientLoc[layer][index], light.ambient[layer].x, light.ambient[layer].y, light.ambient[layer].z, light.ambientIntensity[layer]);
-				
-				//if (light.ambientColor[layer] != null){
-				//	shader.setUniformf("AmbientColor", light.ambientColor[layer].x, light.ambientColor[layer].y, light.ambientColor[layer].z, 1f);
-				//}
-				//shader.setUniformf("Resolution", BufferStartSystem.BUFFER_SIZE, BufferStartSystem.BUFFER_SIZE);
-				//shader.setUniformf("Resolution", BufferStartSystem.BUFFER_SIZE, BufferStartSystem.BUFFER_SIZE);
-				//shader.setUniformi("u_texture", 0);
-				//shader.setUniformi("u_normals", 1); //GL_TEXTURE1
-				//shader.setUniformf("AmbientColor", 1f, 1f, 1f, 0f);
 				
 				falloff[index*3] = light.falloff[layer].x;
 				
@@ -267,7 +249,6 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 		}
 		for (;index < NUM_LIGHTS; index++){
 			/*shader.setUniformf(posLoc[layer][index]
-					
 					, 0f
 					, .5f
 					, .01f);
@@ -279,32 +260,17 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 			pos[index*3] = -10000;
 			
 		}
-		//String falloffs = "";
-		//for (int i = 0; i < NUM_LIGHTS; i++){
-			//falloffs += "falloff " + falloff[i*3] + ", " + falloff[i*3+1] + "," + falloff[i*3+2];
-		//}
-		//Gdx.app.log(TAG, "set uniforms for " + layer + " "+falloffs);
 		
-		//shader.setUniformf("Falloff[0]", 1111111f, 1111111111f, 1111111111111f);
-		//shader.setUniformf("Falloff[1]", 1111111f, 1111111111f, 1111111111111f);
 		shader.setUniform3fv(falloffLoc[layer], falloff, 0, 12);
 		shader.setUniform3fv(posLoc[layer], pos, 0, 12);
 		shader.setUniformf(ambientLoc[layer], maxAmbient);
-		//if (maxAmbient != 0f) Gdx.app.log(TAG, "ambient" + maxAmbient);
 		shader.setUniformf("Zoom", zoom);
-		//shader.setUniform3fv("Falloff[0]", falloff, 0, 12);
-		//shader.setUniform3fv("LightPos[0]", pos, 0, 12);
-		//shader.setUniformf("AmbientColor", .3f);
-		
-		//shader.setUniformf("Falloff[2]", 1111111f, 1111111111f, 1111111111111f);
-		//shader.setUniformf("Falloff[3]", 1111111f, 1111111111f, 1111111111111f);
-		//shader.end();
 	}
 	float[] pos = new float[NUM_LIGHTS*3], falloff = new float[NUM_LIGHTS*3];
 	@Override
 	public void onNotify(Entity e, Event event, Object c) {
 		VectorInput in = (VectorInput) c;
-		viewportSize = in.v.x * .25f;		
+		viewportSize = in.v.x;// * .25f;		
 		
 	}
 

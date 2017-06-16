@@ -3,8 +3,8 @@ package com.niz.actions.mapgen;
 import java.util.Random;
 
 import com.badlogic.ashley.core.EngineNiz;
-import com.badlogic.ashley.core.EngineNiz.PooledEntity;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EngineNiz.PooledEntity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.MathUtils;

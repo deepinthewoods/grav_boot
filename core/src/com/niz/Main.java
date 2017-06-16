@@ -22,6 +22,7 @@ public class Main extends ApplicationAdapter {
 	//private ClientInstance client;
 	//private ServerInstance server;
 	public static Prefs prefs;
+	public static boolean isRelease = true;;
 	@Override
 	public void create() {
 		Gdx.files.local(Data.FILE_PATH_PREFIX).child(Data.WORLDS_SUBFOLDER_PATH).deleteDirectory();

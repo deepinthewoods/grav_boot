@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Bits;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -36,7 +37,8 @@ public class Map implements Component, Poolable {
 	public Bits dirtyPath = new Bits(OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_HEIGHT), dirtyDestroyed = new Bits(OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_HEIGHT);
 	public boolean duplicateRenderL;
 	public boolean duplicateRenderR;
-	public Map(int width, int height, TextureAtlas atlas, ShaderProgram shader, ShaderProgram backShader, ShaderProgram litShader, ShaderProgram fgShader){
+	public Matrix4 renderMatrix = new Matrix4();;
+	public Map(int width, int height, TextureAtlas atlas, ShaderProgram shader){
 		
 		this.width = width;
 		this.height = height;
@@ -67,7 +69,7 @@ public class Map implements Component, Poolable {
 			physicsDirty[i] = true;
 		}
 		if (atlas != null)
-			cache = new SpriteCacheNiz(this, atlas, shader, backShader, litShader, fgShader);
+			cache = new SpriteCacheNiz(this, atlas, shader);
 	}
 	
 	
@@ -302,6 +304,9 @@ public class Map implements Component, Poolable {
 			dirtyPath.set(i);;
 		}
 	}
+
+
+	
 
 
 	

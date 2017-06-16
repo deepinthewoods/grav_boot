@@ -3,11 +3,11 @@ package com.niz.system;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.EngineNiz;
-import com.badlogic.ashley.core.EngineNiz.PooledEntity;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.RenderSystem;
+import com.badlogic.ashley.core.EngineNiz.PooledEntity;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.indexed.AStar;
@@ -66,7 +66,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		@Override
 		protected Map newObject() {
 			// TODO Auto-generated method stub
-			return new Map(OverworldSystem.SCROLLING_MAP_WIDTH, OverworldSystem.SCROLLING_MAP_HEIGHT, atlas, shader, backShader, litShader, fgShader);
+			return new Map(OverworldSystem.SCROLLING_MAP_WIDTH, OverworldSystem.SCROLLING_MAP_HEIGHT, atlas, shader);
 		}
 
 		@Override
@@ -275,7 +275,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 	}
 	
 	private Array<PooledEntity> saveEntities = new Array<PooledEntity>();
-	private Class entityArrayClass = saveEntities.getClass();
+	private Class<? extends Array> entityArrayClass = saveEntities.getClass();
 	private ASaveEntities createEntitySaveAction(Map map, int bit) {
 		saveEntities = Pools.obtain(entityArrayClass);
 		removeEntitiesForPosition(map.offset, map.width, map.height, saveEntities);
@@ -420,11 +420,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 
 	public ShaderProgram shader;
 
-	public ShaderProgram backShader;
-
-	public ShaderProgram fgShader;
-
-	public ShaderProgram litShader;
+	
 
 	private Map newGameMap;
 
@@ -560,7 +556,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		if (newGameScreen) throw new GdxRuntimeException("already on new game screen");
 		newGameScreen = true;
 		if (newGameMap == null){
-			newGameMap = new Map(OverworldSystem.NEW_GAME_MAP_WIDTH, OverworldSystem.NEW_GAME_HEIGHT, atlas, shader, backShader, litShader, fgShader);
+			newGameMap = new Map(OverworldSystem.NEW_GAME_MAP_WIDTH, OverworldSystem.NEW_GAME_HEIGHT, atlas, shader);
 			for (int x = 0; x < 256; x++){
 				for (int y = 0; y < 256; y++){
 					newGameMap.setBG(x,  y, Blocks.STONE + MathUtils.random(64));

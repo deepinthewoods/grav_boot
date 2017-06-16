@@ -3,8 +3,8 @@ package com.niz;
 
 
 import com.badlogic.ashley.core.EngineNiz;
-import com.badlogic.ashley.core.EngineNiz.PooledEntity;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EngineNiz.PooledEntity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.indexed.AStar;
 import com.badlogic.gdx.utils.Array;

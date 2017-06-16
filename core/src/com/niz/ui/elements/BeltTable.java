@@ -161,7 +161,7 @@ public class BeltTable extends UIElement {
 						//throw new GdxRuntimeException("null button");
 						//toastNotifier.notify(null, Event.BELT_TOUCH_START, null);
 						//toastNotifier.notify(butt.e, Event.CHANGE_DOING_SLOT, c);	
-						toastNotifier.notify(null, Event.STOP_TOAST, c);
+						//toastNotifier.notify(null, Event.STOP_TOAST, c);
 						
 					}
 				}

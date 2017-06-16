@@ -156,7 +156,7 @@ private float viewportSize;
 @Override
 public void update(float deltaTime) {
 	
-	
+	//if (true) return;
 	
 	if (camSys.zoomedOut) return;
 	
