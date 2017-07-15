@@ -17,14 +17,16 @@
 package com.niz.anim;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatchNiz;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Bits;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Pool;
@@ -39,75 +41,39 @@ import com.niz.system.MapRenderSystem;
 import com.niz.system.MapSystem;
 import com.niz.system.OverworldSystem;
 
-
 public class SpriteCacheNiz{
-	private static final String 	TAG = "sprite cache";
+	private static final String TAG = "sprite cache";
 	private static final String SPRITE_FILENAME_PREFIX = "diff/tile";
 	private static final int CACHE_TOTAL_TARGET = 64;
 	
-	public SpriteBatchNiz[] batches// = new SpriteBatchNiz[((map.width/MapRenderSystem.RENDER_SIZE)*(map.height/MapRenderSystem.RENDER_SIZE))]
-			, bbatches// = new SpriteBatchNiz[((map.width/MapRenderSystem.RENDER_SIZE)*(map.height/MapRenderSystem.RENDER_SIZE))]
-					, fbatches;// = new SpriteBatchNiz[((map.width/MapRenderSystem.RENDER_SIZE)*(map.height/MapRenderSystem.RENDER_SIZE))];
 	public static Sprite[] sprites = new Sprite[34*512];;
+	private static final Texture atlasTexture = new Texture(Gdx.files.internal("tilesprocessed.png"));
+	private final Texture indexTexture;
 	public boolean hasCa2ched;
 	public int cachedTotal;
 	private static TextureAtlas atlas;
-	private SpriteBatchNiz currentBatch, currentBBatch, currentFBatch, currentLitBatch;
-	
+
 	private ShaderProgram shader;
 	private Matrix4 mat = new Matrix4();
 	private int[] backTiles;
-	
-	private static Pool<SpriteBatchNiz> batchPool = new Pool<SpriteBatchNiz>(){
 
-		@Override
-		protected SpriteBatchNiz newObject() {
-			return new SpriteBatchNiz((MapRenderSystem.RENDER_SIZE*MapRenderSystem.RENDER_SIZE));
-			
-		}
-		
-		
-	};
-	public static void init(){
-		SpriteBatchNiz[] bs = new SpriteBatchNiz[16];
-		for (int i = 0; i < bs.length; i++){
-			bs[i] = batchPool.obtain();
-		}
-		for (int i = 0; i < bs.length; i++){
-			batchPool.free(bs[i]);
-			bs[i] = null;
-		}
-	}
-	
-	
-	
-	private SpriteBatchNiz[] litbatches;
 	private Map map;
-	
-	private int middleDrawCount;
-	private int backdrawCount;
-	
+	private FrameBuffer[] buffers;
+
 	public SpriteCacheNiz(Map map, TextureAtlas atlas, ShaderProgram shader){
 		this.shader = shader;
-		
+		//atlasTexture = atlas.getTextures().first();
+		indexTexture = new Texture(Gdx.files.internal("indexTexture.png"));
+		//atlasTexture = new Texture(Gdx.files.internal("tilesprocessed.png"));
 		this.map = map;
-		batches = new SpriteBatchNiz[((map.width/MapRenderSystem.RENDER_SIZE)*(map.height/MapRenderSystem.RENDER_SIZE))];
-		fbatches = new SpriteBatchNiz[((map.width/MapRenderSystem.RENDER_SIZE)*(map.height/MapRenderSystem.RENDER_SIZE))];
-		bbatches = new SpriteBatchNiz[((map.width/MapRenderSystem.RENDER_SIZE)*(map.height/MapRenderSystem.RENDER_SIZE))];
-		litbatches = new SpriteBatchNiz[((map.width/MapRenderSystem.RENDER_SIZE)*(map.height/MapRenderSystem.RENDER_SIZE))];
+		buffers = new FrameBuffer[(map.width / MapRenderSystem.RENDER_SIZE) * (map.height / MapRenderSystem.RENDER_SIZE)];
 
-		int len = batches.length /(MapRenderSystem.RENDER_SIZE*MapRenderSystem.RENDER_SIZE);
-		Texture tex = atlas.getTextures().first();
-		for (int i = 0; i < batches.length; i++){
-			
-		}
 	}
 	
-	public void beginDrawBack(LightRenderSystem lights) {
-		backdrawCount = 0;
+	public void beginDrawBack(LightRenderSystem lights){
 	}
 
-	public void draw(Map map, int x, int y, int[] tiles, int[] backTiles, OrthographicCamera camera, LightRenderSystem lights, BufferStartSystem buffer, boolean setAllDirty, ShaderProgram shader, int xOffset) {
+	public void draw(Map map, int x, int y, int[] tiles, int[] backTiles, OrthographicCamera camera, LightRenderSystem lights, BufferStartSystem buffer, boolean setAllDirty, ShaderProgram shader, int xOffset, SpriteBatch batch) {
 		x -= map.offset.x/MapRenderSystem.RENDER_SIZE;
 		y -= map.offset.y/MapRenderSystem.RENDER_SIZE;
 		int wy =  y;//(int) (y -( map.offset.y/MapRenderSystem.RENDER_SIZE));
@@ -149,16 +115,13 @@ public class SpriteCacheNiz{
 		//bshader.begin();
 		//bshader.end();
 			
-		currentBBatch = bbatches[index];
-		if (currentBBatch == null) {
-			populateCurrentBatches(index);
-			currentBBatch = bbatches[index];
-			if (currentBBatch == null) {return;}
-		}
+		populateCurrentBatches(index);
 		
 		if (cachedTotal < CACHE_TOTAL_TARGET && (map.dirty[index] || setAllDirty)){
 			//map.dirtyRuns[wx] = true;
-			cacheChunk(map, index, tiles, backTiles);
+			Gdx.app.log(TAG,  "cache chunk  "+index + setAllDirty);
+
+			cacheChunk(map, index, tiles, backTiles, batch);
 			cachedTotal++;
 			map.dirty[index] = false;
 		}
@@ -171,194 +134,79 @@ public class SpriteCacheNiz{
 		//}else currentBBatch.setColor(1f,  1f,  1f,  1f);
 		//if (shader == null) return;
 
-		currentBBatch.setProjectionMatrix(mat);
-		batches[index].setProjectionMatrix(mat);
-		fbatches[index].setProjectionMatrix(mat);
-		litbatches[index].setProjectionMatrix(mat);
-		
-		currentBBatch.disableBlending();
-		currentBBatch.setShader(shader);
-		currentBBatch.beginDraw();		
-		if (backdrawCount++ == 0)
-			lights.setUniforms(Light.MAP_BACK_LAYER, shader);
+		batch.setProjectionMatrix(mat);
 
-		if (shader != null) currentBBatch.render();
-		currentBBatch.end();
-		
-	}
-	
-	public void beginDrawMiddle(LightRenderSystem lights) {
-		middleDrawCount = 0;
-	}
+		batch.disableBlending();
+		batch.setShader(shader);
+		batch.begin();
 
-	public void draw(int x, int y, LightRenderSystem lights, ShaderProgram shader, int xOffset, OrthographicCamera camera){
-		x -= map.offset.x/MapRenderSystem.RENDER_SIZE;
-		y -= map.offset.y/MapRenderSystem.RENDER_SIZE;
-		int wy =  y;//(int) (y -( map.offset.y/MapRenderSystem.RENDER_SIZE));
-		int wx =  x;//(int) (x -( map.offset.x/MapRenderSystem.RENDER_SIZE));
-		wx += xOffset / (MapRenderSystem.RENDER_SIZE * Main.PPM);
-		int v = (OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_TOTAL_SIZE )/ MapRenderSystem.RENDER_SIZE;
-		wx = ((wx % v) + v) % v;
-		int index = wy + wx*(map.width/MapRenderSystem.RENDER_SIZE);
-		if (wx < 0 || wy < 0 || wx >= map.width/MapRenderSystem.RENDER_SIZE || wy >= map.height/MapRenderSystem.RENDER_SIZE){
-			//Gdx.app.log(TAG, "SKIP");
-			return;
-		}
-		currentBatch = batches[index];
-		mat.set(camera.combined);
-		mat.translate(Main.PPM*(x)*(MapRenderSystem.RENDER_SIZE) +map.offset.x*Main.PPM, Main.PPM*(y)*(MapRenderSystem.RENDER_SIZE)+map.offset.y*Main.PPM, 0);
-		mat.translate(xOffset, 0, 0);
-		//currentBatch.setProjectionMatrix(mat);
-		//currentBatch.disableBlending();
-		//Gdx.gl.glDisable(GL20.GL_BLEND);
+		indexTexture.bind(1);
+		shader.setUniformi("u_index_texture", 1); //passing first texture!!!
+		atlasTexture.bind(0);
+		shader.setUniformi("u_texture", 0);
 
-		//currentBatch.setShader(shader);
-		//shader.begin();
-		currentBatch.beginDraw();		
-		if (middleDrawCount++ == 0)
-			lights.setUniforms(Light.MAP_FRONT_LAYER, shader);
-		currentBatch.render();
-		currentBatch.end();	
-		//shader.end();
-	}
-	
-	public void beginDrawLit(LightRenderSystem lights) {
-		lights.setUniforms(Light.MAP_LIT_LAYER, shader);
-		
-	}
+		//lights.setUniforms(Light.MAP_BACK_LAYER, shader);
+		batch.draw(buffers[index].getColorBufferTexture(), 0, 0);
+		//batch.render();
+		batch.end();
+		v3.set(0, 0, 0);
+		mat.getTranslation(v3);
+		//Gdx.app.log(TAG, "draw" + v3);
 
-	public void drawLit(int x, int y, LightRenderSystem lights, ShaderProgram shader, int xOffset, OrthographicCamera camera){
-		x -= map.offset.x/MapRenderSystem.RENDER_SIZE;
-		y -= map.offset.y/MapRenderSystem.RENDER_SIZE;
-		int wy =  y;//(int) (y -( map.offset.y/MapRenderSystem.RENDER_SIZE));
-		int wx =  x;//(int) (x -( map.offset.x/MapRenderSystem.RENDER_SIZE));
-		wx += xOffset / (MapRenderSystem.RENDER_SIZE * Main.PPM);
-		int v = (OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_TOTAL_SIZE )/ MapRenderSystem.RENDER_SIZE;
-		wx = ((wx % v) + v) % v;
-		int index = wy + wx*(map.width/MapRenderSystem.RENDER_SIZE);
-		if (wx < 0 || wy < 0 || wx >= map.width/MapRenderSystem.RENDER_SIZE || wy >= map.height/MapRenderSystem.RENDER_SIZE){
-			
-			return;
-		}
-		currentLitBatch = litbatches[index];
-		//currentLitBatch.setProjectionMatrix(mat);
-		//currentLitBatch.disableBlending();
-		//Gdx.gl.glDisable(GL20.GL_BLEND);
-
-		//currentLitBatch.setShader(shader);
-		currentLitBatch.beginDraw();		
-		currentLitBatch.render();
-		currentLitBatch.end();		
-		
 	}
-	
-	public void beginDrawFG(LightRenderSystem lights) {
-		// TODO Auto-generated method stub
-		
-		
-	}
-
-	public void drawFG(int x, int y, LightRenderSystem lights, ShaderProgram shader, int xOffset, OrthographicCamera camera){
-
-		x -= map.offset.x/MapRenderSystem.RENDER_SIZE;
-		y -= map.offset.y/MapRenderSystem.RENDER_SIZE;
-		int wy =  y;//(int) (y -( map.offset.y/MapRenderSystem.RENDER_SIZE));
-		int wx =  x;//(int) (x -( map.offset.x/MapRenderSystem.RENDER_SIZE));
-		wx += xOffset / (MapRenderSystem.RENDER_SIZE * Main.PPM);
-		int v = (OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_TOTAL_SIZE )/ MapRenderSystem.RENDER_SIZE;
-		wx = ((wx % v) + v) % v;
-		int index = wy + wx*(map.width/MapRenderSystem.RENDER_SIZE);
-		if (wx < 0 || wy < 0 || wx >= map.width/MapRenderSystem.RENDER_SIZE || wy >= map.height/MapRenderSystem.RENDER_SIZE){
-			
-			return;
-		}
-		currentFBatch = fbatches[index];
-		//currentFBatch.setProjectionMatrix(mat);
-		///currentFBatch.enableBlending();
-		//Gdx.gl.glEnable(GL20.GL_BLEND);
-		//Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		//currentFBatch.setShader(shader);
-		currentFBatch.beginDraw();
-		lights.setUniforms(Light.MAP_FOREGROUND_LAYER, shader);
-		currentFBatch.render();
-		currentFBatch.end();
-	}
-	
+	Vector3 v3 = new Vector3();
 
 	private void populateCurrentBatches(int index) {
-		bbatches[index] = batchPool.obtain();
-		batches[index] = batchPool.obtain();
-		fbatches[index] = batchPool.obtain();
-		litbatches[index] = batchPool.obtain();
+		if (buffers[index] != null) return;
+		buffers[index] = new FrameBuffer(Pixmap.Format.RGBA8888
+				, MapRenderSystem.RENDER_SIZE * Main.PPM, MapRenderSystem.RENDER_SIZE * Main.PPM, false);
+		buffers[index].getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 		
-		bbatches[index].setShader(shader);;
-		batches[index].setShader(shader);;
-		fbatches[index].setShader(shader);;
-		litbatches[index].setShader(shader);;
-		
-		bbatches[index].disableBlending();
-		batches[index].disableBlending();;// = batchPool.obtain();
-		fbatches[index].disableBlending();// = batchPool.obtain();
-		litbatches[index].disableBlending();// = batchPool.obtain();
-		
+
 		batchBits.set(index);
 		
 		map.dirty[index] = true;
 	}
-	
-	
 
 	/**
 	 * @param index
 	 * @return true if successful(found a batch)
 	 */
 	public boolean beginCache(int index) {
-		if (batches[index] == null){
-			populateCurrentBatches(index);
-			
-		}
-		currentBatch = batches[index];
-		currentBatch.clearCache();
-		currentBatch.begin();
-		currentBBatch = bbatches[index];
-		currentBBatch.clearCache();
-		currentBBatch.begin();
-		currentFBatch = fbatches[index];
-		currentFBatch.clearCache();
-		currentFBatch.begin();
-		currentLitBatch = fbatches[index];
-		currentLitBatch.clearCache();
-		currentLitBatch.begin();
+
 		return true;
 	}
 
 	public void endCache() {
-		currentBatch.end();
-		currentBBatch.end();
-		currentFBatch.end();
-		currentLitBatch.end();
+
 
 	}
 
-	public void add(Sprite s) {
-		s.draw(currentBatch);
+	public void add(Sprite s, SpriteBatch batch) {
+		s.draw(batch);
 	}
-	public void addB(Sprite s) {
-		s.draw(currentBBatch);
+	public void addB(Sprite s, SpriteBatch batch) {
+		s.draw(batch);
 	}
-	public void addFG(Sprite s) {
-		s.draw(currentFBatch);
+	public void addFG(Sprite s, SpriteBatch batch) {
+		s.draw(batch);
 	}
-	public void addLit(Sprite s){
-		s.draw(currentLitBatch);
+	public void addLit(Sprite s, SpriteBatch batch){
+		s.draw(batch);
 	}
-	
 
-	private boolean cacheChunk(Map map, int index, int[] tiles, int[] backTiles) {
+	private boolean cacheChunk(Map map, int index, int[] tiles, int[] backTiles, SpriteBatch batch) {
 		
-		//Gdx.app.log(TAG,  "cache chunk  "+index);
 		Sprite s = null;
-		
+		int w = MapRenderSystem.RENDER_SIZE * Main.PPM;
+		int h = MapRenderSystem.RENDER_SIZE * Main.PPM;
+		buffers[index].begin();
+		batch.setShader(null);
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
+		batch.begin();
+		atlasTexture.bind(0);
+		batch.getShader().setUniformi("u_texture", 0);
+
 		int x = index / (map.width / MapRenderSystem.RENDER_SIZE);
 		int y = index % (map.height / MapRenderSystem.RENDER_SIZE);
 		x *= MapRenderSystem.RENDER_SIZE;
@@ -377,7 +225,7 @@ public class SpriteCacheNiz{
 					//s.setPosition(Main.PPM*tx ,  Main.PPM*ty);
 					s.setPosition( Main.PPM*(tx-.5f) ,  Main.PPM*(ty-.5f));
 					if (def.isSeeThrough) {
-						addFG(s);
+						addFG(s, batch);
 						int bid = backTiles[ty+y+(tx+x)*map.width];
 						int tileb = bid & Map.TILE_MASK;
 						if (bid != 0){
@@ -385,12 +233,12 @@ public class SpriteCacheNiz{
 							if (s == null) throw new GdxRuntimeException("Sprite not found: "+tileb);
 							s.setPosition( Main.PPM*(tx-.5f) ,  Main.PPM*(ty-.5f));
 							//Gdx.app.log(TAG, "addingB "+s.getX());
-							addB(s);
+							addB(s, batch);
 							
 						}
 					}
-					else if (def.isLit)addLit(s);
-					else add(s);
+					else if (def.isLit)addLit(s, batch);
+					else add(s, batch);
 				} else {
 					int bid = backTiles[ty+y+(tx+x)*map.width];
 					int tile = bid & Map.TILE_MASK;
@@ -399,12 +247,14 @@ public class SpriteCacheNiz{
 						if (s == null) throw new GdxRuntimeException("Sprite not found: "+tile);
 						s.setPosition( Main.PPM*(tx-.5f) ,  Main.PPM*(ty-.5f));
 						//Gdx.app.log(TAG, "addingB "+s.getX());
-						addB(s);
+						addB(s, batch);
 						
 					}
 				}
 			}
 		}		
+		batch.end();
+		buffers[index].end();
 		endCache();
 		//Gdx.app.log(TAG,  "done cache chunk  "+index);
 		return true;
@@ -418,6 +268,7 @@ public class SpriteCacheNiz{
 		if (s == null) throw new GdxRuntimeException("null spr " + i + Data.getString(i));
 		s.setSize(Main.PPM*2, Main.PPM*2);
 		sprites[i] = s;
+		s.setTexture(atlasTexture);
 		//Gdx.app.log(TAG,  "done create  "+i + " " + s.getU() + " v "+s.getV() + " u2:"+s.getU2() + ", " + s.getV2() );
 		return s;
 
@@ -446,16 +297,11 @@ public class SpriteCacheNiz{
 			int index = bits.nextSetBit(0);
 			if (index == -1) break;
 			//Gdx.app.log(TAG,  "remove batches"+index);
-			if (batches[index] == null) throw new GdxRuntimeException("clearing batch error" );
-			batchPool.free(batches[index]);
-			batchPool.free(bbatches[index]);
-			batchPool.free(fbatches[index]);
-			batchPool.free(litbatches[index]);
-			
-			litbatches[index] = null;
-			batches[index] = null;
-			fbatches[index] = null;
-			bbatches[index] = null;
+			if (buffers[index] == null) throw new GdxRuntimeException("clearing buffer error" );
+
+
+			buffers[index].dispose();
+			buffers[index] = null;
 			batchBits.clear(index);
 			bits.clear(index);
 			
@@ -482,21 +328,14 @@ public class SpriteCacheNiz{
 			int index = bits.nextSetBit(0);
 			if (index == -1) break;
 			//Gdx.app.log(TAG,  "remove batches"+index);
-			batchPool.free(batches[index]);
-			batchPool.free(bbatches[index]);
-			batchPool.free(fbatches[index]);
-			batchPool.free(litbatches[index]);
-			
-			litbatches[index] = null;
-			batches[index] = null;
-			fbatches[index] = null;
-			bbatches[index] = null;
+
+
+
+			buffers[index].dispose();
+
+			buffers[index] = null;
 		}
-		while (batchPool.getFree() > 0){
-			SpriteBatchNiz b = batchPool.obtain();
-			b.dispose();
-			
-		}
+
 	}
 
 	

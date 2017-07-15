@@ -86,6 +86,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		//spriteShader = shaderSys.spriteShader;
 		
 		shader = shaderSys.shader;
+		shader = createDefaultShader();
 		
 		lights = engine.getSystem(LightRenderSystem.class);
 		buffer = engine.getSystem(BufferStartSystem.class);
@@ -121,7 +122,46 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 			maps[i] = null;
 		}
 	}
+	/** Returns a new instance of the default shader used by SpriteBatch for GL2 when no shader is specified. */
+	static public ShaderProgram createDefaultShader () {
+		String vertexShader = "attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
+				+ "attribute vec4 " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
+				+ "attribute vec2 " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
+				+ "uniform mat4 u_projTrans;\n" //
+				+ "varying vec4 v_color;\n" //
+				+ "varying vec2 v_texCoords;\n" //
+				+ "\n" //
+				+ "void main()\n" //
+				+ "{\n" //
+				+ "   v_color = " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
+				+ "   v_color.a = v_color.a * (255.0/254.0);\n" //
+				+ "   v_texCoords = " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
+				+ "   gl_Position =  u_projTrans * " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
+				+ "}\n";
+		String fragmentShader = "#ifdef GL_ES\n" //
+				+ "#define LOWP lowp\n" //
+				+ "precision mediump float;\n" //
+				+ "#else\n" //
+				+ "#define LOWP \n" //
+				+ "#endif\n" //
+				+ "varying LOWP vec4 v_color;\n" //
+				+ "varying vec2 v_texCoords;\n" //
+				+ "uniform sampler2D u_texture;\n" //
+				+ "uniform sampler2D u_index_texture;\n" //
+				+ "void main()\n"//
+				+ "{\n" //
+				+ " vec4 DiffuseColor = texture2D(u_texture, v_texCoords); \n"
+				+ " int cIndex = int(DiffuseColor.r * 128.0); \n"
+				+ " int nIndex = int(DiffuseColor.g * 128.0);  \n"
+				+ " vec4 IndexedColor = texture2D(u_index_texture, vec2(DiffuseColor.r, 0.0)); \n"
+				+ "  gl_FragColor = v_color * IndexedColor;\n" //
+				//+ "  gl_FragColor = v_color * DiffuseColor;\n" //
+				+ "}";
 
+		ShaderProgram shader = new ShaderProgram(vertexShader, fragmentShader);
+		if (shader.isCompiled() == false) throw new IllegalArgumentException("Error compiling shader: " + shader.getLog());
+		return shader;
+	}
 	@Override
 	public void removedFromEngine(Engine engine) {
 		super.removedFromEngine(engine);
@@ -213,7 +253,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 				{
 					for (int x = x0; x <= x1; x++){
 						for (int y = y0; y <= y1; y++){
-							map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, 0);
+							map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, 0, batch);
 							//if (count++ > 6) break endbp;
 							int dupeOffset = OverworldSystem.SCROLLING_MAP_WIDTH* OverworldSystem.SCROLLING_MAP_TOTAL_SIZE * Main.PPM;
 							if (map.duplicateRenderL){
@@ -224,48 +264,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 							}
 						}
 					}
-					//map.cache.endDraw();//*/
-					map.cache.beginDrawMiddle(lights);
-					//map.cache.beginDraw(skipDraw);
-					//if (false)                                                                                                                                       
-					for (int x = x0; x <= x1; x++){
-						for (int y = y0; y <= y1; y++){
-							map.cache.draw(x, y, lights, shader, 0, renderCamera);
-							int dupeOffset = OverworldSystem.SCROLLING_MAP_WIDTH* OverworldSystem.SCROLLING_MAP_TOTAL_SIZE * Main.PPM;
-							if (map.duplicateRenderL){
-								//map.cache.draw(x, y, lights, shader, -dupeOffset, renderCamera);
-							}
-							if (map.duplicateRenderR){
-								//map.cache.draw(x, y, lights, shader, dupeOffset, renderCamera);
-							}
-						}
-					}
-					map.cache.beginDrawLit(lights);
-					for (int x = x0; x <= x1; x++){
-						for (int y = y0; y <= y1; y++){
-							map.cache.drawLit(x, y, lights, shader, 0, renderCamera);
-							int dupeOffset = OverworldSystem.SCROLLING_MAP_WIDTH* OverworldSystem.SCROLLING_MAP_TOTAL_SIZE * Main.PPM;
-							if (map.duplicateRenderL){
-								//map.cache.drawLit(x, y, lights, shader, -dupeOffset, renderCamera);
-							}
-							if (map.duplicateRenderR){
-								//map.cache.drawLit(x, y, lights, shader, dupeOffset, renderCamera);
-							}
-						}
-					}
-					map.cache.beginDrawFG(lights);
-					for (int x = x0; x <= x1; x++){
-						for (int y = y0; y <= y1; y++){
-							map.cache.drawFG(x, y, lights, shader, 0, renderCamera);
-							int dupeOffset = OverworldSystem.SCROLLING_MAP_WIDTH* OverworldSystem.SCROLLING_MAP_TOTAL_SIZE * Main.PPM;
-							if (map.duplicateRenderL){
-								//map.cache.drawFG(x, y, lights, shader, -dupeOffset, renderCamera);
-							}
-							if (map.duplicateRenderR){
-								//map.cache.drawFG(x, y, lights, shader, dupeOffset, renderCamera);
-							}
-						}
-					}
+
 				}
 				
 				map.cache.endDraw();

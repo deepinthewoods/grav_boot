@@ -9,11 +9,20 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		//TexturePacker.process("H:\\sprites\\blocks\\finishedplayer", "C:\\Users\\n\\_dungeonpunch\\android\\assets", "player");
 		//TexturePacker.process("H:\\sprites\\blocks\\finished", "C:\\Users\\n\\_dungeonpunch\\android\\assets", "tiles");
-		
+
+
+
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 640;
 		config.height = 480;
 		config.vSyncEnabled = false;
-		new LwjglApplication(new Main(), config);
+		new LwjglApplication(new Main(){
+
+			@Override
+			public void preProcess() {
+				TextureRepacker.process("tiles");
+
+			}
+		}, config);
 	}
 }

@@ -44,7 +44,7 @@ public class AutoGibSystem extends EntitySystem {
 	public ComponentMapper<SpriteStatic> spriteStaticM = ComponentMapper.getFor(SpriteStatic.class);
 	protected ComponentMapper<Body> bodyM = ComponentMapper.getFor(Body.class);
 	
-	public AutoGibSystem(OrthographicCamera gameCamera, SpriteBatchNiz batch, SpriteBatchNiz leftBatch, Texture diff, final Texture normal, LightRenderSystem lights, Texture mapDiff, Texture mapNormal) {
+	public AutoGibSystem(OrthographicCamera gameCamera, SpriteBatch batch, SpriteBatch leftBatch, Texture diff, final Texture normal, LightRenderSystem lights, Texture mapDiff, Texture mapNormal) {
 		
 		makeTables();
 		
@@ -195,7 +195,7 @@ public class AutoGibSystem extends EntitySystem {
 		//processSprites();
 	}
 	
-	public void draw(Sprite s, SpriteBatchNiz theBatch, boolean left, Entity entity) {
+	public void draw(Sprite s, SpriteBatch theBatch, boolean left, Entity entity) {
 		Vector2 basePos = posM.get(entity).pos;
 		Body eBody = bodyM.get(entity);
 		makeGibs(s, left, basePos, false, null, 0, 0);

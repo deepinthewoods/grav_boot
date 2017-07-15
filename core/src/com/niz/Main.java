@@ -49,7 +49,6 @@ public class Main extends ApplicationAdapter {
 		}
 		Data.init();
 		Inventory.initItemDefs();
-		SpriteCacheNiz.init();
 		int tcp = 1000, udp = 1000;
 		String ip = "127.0.0.1";
 		//server = new ServerInstance(tcp, udp);
@@ -66,7 +65,7 @@ public class Main extends ApplicationAdapter {
 		//game = new GameInstance();
 		//games.add(game);
 		//game.create(false, client, null);
-		
+		preProcess();
 		GameInstance game = new GameInstance();
 		games.add(game);
 		game.create(false, true);
@@ -135,7 +134,7 @@ public class Main extends ApplicationAdapter {
 	}
 
 	
-	
+	public void preProcess(){}
 
     
 	

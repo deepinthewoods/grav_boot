@@ -29,8 +29,10 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 
 	private ImmutableArray<Entity> lights;
 	private OrthographicCamera camera;
-	public boolean disabled = false;
+	public boolean disabled = !false;
 	public boolean hasStarted;
+	private float viewportHeight;
+
 	public BufferStartSystem() {
 		
 		float ar = Gdx.graphics.getWidth()/Gdx.graphics.getHeight();
@@ -68,26 +70,26 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 		super.removedFromEngine(engine);
 	}
 	Vector3 tmpV = new Vector3();
-	private float viewportSize;
+	private float viewportWidth;
 	@Override
 	public void update(float deltaTime) {
-		if (disabled){
-			hasStarted = false;
-			return;
-		}
 		if (camSys.zoomedOut)
 			currentBuffer = mapBuffer;
 		else currentBuffer = buffer;
-		
+
 		hasStarted = true;
 		tmpV.set(camera.position);
-		camera.setToOrtho(false, viewportSize, (int)(viewportSize));
+		camera.setToOrtho(false, viewportWidth, (int)(viewportHeight));
 		camera.position.set(tmpV);
 		camera.update();
 		camSys.adjustedCamera.position.set(tmpV);
 		camSys.adjustedCamera.zoom = camera.zoom;
 		camSys.adjustedCamera.update();
-		
+		if (disabled){
+			hasStarted = false;
+			return;
+		}
+
 		currentBuffer.begin();
 		if (!camSys.zoomedOut){
 			Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
@@ -101,12 +103,13 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 	@Override
 	public void onNotify(Entity e, Event event, Object c) {
 		VectorInput in = (VectorInput) c;
-		if (viewportSize != in.v.x){
-			viewportSize = in.v.x;// * .25f;
+		if (viewportWidth != in.v.x){
+			viewportWidth = in.v.x;// * .25f;
+			viewportHeight = in.v.y;
 			if (buffer != null){
 				buffer.dispose();
 			}
-			buffer = new FrameBuffer(Format.RGBA8888, (int)viewportSize, (int) (viewportSize), false){
+			buffer = new FrameBuffer(Format.RGBA8888, (int) viewportWidth, (int) (viewportWidth), false){
 
 				@Override
 				protected Texture createColorTexture() {

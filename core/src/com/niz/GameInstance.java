@@ -18,7 +18,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.AutoGibSystem;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatchNiz;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
@@ -145,8 +144,8 @@ public class GameInstance implements Screen, Observer {
 	private Subject zoomSubject;
 	private ZoomInput zoomInput;
 	private SpriteBatch mapBatch;
-	private SpriteBatchNiz leftBatch;
-	private SpriteBatchNiz rightBatch;
+	private SpriteBatch leftBatch;
+	private SpriteBatch rightBatch;
 	private OrthographicCamera defaultCam;
 	private LightRenderSystem lights;
 	private Texture logo;
@@ -214,8 +213,8 @@ public class GameInstance implements Screen, Observer {
 					stage = new Stage(viewport, batch);		
 					
 					mapBatch = new SpriteBatch(10);
-					leftBatch = new SpriteBatchNiz(5460);
-					rightBatch = new SpriteBatchNiz(5460);
+
+					rightBatch = new SpriteBatch(5460);
 					gameCamera = new OrthographicCamera(10, 10);//Main.PPM*Main.VIEWPORT_SIZE, (int)(Main.PPM*Main.VIEWPORT_SIZE/Main.ar));
 					
 					
@@ -364,7 +363,7 @@ public class GameInstance implements Screen, Observer {
 					engine.addSystem(new WeaponSensorSystem());
 					engine.addSystem(new LineBatchSystem(playerAtlas, playerDiffuseTex, playerNormalTex, lights));
 					break;case 18:
-					engine.addSystem(new SpriteAnimationSystem(gameCamera, rightBatch, leftBatch, playerDiffuseTex, playerNormalTex, lights, mapDiffuseTex, mapNormalTex));
+					engine.addSystem(new SpriteAnimationSystem(gameCamera, rightBatch, playerDiffuseTex, playerNormalTex, lights, mapDiffuseTex, mapNormalTex));
 					break;case 19:
 					engine.addSystem(new LineBatchPostSystem());
 					//engine.addSystem(new ParallaxBackgroundFrontLayersRenderingSystem());
@@ -552,6 +551,8 @@ public class GameInstance implements Screen, Observer {
 			//invScreen.init(skin, stage, engine);
 		
 		}
+		resC.v.x = width;
+		resC.v.y = height;
 		engine.getSubject("resize").notify(null, Event.RESIZE, resC);
 		
 		//engine.getSubject("inventoryRefresh").notify(null, Event.INVENTORY_REFRESH, resC);
