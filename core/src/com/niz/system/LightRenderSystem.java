@@ -40,8 +40,6 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 
 	private ShaderSystem shaderSys;
 
-	
-
 	private ShaderProgram shader;
 
 	private float viewportSize;
@@ -49,7 +47,6 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 	private ImmutableArray<Entity> playerEntities;
 
 	private CameraSystem camSys;
-
 
 	private OrthographicCamera zoomOutCamera;
 
@@ -108,9 +105,6 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 				falloffLoc[5] = shader.getUniformLocation("Falloff[0]");
 				ambientLoc[5] = shader.getUniformLocation("AmbientColor");
 		}
-		
-			
-		
 		
 		lights = engine.getEntitiesFor(Family.all(Light.class, Position.class).get());
 		startBuffer = engine.getSystem(BufferStartSystem.class);
@@ -274,5 +268,4 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 		
 	}
 
-	
 }

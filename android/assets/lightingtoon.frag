@@ -11,8 +11,8 @@ varying vec2 vTexCoord;
 
 //our texture samplers
 uniform sampler2D u_texture;   //diffuse map
-uniform sampler2D u_normals;   //normal map
-
+//uniform sampler2D u_normals;   //normal map
+uniform sampler2D u_index_texture;
 //values used for shading algorithm...
 uniform vec2 Resolution;      //resolution of canvas
 uniform float AmbientColor;    //ambient RGBA -- alpha is intensity 
@@ -34,9 +34,13 @@ void main() {
 	vec4 DiffuseColor = texture2D(u_texture, vTexCoord);
 	
 	//RGB of our normal map
-	vec3 NormalMap = texture2D(u_normals, vTexCoord).rgb;
-	
+	//vec3 NormalMap = texture2D(u_index_texture, vTexCoord).rgb;
+	vec4 IndexedColor = texture2D(u_index_texture, vec2(DiffuseColor.r, 0.0));
+	vec3 NormalMap = texture2D(u_index_texture, vec2(DiffuseColor.r, 1.0)).rgb;
+
 	float Sum = 0.0;
+    int cIndex = int(DiffuseColor.r * 128.0);
+    int nIndex = int(DiffuseColor.g * 128.0);
 
 	for (int i=0; i<N_LIGHTS; i++) {
 		//The delta position of light
@@ -81,7 +85,7 @@ void main() {
 	//Sum += AmbientColor;
 	Sum = max(Sum, AmbientColor);
 	//Here is where we apply some toon shading to the light
-	
+	//Sum = 1.0;
 
-	gl_FragColor = vec4(DiffuseColor.rgb * Sum, DiffuseColor.a);
+	gl_FragColor = vec4(IndexedColor.rgb * Sum, IndexedColor.a);
 }

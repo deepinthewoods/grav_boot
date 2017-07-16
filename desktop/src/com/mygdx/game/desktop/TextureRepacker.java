@@ -25,7 +25,6 @@ class TextureRepacker {
 
     public static void process(String tiles) {
 
-
         FileHandle atlasFile = Gdx.files.internal(tiles + ".png");
         FileHandle outFile = Gdx.files.absolute(atlasFile.sibling(tiles + "processed.png").file().getAbsolutePath());
         Pixmap inPix = new Pixmap(atlasFile);
@@ -76,6 +75,4 @@ class TextureRepacker {
     public static float toFloat(int i){
         return (i + .5f ) / 128f;
     }
-
-
 }

@@ -86,7 +86,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		//spriteShader = shaderSys.spriteShader;
 		
 		shader = shaderSys.shader;
-		shader = createDefaultShader();
+		//shader = createDefaultShader();
 		
 		lights = engine.getSystem(LightRenderSystem.class);
 		buffer = engine.getSystem(BufferStartSystem.class);
@@ -123,7 +123,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		}
 	}
 	/** Returns a new instance of the default shader used by SpriteBatch for GL2 when no shader is specified. */
-	static public ShaderProgram createDefaultShader () {
+	/*static public ShaderProgram createDefaultShader () {
 		String vertexShader = "attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
 				+ "attribute vec4 " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
 				+ "attribute vec2 " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
@@ -161,7 +161,10 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		ShaderProgram shader = new ShaderProgram(vertexShader, fragmentShader);
 		if (shader.isCompiled() == false) throw new IllegalArgumentException("Error compiling shader: " + shader.getLog());
 		return shader;
-	}
+	}*/
+
+
+
 	@Override
 	public void removedFromEngine(Engine engine) {
 		super.removedFromEngine(engine);
@@ -246,7 +249,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 				//camera.zoom = Math.min(originalZoom, 10f);
 				int[] tiles = map.tiles, backTiles = map.backTiles;
 
-				map.cache.beginDraw(skipDraw);
+				map.cache.beginDraw(skipDraw, batch);
 				map.cache.beginDrawBack(lights);
 				//if (false)                                                           
 				endbp:
@@ -278,8 +281,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 			renderCamera.update();
 			skippedDraw = skipDraw;
 		}
-		
-		
+
 	}
 
 	@Override

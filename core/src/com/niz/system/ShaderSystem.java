@@ -71,10 +71,10 @@ public class ShaderSystem extends RenderSystem implements Observer {
 		
 		//our normal map
 		shader.setUniformi("u_texture", 0);
-		shader.setUniformi("u_normals", 1); //GL_TEXTURE1
+		shader.setUniformi("u_index_texture", 1); //GL_TEXTURE1
 		
-		shader.setUniformi("u_texture", 0);
-		shader.setUniformi("u_normals", 1); //GL_TEXTURE1
+		//shader.setUniformi("u_texture", 0);
+		//shader.setUniformi("u_index_texture", 1); //GL_TEXTURE1
 		//shader.setUniformf("AmbientColor", AMBIENT_COLOR.x, AMBIENT_COLOR.y, AMBIENT_COLOR.z, 1f);
 
 		shader.end();
@@ -169,6 +169,9 @@ public class ShaderSystem extends RenderSystem implements Observer {
 		shad.end();
 		return shad;
 	}
+
+
+
 
 	@Override
 	public void onNotify(Entity e, Event event, Object c) {

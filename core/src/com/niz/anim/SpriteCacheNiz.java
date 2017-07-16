@@ -41,6 +41,8 @@ import com.niz.system.MapRenderSystem;
 import com.niz.system.MapSystem;
 import com.niz.system.OverworldSystem;
 
+import static com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888;
+
 public class SpriteCacheNiz{
 	private static final String TAG = "sprite cache";
 	private static final String SPRITE_FILENAME_PREFIX = "diff/tile";
@@ -49,6 +51,8 @@ public class SpriteCacheNiz{
 	public static Sprite[] sprites = new Sprite[34*512];;
 	private static final Texture atlasTexture = new Texture(Gdx.files.internal("tilesprocessed.png"));
 	private final Texture indexTexture;
+	private final ShaderProgram cacheShader;
+	private final FrameBuffer indexBuffer;
 	public boolean hasCa2ched;
 	public int cachedTotal;
 	private static TextureAtlas atlas;
@@ -67,10 +71,66 @@ public class SpriteCacheNiz{
 		//atlasTexture = new Texture(Gdx.files.internal("tilesprocessed.png"));
 		this.map = map;
 		buffers = new FrameBuffer[(map.width / MapRenderSystem.RENDER_SIZE) * (map.height / MapRenderSystem.RENDER_SIZE)];
+		cacheShader = createDefaultShader();
+		indexBuffer = new FrameBuffer(RGBA8888, 128, 64, false);
+	}
+	/** Returns a new instance of the default shader used by SpriteBatch for GL2 when no shader is specified. */
+	static public ShaderProgram createDefaultShader () {
+		String vertexShader = "attribute vec4 " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
+				+ "attribute vec4 " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
+				+ "attribute vec2 " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
+				+ "uniform mat4 u_projTrans;\n" //
+				+ "varying vec4 v_color;\n" //
+				+ "varying vec2 v_texCoords;\n" //
+				+ "\n" //
+				+ "void main()\n" //
+				+ "{\n" //
+				+ "   v_color = " + ShaderProgram.COLOR_ATTRIBUTE + ";\n" //
+				+ "   v_color.a = v_color.a * (255.0/254.0);\n" //
+				+ "   v_texCoords = " + ShaderProgram.TEXCOORD_ATTRIBUTE + "0;\n" //
+				+ "   gl_Position =  u_projTrans * " + ShaderProgram.POSITION_ATTRIBUTE + ";\n" //
+				+ "}\n";
+		String fragmentShader = "#ifdef GL_ES\n" //
+				+ "#define LOWP lowp\n" //
+				+ "precision mediump float;\n" //
+				+ "#else\n" //
+				+ "#define LOWP \n" //
+				+ "#endif\n" //
+				+ "varying LOWP vec4 v_color;\n" //
+				+ "varying vec2 v_texCoords;\n" //
+				+ "uniform sampler2D u_texture;\n" //
+				+ "void main()\n"//
+				+ "{\n" //
+				+ "  vec4 diff = texture2D(u_texture, v_texCoords);  \n"
+				+ "  gl_FragColor = vec4(diff.rg, v_color.r, diff.a);\n" //
+				+ "}";
 
+		ShaderProgram shader = new ShaderProgram(vertexShader, fragmentShader);
+		if (shader.isCompiled() == false) throw new IllegalArgumentException("Error compiling shader: " + shader.getLog());
+		return shader;
 	}
 	
 	public void beginDrawBack(LightRenderSystem lights){
+	}
+
+	public void beginDraw(boolean skipDraw, SpriteBatch batch) {
+		drawnBits.clear();
+		cachedTotal = 0;
+
+
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, indexBuffer.getWidth(), indexBuffer.getHeight());
+		indexBuffer.begin();
+		batch.setShader(null);
+		batch.begin();
+		batch.draw(indexTexture, 0, 0, indexBuffer.getWidth(), 2);
+		batch.end();
+
+		//batch.setShader(fxSshader);
+		//batch.begin();
+		//any texture
+		//batch.draw(indexTexture, 0, 2, indexBuffer.getWidth(), indexBuffer.getHeight()-2);
+		//batch.end();
+		indexBuffer.end();
 	}
 
 	public void draw(Map map, int x, int y, int[] tiles, int[] backTiles, OrthographicCamera camera, LightRenderSystem lights, BufferStartSystem buffer, boolean setAllDirty, ShaderProgram shader, int xOffset, SpriteBatch batch) {
@@ -139,7 +199,7 @@ public class SpriteCacheNiz{
 		batch.disableBlending();
 		batch.setShader(shader);
 		batch.begin();
-
+		lights.setUniforms(Light.MAP_FRONT_LAYER, shader);
 		indexTexture.bind(1);
 		shader.setUniformi("u_index_texture", 1); //passing first texture!!!
 		atlasTexture.bind(0);
@@ -158,7 +218,7 @@ public class SpriteCacheNiz{
 
 	private void populateCurrentBatches(int index) {
 		if (buffers[index] != null) return;
-		buffers[index] = new FrameBuffer(Pixmap.Format.RGBA8888
+		buffers[index] = new FrameBuffer(RGBA8888
 				, MapRenderSystem.RENDER_SIZE * Main.PPM, MapRenderSystem.RENDER_SIZE * Main.PPM, false);
 		buffers[index].getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 		
@@ -201,11 +261,10 @@ public class SpriteCacheNiz{
 		int w = MapRenderSystem.RENDER_SIZE * Main.PPM;
 		int h = MapRenderSystem.RENDER_SIZE * Main.PPM;
 		buffers[index].begin();
-		batch.setShader(null);
+		//batch.setShader(cacheShader);
+		batch.setShader(cacheShader);
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
 		batch.begin();
-		atlasTexture.bind(0);
-		batch.getShader().setUniformi("u_texture", 0);
 
 		int x = index / (map.width / MapRenderSystem.RENDER_SIZE);
 		int y = index % (map.height / MapRenderSystem.RENDER_SIZE);
@@ -306,15 +365,8 @@ public class SpriteCacheNiz{
 			bits.clear(index);
 			
 		}
-		
-		
-	}
 
-	public void beginDraw(boolean skipDraw) {
-		drawnBits.clear();
-		cachedTotal = 0;
 	}
-	
 
 	public static void setAtlas(TextureAtlas atlas2) {
 		atlas = atlas2;
@@ -338,9 +390,4 @@ public class SpriteCacheNiz{
 
 	}
 
-	
-
-	
-	
-	
 }
