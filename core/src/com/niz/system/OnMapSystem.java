@@ -8,7 +8,6 @@ import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.niz.component.Buckets;
@@ -32,6 +31,8 @@ public class OnMapSystem extends EntitySystem implements Observer, EntityListene
 	private EngineNiz engine;
 	ShaderProgram shader;
 	private TextureAtlas atlas;
+	public ShaderProgram coeffsShader;
+
 	public OnMapSystem(TextureAtlas atlas){
 		
 		this.atlas = atlas;
@@ -48,7 +49,7 @@ public class OnMapSystem extends EntitySystem implements Observer, EntityListene
 		
 		bucketSystem = engine.getSystem(BucketSystem.class);
 		((EngineNiz)engine).getSubject("changeLargeBuckets").add(this);;
-		emptyMap = new Map(1, 1, atlas, shader);
+		emptyMap = new Map(1, 1, atlas, shader, coeffsShader);
 		engine.addEntityListener(this);
 		this.engine = (EngineNiz) engine;
 		

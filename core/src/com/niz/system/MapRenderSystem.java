@@ -108,10 +108,11 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		mapSys = engine.getSystem(MapSystem.class);
 		OnMapSystem onMap = engine.getSystem(OnMapSystem.class);
 		onMap.shader = shader;
-		
+		onMap.coeffsShader = shaderSys.coeffsShader;
+
 		OverworldSystem over = engine.getSystem(OverworldSystem.class);
 		over.shader = shader;
-		
+		over.coeffsShader = shaderSys.coeffsShader;
 		
 		Map[] maps = new Map[3];
 		for (int i = 0; i < maps.length; i++){
@@ -250,7 +251,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 				int[] tiles = map.tiles, backTiles = map.backTiles;
 				batch.setProjectionMatrix(renderCamera.combined);
 
-				map.cache.beginDraw(skipDraw, batch);
+				map.cache.beginDraw(skipDraw, batch, lights);
 				map.cache.beginDrawBack(lights);
 				//if (false)                                                           
 				endbp:
@@ -270,7 +271,6 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 					}
 
 				}
-
 
 				map.cache.endDraw();
 			

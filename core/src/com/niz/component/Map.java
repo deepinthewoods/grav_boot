@@ -38,7 +38,7 @@ public class Map implements Component, Poolable {
 	public boolean duplicateRenderL;
 	public boolean duplicateRenderR;
 	public Matrix4 renderMatrix = new Matrix4();;
-	public Map(int width, int height, TextureAtlas atlas, ShaderProgram shader){
+	public Map(int width, int height, TextureAtlas atlas, ShaderProgram shader, ShaderProgram coeffsShader){
 		
 		this.width = width;
 		this.height = height;
@@ -69,7 +69,7 @@ public class Map implements Component, Poolable {
 			physicsDirty[i] = true;
 		}
 		if (atlas != null)
-			cache = new SpriteCacheNiz(this, atlas, shader);
+			cache = new SpriteCacheNiz(this, atlas, shader, coeffsShader);
 	}
 	
 	

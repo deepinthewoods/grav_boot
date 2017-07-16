@@ -54,6 +54,7 @@ public class SpriteCacheNiz{
 	public final Texture indexTexture;
 	private final ShaderProgram cacheShader;
 	public final FrameBuffer indexBuffer;
+	private final ShaderProgram coefficientsShader;
 	public boolean hasCa2ched;
 	public int cachedTotal;
 	private static TextureAtlas atlas;
@@ -65,7 +66,7 @@ public class SpriteCacheNiz{
 	private Map map;
 	private FrameBuffer[] buffers;
 
-	public SpriteCacheNiz(Map map, TextureAtlas atlas, ShaderProgram shader){
+	public SpriteCacheNiz(Map map, TextureAtlas atlas, ShaderProgram shader, ShaderProgram coeffsS){
 		this.shader = shader;
 		//atlasTexture = atlas.getTextures().first();
 		indexTexture = new Texture(Gdx.files.internal("indexTexture.png"));
@@ -73,8 +74,9 @@ public class SpriteCacheNiz{
 		this.map = map;
 		buffers = new FrameBuffer[(map.width / MapRenderSystem.RENDER_SIZE) * (map.height / MapRenderSystem.RENDER_SIZE)];
 		cacheShader = createDefaultShader();
-		indexBuffer = new FrameBuffer(RGBA8888, 128, INDEX_BUFFER_HEIGHT, false);
+		indexBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 128, INDEX_BUFFER_HEIGHT, false);
 		indexBuffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+		coefficientsShader = coeffsS;
 	}
 	/** Returns a new instance of the default shader used by SpriteBatch for GL2 when no shader is specified. */
 	static public ShaderProgram createDefaultShader () {
@@ -115,10 +117,9 @@ public class SpriteCacheNiz{
 	public void beginDrawBack(LightRenderSystem lights){
 	}
 
-	public void beginDraw(boolean skipDraw, SpriteBatch batch) {
+	public void beginDraw(boolean skipDraw, SpriteBatch batch, LightRenderSystem lights) {
 		drawnBits.clear();
 		cachedTotal = 0;
-
 
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, indexBuffer.getWidth(), indexBuffer.getHeight());
 		indexBuffer.begin();
@@ -126,11 +127,16 @@ public class SpriteCacheNiz{
 		batch.begin();
 		batch.draw(indexTexture, 0, 0);
 		batch.end();
-
+		batch.setShader(coefficientsShader);
+		lights.setUniformsNew(coefficientsShader, shader);
+		batch.begin();
+		//any texture
+		batch.draw(indexTexture, 0, 2, indexBuffer.getWidth(), 1);
+		batch.end();
 		//batch.setShader(fxSshader);
 		//batch.begin();
 		//any texture
-		//batch.draw(indexTexture, 0, 2, indexBuffer.getWidth(), indexBuffer.getHeight()-2);
+		//batch.draw(indexTexture, 0, 3, indexBuffer.getWidth(), indexBuffer.getHeight()-3);
 		//batch.end();
 		indexBuffer.end();
 	}

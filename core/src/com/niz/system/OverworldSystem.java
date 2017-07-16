@@ -28,8 +28,6 @@ import com.niz.SimplexNoise;
 import com.niz.WorldDefinition;
 import com.niz.action.Action;
 import com.niz.action.ActionList;
-import com.niz.actions.mapgen.AAgentBuildMap;
-import com.niz.actions.mapgen.AGenerateEntities;
 import com.niz.actions.mapgen.ALoadEntities;
 import com.niz.actions.mapgen.ALoadMap;
 import com.niz.actions.mapgen.ASaveEntities;
@@ -59,14 +57,16 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 	static ComponentMapper<Player>playerM = ComponentMapper.getFor(Player.class);
 
 	public int currentLevel = 0;
-	
+
+
 	private Bits loaded = new Bits(SCROLLING_MAP_TOTAL_SIZE), shouldLoad = new Bits(SCROLLING_MAP_TOTAL_SIZE), tmpBits = new Bits(SCROLLING_MAP_TOTAL_SIZE), loading = new Bits(SCROLLING_MAP_TOTAL_SIZE), saving = new Bits(SCROLLING_MAP_TOTAL_SIZE);
+	public ShaderProgram coeffsShader;
 	Pool<Map> mapPool = new Pool<Map>(){
 
 		@Override
 		protected Map newObject() {
 			// TODO Auto-generated method stub
-			return new Map(OverworldSystem.SCROLLING_MAP_WIDTH, OverworldSystem.SCROLLING_MAP_HEIGHT, atlas, shader);
+			return new Map(OverworldSystem.SCROLLING_MAP_WIDTH, OverworldSystem.SCROLLING_MAP_HEIGHT, atlas, shader, coeffsShader);
 		}
 
 		@Override
@@ -143,7 +143,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		//engine.addEntityListener(family, this);
 
 		playerEntities = engine.getEntitiesFor(Family.all(Player.class).get());
-		
+
 		Pools.set(Map.class, mapPool);
 		
 		mapSystem = engine.getSystem(MapSystem.class);
@@ -556,7 +556,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		if (newGameScreen) throw new GdxRuntimeException("already on new game screen");
 		newGameScreen = true;
 		if (newGameMap == null){
-			newGameMap = new Map(OverworldSystem.NEW_GAME_MAP_WIDTH, OverworldSystem.NEW_GAME_HEIGHT, atlas, shader);
+			newGameMap = new Map(OverworldSystem.NEW_GAME_MAP_WIDTH, OverworldSystem.NEW_GAME_HEIGHT, atlas, shader, coeffsShader);
 			for (int x = 0; x < 256; x++){
 				for (int y = 0; y < 256; y++){
 					newGameMap.setBG(x,  y, Blocks.STONE + MathUtils.random(64));

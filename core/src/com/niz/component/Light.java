@@ -9,6 +9,7 @@ import com.niz.Main;
 public class Light extends BinaryHeap.Node implements Component {
 	public static final int CHARACTER_SPRITES_LAYER_LEFT = 0, CHARACTER_SPRITES_LAYER_RIGHT = 1, MAP_BACK_LAYER = 2
 			, MAP_FRONT_LAYER = 3, MAP_LIT_LAYER = 4, MAP_FOREGROUND_LAYER = 5;
+	public static final int MAX_LAYERS = 6;
 
 	/**
 	 * 

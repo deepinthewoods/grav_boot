@@ -34,9 +34,9 @@ public class ShaderSystem extends RenderSystem implements Observer {
 	private static final Vector3 FALLOFF = new Vector3(.053f, .13f, 35f);
 	private static final float AMBIENT_INTENSITY = .327f;
 	private static final float LIGHT_INTENSITY = .628f;
-	
-	
-	
+	public ShaderProgram coeffsShader;
+
+
 	@Override
 	public void addedToEngine(Engine engine) {
 		EngineNiz niz = (EngineNiz)engine;
@@ -144,7 +144,10 @@ public class ShaderSystem extends RenderSystem implements Observer {
 
 		//shader = null;
 		//lShader = null;
-		
+
+		coeffsShader = new ShaderProgram(Gdx.files.internal("lighting.vert"), Gdx.files.internal("lightingtooncoeffs.frag"));
+		if (!coeffsShader.isCompiled())
+			throw new GdxRuntimeException("Could not compile shader: "+coeffsShader.getLog());
 	}
 
 	private ShaderProgram makeShader() {
@@ -159,11 +162,11 @@ public class ShaderSystem extends RenderSystem implements Observer {
 		shad.begin();
 		
 		//our normal map
-		shad.setUniformi("u_texture", 0);
-		shad.setUniformi("u_normals", 1); //GL_TEXTURE1
+		//shad.setUniformi("u_texture", 0);
+		//shad.setUniformi("u_normals", 1); //GL_TEXTURE1
 		
-		shad.setUniformi("u_texture", 0);
-		shad.setUniformi("u_normals", 1); //GL_TEXTURE1
+		//shad.setUniformi("u_texture", 0);
+		//shad.setUniformi("u_normals", 1); //GL_TEXTURE1
 		//shader.setUniformf("AmbientColor", AMBIENT_COLOR.x, AMBIENT_COLOR.y, AMBIENT_COLOR.z, 1f);
 
 		shad.end();

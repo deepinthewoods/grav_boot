@@ -18,7 +18,7 @@ uniform vec2 Resolution;      //resolution of canvas
 uniform float AmbientColor;    //ambient RGBA -- alpha is intensity 
 
 uniform vec3 LightPos[N_LIGHTS];     //light position, normalized
-uniform vec3 Falloff[N_LIGHTS];      //attenuation coefficients
+//uniform vec3 Falloff[N_LIGHTS];      //attenuation coefficients
 uniform vec4 LightColor[N_LIGHTS];   //light RGBA -- alpha is intensity
 uniform float Zoom;
 //Flat shading in four steps
@@ -26,7 +26,8 @@ uniform float Zoom;
 #define STEP_B 0.55
 #define STEP_C 1.0
 #define STEP_D 1.4
-const float INDEXPIXELHEIGHT = 1.1 / 66.0; // 1/66
+const float INDEXPIXELHEIGHT = 1.1 / 66.0;
+const float COEFFICIENTS_PIXEL_HEIGHT = 2.1 / 66.0;
 
 // uniform float Test[2];
 
@@ -38,15 +39,22 @@ void main() {
 	//vec3 NormalMap = texture2D(u_index_texture, vTexCoord).rgb;
 	vec4 IndexedColor = texture2D(u_index_texture, vec2(DiffuseColor.r, INDEXPIXELHEIGHT));
 	vec3 NormalMap = texture2D(u_index_texture, vec2(DiffuseColor.r, 0.0)).rgb;
-
 	float Sum = 0.0;
     int cIndex = int(DiffuseColor.r * 128.0);
     int nIndex = int(DiffuseColor.g * 128.0);
 
 	for (int i=0; i<N_LIGHTS; i++) {
+        vec3 Falloff = texture2D(u_index_texture, vec2(0, COEFFICIENTS_PIXEL_HEIGHT)).rgb;
+        Falloff.g *= 10.0;
+        Falloff.b *= 50.0;
+        //Falloff *= 0.0000000001;
+        //Falloff.r += 0.4;
+       // Falloff.g += 3.0;
+        //Falloff.b += 20.0;
 		//The delta position of light
 		vec3 LightDir = vec3(LightPos[i].xy - (gl_FragCoord.xy / Resolution.xy), LightPos[i].z);
-		
+		//LightDir *= 0.000000001;
+		//LightDir += vec3(vec2(0.5, 0.5).xy - (gl_FragCoord.xy / Resolution.xy), 0.5);
 		//Correct for aspect ratio
 		LightDir.x *= Resolution.x / Resolution.y;
 		
@@ -65,7 +73,7 @@ void main() {
 		//vec3 Ambient = AmbientColor.rgb * AmbientColor.a;
 		
 		//calculate attenuation
-		float Attenuation = 1.0 / ( Falloff[i].x + (Falloff[i].y*D) + (Falloff[i].z*D*D) );
+		float Attenuation = 1.0 / ( Falloff.x + (Falloff.y*D) + (Falloff.z*D*D) );
 		Attenuation = Attenuation *  max(dot(N, L), 0.0);
 		
 		
