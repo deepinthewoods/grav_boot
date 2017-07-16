@@ -248,6 +248,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 				Map map = mapM.get(e);
 				//camera.zoom = Math.min(originalZoom, 10f);
 				int[] tiles = map.tiles, backTiles = map.backTiles;
+				batch.setProjectionMatrix(renderCamera.combined);
 
 				map.cache.beginDraw(skipDraw, batch);
 				map.cache.beginDrawBack(lights);
@@ -269,17 +270,25 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 					}
 
 				}
-				
+
+
 				map.cache.endDraw();
 			
 				if (skipDraw){
 					batch.end();
 				}
+				batch.setShader(null);
+				Texture t = map.cache.indexBuffer.getColorBufferTexture();
+				batch.getProjectionMatrix().setToOrtho2D(0,  0, t.getWidth(), t.getHeight());
+				batch.begin();
+				//batch.draw(t, 0, 0);
+				batch.end();
 			}
 			camera.zoom = originalZoom;
 			camera.update();
 			renderCamera.update();
 			skippedDraw = skipDraw;
+
 		}
 
 	}

@@ -26,6 +26,7 @@ uniform float Zoom;
 #define STEP_B 0.55
 #define STEP_C 1.0
 #define STEP_D 1.4
+const float INDEXPIXELHEIGHT = 1.1 / 66.0; // 1/66
 
 // uniform float Test[2];
 
@@ -35,8 +36,8 @@ void main() {
 	
 	//RGB of our normal map
 	//vec3 NormalMap = texture2D(u_index_texture, vTexCoord).rgb;
-	vec4 IndexedColor = texture2D(u_index_texture, vec2(DiffuseColor.r, 0.0));
-	vec3 NormalMap = texture2D(u_index_texture, vec2(DiffuseColor.r, 1.0)).rgb;
+	vec4 IndexedColor = texture2D(u_index_texture, vec2(DiffuseColor.r, INDEXPIXELHEIGHT));
+	vec3 NormalMap = texture2D(u_index_texture, vec2(DiffuseColor.r, 0.0)).rgb;
 
 	float Sum = 0.0;
     int cIndex = int(DiffuseColor.r * 128.0);

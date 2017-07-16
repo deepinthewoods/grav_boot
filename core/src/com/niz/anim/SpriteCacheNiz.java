@@ -47,12 +47,13 @@ public class SpriteCacheNiz{
 	private static final String TAG = "sprite cache";
 	private static final String SPRITE_FILENAME_PREFIX = "diff/tile";
 	private static final int CACHE_TOTAL_TARGET = 64;
-	
+	private static final int INDEX_BUFFER_HEIGHT = 66;
+
 	public static Sprite[] sprites = new Sprite[34*512];;
 	private static final Texture atlasTexture = new Texture(Gdx.files.internal("tilesprocessed.png"));
-	private final Texture indexTexture;
+	public final Texture indexTexture;
 	private final ShaderProgram cacheShader;
-	private final FrameBuffer indexBuffer;
+	public final FrameBuffer indexBuffer;
 	public boolean hasCa2ched;
 	public int cachedTotal;
 	private static TextureAtlas atlas;
@@ -72,7 +73,8 @@ public class SpriteCacheNiz{
 		this.map = map;
 		buffers = new FrameBuffer[(map.width / MapRenderSystem.RENDER_SIZE) * (map.height / MapRenderSystem.RENDER_SIZE)];
 		cacheShader = createDefaultShader();
-		indexBuffer = new FrameBuffer(RGBA8888, 128, 64, false);
+		indexBuffer = new FrameBuffer(RGBA8888, 128, INDEX_BUFFER_HEIGHT, false);
+		indexBuffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 	}
 	/** Returns a new instance of the default shader used by SpriteBatch for GL2 when no shader is specified. */
 	static public ShaderProgram createDefaultShader () {
@@ -122,7 +124,7 @@ public class SpriteCacheNiz{
 		indexBuffer.begin();
 		batch.setShader(null);
 		batch.begin();
-		batch.draw(indexTexture, 0, 0, indexBuffer.getWidth(), 2);
+		batch.draw(indexTexture, 0, 0);
 		batch.end();
 
 		//batch.setShader(fxSshader);
@@ -200,7 +202,8 @@ public class SpriteCacheNiz{
 		batch.setShader(shader);
 		batch.begin();
 		lights.setUniforms(Light.MAP_FRONT_LAYER, shader);
-		indexTexture.bind(1);
+		indexBuffer.getColorBufferTexture().bind(1);
+		//indexTexture.bind(1);
 		shader.setUniformi("u_index_texture", 1); //passing first texture!!!
 		atlasTexture.bind(0);
 		shader.setUniformi("u_texture", 0);
