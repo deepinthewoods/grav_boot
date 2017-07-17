@@ -36,12 +36,11 @@ void main() {
 
 	int index = int(mod(vTexCoord.x * 128.0 + (DiffuseColor.r * 0.0000000001), N_LIGHTS));
 
-	int layerIndex = int((vTexCoord.x * 128.0 + DiffuseColor.r * 0.0000000001) / float(N_LIGHTS));
+	int layerIndex = int((vTexCoord.x * 128.0 ) / float(N_LIGHTS));
 
-    vec3 v = Falloff[index + layerIndex * N_LIGHTS];
-    v.g /= 10.0;
-    v.b /= 50.0;
-
+    vec3 v = LightPos[index + layerIndex * N_LIGHTS];
+    //v.xy += 1.0;
+    //v.xy *= 0.5;
 
 	gl_FragColor = vec4(v, 1.0 );
 

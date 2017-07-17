@@ -109,11 +109,12 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		OnMapSystem onMap = engine.getSystem(OnMapSystem.class);
 		onMap.shader = shader;
 		onMap.coeffsShader = shaderSys.coeffsShader;
-
+		onMap.posShader = shaderSys.posShader;
 		OverworldSystem over = engine.getSystem(OverworldSystem.class);
 		over.shader = shader;
 		over.coeffsShader = shaderSys.coeffsShader;
-		
+		over.posShader = shaderSys.posShader;
+
 		Map[] maps = new Map[3];
 		for (int i = 0; i < maps.length; i++){
 			maps[i] = over.mapPool.obtain();
@@ -279,9 +280,10 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 				}
 				batch.setShader(null);
 				Texture t = map.cache.indexBuffer.getColorBufferTexture();
+				batch.enableBlending();
 				batch.getProjectionMatrix().setToOrtho2D(0,  0, t.getWidth(), t.getHeight());
 				batch.begin();
-				//batch.draw(t, 0, 0);
+				batch.draw(t, 0, 0);
 				batch.end();
 			}
 			camera.zoom = originalZoom;

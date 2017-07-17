@@ -35,6 +35,7 @@ public class ShaderSystem extends RenderSystem implements Observer {
 	private static final float AMBIENT_INTENSITY = .327f;
 	private static final float LIGHT_INTENSITY = .628f;
 	public ShaderProgram coeffsShader;
+	public ShaderProgram posShader;
 
 
 	@Override
@@ -148,6 +149,10 @@ public class ShaderSystem extends RenderSystem implements Observer {
 		coeffsShader = new ShaderProgram(Gdx.files.internal("lighting.vert"), Gdx.files.internal("lightingtooncoeffs.frag"));
 		if (!coeffsShader.isCompiled())
 			throw new GdxRuntimeException("Could not compile shader: "+coeffsShader.getLog());
+
+		posShader = new ShaderProgram(Gdx.files.internal("lighting.vert"), Gdx.files.internal("lightingtoonpos.frag"));
+		if (!posShader.isCompiled())
+			throw new GdxRuntimeException("Could not compile shader: "+posShader.getLog());
 	}
 
 	private ShaderProgram makeShader() {

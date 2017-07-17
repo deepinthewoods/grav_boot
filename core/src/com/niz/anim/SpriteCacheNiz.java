@@ -17,6 +17,8 @@
 package com.niz.anim;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -40,6 +42,7 @@ import com.niz.system.LightRenderSystem;
 import com.niz.system.MapRenderSystem;
 import com.niz.system.MapSystem;
 import com.niz.system.OverworldSystem;
+import com.niz.system.SpriteAnimationSystem;
 
 import static com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888;
 
@@ -55,6 +58,7 @@ public class SpriteCacheNiz{
 	private final ShaderProgram cacheShader;
 	public final FrameBuffer indexBuffer;
 	private final ShaderProgram coefficientsShader;
+	private final ShaderProgram positionShader;
 	public boolean hasCa2ched;
 	public int cachedTotal;
 	private static TextureAtlas atlas;
@@ -66,7 +70,7 @@ public class SpriteCacheNiz{
 	private Map map;
 	private FrameBuffer[] buffers;
 
-	public SpriteCacheNiz(Map map, TextureAtlas atlas, ShaderProgram shader, ShaderProgram coeffsS){
+	public SpriteCacheNiz(Map map, TextureAtlas atlas, ShaderProgram shader, ShaderProgram coeffsS, ShaderProgram posShader){
 		this.shader = shader;
 		//atlasTexture = atlas.getTextures().first();
 		indexTexture = new Texture(Gdx.files.internal("indexTexture.png"));
@@ -77,6 +81,7 @@ public class SpriteCacheNiz{
 		indexBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 128, INDEX_BUFFER_HEIGHT, false);
 		indexBuffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 		coefficientsShader = coeffsS;
+		positionShader = posShader;
 	}
 	/** Returns a new instance of the default shader used by SpriteBatch for GL2 when no shader is specified. */
 	static public ShaderProgram createDefaultShader () {
@@ -123,15 +128,24 @@ public class SpriteCacheNiz{
 
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, indexBuffer.getWidth(), indexBuffer.getHeight());
 		indexBuffer.begin();
+		Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.setShader(null);
 		batch.begin();
 		batch.draw(indexTexture, 0, 0);
 		batch.end();
 		batch.setShader(coefficientsShader);
-		lights.setUniformsNew(coefficientsShader, shader);
+		lights.setUniformsNew(coefficientsShader, shader, positionShader);
 		batch.begin();
 		//any texture
 		batch.draw(indexTexture, 0, 2, indexBuffer.getWidth(), 1);
+		batch.end();
+
+		batch.setShader(positionShader);
+		//lights.setUniformsNew(coefficientsShader, shader, positionShader);
+		batch.begin();
+		//any texture
+		batch.draw(indexTexture, 0, 3, indexBuffer.getWidth(), 1);
 		batch.end();
 		//batch.setShader(fxSshader);
 		//batch.begin();
@@ -206,6 +220,7 @@ public class SpriteCacheNiz{
 
 		batch.disableBlending();
 		batch.setShader(shader);
+		//batch.setShader(null);
 		batch.begin();
 		lights.setUniforms(Light.MAP_FRONT_LAYER, shader);
 		indexBuffer.getColorBufferTexture().bind(1);
@@ -252,15 +267,25 @@ public class SpriteCacheNiz{
 	}
 
 	public void add(Sprite s, SpriteBatch batch) {
+		s.setColor(Color.BLACK);
+		s.setColor(SpriteAnimationSystem.LAYER_COLORS[Light.MAP_FRONT_LAYER]);
 		s.draw(batch);
 	}
 	public void addB(Sprite s, SpriteBatch batch) {
+
+		s.setColor(Color.BLACK);
+		s.setColor(SpriteAnimationSystem.LAYER_COLORS[Light.MAP_BACK_LAYER]);
 		s.draw(batch);
 	}
 	public void addFG(Sprite s, SpriteBatch batch) {
+
+		s.setColor(Color.BLACK);
+		s.setColor(SpriteAnimationSystem.LAYER_COLORS[Light.MAP_FOREGROUND_LAYER]);
 		s.draw(batch);
 	}
 	public void addLit(Sprite s, SpriteBatch batch){
+		s.setColor(Color.BLACK);
+		s.setColor(SpriteAnimationSystem.LAYER_COLORS[Light.MAP_LIT_LAYER]);
 		s.draw(batch);
 	}
 
@@ -272,6 +297,7 @@ public class SpriteCacheNiz{
 		buffers[index].begin();
 		//batch.setShader(cacheShader);
 		batch.setShader(cacheShader);
+		batch.setColor(Color.BLACK);
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
 		batch.begin();
 
@@ -289,6 +315,7 @@ public class SpriteCacheNiz{
 					BlockDefinition def = MapSystem.defs[(id&Map.ID_MASK) >> Map.ID_BITS];
 					
 					s = findSprite(tile);
+
 					if (s == null) throw new GdxRuntimeException("Sprite not found: "+tile);
 					//s.setPosition(Main.PPM*tx ,  Main.PPM*ty);
 					s.setPosition( Main.PPM*(tx-.5f) ,  Main.PPM*(ty-.5f));
@@ -324,6 +351,7 @@ public class SpriteCacheNiz{
 		batch.end();
 		buffers[index].end();
 		endCache();
+		batch.setColor(Color.WHITE);
 		//Gdx.app.log(TAG,  "done cache chunk  "+index);
 		return true;
 	}
@@ -337,6 +365,7 @@ public class SpriteCacheNiz{
 		s.setSize(Main.PPM*2, Main.PPM*2);
 		sprites[i] = s;
 		s.setTexture(atlasTexture);
+		//s.setColor(Color.BLACK);
 		//Gdx.app.log(TAG,  "done create  "+i + " " + s.getU() + " v "+s.getV() + " u2:"+s.getU2() + ", " + s.getV2() );
 		return s;
 

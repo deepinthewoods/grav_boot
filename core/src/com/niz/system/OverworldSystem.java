@@ -66,7 +66,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		@Override
 		protected Map newObject() {
 			// TODO Auto-generated method stub
-			return new Map(OverworldSystem.SCROLLING_MAP_WIDTH, OverworldSystem.SCROLLING_MAP_HEIGHT, atlas, shader, coeffsShader);
+			return new Map(OverworldSystem.SCROLLING_MAP_WIDTH, OverworldSystem.SCROLLING_MAP_HEIGHT, atlas, shader, coeffsShader, posShader);
 		}
 
 		@Override
@@ -111,7 +111,8 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 	private ImmutableArray<Entity> playerEntities;
 
 	private Factory factory;;
-	
+	public ShaderProgram posShader;
+
 	public OverworldSystem(TextureAtlas atlas, Factory factory){
 		this.atlas = atlas;
 		this.factory = factory;
@@ -556,7 +557,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		if (newGameScreen) throw new GdxRuntimeException("already on new game screen");
 		newGameScreen = true;
 		if (newGameMap == null){
-			newGameMap = new Map(OverworldSystem.NEW_GAME_MAP_WIDTH, OverworldSystem.NEW_GAME_HEIGHT, atlas, shader, coeffsShader);
+			newGameMap = new Map(OverworldSystem.NEW_GAME_MAP_WIDTH, OverworldSystem.NEW_GAME_HEIGHT, atlas, shader, coeffsShader, posShader);
 			for (int x = 0; x < 256; x++){
 				for (int y = 0; y < 256; y++){
 					newGameMap.setBG(x,  y, Blocks.STONE + MathUtils.random(64));

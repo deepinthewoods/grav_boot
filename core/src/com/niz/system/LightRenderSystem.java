@@ -24,6 +24,7 @@ import com.niz.observer.Subject.Event;
 
 public class LightRenderSystem extends RenderSystem implements Observer{
 	private static final int NUM_LIGHTS = 4;
+	public static final int N_LAYERS = 6;
 
 	public static final int BUFFER_SIZE = 512;
 
@@ -68,6 +69,7 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 		
 		shader = shaderSys.shader;
 		ShaderProgram coeffShader = shaderSys.coeffsShader;
+		ShaderProgram posShader = shaderSys.posShader;
 		if (shader != null){
 			String[] att = shader.getUniforms();
 			for (String s : att){
@@ -75,7 +77,7 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 				//Gdx.app.log(TAG,  ""+s);;
 			}
 			
-				posLoc = shader.getUniformLocation("LightPos[0]");
+				posLoc = posShader.getUniformLocation("LightPos[0]");
 				colorLoc = shader.getUniformLocation("LightColor[0]");
 				falloffLoc = coeffShader.getUniformLocation("Falloff[0]");
 				ambientLoc = shader.getUniformLocation("AmbientColor");
@@ -120,7 +122,6 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 
 	@Override
 	public void removedFromEngine(Engine engine) {
-		// TODO Auto-generated method stub
 		super.removedFromEngine(engine);
 	}
 	BinaryHeap<Light> heap = new BinaryHeap<Light>(16, false);
@@ -196,36 +197,37 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 
 	}
 
-	public void setUniformsNew(int layer, ShaderProgram shader, boolean zoomOut, ShaderProgram lightShader) {
+	public void setUniformsNew(ShaderProgram shader, boolean zoomOut, ShaderProgram lightShader, ShaderProgram posShader) {
 		//if (true) return;
 		if (shader == null) return;
 		//if (layer == this.MAP_BACK_LAYER){
 
 		//}
-		int index = 0;
-		//shader.begin();
-		float maxAmbient = 0f;
-		for (int i = 0; i < lights.size(); i++){
-			Entity e = lights.get(i);
-			Light light = lightM.get(e);
-			//if (index >= NUM_LIGHTS) break;
-			if (light.isOn){
-				
-				falloff[index*3] = light.falloff[layer].x;
-				
-				falloff[index*3+1] = light.falloff[layer].y; 
-				falloff[index*3+2] = light.falloff[layer].z;
-				
-				pos[index*3] = light.position.x;
-				pos[index*3+1] = light.position.y;
-				pos[index*3+2] = light.position.z +
-						light.yOffset[layer];
-				//Gdx.app.log(TAG, "pos  "+light.position + "  " + index);
-				index++;
-				maxAmbient = Math.max(maxAmbient, light.ambientIntensity[layer]);
+		for (int layer = 0; layer < N_LAYERS; layer++){
+			int index = 0;
+			//shader.begin();
+			float maxAmbient = 0f;
+			for (int i = 0; i < lights.size(); i++){
+				Entity e = lights.get(i);
+				Light light = lightM.get(e);
+				//if (index >= NUM_LIGHTS) break;
+				if (light.isOn){
+
+					falloff[layer * NUM_LIGHTS * 3 +index*3] = light.falloff[layer].x;
+
+					falloff[layer * NUM_LIGHTS * 3 +index*3+1] = light.falloff[layer].y;
+					falloff[layer * NUM_LIGHTS * 3 +index*3+2] = light.falloff[layer].z;
+
+					pos[layer * NUM_LIGHTS * 3 +index*3] = light.position.x;
+					pos[layer * NUM_LIGHTS * 3 +index*3+1] = light.position.y;
+					pos[layer * NUM_LIGHTS * 3 +index*3+2] = //light.position.z +
+							light.yOffset[layer];
+					Gdx.app.log(TAG, "pos  "+light.position + "  " + (layer * NUM_LIGHTS * 3 +index*3));
+					index++;
+					maxAmbient = Math.max(maxAmbient, light.ambientIntensity[layer]);
+				}
 			}
-		}
-		for (;index < NUM_LIGHTS; index++){
+			for (;index < NUM_LIGHTS; index++){
 			/*shader.setUniformf(posLoc[layer][index]
 					, 0f
 					, .5f
@@ -233,27 +235,31 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 			shader.setUniformf(colorLoc[layer][index], 0f, 0, 0f);
 			//shader.setUniformf(7, 0f, 0, 0f);
 			shader.setUniformf(falloffLoc[layer][index], 11111111111111111f, 11111111111111111111f, 111111111111111111111111111111f);//*/
-			falloff[index*3] = 1111111f;
-			pos[index*3+2] = 0;
-			pos[index*3] = -10000;
-			
+				falloff[layer * NUM_LIGHTS * 3 + index*3] = 1111111f;
+				pos[layer * NUM_LIGHTS * 3 + index*3+2] = 0;
+				pos[layer * NUM_LIGHTS * 3 + index*3] = -10000;
+
+			}
 		}
+
 		shader.begin();
-		shader.setUniform3fv(falloffLoc, falloff, 0, 12);
+		shader.setUniform3fv(falloffLoc, falloff, 0, falloff.length);
 		shader.end();
 
+		posShader.begin();
+		posShader.setUniform3fv(posLoc, pos, 0, pos.length);
 
+		posShader.end();
 
 		resolutionArr[0] = viewportSize;
 		resolutionArr[1] = viewportSize;
 		lightShader.begin();
 		lightShader.setUniformf("Resolution", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		lightShader.setUniform3fv(posLoc, pos, 0, 12);
-		lightShader.setUniformf(ambientLoc, maxAmbient);
+		lightShader.setUniformf(ambientLoc, 0.3f);//maxAmbient);
 		lightShader.setUniformf("Zoom", zoom);
 		lightShader.end();
 	}
-	float[] pos = new float[NUM_LIGHTS*3], falloff = new float[NUM_LIGHTS*3];
+	float[] pos = new float[NUM_LIGHTS*3 * N_LAYERS], falloff = new float[NUM_LIGHTS*3* N_LAYERS];
 	@Override
 	public void onNotify(Entity e, Event event, Object c) {
 		VectorInput in = (VectorInput) c;
@@ -261,9 +267,9 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 		
 	}
 
-	public void setUniformsNew(ShaderProgram shader, ShaderProgram lightShader) {
+	public void setUniformsNew(ShaderProgram shader, ShaderProgram lightShader, ShaderProgram posShader) {
 		//for (int i =  0; i < Light.MAX_LAYERS; i++){
-			setUniformsNew(0, shader, false, lightShader);
+			setUniformsNew( shader, false, lightShader, posShader);
 		//}
 	}
 }

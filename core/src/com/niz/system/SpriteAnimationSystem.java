@@ -88,6 +88,8 @@ private CameraSystem camSys;
 
 private Sprite square;
 
+	public static final Color[] LAYER_COLORS = new Color[LightRenderSystem.N_LAYERS];
+
 public SpriteAnimationSystem(OrthographicCamera gameCamera, SpriteBatch batch,
 							  Texture diff, Texture normal, LightRenderSystem lights, Texture mapDiff, Texture mapNormal) {
 	this.lights = lights;
@@ -104,6 +106,10 @@ public SpriteAnimationSystem(OrthographicCamera gameCamera, SpriteBatch batch,
 	pixmap.fill();
 	
 	square = new Sprite(new Texture(pixmap));
+	for (int i = 0; i < LAYER_COLORS.length; i++){
+		LAYER_COLORS[i] = new Color((float)(i) / 128f, 0f, 0f, 1f);
+
+	}
 }
 
 @Override
