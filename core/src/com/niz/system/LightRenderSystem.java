@@ -80,7 +80,7 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 				posLoc = posShader.getUniformLocation("LightPos[0]");
 				colorLoc = shader.getUniformLocation("LightColor[0]");
 				falloffLoc = coeffShader.getUniformLocation("Falloff[0]");
-				ambientLoc = shader.getUniformLocation("AmbientColor");
+				ambientLoc = shader.getUniformLocation("AmbientColor[0]");
 				
 
 				
@@ -188,7 +188,7 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 	public void setUniforms(int layer, ShaderProgram shader) {
 		setUniforms(layer, shader, false);
 	}
-	float[] resolutionArr = {0,0};
+	float[] resolutionArr = {0,0}, ambient = new float[N_LAYERS];
 	public void setUniforms(int layer, ShaderProgram shader, boolean zoomOut) {
 
 	}
@@ -222,11 +222,12 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 					pos[layer * NUM_LIGHTS * 3 +index*3+1] = light.position.y;
 					pos[layer * NUM_LIGHTS * 3 +index*3+2] = //light.position.z +
 							light.yOffset[layer];
-					Gdx.app.log(TAG, "pos  "+light.position + "  " + (layer * NUM_LIGHTS * 3 +index*3));
+					//Gdx.app.log(TAG, "pos  "+light.position + "  " + (layer * NUM_LIGHTS * 3 +index*3));
 					index++;
 					maxAmbient = Math.max(maxAmbient, light.ambientIntensity[layer]);
 				}
 			}
+			ambient[layer] = maxAmbient;
 			for (;index < NUM_LIGHTS; index++){
 			/*shader.setUniformf(posLoc[layer][index]
 					, 0f
@@ -255,7 +256,7 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 		resolutionArr[1] = viewportSize;
 		lightShader.begin();
 		lightShader.setUniformf("Resolution", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		lightShader.setUniformf(ambientLoc, 0.3f);//maxAmbient);
+		lightShader.setUniform1fv(ambientLoc, ambient, 0, ambient.length);//maxAmbient);
 		lightShader.setUniformf("Zoom", zoom);
 		lightShader.end();
 	}

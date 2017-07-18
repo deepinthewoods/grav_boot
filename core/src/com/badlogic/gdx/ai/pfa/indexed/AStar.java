@@ -64,7 +64,7 @@ public class AStar<N> implements PathFinder<N> {
 	private static final int OPEN = 1;
 	private static final int CLOSED = 2;
 	public static final int PATHFINDING_INITIAL_Y_OFFSET = 5, PATHFINDING_DOWN_Y_OFFSET = 1, PATHFINDING_UP_Y_OFFSET = 10
-			, PATHFINDING_X_START = 5, PATHFINDING_WIDTH = 20;
+			, PATHFINDING_X_START = 15, PATHFINDING_WIDTH = 20;
 	public static final int MOVE_MASK = 0b01;
 	public static final int TYPE_MASK = 0b11111110000;
 	public static final int INDEX_MASK = 0b1111;

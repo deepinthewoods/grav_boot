@@ -17,7 +17,6 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasSprite;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -107,7 +106,7 @@ public SpriteAnimationSystem(OrthographicCamera gameCamera, SpriteBatch batch,
 	
 	square = new Sprite(new Texture(pixmap));
 	for (int i = 0; i < LAYER_COLORS.length; i++){
-		LAYER_COLORS[i] = new Color((float)(i) / 128f, 0f, 0f, 1f);
+		LAYER_COLORS[i] = new Color((float)(i + .5f) / 128f, 0f, 0f, 1f);
 
 	}
 }
@@ -204,7 +203,13 @@ public void update(float deltaTime) {
 	
 
 	batch.begin();
-	
+	//map.indexBuffer.getColorBufferTexture().bind(1);
+	//indexTexture.bind(1);
+	//shader.setUniformi("u_index_texture", 1); //////passing first texture!!!
+
+	//map.atlasTexture.bind(0);
+	//shader.setUniformi("u_texture", 0);
+
 	processSprites();
 	
 	
@@ -231,8 +236,9 @@ public void processSprites() {
 	//Gdx.app.log(TAG, "process phys:"+physicsEntities.size() + "  static:");
 	
 	///////////////////////////////////////////////
-	
-	
+	int layerI = Light.CHARACTER_SPRITES_LAYER_RIGHT;
+
+
 	for (int i = 0; i < dragEntities.size(); i++){
 		Entity e  = dragEntities.get(i);
 		SpriteAnimation spr = spriteM.get(e);
@@ -274,12 +280,12 @@ public void processSprites() {
 				continue; 
 			}
 			SpriteBatch theBatch = left?leftBatch:batch;
-			draw(s, theBatch, left, e);
+			draw(s, theBatch, left, e, layerI);
 			if (!drag.multiDraw) continue;
 			s.setPosition(s.getX() + drag.spacing * Main.PPM, s.getY());
-			draw(s, theBatch, left, e);
+			draw(s, theBatch, left, e, layerI);
 			s.setPosition(s.getX() - drag.spacing * 2 * Main.PPM, s.getY());
-			draw(s, theBatch, left, e);
+			draw(s, theBatch, left, e, layerI);
 		}
 	}
 	
@@ -296,7 +302,7 @@ public void processSprites() {
 			spr.s.setPosition((int)(v3.x), (int)v3.y);
 			//Gdx.app.log(TAG, "draw "+v3.x+" , "+v3.y);
 			SpriteBatch theBatch = spr.left?leftBatch:batch;
-			draw(spr.s, theBatch, spr.left, e);
+			draw(spr.s, theBatch, spr.left, e, layerI);
 		}
 	}
 	
@@ -335,13 +341,13 @@ public void processSprites() {
 			s.setColor(Data.colorFloats[spr.colors[index]]);
 			SpriteBatch theBatch = left?leftBatch:batch;
 			
-			draw(s, theBatch, left, e);
+			draw(s, theBatch, left, e, layerI);
 		}
 	}
 }
 
 public void processMap(){
-	
+	int layer = Light.MAP_FOREGROUND_LAYER;
 	if (staticMapEntities != null){
 		for (int i = 0; i < staticMapEntities.size(); i++){
 			Entity e  = staticMapEntities.get(i);
@@ -356,7 +362,7 @@ public void processMap(){
 			spr.s.setPosition((int)(v3.x), (int)v3.y);
 			//Gdx.app.log(TAG, "draw "+v3.x+" , "+v3.y);
 			SpriteBatch theBatch = spr.left?leftBatch:batch;
-			draw(spr.s, theBatch, spr.left, e);
+			draw(spr.s, theBatch, spr.left, e, layer);
 			
 		}
 		
@@ -375,7 +381,7 @@ public void processMap(){
 			spr.s.setPosition((int)(v3.x), (int)v3.y);
 			//Gdx.app.log(TAG, "draw gib "+v3.x+" , "+v3.y + spr.left);
 			SpriteBatch theBatch = spr.left?leftBatch:batch;
-			draw(spr.s, theBatch, spr.left, e);
+			draw(spr.s, theBatch, spr.left, e, layer);
 			
 		}
 		
@@ -400,15 +406,15 @@ public void processMap(){
 
 			spr.s.setPosition((int)(v3.x), (int)v3.y);
 			SpriteBatch theBatch = spr.left?leftBatch:batch;
-			draw(spr.s, theBatch, spr.left, e);
+			draw(spr.s, theBatch, spr.left, e, layer);
 			
 		}
 		
 	}
 }
 
-public void draw(Sprite s, SpriteBatch theBatch, boolean left, Entity entity) {
-
+public void draw(Sprite s, SpriteBatch theBatch, boolean left, Entity entity, int layer) {
+	s.setColor(LAYER_COLORS[layer]);
 	s.draw(theBatch);
 }
 
@@ -443,7 +449,8 @@ public void drawLowLOD(){
 private void processSpritesLowLOD() {
 
 	//Gdx.app.log(TAG, "process phys:"+physicsEntities.size() + "  static:");
-	
+	int layer = Light.CHARACTER_SPRITES_LAYER_RIGHT;
+
 	///////////////////////////////////////////////
 	for (int i = 0; i < physicsEntities.size(); i++){
 		Entity e  = physicsEntities.get(i);
@@ -460,7 +467,7 @@ private void processSpritesLowLOD() {
 		square.setPosition((int)v3.x,  (int)v3.y);
 		//Gdx.app.log(TAG, "process phy "+square.getX() + "," + square.getY());
 		square.setColor(Color.RED);
-		draw(square, batch, spr.left, e);
+		draw(square, batch, spr.left, e, layer);
 		//batch.setColor(Color.WHITE);
 	}
 	square.setColor(Color.BLUE);
@@ -479,7 +486,7 @@ private void processSpritesLowLOD() {
 		int h = Main.PPM;
 		square.setSize(w, h);
 		square.setPosition((int)v3.x,  (int)v3.y);
-		draw(square, batch, spr.left, e);
+		draw(square, batch, spr.left, e, layer);
 	}
 	//batch.setColor(Color.WHITE);
 
@@ -497,7 +504,7 @@ private void processSpritesLowLOD() {
 			int h = Main.PPM;
 			square.setSize(w, h);
 			square.setPosition((int)v3.x,  (int)v3.y);
-			draw(square, batch, spr.left, e);
+			draw(square, batch, spr.left, e, layer);
 		}
 	}
 
@@ -518,7 +525,7 @@ private void processSpritesLowLOD() {
 			int h = Main.PPM;
 			square.setSize(w, h);
 			square.setPosition((int)v3.x,  (int)v3.y);
-			draw(square, batch, spr.left, e);
+			draw(square, batch, spr.left, e, layer);
 			
 			
 		}
@@ -541,7 +548,7 @@ private void processSpritesLowLOD() {
 			int h = Main.PPM;
 			square.setSize(w, h);
 			square.setPosition((int)v3.x,  (int)v3.y);
-			draw(square, batch, false, e);
+			draw(square, batch, false, e, layer);
 			
 		}
 		
@@ -571,7 +578,7 @@ private void processSpritesLowLOD() {
 			int h = Main.PPM;
 			square.setSize(w, h);
 			square.setPosition((int)v3.x,  (int)v3.y);
-			draw(square, batch, spr.left, e);
+			draw(square, batch, spr.left, e, layer);
 			
 		}
 		

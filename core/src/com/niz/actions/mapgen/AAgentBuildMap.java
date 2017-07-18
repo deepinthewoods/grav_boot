@@ -189,7 +189,7 @@ public class AAgentBuildMap extends ProgressAction {
 			for (int x = 0; x < map.width; x++)
 				for (int y = 0; y < map.height; y++){
 					
-					map.setBGLocal(x, y, Blocks.STONE+5);
+					map.setBGLocal(x, y, Blocks.STONE+r.nextInt(64));
 					
 				}
 			for (int x = 0; x < map.width; x++){

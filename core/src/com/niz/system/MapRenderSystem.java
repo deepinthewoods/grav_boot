@@ -10,11 +10,15 @@ import com.badlogic.ashley.core.IDisposeable;
 import com.badlogic.ashley.core.RenderSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -33,7 +37,10 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	private static final String TAG = "MapRenderSystem";
 	private static final Vector3 LIGHT_POS = new Vector3(53f,.753f,0.51075f);
 	private static final int OVERDRAW_PIXELS = 10;
-	
+	private static final int INDEX_BUFFER_HEIGHT = 66;
+	public final FrameBuffer indexBuffer;
+	public final Texture indexTexture;
+
 	private Array<Vector2> topTiles = new Array<Vector2>();
 	OrthographicCamera camera;
 	//private 
@@ -60,6 +67,11 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	private OrthographicCamera renderCamera;
 	private CameraSystem camSys;
 	private OrthographicCamera zoomOutCamera;
+	private ShaderProgram coefficientsShader;
+	private ShaderProgram positionShader;
+	public Texture atlasTexture;// = new Texture(Gdx.files.internal("tilesprocessed.png"));
+
+
 	public MapRenderSystem(OrthographicCamera gameCamera, OrthographicCamera zoomOutCamera, SpriteBatch batch, TextureAtlas atlas, Texture diffTexture, Texture normalTexture) {
 		this.diffTexture = diffTexture;
 		this.normalTexture = normalTexture;
@@ -74,8 +86,10 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		//this.shader = shader;
 		this.atlas = atlas;
 		//this.backShader = backShader;
-		
-		
+		indexBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 128, INDEX_BUFFER_HEIGHT, false);
+		indexBuffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+		indexTexture = new Texture(Gdx.files.internal("indexTexture.png"));
+		atlasTexture = new Texture(Gdx.files.internal("tilesprocessed.png"));
 		//Gdx.app.log("map",  "write "+(int) (16/ar));
 	}
 
@@ -86,6 +100,8 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		//spriteShader = shaderSys.spriteShader;
 		
 		shader = shaderSys.shader;
+		coefficientsShader = shaderSys.coeffsShader;
+		positionShader = shaderSys.posShader;
 		//shader = createDefaultShader();
 		
 		lights = engine.getSystem(LightRenderSystem.class);
@@ -241,7 +257,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		}
 		
 		x0 -= 1;//meh, dupe rendering doesn't work without this4
-		
+		start();
 		int count = 0;
 		{
 			
@@ -251,7 +267,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 				//camera.zoom = Math.min(originalZoom, 10f);
 				int[] tiles = map.tiles, backTiles = map.backTiles;
 				batch.setProjectionMatrix(renderCamera.combined);
-
+				if (Gdx.input.isKeyPressed(Input.Keys.P))map.setDirtyAll();
 				map.cache.beginDraw(skipDraw, batch, lights);
 				map.cache.beginDrawBack(lights);
 				//if (false)                                                           
@@ -259,7 +275,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 				{
 					for (int x = x0; x <= x1; x++){
 						for (int y = y0; y <= y1; y++){
-							map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, 0, batch);
+							map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, 0, batch, indexBuffer, atlasTexture);
 							//if (count++ > 6) break endbp;
 							int dupeOffset = OverworldSystem.SCROLLING_MAP_WIDTH* OverworldSystem.SCROLLING_MAP_TOTAL_SIZE * Main.PPM;
 							if (map.duplicateRenderL){
@@ -279,7 +295,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 					batch.end();
 				}
 				batch.setShader(null);
-				Texture t = map.cache.indexBuffer.getColorBufferTexture();
+				Texture t = indexBuffer.getColorBufferTexture();
 				batch.enableBlending();
 				batch.getProjectionMatrix().setToOrtho2D(0,  0, t.getWidth(), t.getHeight());
 				batch.begin();
@@ -293,6 +309,36 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 
 		}
 
+	}
+
+	private void start() {
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, indexBuffer.getWidth(), indexBuffer.getHeight());
+		indexBuffer.begin();
+		Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.setShader(null);
+		batch.begin();
+		batch.draw(indexTexture, 0, 0);
+		batch.end();
+		batch.setShader(coefficientsShader);
+		lights.setUniformsNew(coefficientsShader, shader, positionShader);
+		batch.begin();
+		//any texture
+		batch.draw(indexTexture, 0, 2, indexBuffer.getWidth(), 1);
+		batch.end();
+
+		batch.setShader(positionShader);
+		//lights.setUniformsNew(coefficientsShader, shader, positionShader);
+		batch.begin();
+		//any texture
+		batch.draw(indexTexture, 0, 3, indexBuffer.getWidth(), 1);
+		batch.end();
+		//batch.setShader(fxSshader);
+		//batch.begin();
+		//any texture
+		//batch.draw(indexTexture, 0, 3, indexBuffer.getWidth(), indexBuffer.getHeight()-3);
+		//batch.end();
+		indexBuffer.end();
 	}
 
 	@Override

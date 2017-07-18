@@ -306,10 +306,7 @@ public class Map implements Component, Poolable {
 	}
 
 
-	
-
-
-	
-
-	
+	public void setDirtyAll() {
+		for (int i = 0; i < dirty.length; i++)dirty[i] = true;
+	}
 }

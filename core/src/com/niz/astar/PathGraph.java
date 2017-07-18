@@ -33,6 +33,7 @@ public class PathGraph implements IndexedGraph<PathNode> {
 	}
 
 	public PathNode getNode(int x, int y){
+		if (x < 0 || y < 0) return null;
 		return nodes[x + y * w];
 	}
 

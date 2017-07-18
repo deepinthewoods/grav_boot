@@ -49,7 +49,7 @@ import static com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888;
 public class SpriteCacheNiz{
 	private static final String TAG = "sprite cache";
 	private static final String SPRITE_FILENAME_PREFIX = "diff/tile";
-	private static final int CACHE_TOTAL_TARGET = 64;
+	private static final int CACHE_TOTAL_TARGET = 32;
 	private static final int INDEX_BUFFER_HEIGHT = 66;
 
 	public static Sprite[] sprites = new Sprite[34*512];;
@@ -155,7 +155,7 @@ public class SpriteCacheNiz{
 		indexBuffer.end();
 	}
 
-	public void draw(Map map, int x, int y, int[] tiles, int[] backTiles, OrthographicCamera camera, LightRenderSystem lights, BufferStartSystem buffer, boolean setAllDirty, ShaderProgram shader, int xOffset, SpriteBatch batch) {
+	public void draw(Map map, int x, int y, int[] tiles, int[] backTiles, OrthographicCamera camera, LightRenderSystem lights, BufferStartSystem buffer, boolean setAllDirty, ShaderProgram shader, int xOffset, SpriteBatch batch, FrameBuffer indexBuffer, Texture atlasTexture) {
 		x -= map.offset.x/MapRenderSystem.RENDER_SIZE;
 		y -= map.offset.y/MapRenderSystem.RENDER_SIZE;
 		int wy =  y;//(int) (y -( map.offset.y/MapRenderSystem.RENDER_SIZE));
@@ -178,14 +178,14 @@ public class SpriteCacheNiz{
 				
 			//}  
 		}
-
+		//setAllDirty = true;
 		int index = wy + wx*(map.width/MapRenderSystem.RENDER_SIZE);
 		
 		//x *= MapRenderSystem.RENDER_SIZE;
 		//y *= MapRenderSystem.RENDER_SIZE;
 		
 		//Gdx.app.log(TAG,  "draw "+ "  index "+index + " wx "+wx+" wy"+wy + " tot"+map.width);
-		
+		//if (x != 0 || y != 0) return;
 		//if (x >= 0) return;
 		mat.set(camera.combined);
 		mat.translate(Main.PPM*(x)*(MapRenderSystem.RENDER_SIZE) +map.offset.x*Main.PPM, Main.PPM*(y)*(MapRenderSystem.RENDER_SIZE)+map.offset.y*Main.PPM, 0);
@@ -217,20 +217,27 @@ public class SpriteCacheNiz{
 		//if (shader == null) return;
 
 		batch.setProjectionMatrix(mat);
-
+		//zeroMatrix.idt();
+		//batch.setTransformMatrix(zeroMatrix);
+		//batch.getProjectionMatrix().setToOrtho2D(0, 0, MapRenderSystem.RENDER_SIZE * Main.PPM, MapRenderSystem.RENDER_SIZE * Main.PPM);
 		batch.disableBlending();
+		batch.enableBlending();
 		batch.setShader(shader);
 		//batch.setShader(null);
 		batch.begin();
 		lights.setUniforms(Light.MAP_FRONT_LAYER, shader);
-		indexBuffer.getColorBufferTexture().bind(1);
+		this.indexBuffer.getColorBufferTexture().bind(1);
 		//indexTexture.bind(1);
 		shader.setUniformi("u_index_texture", 1); //passing first texture!!!
-		atlasTexture.bind(0);
+		SpriteCacheNiz.atlasTexture.bind(0);
 		shader.setUniformi("u_texture", 0);
 
 		//lights.setUniforms(Light.MAP_BACK_LAYER, shader);
-		batch.draw(buffers[index].getColorBufferTexture(), 0, 0);
+		Texture tex = buffers[index].getColorBufferTexture();
+
+
+		batch.draw(tex, 0, tex.getHeight(), tex.getWidth(), -tex.getHeight());
+
 		//batch.render();
 		batch.end();
 		v3.set(0, 0, 0);
@@ -239,7 +246,7 @@ public class SpriteCacheNiz{
 
 	}
 	Vector3 v3 = new Vector3();
-
+	Matrix4 zeroMatrix = new Matrix4();
 	private void populateCurrentBatches(int index) {
 		if (buffers[index] != null) return;
 		buffers[index] = new FrameBuffer(RGBA8888
@@ -268,18 +275,25 @@ public class SpriteCacheNiz{
 
 	public void add(Sprite s, SpriteBatch batch) {
 		s.setColor(Color.BLACK);
+		s.setColor(Color.WHITE);
+		//Gdx.app.log(TAG, "REGULAR" + s.getX()/16f + ", " + s.getY()/16f);
 		s.setColor(SpriteAnimationSystem.LAYER_COLORS[Light.MAP_FRONT_LAYER]);
 		s.draw(batch);
 	}
 	public void addB(Sprite s, SpriteBatch batch) {
-
+		//Gdx.app.log(TAG, "BACK");
+		//batch.end();
 		s.setColor(Color.BLACK);
+		//s.setColor(Color.WHITE);
+		//batch.begin();
 		s.setColor(SpriteAnimationSystem.LAYER_COLORS[Light.MAP_BACK_LAYER]);
 		s.draw(batch);
+		//batch.setColor(Color.WHITE);
 	}
 	public void addFG(Sprite s, SpriteBatch batch) {
 
 		s.setColor(Color.BLACK);
+		//s.setColor(Color.WHITE);
 		s.setColor(SpriteAnimationSystem.LAYER_COLORS[Light.MAP_FOREGROUND_LAYER]);
 		s.draw(batch);
 	}
@@ -296,8 +310,10 @@ public class SpriteCacheNiz{
 		int h = MapRenderSystem.RENDER_SIZE * Main.PPM;
 		buffers[index].begin();
 		//batch.setShader(cacheShader);
+		batch.enableBlending();
 		batch.setShader(cacheShader);
-		batch.setColor(Color.BLACK);
+		//batch.setColor(Color.BLACK);
+		batch.setColor(Color.WHITE);
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
 		batch.begin();
 
@@ -313,7 +329,7 @@ public class SpriteCacheNiz{
 				if ((id & Map.ID_MASK) != 0){
 					int tile = id & Map.TILE_MASK;
 					BlockDefinition def = MapSystem.defs[(id&Map.ID_MASK) >> Map.ID_BITS];
-					
+					Gdx.app.log(TAG,  "update  "+((id&Map.ID_MASK) >> Map.ID_BITS));
 					s = findSprite(tile);
 
 					if (s == null) throw new GdxRuntimeException("Sprite not found: "+tile);
@@ -327,10 +343,9 @@ public class SpriteCacheNiz{
 							s = findSprite(tileb);
 							if (s == null) throw new GdxRuntimeException("Sprite not found: "+tileb);
 							s.setPosition( Main.PPM*(tx-.5f) ,  Main.PPM*(ty-.5f));
-							//Gdx.app.log(TAG, "addingB "+s.getX());
 							addB(s, batch);
-							
 						}
+							//Gdx.app.log(TAG, "addingB "+s.getX());
 					}
 					else if (def.isLit)addLit(s, batch);
 					else add(s, batch);
@@ -341,7 +356,7 @@ public class SpriteCacheNiz{
 						s = findSprite(tile);
 						if (s == null) throw new GdxRuntimeException("Sprite not found: "+tile);
 						s.setPosition( Main.PPM*(tx-.5f) ,  Main.PPM*(ty-.5f));
-						//Gdx.app.log(TAG, "addingB "+s.getX());
+						Gdx.app.log(TAG, "addingB "+tile + "  " + tx);
 						addB(s, batch);
 						
 					}

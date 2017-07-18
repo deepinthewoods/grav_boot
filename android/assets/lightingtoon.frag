@@ -16,7 +16,7 @@ uniform sampler2D u_texture;   //diffuse map
 uniform sampler2D u_index_texture;
 //values used for shading algorithm...
 uniform vec2 Resolution;      //resolution of canvas
-uniform float AmbientColor;    //ambient RGBA -- alpha is intensity 
+uniform float AmbientColor[N_LAYERS];    //ambient RGBA -- alpha is intensity
 
 //uniform vec3 LightPos[N_LIGHTS];     //light position, normalized
 //uniform vec3 Falloff[N_LIGHTS];      //attenuation coefficients
@@ -67,7 +67,7 @@ void main() {
 		LightDir += vec3(vec2(LightPos.xy) - (gl_FragCoord.xy / Resolution.xy), LightPos.z);
 		//Correct for aspect ratio
 		LightDir.x *= Resolution.x / Resolution.y;
-		
+
 		//Determine distance (used for attenuation) BEFORE we normalize our LightDir
 		float D = length(LightDir) * Zoom;
 		
@@ -102,7 +102,7 @@ void main() {
 	}
 	
 	//Sum += AmbientColor;
-	Sum = max(Sum, AmbientColor);
+	Sum = max(Sum, AmbientColor[int(layerIndex)]);
 	//Here is where we apply some toon shading to the light
 	//Sum = 1.0;
 

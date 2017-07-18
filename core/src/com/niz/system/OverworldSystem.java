@@ -560,16 +560,16 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 			newGameMap = new Map(OverworldSystem.NEW_GAME_MAP_WIDTH, OverworldSystem.NEW_GAME_HEIGHT, atlas, shader, coeffsShader, posShader);
 			for (int x = 0; x < 256; x++){
 				for (int y = 0; y < 256; y++){
-					newGameMap.setBG(x,  y, Blocks.STONE + MathUtils.random(64));
+					newGameMap.setBG(x,  y, Blocks.STONE);
 				}
 			}
 			for (int i = 0; i < NEW_GAME_MAP_WIDTH; i++){
 				newGameMap.set(i,  0, Blocks.STONE + MathUtils.random(64));
-				if (i <= AStar.PATHFINDING_X_START)newGameMap.set(i,  AStar.PATHFINDING_INITIAL_Y_OFFSET-1, Blocks.STONE + MathUtils.random(64));
+				if (i <= AStar.PATHFINDING_X_START)newGameMap.set(i,  AStar.PATHFINDING_INITIAL_Y_OFFSET-1, Blocks.STONE);
 
 			}
 			for (int i = 0; i < AStar.PATHFINDING_WALL_HEIGHT; i++){
-				newGameMap.set(0,  i + AStar.PATHFINDING_INITIAL_Y_OFFSET, Blocks.STONE + MathUtils.random(64));
+				newGameMap.set(0,  i + AStar.PATHFINDING_INITIAL_Y_OFFSET, Blocks.STONE);
 			}
 		}
 		int bit = 0;

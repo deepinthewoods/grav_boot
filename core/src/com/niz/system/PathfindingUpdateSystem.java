@@ -284,6 +284,9 @@ public class PathfindingUpdateSystem extends EntitySystem {
 			//if (def.isSolid){
 			
 			PathNode to = graph.getNode(x + block.x * flipX, y + block.y);
+			if (to != null){
+
+			}
 			JumpPathConnection c = Pools.obtain(JumpPathConnection.class);
 			c.from = from;
 			c.to = to;
