@@ -34,6 +34,10 @@ float quadraticOut(float t) {
   return -t * (t - 2.0);
 }
 
+float circularOut(float t) {
+  return sqrt((2.0 - t) * t);
+}
+
 void main() {
 	//RGBA of our diffuse color
 	vec4 DiffuseColor = texture2D(u_texture, vTexCoord);
@@ -42,7 +46,7 @@ void main() {
 
 	int layerIndex = int((vTexCoord.x * 128.0 ) / float(N_LIGHTS));
 
-    vec3 v = vec3(float(int(quadraticOut(vTexCoord.x) * 6.0)) / 6.0, 0., 0.);
+    vec3 v = vec3(float(int((vTexCoord.x) * 4.0)) / 4.0, 0., 0.);
     //v.xy += 1.0;
     //v.xy *= 0.5;
 

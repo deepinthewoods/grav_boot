@@ -14,6 +14,8 @@ import com.badlogic.gdx.utils.IntArray;
 
 import org.omg.IOP.TAG_ALTERNATE_IIOP_ADDRESS;
 
+import static com.badlogic.gdx.Gdx.input;
+
 
 /**
  * Created by niz on 15/07/17.
@@ -23,12 +25,13 @@ class TextureRepacker {
 
     private static final String TAG = "texture repacker";
 
-    public static void process(String tiles) {
 
+    public static void process(String tiles, String inName) {
+       // if (true) return;
         FileHandle atlasFile = Gdx.files.internal(tiles + ".png");
         FileHandle outFile = Gdx.files.absolute(atlasFile.sibling(tiles + "processed.png").file().getAbsolutePath());
         Pixmap inPix = new Pixmap(atlasFile);
-        Pixmap inNormals = new Pixmap(Gdx.files.internal("tiles2quantized.png"));
+        Pixmap inNormals = new Pixmap(Gdx.files.internal(inName + ".png"));
         Pixmap outPix = new Pixmap(inPix.getWidth(), inPix.getHeight(), inPix.getFormat());
         IntArray storedColors = new IntArray(), storedNormals = new IntArray();
         for (int x = 0; x < inPix.getWidth(); x++)
@@ -56,7 +59,7 @@ class TextureRepacker {
         PixmapIO.writePNG(outFile, outPix);
 
         Pixmap indexPix = new Pixmap(128, 2, Pixmap.Format.RGBA8888);
-        FileHandle indexOutFile = Gdx.files.absolute(atlasFile.sibling("indexTexture.png").file().getAbsolutePath());
+        FileHandle indexOutFile = Gdx.files.absolute(atlasFile.sibling(tiles + "indexTexture.png").file().getAbsolutePath());
         for (int i = 0; i < storedColors.size; i++){
             c.set(storedColors.get(i));
             indexPix.drawPixel(i, 0, Color.rgba8888(c));
@@ -66,7 +69,7 @@ class TextureRepacker {
         for (int i = 0; i < storedNormals.size; i++){
             c.set(storedNormals.get(i));
             indexPix.drawPixel(i, 1, Color.rgba8888(c));
-            Gdx.app.log(TAG, "draw normal" + c + " / " + storedNormals.size);
+            //Gdx.app.log(TAG, "draw normal" + c + " / " + storedNormals.size);
         }
 
         PixmapIO.writePNG(indexOutFile, indexPix);

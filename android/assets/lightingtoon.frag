@@ -58,7 +58,7 @@ void main() {
        // Falloff.g += 3.0;
         //Falloff.b += 20.0;
 
-        vec3 LightPos = texture2D(u_index_texture, vec2(float(i) * ONE_PIXEL, POSITION_PIXEL_HEIGHT)).rgb;
+        vec3 LightPos = texture2D(u_index_texture, vec2(float(i) * ONE_PIXEL, POSITION_PIXEL_HEIGHT)).rgb ;
 
 		//The delta position of light
 		//vec3 LightDir = vec3(LightPos[i].xy - (gl_FragCoord.xy / Resolution.xy), LightPos[i].z);
@@ -67,7 +67,7 @@ void main() {
 		LightDir.x *= Resolution.x / Resolution.y;
 
 		//Determine distance (used for attenuation) BEFORE we normalize our LightDir
-		float D = length(LightDir) * Zoom;
+		float D = length(LightDir) * Zoom ;
 		
 		//normalize our vectors
 		vec3 N = normalize(NormalMap * 2.0 - 1.0);
@@ -94,15 +94,16 @@ void main() {
 		//the calculation which brings it all together
 		
 		//vec3 FinalColor = DiffuseColor.rgb * Diffuse;
-
 		//Sum += Attenuation ;
 		Sum = max(Sum, Attenuation);
 	}
-	
+    //IndexedColor *= 0.000001;
+    //IndexedColor += vec4(1., 1., 1., 1.);
+
 	//Sum += AmbientColor;
 	Sum = max(Sum, AmbientColor[int(layerIndex)]);
 	//Sum = min(1.0, Sum);
-    //Sum = texture2D(u_index_texture, vec2(Sum , RAMP_PIXEL_HEIGHT)).r;
+    Sum = texture2D(u_index_texture, vec2(Sum , RAMP_PIXEL_HEIGHT)).r;
 
 	//Here is where we apply some toon shading to the light
 	//Sum = 1.0;

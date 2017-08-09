@@ -87,7 +87,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		//this.backShader = backShader;
 		indexBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 128, INDEX_BUFFER_HEIGHT, false);
 		indexBuffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-		indexTexture = new Texture(Gdx.files.internal("indexTexture.png"));
+		indexTexture = new Texture(Gdx.files.internal("tilesindexTexture.png"));
 		atlasTexture = new Texture(Gdx.files.internal("tilesprocessed.png"));
 		//Gdx.app.log("map",  "write "+(int) (16/ar));
 	}
@@ -347,6 +347,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		//batch.draw(indexTexture, 0, 3, indexBuffer.getWidth(), indexBuffer.getHeight()-3);
 		//batch.end();
 		indexBuffer.end();
+
 	}
 
 	@Override

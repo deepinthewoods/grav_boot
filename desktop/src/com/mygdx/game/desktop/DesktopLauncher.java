@@ -20,7 +20,8 @@ public class DesktopLauncher {
 
 			@Override
 			public void preProcess() {
-				TextureRepacker.process("tiles");
+				TextureRepacker.process("tiles", "tiles2quantized");
+				TextureRepacker.process("player", "player2quantized");
 
 			}
 		}, config);

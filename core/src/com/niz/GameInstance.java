@@ -228,6 +228,7 @@ public class GameInstance implements Screen, Observer {
 
 					playerDiffuseTex = playerAtlas.findRegion("diff/playertorso", 0).getTexture();
 					playerNormalTex = playerAtlas.findRegion("normal/playertorso", 0).getTexture();
+					//playerNormalTex = new Texture(Gdx.files.internal("playerprocessed.png"));
 					//if () throw new GdxRuntimeException("kl");
 					Gdx.app.log(TAG,  "d " + playerDiffuseTex.getMagFilter() + playerDiffuseTex.getMinFilter() + playerDiffuseTex.getDepth());
 					Gdx.app.log(TAG,  "n " + playerNormalTex.getMagFilter() + playerNormalTex.getMinFilter() + playerNormalTex.getDepth());

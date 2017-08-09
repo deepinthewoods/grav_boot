@@ -71,7 +71,7 @@ public class SpriteCacheNiz{
 	public SpriteCacheNiz(Map map, TextureAtlas atlas, ShaderProgram shader, ShaderProgram coeffsS, ShaderProgram posShader){
 		this.shader = shader;
 		//atlasTexture = atlas.getTextures().first();
-		indexTexture = new Texture(Gdx.files.internal("indexTexture.png"));
+		indexTexture = new Texture(Gdx.files.internal("tilesindexTexture.png"));
 		//atlasTexture = new Texture(Gdx.files.internal("tilesprocessed.png"));
 		this.map = map;
 		buffers = new FrameBuffer[(map.width / MapRenderSystem.RENDER_SIZE) * (map.height / MapRenderSystem.RENDER_SIZE)];

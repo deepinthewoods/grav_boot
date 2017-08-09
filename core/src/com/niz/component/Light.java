@@ -40,15 +40,15 @@ public class Light extends BinaryHeap.Node implements Component {
 	public Vector3[] falloff = {
 			new Vector3(.4f, 3f, 20f)//character l
 			, new Vector3(.4f, 3f, 20f)//character r
-			, new Vector3(.4f, 3f, 20f)//map back layer
-			, new Vector3(.4f, 3f, 20f)//map front
+			, new Vector3(.94f, 9f, 10f)//map back layer
+			, new Vector3(.14f, .3f, 5f)//map front
 			, new Vector3(.4f, 3f, 20f)//map lit
 			, new Vector3(.4f, 3f, 20f)//map fg
 			}
 	;
 
-	public float[] yOffset = {Main.PX*2, Main.PX*2, Main.PX*2, Main.PX*2, Main.PX*2, Main.PX*2};
+	public float[] yOffset = {Main.PX*2, Main.PX*2, Main.PX*16, Main.PX*2, Main.PX*2, Main.PX*2};
 
-	public float[] ambientIntensity = {.03f, .03f, .03f, .03f, .03f, .03f};
+	public float[] ambientIntensity = {.03f, .03f, .03f, .3f, .03f, .03f};
 
 }
