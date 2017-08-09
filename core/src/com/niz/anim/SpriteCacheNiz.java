@@ -126,7 +126,7 @@ public class SpriteCacheNiz{
 		drawnBits.clear();
 		cachedTotal = 0;
 
-		batch.getProjectionMatrix().setToOrtho2D(0, 0, indexBuffer.getWidth(), indexBuffer.getHeight());
+		/*batch.getProjectionMatrix().setToOrtho2D(0, 0, indexBuffer.getWidth(), indexBuffer.getHeight());
 		indexBuffer.begin();
 		Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -152,7 +152,7 @@ public class SpriteCacheNiz{
 		//any texture
 		//batch.draw(indexTexture, 0, 3, indexBuffer.getWidth(), indexBuffer.getHeight()-3);
 		//batch.end();
-		indexBuffer.end();
+		indexBuffer.end();*/
 	}
 
 	public void draw(Map map, int x, int y, int[] tiles, int[] backTiles, OrthographicCamera camera, LightRenderSystem lights, BufferStartSystem buffer, boolean setAllDirty, ShaderProgram shader, int xOffset, SpriteBatch batch, FrameBuffer indexBuffer, Texture atlasTexture) {
@@ -225,8 +225,8 @@ public class SpriteCacheNiz{
 		batch.setShader(shader);
 		//batch.setShader(null);
 		batch.begin();
-		lights.setUniforms(Light.MAP_FRONT_LAYER, shader);
-		this.indexBuffer.getColorBufferTexture().bind(1);
+		//lights.setUniforms(Light.MAP_FRONT_LAYER, shader);
+		indexBuffer.getColorBufferTexture().bind(1);
 		//indexTexture.bind(1);
 		shader.setUniformi("u_index_texture", 1); //passing first texture!!!
 		SpriteCacheNiz.atlasTexture.bind(0);

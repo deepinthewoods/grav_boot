@@ -31,7 +31,7 @@ const float INDEXPIXELHEIGHT = 1.1 / 66.0;
 const float COEFFICIENTS_PIXEL_HEIGHT = 2.1 / 66.0;
 const float POSITION_PIXEL_HEIGHT = 3.1 / 66.0;
 const float ONE_PIXEL = 1.0 / 128.0;
-const float LAYERS_SPACE = 6.0 / 128.0;
+const float LAYERS_SPACE = 6.1 / 128.0;
 
 // uniform float Test[2];
 
@@ -41,11 +41,10 @@ void main() {
 	
 	//RGB of our normal map
 	//vec3 NormalMap = texture2D(u_index_texture, vTexCoord).rgb;
-	vec4 IndexedColor = texture2D(u_index_texture, vec2(DiffuseColor.r, INDEXPIXELHEIGHT));
-	vec3 NormalMap = texture2D(u_index_texture, vec2(DiffuseColor.r, 0.0)).rgb;
+	vec4 IndexedColor = texture2D(u_index_texture, vec2(DiffuseColor.r , INDEXPIXELHEIGHT));
+	vec3 NormalMap = texture2D(u_index_texture, vec2(DiffuseColor.g, 0.0)).rgb;
 	float Sum = 0.0;
-    int cIndex = int(DiffuseColor.r * 128.0);
-    int nIndex = int(DiffuseColor.g * 128.0);
+
     float layerIndex = float(int(DiffuseColor.b * 128.0));
 
 	for (int i=0; i<N_LIGHTS; i++) {
@@ -62,9 +61,7 @@ void main() {
 
 		//The delta position of light
 		//vec3 LightDir = vec3(LightPos[i].xy - (gl_FragCoord.xy / Resolution.xy), LightPos[i].z);
-		vec3 LightDir = vec3(LightPos.xy - (gl_FragCoord.xy / Resolution.xy), LightPos.z);
-		LightDir *= 0.000000001;
-		LightDir += vec3(vec2(LightPos.xy) - (gl_FragCoord.xy / Resolution.xy), LightPos.z);
+		vec3 LightDir = vec3(vec2(LightPos.xy) - (gl_FragCoord.xy / Resolution.xy), LightPos.z);
 		//Correct for aspect ratio
 		LightDir.x *= Resolution.x / Resolution.y;
 

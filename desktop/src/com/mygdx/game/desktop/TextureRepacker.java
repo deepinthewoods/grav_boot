@@ -66,7 +66,7 @@ class TextureRepacker {
         for (int i = 0; i < storedNormals.size; i++){
             c.set(storedNormals.get(i));
             indexPix.drawPixel(i, 1, Color.rgba8888(c));
-            Gdx.app.log(TAG, "draw normal" + c);
+            Gdx.app.log(TAG, "draw normal" + c + " / " + storedNormals.size);
         }
 
         PixmapIO.writePNG(indexOutFile, indexPix);

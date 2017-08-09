@@ -229,6 +229,7 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 			}
 			ambient[layer] = maxAmbient;
 			for (;index < NUM_LIGHTS; index++){
+				//Gdx.app.log(TAG, "skip light" + index);
 			/*shader.setUniformf(posLoc[layer][index]
 					, 0f
 					, .5f
@@ -236,9 +237,11 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 			shader.setUniformf(colorLoc[layer][index], 0f, 0, 0f);
 			//shader.setUniformf(7, 0f, 0, 0f);
 			shader.setUniformf(falloffLoc[layer][index], 11111111111111111f, 11111111111111111111f, 111111111111111111111111111111f);//*/
-				falloff[layer * NUM_LIGHTS * 3 + index*3] = 1111111f;
-				pos[layer * NUM_LIGHTS * 3 + index*3+2] = 0;
-				pos[layer * NUM_LIGHTS * 3 + index*3] = -10000;
+				falloff[layer * NUM_LIGHTS * 3 + index*3] = 1f;
+				falloff[layer * NUM_LIGHTS * 3 + index*3+1] = 10f;
+				falloff[layer * NUM_LIGHTS * 3 + index*3+2] = 50f;
+				pos[layer * NUM_LIGHTS * 3 + index*3+2] = 11111;
+				pos[layer * NUM_LIGHTS * 3 + index*3] = 111110;
 
 			}
 		}
