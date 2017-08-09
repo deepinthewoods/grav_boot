@@ -41,13 +41,13 @@ public class Light extends BinaryHeap.Node implements Component {
 			new Vector3(.4f, 3f, 20f)//character l
 			, new Vector3(.4f, 3f, 20f)//character r
 			, new Vector3(.4f, 3f, 20f)//map back layer
-			, new Vector3(.4f, 3f, 10f)//map front
+			, new Vector3(.4f, 3f, 20f)//map front
 			, new Vector3(.4f, 3f, 20f)//map lit
 			, new Vector3(.4f, 3f, 20f)//map fg
 			}
 	;
 
-	public float[] yOffset = {Main.PX*2, Main.PX*2, Main.PX*8, Main.PX*2, Main.PX*2, Main.PX*2};
+	public float[] yOffset = {Main.PX*2, Main.PX*2, Main.PX*2, Main.PX*2, Main.PX*2, Main.PX*2};
 
 	public float[] ambientIntensity = {.03f, .03f, .03f, .03f, .03f, .03f};
 

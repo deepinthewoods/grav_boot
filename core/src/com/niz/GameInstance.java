@@ -17,7 +17,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.AutoGibSystem;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatchN;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
@@ -103,7 +103,7 @@ import com.niz.ui.edgeUI.SettingsScreen;
 public class GameInstance implements Screen, Observer {
 
 	
-	SpriteBatch batch;
+	SpriteBatchN batch;
 	public EngineNiz engine;
 	private OrthographicCamera gameCamera;
 	private OrthographicCamera uiCamera;
@@ -143,9 +143,9 @@ public class GameInstance implements Screen, Observer {
 	private SettingsScreen settingsScreen;
 	private Subject zoomSubject;
 	private ZoomInput zoomInput;
-	private SpriteBatch mapBatch;
-	private SpriteBatch leftBatch;
-	private SpriteBatch rightBatch;
+	private SpriteBatchN mapBatch;
+	private SpriteBatchN leftBatch;
+	private SpriteBatchN rightBatch;
 	private OrthographicCamera defaultCam;
 	private LightRenderSystem lights;
 	private Texture logo;
@@ -160,7 +160,7 @@ public class GameInstance implements Screen, Observer {
 		//GLProfiler.enable();
 		final GameInstance inst = this;
 		this.headless = headless;
-		batch = new SpriteBatch(50);
+		batch = new SpriteBatchN(50);
 		uiCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		engine = new EngineNiz();
 		logo = new Texture(Gdx.files.internal("logo.png"));
@@ -212,9 +212,9 @@ public class GameInstance implements Screen, Observer {
 
 					stage = new Stage(viewport, batch);		
 					
-					mapBatch = new SpriteBatch(10);
+					mapBatch = new SpriteBatchN(10);
 
-					rightBatch = new SpriteBatch(5460);
+					rightBatch = new SpriteBatchN(5460);
 					gameCamera = new OrthographicCamera(10, 10);//Main.PPM*Main.VIEWPORT_SIZE, (int)(Main.PPM*Main.VIEWPORT_SIZE/Main.ar));
 					
 					
@@ -715,7 +715,7 @@ public class GameInstance implements Screen, Observer {
 			if (stage != null)stage.act(delta);
 			stage.draw();
 			if (invScreen != null){
-				SpriteBatch bat = (SpriteBatch) stage.getBatch();
+				SpriteBatchN bat = (SpriteBatchN) stage.getBatch();
 				invScreen.update(delta);
 				invScreen.draw(shapeR, bat, Styles.inventoryFont);
 			}

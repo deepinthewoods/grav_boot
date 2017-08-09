@@ -7,7 +7,7 @@ import com.badlogic.ashley.core.RenderSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatchN;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.niz.Main;
 import com.niz.ZoomInput;
@@ -22,7 +22,7 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 	private static final String TAG = "buffer end sys";
 	float zoom = 1f;
 	private MapRenderSystem map;
-	private SpriteBatch batch;
+	private SpriteBatchN batch;
 	private BufferStartSystem startBuffer;
 	private float viewportSize;
 	private CameraSystem camSys;
@@ -30,7 +30,7 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 	private ShaderProgram shader;
 	private Texture blankNormalTexture;
 	private SpriteAnimationSystem spriteSys;
-	public BufferEndSystem(SpriteBatch batch, Texture blankNormalTexture){
+	public BufferEndSystem(SpriteBatchN batch, Texture blankNormalTexture){
 		this.batch = batch;
 		this.blankNormalTexture = blankNormalTexture;
 	}

@@ -16,7 +16,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatchN;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasSprite;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -51,12 +51,12 @@ public ComponentMapper<SpriteStatic> spriteStaticM = ComponentMapper.getFor(Spri
 protected ComponentMapper<Body> bodyM = ComponentMapper.getFor(Body.class);
 private static ComponentMapper<DragOption> dragM = ComponentMapper.getFor(DragOption.class);
 
-private SpriteBatch batch;
+private SpriteBatchN batch;
 //protected ImmutableArray<Entity> entities;
 private OrthographicCamera camera;
 private ComponentMapper<Physics> physM = ComponentMapper.getFor(Physics.class);
 protected MapRenderSystem map;
-private SpriteBatch leftBatch;
+private SpriteBatchN leftBatch;
 
 private ShaderProgram shader, lShader;
 
@@ -89,7 +89,7 @@ private Sprite square;
 
 	public static final Color[] LAYER_COLORS = new Color[LightRenderSystem.N_LAYERS];
 
-public SpriteAnimationSystem(OrthographicCamera gameCamera, SpriteBatch batch,
+public SpriteAnimationSystem(OrthographicCamera gameCamera, SpriteBatchN batch,
 							  Texture diff, Texture normal, LightRenderSystem lights, Texture mapDiff, Texture mapNormal) {
 	this.lights = lights;
 	this.batch = batch;
@@ -279,7 +279,7 @@ public void processSprites() {
 				//Gdx.app.log(TAG, "disabled drago" + e.getId());
 				continue; 
 			}
-			SpriteBatch theBatch = left?leftBatch:batch;
+			SpriteBatchN theBatch = left?leftBatch:batch;
 			draw(s, theBatch, left, e, layerI);
 			if (!drag.multiDraw) continue;
 			s.setPosition(s.getX() + drag.spacing * Main.PPM, s.getY());
@@ -301,7 +301,7 @@ public void processSprites() {
 			v3.scl(16);
 			spr.s.setPosition((int)(v3.x), (int)v3.y);
 			//Gdx.app.log(TAG, "draw "+v3.x+" , "+v3.y);
-			SpriteBatch theBatch = spr.left?leftBatch:batch;
+			SpriteBatchN theBatch = spr.left?leftBatch:batch;
 			draw(spr.s, theBatch, spr.left, e, layerI);
 		}
 	}
@@ -339,7 +339,7 @@ public void processSprites() {
 			v3.scl(16f);
 			s.setPosition((int)v3.x, (int)v3.y);
 			s.setColor(Data.colorFloats[spr.colors[index]]);
-			SpriteBatch theBatch = left?leftBatch:batch;
+			SpriteBatchN theBatch = left?leftBatch:batch;
 			
 			draw(s, theBatch, left, e, layerI);
 		}
@@ -361,7 +361,7 @@ public void processMap(){
 
 			spr.s.setPosition((int)(v3.x), (int)v3.y);
 			//Gdx.app.log(TAG, "draw "+v3.x+" , "+v3.y);
-			SpriteBatch theBatch = spr.left?leftBatch:batch;
+			SpriteBatchN theBatch = spr.left?leftBatch:batch;
 			draw(spr.s, theBatch, spr.left, e, layer);
 			
 		}
@@ -380,7 +380,7 @@ public void processMap(){
 
 			spr.s.setPosition((int)(v3.x), (int)v3.y);
 			//Gdx.app.log(TAG, "draw gib "+v3.x+" , "+v3.y + spr.left);
-			SpriteBatch theBatch = spr.left?leftBatch:batch;
+			SpriteBatchN theBatch = spr.left?leftBatch:batch;
 			draw(spr.s, theBatch, spr.left, e, layer);
 			
 		}
@@ -405,7 +405,7 @@ public void processMap(){
 			v3.scl(Main.PPM);
 
 			spr.s.setPosition((int)(v3.x), (int)v3.y);
-			SpriteBatch theBatch = spr.left?leftBatch:batch;
+			SpriteBatchN theBatch = spr.left?leftBatch:batch;
 			draw(spr.s, theBatch, spr.left, e, layer);
 			
 		}
@@ -413,7 +413,7 @@ public void processMap(){
 	}
 }
 
-public void draw(Sprite s, SpriteBatch theBatch, boolean left, Entity entity, int layer) {
+public void draw(Sprite s, SpriteBatchN theBatch, boolean left, Entity entity, int layer) {
 	s.setColor(LAYER_COLORS[layer]);
 	s.draw(theBatch);
 }

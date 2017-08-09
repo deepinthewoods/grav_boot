@@ -30,9 +30,10 @@ uniform float Zoom;
 const float INDEXPIXELHEIGHT = 1.1 / 66.0;
 const float COEFFICIENTS_PIXEL_HEIGHT = 2.1 / 66.0;
 const float POSITION_PIXEL_HEIGHT = 3.1 / 66.0;
+const float RAMP_PIXEL_HEIGHT = 4.1 / 66.0;
 const float ONE_PIXEL = 1.0 / 128.0;
-const float LAYERS_SPACE = 6.1 / 128.0;
-
+const float LAYERS_SPACE = 4.0 / 128.0;
+//const float[] CLAMPS = {0.4, 0.4, 0.4, 0.4, 0.7, 0.7, 0.7, 1.0, 1.0, 1.0};
 // uniform float Test[2];
 
 void main() {
@@ -100,6 +101,9 @@ void main() {
 	
 	//Sum += AmbientColor;
 	Sum = max(Sum, AmbientColor[int(layerIndex)]);
+	//Sum = min(1.0, Sum);
+    //Sum = texture2D(u_index_texture, vec2(Sum , RAMP_PIXEL_HEIGHT)).r;
+
 	//Here is where we apply some toon shading to the light
 	//Sum = 1.0;
 

@@ -7,7 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatchN;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasSprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -630,7 +630,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	Vector2 tmpV = new Vector2(), tmpV2 = new Vector2(), tmpV3 = new Vector2(), tmpV4 = new Vector2(), tmpV5 = new Vector2();
 	private boolean doorButtonsWasOn;
 
-	public void draw(ShapeRenderer rend, SpriteBatch batch, BitmapFont font) {
+	public void draw(ShapeRenderer rend, SpriteBatchN batch, BitmapFont font) {
 		//if (true) return;
 		if (doorButtonsOn){
 			if (!doorButtonsWasOn){
@@ -896,7 +896,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		
 	}
 	
-	private void drawButtonAmount(InventoryButton butt, SpriteBatch batch, BitmapFont font) {
+	private void drawButtonAmount(InventoryButton butt, SpriteBatchN batch, BitmapFont font) {
 		Image im = butt.getImage();
 
 		float x = 

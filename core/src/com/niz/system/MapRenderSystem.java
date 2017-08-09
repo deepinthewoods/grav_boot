@@ -16,7 +16,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatchN;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -25,8 +25,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.niz.Main;
 import com.niz.ZoomInput;
-import com.niz.anim.SpriteCacheNiz;
-import com.niz.component.Light;
 import com.niz.component.Map;
 import com.niz.observer.Observer;
 import com.niz.observer.Subject.Event;
@@ -45,7 +43,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	OrthographicCamera camera;
 	//private 
 	//OrthographicCamera defaultCamera;
-	private SpriteBatch batch;
+	private SpriteBatchN batch;
 	private Sprite[] sprites;
 	private Sprite s;
 	private Vector3 tmpV = new Vector3();
@@ -70,9 +68,10 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	private ShaderProgram coefficientsShader;
 	private ShaderProgram positionShader;
 	public Texture atlasTexture;// = new Texture(Gdx.files.internal("tilesprocessed.png"));
+	private ShaderProgram lightRampShader;
 
 
-	public MapRenderSystem(OrthographicCamera gameCamera, OrthographicCamera zoomOutCamera, SpriteBatch batch, TextureAtlas atlas, Texture diffTexture, Texture normalTexture) {
+	public MapRenderSystem(OrthographicCamera gameCamera, OrthographicCamera zoomOutCamera, SpriteBatchN batch, TextureAtlas atlas, Texture diffTexture, Texture normalTexture) {
 		this.diffTexture = diffTexture;
 		this.normalTexture = normalTexture;
 		this.camera = gameCamera;//mapCollisionCamera;
@@ -102,6 +101,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		shader = shaderSys.shader;
 		coefficientsShader = shaderSys.coeffsShader;
 		positionShader = shaderSys.posShader;
+		lightRampShader = shaderSys.lightRampShader;
 		//shader = createDefaultShader();
 		
 		lights = engine.getSystem(LightRenderSystem.class);
@@ -333,6 +333,14 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		//any texture
 		batch.draw(indexTexture, 0, 3, indexBuffer.getWidth(), 1);
 		batch.end();
+
+		batch.setShader(lightRampShader);
+		//lights.setUniformsNew(coefficientsShader, shader, positionShader);
+		batch.begin();
+		//any texture
+		batch.draw(indexTexture, 0, 4, indexBuffer.getWidth(), 1);
+		batch.end();
+
 		//batch.setShader(fxSshader);
 		//batch.begin();
 		//any texture

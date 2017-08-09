@@ -18,12 +18,11 @@ package com.niz.anim;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatchN;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -31,7 +30,6 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Bits;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.badlogic.gdx.utils.Pool;
 import com.niz.BlockDefinition;
 import com.niz.Data;
 import com.niz.Main;
@@ -122,7 +120,7 @@ public class SpriteCacheNiz{
 	public void beginDrawBack(LightRenderSystem lights){
 	}
 
-	public void beginDraw(boolean skipDraw, SpriteBatch batch, LightRenderSystem lights) {
+	public void beginDraw(boolean skipDraw, SpriteBatchN batch, LightRenderSystem lights) {
 		drawnBits.clear();
 		cachedTotal = 0;
 
@@ -155,7 +153,7 @@ public class SpriteCacheNiz{
 		indexBuffer.end();*/
 	}
 
-	public void draw(Map map, int x, int y, int[] tiles, int[] backTiles, OrthographicCamera camera, LightRenderSystem lights, BufferStartSystem buffer, boolean setAllDirty, ShaderProgram shader, int xOffset, SpriteBatch batch, FrameBuffer indexBuffer, Texture atlasTexture) {
+	public void draw(Map map, int x, int y, int[] tiles, int[] backTiles, OrthographicCamera camera, LightRenderSystem lights, BufferStartSystem buffer, boolean setAllDirty, ShaderProgram shader, int xOffset, SpriteBatchN batch, FrameBuffer indexBuffer, Texture atlasTexture) {
 		x -= map.offset.x/MapRenderSystem.RENDER_SIZE;
 		y -= map.offset.y/MapRenderSystem.RENDER_SIZE;
 		int wy =  y;//(int) (y -( map.offset.y/MapRenderSystem.RENDER_SIZE));
@@ -273,14 +271,14 @@ public class SpriteCacheNiz{
 
 	}
 
-	public void add(Sprite s, SpriteBatch batch) {
+	public void add(Sprite s, SpriteBatchN batch) {
 		s.setColor(Color.BLACK);
 		s.setColor(Color.WHITE);
 		//Gdx.app.log(TAG, "REGULAR" + s.getX()/16f + ", " + s.getY()/16f);
 		s.setColor(SpriteAnimationSystem.LAYER_COLORS[Light.MAP_FRONT_LAYER]);
 		s.draw(batch);
 	}
-	public void addB(Sprite s, SpriteBatch batch) {
+	public void addB(Sprite s, SpriteBatchN batch) {
 		//Gdx.app.log(TAG, "BACK");
 		//batch.end();
 		s.setColor(Color.BLACK);
@@ -290,20 +288,20 @@ public class SpriteCacheNiz{
 		s.draw(batch);
 		//batch.setColor(Color.WHITE);
 	}
-	public void addFG(Sprite s, SpriteBatch batch) {
+	public void addFG(Sprite s, SpriteBatchN batch) {
 
 		s.setColor(Color.BLACK);
 		//s.setColor(Color.WHITE);
 		s.setColor(SpriteAnimationSystem.LAYER_COLORS[Light.MAP_FOREGROUND_LAYER]);
 		s.draw(batch);
 	}
-	public void addLit(Sprite s, SpriteBatch batch){
+	public void addLit(Sprite s, SpriteBatchN batch){
 		s.setColor(Color.BLACK);
 		s.setColor(SpriteAnimationSystem.LAYER_COLORS[Light.MAP_LIT_LAYER]);
 		s.draw(batch);
 	}
 
-	private boolean cacheChunk(Map map, int index, int[] tiles, int[] backTiles, SpriteBatch batch) {
+	private boolean cacheChunk(Map map, int index, int[] tiles, int[] backTiles, SpriteBatchN batch) {
 		
 		Sprite s = null;
 		int w = MapRenderSystem.RENDER_SIZE * Main.PPM;

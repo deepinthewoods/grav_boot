@@ -8,8 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.SpriteBatchN;
 import com.badlogic.gdx.utils.Bits;
 import com.badlogic.gdx.utils.FloatArray;
 import com.niz.component.VectorInput;
@@ -21,12 +20,12 @@ public class ProgressBarSystem extends RenderSystem implements Observer {
 	private static final String TAG = "progress bar system";
 	FloatArray progressBars = new FloatArray();
 	Bits progressBarBits = new Bits(128);
-	private SpriteBatch batch;
+	private SpriteBatchN batch;
 	private OrthographicCamera camera;
 	private Sprite s;
 	private float width, progressBarsTotal;
 	private float y;
-	public ProgressBarSystem(OrthographicCamera uiCamera, SpriteBatch batch) {
+	public ProgressBarSystem(OrthographicCamera uiCamera, SpriteBatchN batch) {
 		camera = uiCamera;
 		this.batch = batch;
 		s = new Sprite(new Texture(Gdx.files.internal("progbar.png")));

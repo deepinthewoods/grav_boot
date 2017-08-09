@@ -36,9 +36,10 @@ public class ShaderSystem extends RenderSystem implements Observer {
 	private static final float LIGHT_INTENSITY = .628f;
 	public ShaderProgram coeffsShader;
 	public ShaderProgram posShader;
+	public ShaderProgram lightRampShader;
 
 
-	@Override
+    @Override
 	public void addedToEngine(Engine engine) {
 		EngineNiz niz = (EngineNiz)engine;
 		niz.getSubject("resize").add(this);
@@ -153,6 +154,10 @@ public class ShaderSystem extends RenderSystem implements Observer {
 		posShader = new ShaderProgram(Gdx.files.internal("lighting.vert"), Gdx.files.internal("lightingtoonpos.frag"));
 		if (!posShader.isCompiled())
 			throw new GdxRuntimeException("Could not compile shader: "+posShader.getLog());
+
+		lightRampShader = new ShaderProgram(Gdx.files.internal("lighting.vert"), Gdx.files.internal("lightingtoonramp.frag"));
+		if (!lightRampShader.isCompiled())
+			throw new GdxRuntimeException("Could not compile shader: "+lightRampShader.getLog());
 	}
 
 	private ShaderProgram makeShader() {
