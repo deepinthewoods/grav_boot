@@ -39,15 +39,25 @@ const float LAYERS_SPACE = 4.0 / 128.0;
 void main() {
 	//RGBA of our diffuse color
 	vec4 DiffuseColor = texture2D(u_texture, vTexCoord);
-	
+	#ifdef IMMEDIATE
+	//DiffuseColor *= 0.0000001;
+	//DiffuseColor += vec4(1., 1., 1., 1.);
+	//DiffuseColor.r = 0.1f;
+	#endif
 	//RGB of our normal map
 	//vec3 NormalMap = texture2D(u_index_texture, vTexCoord).rgb;
 	vec4 IndexedColor = texture2D(u_index_texture, vec2(DiffuseColor.r , INDEXPIXELHEIGHT));
 	vec3 NormalMap = texture2D(u_index_texture, vec2(DiffuseColor.g, 0.0)).rgb;
 	float Sum = 0.0;
+   // float layerIndex = float(int(DiffuseColor.b * 128.0));
+    float layerIndex = 0.;;
+    #ifdef IMMEDIATE
+    layerIndex = float(int(vColor.r * 128.0));
+    //layerIndex = 2.;
+    #else
+    layerIndex = float(int(DiffuseColor.b * 128.0));
 
-    float layerIndex = float(int(DiffuseColor.b * 128.0));
-
+    #endif
 	for (int i=0; i<N_LIGHTS; i++) {
         vec3 Falloff = texture2D(u_index_texture, vec2(layerIndex * LAYERS_SPACE, COEFFICIENTS_PIXEL_HEIGHT)).rgb;
         Falloff.g *= 10.0;

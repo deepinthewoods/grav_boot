@@ -60,9 +60,14 @@ class TextureRepacker {
 
         Pixmap indexPix = new Pixmap(128, 2, Pixmap.Format.RGBA8888);
         FileHandle indexOutFile = Gdx.files.absolute(atlasFile.sibling(tiles + "indexTexture.png").file().getAbsolutePath());
-        for (int i = 0; i < storedColors.size; i++){
-            c.set(storedColors.get(i));
-            indexPix.drawPixel(i, 0, Color.rgba8888(c));
+        int count;
+        for (count = 0; count < storedColors.size; count++){
+            c.set(storedColors.get(count));
+            indexPix.drawPixel(count, 0, Color.rgba8888(c));
+        }
+        for (;count < indexPix.getWidth(); count++){
+            c.set(Color.MAGENTA);
+            indexPix.drawPixel(count, 0, Color.rgba8888(c));
         }
         //Gdx.app.log(TAG, "draw normaraw normaraw normaraw normaraw normaraw normaraw normaraw normaraw normaraw normals" );
 

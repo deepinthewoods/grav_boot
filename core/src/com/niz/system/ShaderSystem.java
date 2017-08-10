@@ -37,9 +37,10 @@ public class ShaderSystem extends RenderSystem implements Observer {
 	public ShaderProgram coeffsShader;
 	public ShaderProgram posShader;
 	public ShaderProgram lightRampShader;
+	public ShaderProgram charShader;
 
 
-    @Override
+	@Override
 	public void addedToEngine(Engine engine) {
 		EngineNiz niz = (EngineNiz)engine;
 		niz.getSubject("resize").add(this);
@@ -60,11 +61,18 @@ public class ShaderSystem extends RenderSystem implements Observer {
 
 	private void setupShader() {
 		//shader = new ShaderProgram(VERT, FRAG);
-		
-		shader = new ShaderProgram(Gdx.files.internal("lighting.vert"), Gdx.files.internal("lightingtoon.frag"));
+		String vert = Gdx.files.internal("lighting.vert").readString();
+		String frag = Gdx.files.internal("lightingtoon.frag").readString();
+		shader = new ShaderProgram(vert, frag);
 		//Gdx.app.log(TAG,  "shader \n"+FRAG + "\n\n\n vert  \n\n\n"+VERT);
 		if (!shader.isCompiled())
 			throw new GdxRuntimeException("Could not compile shader: "+shader.getLog());
+
+		charShader = new ShaderProgram(vert, "#define IMMEDIATE \n" + frag);
+		//Gdx.app.log(TAG,  "shader \n"+FRAG + "\n\n\n vert  \n\n\n"+VERT);
+		if (!charShader.isCompiled())
+			throw new GdxRuntimeException("Could not compile shader: "+charShader.getLog());
+
 		//print any warnings
 		if (shader.getLog().length()!=0)
 			System.out.println(shader.getLog());

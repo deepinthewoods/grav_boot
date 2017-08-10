@@ -35,7 +35,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	private static final String TAG = "MapRenderSystem";
 	private static final Vector3 LIGHT_POS = new Vector3(53f,.753f,0.51075f);
 	private static final int OVERDRAW_PIXELS = 10;
-	private static final int INDEX_BUFFER_HEIGHT = 66;
+	public static final int INDEX_BUFFER_HEIGHT = 66;
 	public final FrameBuffer indexBuffer;
 	public final Texture indexTexture;
 
@@ -299,7 +299,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 				batch.enableBlending();
 				batch.getProjectionMatrix().setToOrtho2D(0,  0, t.getWidth(), t.getHeight());
 				batch.begin();
-				batch.draw(t, 0, 0);
+				//batch.draw(t, 0, 0);
 				batch.end();
 			}
 			camera.zoom = originalZoom;

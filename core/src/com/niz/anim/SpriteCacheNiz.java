@@ -18,6 +18,7 @@ package com.niz.anim;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -199,7 +200,7 @@ public class SpriteCacheNiz{
 		
 		if (cachedTotal < CACHE_TOTAL_TARGET && (map.dirty[index] || setAllDirty)){
 			//map.dirtyRuns[wx] = true;
-			Gdx.app.log(TAG,  "cache chunk  "+index + setAllDirty);
+			//Gdx.app.log(TAG,  "cache chunk  "+index + setAllDirty);
 
 			cacheChunk(map, index, tiles, backTiles, batch);
 			cachedTotal++;
@@ -307,6 +308,7 @@ public class SpriteCacheNiz{
 		int w = MapRenderSystem.RENDER_SIZE * Main.PPM;
 		int h = MapRenderSystem.RENDER_SIZE * Main.PPM;
 		buffers[index].begin();
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		//batch.setShader(cacheShader);
 		batch.enableBlending();
 		batch.setShader(cacheShader);
@@ -327,22 +329,22 @@ public class SpriteCacheNiz{
 				if ((id & Map.ID_MASK) != 0){
 					int tile = id & Map.TILE_MASK;
 					BlockDefinition def = MapSystem.defs[(id&Map.ID_MASK) >> Map.ID_BITS];
-					Gdx.app.log(TAG,  "update  "+((id&Map.ID_MASK) >> Map.ID_BITS));
+					//Gdx.app.log(TAG,  "update  "+((id&Map.ID_MASK) >> Map.ID_BITS));
 					s = findSprite(tile);
 
 					if (s == null) throw new GdxRuntimeException("Sprite not found: "+tile);
 					//s.setPosition(Main.PPM*tx ,  Main.PPM*ty);
 					s.setPosition( Main.PPM*(tx-.5f) ,  Main.PPM*(ty-.5f));
 					if (def.isSeeThrough) {
-						addFG(s, batch);
 						int bid = backTiles[ty+y+(tx+x)*map.width];
 						int tileb = bid & Map.TILE_MASK;
 						if (bid != 0){
-							s = findSprite(tileb);
-							if (s == null) throw new GdxRuntimeException("Sprite not found: "+tileb);
-							s.setPosition( Main.PPM*(tx-.5f) ,  Main.PPM*(ty-.5f));
-							addB(s, batch);
+							Sprite s2 = findSprite(tileb);
+							if (s2 == null) throw new GdxRuntimeException("Sprite not found: "+tileb);
+							s2.setPosition( Main.PPM*(tx-.5f) ,  Main.PPM*(ty-.5f));
+							addB(s2, batch);
 						}
+						addFG(s, batch);
 							//Gdx.app.log(TAG, "addingB "+s.getX());
 					}
 					else if (def.isLit)addLit(s, batch);
@@ -354,7 +356,7 @@ public class SpriteCacheNiz{
 						s = findSprite(tile);
 						if (s == null) throw new GdxRuntimeException("Sprite not found: "+tile);
 						s.setPosition( Main.PPM*(tx-.5f) ,  Main.PPM*(ty-.5f));
-						Gdx.app.log(TAG, "addingB "+tile + "  " + tx);
+						//Gdx.app.log(TAG, "addingB "+tile + "  " + tx);
 						addB(s, batch);
 						
 					}

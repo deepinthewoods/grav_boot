@@ -19,6 +19,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatchN;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasSprite;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -27,6 +28,7 @@ import com.niz.Data;
 import com.niz.Main;
 import com.niz.anim.AnimationContainer;
 import com.niz.anim.AnimationLayer;
+import com.niz.anim.SpriteCacheNiz;
 import com.niz.component.Body;
 import com.niz.component.DragOption;
 import com.niz.component.Light;
@@ -88,8 +90,14 @@ private CameraSystem camSys;
 private Sprite square;
 
 	public static final Color[] LAYER_COLORS = new Color[LightRenderSystem.N_LAYERS];
+	private Texture indexTexture;
+	private Texture atlasTexture;
+	private FrameBuffer indexBuffer;
+	private ShaderProgram coefficientsShader;
+	private ShaderProgram positionShader;
+	private ShaderProgram lightRampShader;
 
-public SpriteAnimationSystem(OrthographicCamera gameCamera, SpriteBatchN batch,
+	public SpriteAnimationSystem(OrthographicCamera gameCamera, SpriteBatchN batch,
 							  Texture diff, Texture normal, LightRenderSystem lights, Texture mapDiff, Texture mapNormal) {
 	this.lights = lights;
 	this.batch = batch;
@@ -116,10 +124,13 @@ public void addedToEngine(Engine engine) {
 	ShaderSystem shaderSys = engine.getSystem(ShaderSystem.class);
 	//spriteShader = shaderSys.spriteShader;
 	//backShader = shaderSys.backShader;
-	shader = shaderSys.shader;
+	shader = shaderSys.charShader;
 	lShader = shaderSys.lShader;
-	batch.setShader(shader);
-	leftBatch.setShader(lShader);
+	coefficientsShader = shaderSys.coeffsShader;
+	positionShader = shaderSys.posShader;
+	lightRampShader = shaderSys.lightRampShader;
+	//batch.setShader(shader);
+	//leftBatch.setShader(lShader);
 	
 	Family physFam = Family.all(Position.class, SpriteAnimation.class).exclude(DragOption.class).get();
 	physicsEntities = engine.getEntitiesFor(physFam);
@@ -146,6 +157,11 @@ public void addedToEngine(Engine engine) {
 	//Family.all;
 	((EngineNiz) engine).getSubject("resize").add(this);;
 	engine.addEntityListener(Family.one(SpriteAnimation.class).get(), this);
+
+	indexTexture = new Texture(Gdx.files.internal("playerindexTexture.png"));
+	atlasTexture = new Texture(Gdx.files.internal("playerprocessed.png"));
+	indexBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 128, MapRenderSystem.INDEX_BUFFER_HEIGHT, false);
+	indexBuffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 }
 
 @Override
@@ -159,11 +175,53 @@ private Vector2 tmpV = new Vector2(), zeroVector = new Vector2();;
 
 private float viewportSize;
 
+	private void start() {
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, indexBuffer.getWidth(), indexBuffer.getHeight());
+		indexBuffer.begin();
+		Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.setShader(null);
+
+		batch.enableBlending();
+		batch.setColor(Color.WHITE);
+		batch.begin();
+		batch.draw(indexTexture, 0, 0);
+		batch.end();
+		batch.setShader(coefficientsShader);
+		lights.setUniformsNew(coefficientsShader, shader, positionShader);
+		batch.begin();
+		//any texture
+		batch.draw(indexTexture, 0, 2, indexBuffer.getWidth(), 1);
+		batch.end();
+
+		batch.setShader(positionShader);
+		//lights.setUniformsNew(coefficientsShader, shader, positionShader);
+		batch.begin();
+		//any texture
+		batch.draw(indexTexture, 0, 3, indexBuffer.getWidth(), 1);
+		batch.end();
+
+		batch.setShader(lightRampShader);
+		//lights.setUniformsNew(coefficientsShader, shader, positionShader);
+		batch.begin();
+		//any texture
+		batch.draw(indexTexture, 0, 4, indexBuffer.getWidth(), 1);
+		batch.end();
+
+		//batch.setShader(fxSshader);
+		//batch.begin();
+		//any texture
+		//batch.draw(indexTexture, 0, 3, indexBuffer.getWidth(), indexBuffer.getHeight()-3);
+		//batch.end();
+		indexBuffer.end();
+
+	}
+
 @Override
 public void update(float deltaTime) {
 	
 	//if (true) return;
-	
+	start();
 	if (camSys.zoomedOut) return;
 	
 	//TODO dt += Main.accum;
@@ -179,11 +237,11 @@ public void update(float deltaTime) {
 	
 
 	Gdx.gl.glDisable(GL20.GL_BLEND);
-	
+	batch.setShader(shader);
 	//batch.setShader(null);
 	batch.begin();
-	
-	processMap();
+
+	//processMap();
 	
 	batch.end();
 
@@ -197,37 +255,52 @@ public void update(float deltaTime) {
 	//diffTexture.bind(0);
 	//leftBatch.enableBlending();
 
-	
+
 	////////////////////////////////////////////////////////////////////////////////////////////
-	
-	
 
+	batch.enableBlending();
+	Gdx.gl.glEnable(GL20.GL_BLEND);
+	batch.setShader(shader);
+	//batch.setShader(null);
 	batch.begin();
-	//map.indexBuffer.getColorBufferTexture().bind(1);
+	indexBuffer.getColorBufferTexture().bind(1);
 	//indexTexture.bind(1);
-	//shader.setUniformi("u_index_texture", 1); //////passing first texture!!!
+	shader.setUniformi("u_index_texture", 1); //passing first texture!!!
+	atlasTexture.bind(0);
+	shader.setUniformi("u_texture", 0);
 
+	//indexBuffer.getColorBufferTexture().bind(1);
+	//shader.setUniformi("u_index_texture", 1); //////passing first texture!!!
 	//map.atlasTexture.bind(0);
 	//shader.setUniformi("u_texture", 0);
 
+
+
 	processSprites();
-	
-	
-	
-	
+
+
+
+
 	////////////////////////
-	
+
 	batch.end();
 
 	//shader.begin();
 	//shader.end();
-	Gdx.gl.glEnable(GL20.GL_BLEND);
 	//batch.enableBlending();
-	batch.begin();
-	uvTexture.bind(1);
-	diffTexture.bind(0);
-	lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_RIGHT, batch.getShader());
+	//batch.begin();
+	//uvTexture.bind(1);
+	//diffTexture.bind(0);
+	//lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_RIGHT, batch.getShader());
 	//batch.render();
+	//batch.end();
+
+	batch.setShader(null);
+	Texture t = indexBuffer.getColorBufferTexture();
+	batch.enableBlending();
+	batch.getProjectionMatrix().setToOrtho2D(0,  0, t.getWidth(), t.getHeight());
+	batch.begin();
+	batch.draw(t, 0, 0);
 	batch.end();
 
 }
@@ -414,7 +487,10 @@ public void processMap(){
 }
 
 public void draw(Sprite s, SpriteBatchN theBatch, boolean left, Entity entity, int layer) {
+	//Gdx.app.log(TAG, "layer " + layer);
 	s.setColor(LAYER_COLORS[layer]);
+	s.setColor(Color.WHITE);
+	s.setTexture(atlasTexture);
 	s.draw(theBatch);
 }
 
@@ -423,7 +499,7 @@ public void drawLowLOD(){
 	float sc = Gdx.graphics.getWidth()/viewportSize;
 	sc *= 2;
 	sc = 1f;
-	batch.setColor(Color.RED);
+	//batch.setColor(Color.RED);
 
 	batch.getProjectionMatrix().scale(sc, sc, sc);batch.begin();
 	
