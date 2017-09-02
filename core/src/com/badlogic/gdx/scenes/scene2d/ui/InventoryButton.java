@@ -141,8 +141,11 @@ public class InventoryButton extends Button{
 		localToStageCoordinates(v2);
 		v2.sub(v);
 		drawable.tint(Color.WHITE);
-
-		drawable.draw(batch, v.x, v.y, v2.x, v2.y);
+		float ar = (float)drawable.getRegion().getRegionHeight() / (float)drawable.getRegion().getRegionWidth();
+		if (ar > 1f)
+			drawable.draw(batch, v.x, v.y, v2.x / ar, v2.y);
+		else
+			drawable.draw(batch, v.x, v.y, v2.x, v2.y * ar);
 
 		//image.draw2(batch, v);
 	}
