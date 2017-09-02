@@ -56,7 +56,7 @@ public class ButtonPad extends UIElement {
                 l_btn.setCheckedWithoutChanging(false);
                 changeEvent.cancel();
             }
-        });;
+        });
 
         table.add(l_btn);
         MomentaryTextButton middle_btn = new MomentaryTextButton("F", skin, entity, input_jump, subjects[0]);
@@ -67,7 +67,7 @@ public class ButtonPad extends UIElement {
                 fwd_btn.setCheckedWithoutChanging(false);
                 changeEvent.cancel();
             }
-        });;
+        });
         table.add(middle_btn);
         final MomentaryTextButton r_btn = new MomentaryTextButton("F", skin, entity, input_r, subjects[0]);
         r_btn.addListener(new ChangeListener() {
@@ -80,7 +80,7 @@ public class ButtonPad extends UIElement {
                 changeEvent.cancel();
                // Gdx.app.log("", "mdsull");
             }
-        });;
+        });
         table.add(r_btn);
         table.row();
         table.add(new Actor());
@@ -95,7 +95,7 @@ public class ButtonPad extends UIElement {
                 Gdx.app.log("", "mdsull");
                 changeEvent.cancel();
             }
-        });;
+        });
         table.add(back_btn);
         table.add(new Actor());
 

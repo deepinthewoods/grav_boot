@@ -123,10 +123,10 @@ public class EdgeUI{
                     //sides[i].init(skin, this, engine);
 
                     if (colspanTop && i == 1){
-                    	sides[i].addTo(i, this, expandX[i]?true:false, expandY[i]?true:false, true);
+                    	sides[i].addTo(i, this, expandX[i], expandY[i], true);
                     } 
                     else
-                    	sides[i].addTo(i, this, expandX[i]?true:false, expandY[i]?true:false, false);
+                    	sides[i].addTo(i, this, expandX[i], expandY[i], false);
                     //sides[i].addTo(this, i==4?false:false);
 
                     //Gdx.app.log(TAG, "face");

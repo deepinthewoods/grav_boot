@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatchN;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasSprite;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.GridPoint2;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.BeltButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageN;
 import com.badlogic.gdx.scenes.scene2d.ui.InventoryButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.MomentaryButton;
@@ -43,6 +45,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.niz.Input;
 import com.niz.Main;
 import com.niz.anim.Animations;
+import com.niz.anim.SpriteCacheNiz;
 import com.niz.component.Body;
 import com.niz.component.BooleanInput;
 import com.niz.component.Door;
@@ -57,6 +60,8 @@ import com.niz.item.ItemDef;
 import com.niz.observer.Observer;
 import com.niz.observer.Subject;
 import com.niz.observer.Subject.Event;
+import com.niz.system.MapRenderSystem;
+import com.niz.system.SpriteAnimationSystem;
 import com.niz.ui.elements.BackgroundClickDrag;
 import com.niz.ui.elements.BeltTable;
 import com.niz.ui.elements.ButtonsDisplay;
@@ -75,6 +80,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	private static final int TOTAL_TOAST_LABELS = 16;
 	private static final float TOAST_SPEED = 1f;
 	private static final float TOAST_DELAY = 1f;
+	private final ShaderProgram shader;
 	public BeltTable belt;
 	private ControllerButton btnPad;
 	private ControllerSliderBoolean slider;
@@ -92,7 +98,8 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	private TextButton[] doorButtons;
 	private Table doorTable;
 	
-	public InventoryScreen(final EngineNiz engine, Skin skin, TextureAtlas atlas, CharacterScreen charScr, SettingsScreen setScr){
+	public InventoryScreen(final EngineNiz engine, Skin skin, TextureAtlas atlas, CharacterScreen charScr, SettingsScreen setScr, ShaderProgram indexedShader){
+		this.shader = indexedShader;
 		settingsScreen = setScr;
 		charScreen = charScr;
 		
@@ -162,11 +169,10 @@ public class InventoryScreen extends EdgeUI implements Observer{
         invRefreshSubject.add(this);
         engine.getSubject("resize").add(this);
         engine.getSubject("inventoryToggle").add(this);
-        engine.getSubject("screen").add(this);;
-        
-        
+        engine.getSubject("screen").add(this);
 
-        sides[2] = new UITable();
+
+		sides[2] = new UITable();
         sides[2].min = new UIElement[1];
         //sides[2].min[0] = new ControllerPad();
         table.row();
@@ -176,9 +182,9 @@ public class InventoryScreen extends EdgeUI implements Observer{
         sides[3].min = new UIElement[1];
         //invDisplay = new InventoryInformationDisplay();
         
-        inv = new ItemDisplay(this, engine);;
-        
-        sides[3].min[0] = inv;
+        inv = new ItemDisplay(this, engine);
+
+		sides[3].min[0] = inv;
         /*sides[3].min[0] = new UIElement(){
 
 			@Override
@@ -208,8 +214,8 @@ public class InventoryScreen extends EdgeUI implements Observer{
 
         sides[6] = new UITable();
         sides[6].min = new UIElement[1];
-        slider = new ControllerSliderBoolean();;
-        sides[6].min[0] = slider;
+        slider = new ControllerSliderBoolean();
+		sides[6].min[0] = slider;
         //sides[6].table.getCells().get(0).expand();
         //table.row();
         this.expandX[6] = true;
@@ -271,7 +277,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	private boolean toastOn;
 	private float toastTimer = 9999f;
 	private int toastSelectedIndex;
-	private int totalDoings = 1;;
+	private int totalDoings = 1;
 
 	Label toastTitleLabel;
 	Array<DoingLabel> toastLabels = new Array<DoingLabel>();
@@ -300,7 +306,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		}
 		
 		final Skin skinn = skin;
-		toastSubject = engine.getSubject("toast");;
+		toastSubject = engine.getSubject("toast");
 		toastSubject .add(new Observer(){
 
 
@@ -328,8 +334,8 @@ public class InventoryScreen extends EdgeUI implements Observer{
 						return;
 					}
 					//input.value %= totalDoings;
-					ItemDef def = input.item.getDef();;
-					toastTitleLabel.setText(""+def.name);
+					ItemDef def = input.item.getDef();
+					 toastTitleLabel.setText(""+def.name);
 					//toastSelectedIndex = input.value;
 					//for (int i = 0; i < toastLabels.size; i++){
 					//Gdx.app.log(TAG, "toast" + toastSelectedIndex+" "+input.value + "  "+ totalDoings);
@@ -454,10 +460,11 @@ public class InventoryScreen extends EdgeUI implements Observer{
 				ItemDef def = item.getDef();
 				//Gdx.app.log(TAG,  "blet redtawafr");
 				//butt.invalidateHierarchy();
-				butt.getImage().setDrawable(Animations.itemDrawables[def.id]);
+				//butt.setFrom(item, e);
+				//butt.getImage().setDrawable(Animations.itemDrawables[def.id]);
 				//butt.getImage().setRotation(20f);
 				//butt.getImage().setOrigin(Align.center);
-				butt.setFrom(item, e);;
+				butt.setFrom(item, e);
 			}
 			Table t = (Table)(belt.actor);//.invalidateAll();
 			
@@ -492,7 +499,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 			jumpButtonStyle.up.setMinWidth(Main.prefs.jump_button_width);
 			jumpButtonStyle.down.setMinWidth(Main.prefs.jump_button_width);
 			jumpButtonStyle.checked.setMinWidth(Main.prefs.jump_button_width);
-			MomentaryButton m = (MomentaryButton)((Table)s2.actor);
+			MomentaryButton m = (MomentaryButton) s2.actor;
 			
 			m.setStyle(jumpButtonStyle);
 			m.setHeight(Main.prefs.control_button_height);
@@ -515,7 +522,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 			//invDisplay.actor.setSize(Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight());
 			backgroundDragger.actor.setSize(v.getScreenWidth(), v.getScreenHeight());
 			
-			toastTitleLabel.setX(0);;
+			toastTitleLabel.setX(0);
 			toastTitleLabel.setWidth(v.getScreenWidth());
 			toastTitleLabel.setY(v.getScreenHeight()/3*2);
 			toastTitleLabel.setAlignment(Align.center);
@@ -666,7 +673,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		if (!sides[0].isHidden())
 			for (int i = 0; i < BELT_SLOTS; i++){
 				InventoryButton butt2 = belt.buttons[i];
-				
+
 				//if (butt.hash == 0) continue;
 				drawButtonAmount(butt2, batch, font);
 			}
@@ -677,6 +684,57 @@ public class InventoryScreen extends EdgeUI implements Observer{
 				//if (butt.hash == 0) continue;
 				//Gdx.app.log(TAG, "draw item amount");
 				drawButtonAmount(butt3, batch, font);
+			}
+		batch.end();
+
+		batch.setColor(Color.WHITE);
+		batch.begin();
+		/*if (!sides[0].isHidden())
+			for (int i = 0; i < BELT_SLOTS; i++){
+				InventoryButton butt2 = belt.buttons[i];
+				butt2.draw2(batch, 1f);
+				//if (butt.hash == 0) continue;
+				//drawButton(butt2, batch);
+			}*/
+		//DRAW BUTtoN IMAGES MANUALLY
+		//indexBuffer.getColorBufferTexture().bind(1);
+		//indexTexture.bind(1);
+		batch.end();
+		batch.setShader(shader);
+		batch.disableTextureBinding();
+		batch.begin();
+		SpriteAnimationSystem.indexBuffer.getColorBufferTexture().bind(1);
+		shader.setUniformi("u_index_texture", 1); //passing first texture!!!
+		SpriteAnimationSystem.atlasTexture.bind(0);
+		shader.setUniformi("u_texture", 0);
+		//batch.end();batch.setShader(null);batch.begin();
+		for (InventoryButton b : InventoryButton.blockDrawList){
+			b.draw2(batch, 1f);
+//			Gdx.app.log(TAG, "dtaw block");
+		}
+		batch.end();
+		batch.begin();
+		SpriteAnimationSystem.indexBuffer.getColorBufferTexture().bind(1);
+		shader.setUniformi("u_index_texture", 1); //passing first texture!!!
+		SpriteAnimationSystem.atlasTexture.bind(0);
+		shader.setUniformi("u_texture", 0);
+		for (InventoryButton b : InventoryButton.itemDrawList){
+			b.draw2(batch, 1f);
+
+		}
+		batch.end();
+		InventoryButton.blockDrawList.clear();
+		InventoryButton.itemDrawList.clear();
+		batch.setShader(null);
+		batch.enableTextureBinding();
+		batch.begin();
+		if (!sides[3].isHidden())
+			for (int i = 0; i < inv.buttons.size; i++){
+				InventoryButton butt3 = inv.buttons.get(i);
+				//butt3.draw2(batch, 1f);
+				//if (butt.hash == 0) continue;
+				//Gdx.app.log(TAG, "draw item amount");
+				//drawButton(butt3, batch);
 			}
 		batch.end();
 		
@@ -867,8 +925,8 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	}
 	private Vector2 a = new Vector2(), b = new Vector2(), t = new Vector2(), c = new Vector2();
 
-	private void drawButton(InventoryButton butt, ShapeRenderer rend) {
-		Image im = butt.getImage();
+	private void drawButton(InventoryButton butt, SpriteBatchN batch) {
+		ImageN im = (ImageN) butt.getImage();
 
 		float x = im.getX() +
 				butt.getX();
@@ -891,9 +949,12 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		
 		if (butt.isChecked()){
 			queueCheckedButtonDraw(x, y, w, h);
-		} else
-		drawShape(rend, x, y, w, h);
-		
+		}
+		//else
+		//drawShape(rend, x, y, w, h);
+
+		im.draw2(batch, 1f);
+
 	}
 	
 	private void drawButtonAmount(InventoryButton butt, SpriteBatchN batch, BitmapFont font) {
@@ -1042,7 +1103,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	public void changeToCharacterScreen() {
 		on = false;
 		theStage.clear();
-		charScreen.addTo(theStage);;
+		charScreen.addTo(theStage);
 		sides[3].hide();
 		sides[7].hide();
 		sides[6].unHide();
@@ -1096,7 +1157,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		on = true;
 		settingsOn = true;
 		
-		settingsScreen.addTo(theStage);;
+		settingsScreen.addTo(theStage);
 		settingsScreen.reTableStack();
 		
 		for (BeltButton b : belt.buttons){
@@ -1165,7 +1226,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 			public void drag(InputEvent event, float x, float y, int pointer) {
 				int size = Main.prefs.control_button_height;
 				int width = Main.prefs.move_slider_width;
-				float dx = prevX - Gdx.input.getX(pointer);;
+				float dx = prevX - Gdx.input.getX(pointer);
 				width -= dx;
 				width = Math.max(15,  width);
 				width = Math.min(Gdx.graphics.getWidth()/2, width);

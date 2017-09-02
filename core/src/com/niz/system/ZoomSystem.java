@@ -19,8 +19,8 @@ public class ZoomSystem extends EntitySystem implements Observer {
 	public void addedToEngine(Engine engine) {
 		// TODO Auto-generated method stub
 		super.addedToEngine(engine);
-		((EngineNiz) engine).getSubject("zoominput").add(this);;
-		zoomNotifier = ((EngineNiz) engine).getSubject("zoom");
+		((EngineNiz) engine).getSubject("zoominput").add(this);
+        zoomNotifier = ((EngineNiz) engine).getSubject("zoom");
 	}
 
 	@Override

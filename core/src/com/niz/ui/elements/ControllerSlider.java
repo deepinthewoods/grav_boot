@@ -28,7 +28,6 @@ public class ControllerSlider extends UIElement{
             public void act(float dt){
                 super.act(dt);
                 if (this.isDragging()){
-                    ;
                     inp.v.set(getValue(), 0);
                     subjects[0].notify(null, Subject.Event.SLIDER_PRESSED, inp);
                 } else {

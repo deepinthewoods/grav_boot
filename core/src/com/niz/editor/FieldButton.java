@@ -7,5 +7,5 @@ public interface FieldButton {
 
 	
 	
-	public void apply();
+	void apply();
 }

@@ -241,8 +241,8 @@ public class MainMenuTable extends UIElement {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
-				touchTime = game.engine.tick;;
-				//Gdx.app.log(TAG, "dwon press");
+				touchTime = game.engine.tick;
+                //Gdx.app.log(TAG, "dwon press");
 				holding = true;
 				return true;//super.touchDown(event, x, y, pointer, button);
 			}

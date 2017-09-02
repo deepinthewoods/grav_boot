@@ -154,8 +154,8 @@ public OrthographicCamera adjustedCamera;
 	@Override
 	public void onNotify(Entity e, Event event, Object c) {
 		VectorInput in = (VectorInput) c;
-		float VIEWPORT_SIZE = in.v.x;;
-		//camera.setToOrtho(true, VIEWPORT_SIZE, (int)(VIEWPORT_SIZE/Main.ar));
+		float VIEWPORT_SIZE = in.v.x;
+        //camera.setToOrtho(true, VIEWPORT_SIZE, (int)(VIEWPORT_SIZE/Main.ar));
 		//gameCamera = new OrthographicCamera(10, 10);//Main.PPM*Main.VIEWPORT_SIZE, (int)(Main.PPM*Main.VIEWPORT_SIZE/Main.ar));
 
 	}

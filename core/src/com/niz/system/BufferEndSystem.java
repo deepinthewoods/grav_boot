@@ -39,8 +39,8 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 	public void addedToEngine(Engine engine) {
 		map = engine.getSystem(MapRenderSystem.class);
 		startBuffer = engine.getSystem(BufferStartSystem.class);
-		((EngineNiz) engine).getSubject("resize").add(this);;
-		((EngineNiz) engine).getSubject("zoom").add(new Observer(){
+		((EngineNiz) engine).getSubject("resize").add(this);
+        ((EngineNiz) engine).getSubject("zoom").add(new Observer(){
 
 			@Override
 			public void onNotify(Entity e, Event event, Object c) {
@@ -52,8 +52,8 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 				//zoom = 1f;
 			}
 			
-		});;
-		camSys = engine.getSystem(CameraSystem.class);
+		});
+        camSys = engine.getSystem(CameraSystem.class);
 		lightSys = engine.getSystem(LightRenderSystem.class);
 		shader = engine.getSystem(ShaderSystem.class).shader;
 		spriteSys = engine.getSystem(SpriteAnimationSystem.class);
@@ -93,9 +93,9 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 			startBuffer.currentBuffer.getColorBufferTexture().bind(0);
 			//batch.enableBlending();
 			batch.disableBlending();
-			batch.setShader(null);;
-			
-			batch.begin();
+			batch.setShader(null);
+
+            batch.begin();
 			lightSys.setUniforms(Light.MAP_FRONT_LAYER, shader, true);
 			
 			//Gdx.app.log(TAG, "" + camSys.camera.position);

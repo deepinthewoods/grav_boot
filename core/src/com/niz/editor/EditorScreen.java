@@ -783,8 +783,8 @@ public class EditorScreen extends EdgeUI implements Observer{
 			Class<?> arrayClass, Skin skin) {
 		
 		EditorTable newTable = tableP.obtain();
-		newTable.set(table, o, "["+name+"]");;
-		newTable.setBackground(Styles.tableBack[o.hashCode()%Styles.tableBack.length]);
+		newTable.set(table, o, "["+name+"]");
+        newTable.setBackground(Styles.tableBack[o.hashCode()%Styles.tableBack.length]);
 		ArrayExpander expander = arrayExpanderP.obtain();
 		
 		boolean shouldExpand = expandedStore.containsKey(o);
@@ -983,8 +983,8 @@ public class EditorScreen extends EdgeUI implements Observer{
 			slider.set(an.min(), an.max(), b);
 			tab.add(slider);
 			//tab.add(labelP.obtain());
-			Gdx.app.log(TAG, "ANNOTATION");;
-			tab.row();
+			Gdx.app.log(TAG, "ANNOTATION");
+            tab.row();
 			
 		}
 		

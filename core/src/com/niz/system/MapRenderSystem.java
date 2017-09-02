@@ -36,7 +36,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	private static final Vector3 LIGHT_POS = new Vector3(53f,.753f,0.51075f);
 	private static final int OVERDRAW_PIXELS = 10;
 	public static final int INDEX_BUFFER_HEIGHT = 66;
-	public final FrameBuffer indexBuffer;
+	public static FrameBuffer indexBuffer;
 	public final Texture indexTexture;
 
 	private Array<Vector2> topTiles = new Array<Vector2>();
@@ -85,6 +85,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		//this.shader = shader;
 		this.atlas = atlas;
 		//this.backShader = backShader;
+
 		indexBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 128, INDEX_BUFFER_HEIGHT, false);
 		indexBuffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 		indexTexture = new Texture(Gdx.files.internal("tilesindexTexture.png"));

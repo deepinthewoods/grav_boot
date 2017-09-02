@@ -12,8 +12,8 @@ public class SlopeBlockDefinition extends BlockDefinition {
 	private static final float[] 
 			X0 = {1f, -0.01f, .5f, -0.01f, .5f, 1f, .5f, 1f}
 			, X1 = {-0.01f, 1f, -0.01f, .5f, 1f, .5f, .5f, 1f};
-	private static final int VARIANT_MASK = 0xFFFFFFC7;;
-	private static final int RIGHT_45 = 0, LEFT_45 = 1
+	private static final int VARIANT_MASK = 0xFFFFFFC7;
+    private static final int RIGHT_45 = 0, LEFT_45 = 1
 			, RIGHT_30_BOTTOM = 2, LEFT_30_BOTTOM = 3
 			, LEFT_30_TOP = 4, RIGHT_30_TOP = 5
 			, HALF = 6, FULL = 7 ;

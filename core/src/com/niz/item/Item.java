@@ -15,7 +15,9 @@ public class Item implements Poolable, Component{
 	public int hash;
 	public float destroyBlockBaseAlpha = 1f;
 
-	public ItemDef getDef(){
+
+
+    public ItemDef getDef(){
 		return Inventory.defs.get(id);
 	}
 	
@@ -68,10 +70,6 @@ public class Item implements Poolable, Component{
 	}
 	
 	public boolean canStack(Item item) {
-		if (item.id == id){
-			
-			return true;
-		}
-		return false;
-	}
+        return item.id == id;
+    }
 }

@@ -10,9 +10,9 @@ public class Anima extends Animation {
 	public boolean isVelocityDependant;
 	public boolean randomStart;
 	public int bitmask;
-	public boolean drawOnMove = false;;
+	public boolean drawOnMove = false;
 
-	public Anima(float frameDuration, TextureRegion[] keyFrames) {
+    public Anima(float frameDuration, TextureRegion[] keyFrames) {
 		super(frameDuration, keyFrames);
 	}
 	

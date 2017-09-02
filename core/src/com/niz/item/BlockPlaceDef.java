@@ -27,6 +27,7 @@ public class BlockPlaceDef extends ItemDef {
 			
 		};
 		doings.add(doPlaceBack);
+		isBlock = true;
 	}
 
 	@Override
@@ -73,9 +74,9 @@ public class BlockPlaceDef extends ItemDef {
 
 		e.add(anim);
 		
-		engine.addEntity(e);;
-		if (e.getComponent(PickUp.class) != null) throw new GdxRuntimeException("KJFD");
-		((EngineNiz)engine).getSubject("changeLargeBuckets").notify(e, Event.CHANGE_LARGE_BUCKET, null);
+		engine.addEntity(e);
+        if (e.getComponent(PickUp.class) != null) throw new GdxRuntimeException("KJFD");
+		engine.getSubject("changeLargeBuckets").notify(e, Event.CHANGE_LARGE_BUCKET, null);
 	
 	}
 	

@@ -58,8 +58,8 @@ public class RaceSelectionButton extends Table {
 	}
 	
 	public void setName(){
-		text.setText(Race.raceNames[current]);;
-	}
+		text.setText(Race.raceNames[current]);
+    }
 	
 	
 }

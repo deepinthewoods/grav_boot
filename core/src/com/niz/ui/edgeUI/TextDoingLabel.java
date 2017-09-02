@@ -34,8 +34,8 @@ public class TextDoingLabel extends Label{
 
 	public void resize(int screenWidth, float height, int screenHeight) {
 		//setX(screenWidth/2);
-		setX(0);;
-		setWidth(screenWidth);
+		setX(0);
+        setWidth(screenWidth);
 		setAlignment(Align.center);
 		setY(screenHeight/3*2-(index+1)*height);
 	}

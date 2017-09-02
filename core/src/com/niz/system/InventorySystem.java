@@ -46,8 +46,8 @@ public class InventorySystem extends EntitySystem implements Observer {
 			Inventory inv = invM.get(e);
 			if (inv.dirty){
 				
-				invNotifier.notify(e, Event.BELT_REFRESH, inv);;
-			}
+				invNotifier.notify(e, Event.BELT_REFRESH, inv);
+            }
 		}
 		
 		

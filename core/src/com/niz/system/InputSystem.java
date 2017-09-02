@@ -49,8 +49,8 @@ public class InputSystem  extends EntitySystem implements Observer {
 		playerControl = ((EngineNiz) engine).getSubject("playerControl");
         //playerControl.add(this);
 		entities = engine.getEntitiesFor(Family.all(Player.class).get());
-		((EngineNiz) engine).getSubject("screen").add(this);;
-	}
+		((EngineNiz) engine).getSubject("screen").add(this);
+    }
 
 	@Override
 	public void removedFromEngine(Engine engine) {

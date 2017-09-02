@@ -1,5 +1,5 @@
 
-player.png
+playerprocessed.png
 size: 2048,2048
 format: RGBA8888
 filter: Nearest,Nearest
@@ -51819,7 +51819,7 @@ diff/whitedragontorso
   offset: 34, 44
   index: 45
 
-player2.png
+playerprocessed.png
 size: 2048,2048
 format: RGBA8888
 filter: Nearest,Nearest

@@ -35,7 +35,9 @@ import com.niz.system.MapSystem;
 public abstract class ItemDef {
 private static final String TAG = "Item def";
 public String name;
-public ItemDef(String string) {
+	public boolean isBlock = false;
+
+	public ItemDef(String string) {
 		name = string;
 		
 	}
@@ -75,9 +77,9 @@ public void doThrow(LayerGuide guide, Entity parent,
 	projA.rotationSpeed = 1200;
 	
 	CollidesWithMap coll = engine.createComponent(CollidesWithMap.class);
-	OnMap onMap = engine.createComponent(OnMap.class);;
-	
-	Buckets bucket = engine.createComponent(Buckets.class);
+	OnMap onMap = engine.createComponent(OnMap.class);
+
+    Buckets bucket = engine.createComponent(Buckets.class);
 	
 	LineBody line = engine.createComponent(LineBody.class);
 	
@@ -86,8 +88,8 @@ public void doThrow(LayerGuide guide, Entity parent,
 	e.add(pos);
 	e.add(phys);
 	tmpV.set(25, 0).rotate(angle);
-	phys.setLinearVelocity(tmpV.x,  tmpV.y);;
-	e.add(anim);
+	phys.setLinearVelocity(tmpV.x,  tmpV.y);
+    e.add(anim);
 	e.add(bucket);
 	//e.add(body);
 	e.add(line);
@@ -99,10 +101,10 @@ public void doThrow(LayerGuide guide, Entity parent,
 	Light light = engine.createComponent(Light.class);
 	e.add(light);
 	
-	engine.addEntity(e);;
-	Gdx.app.log(TAG, "doThrow " + e.getId());
+	engine.addEntity(e);
+    Gdx.app.log(TAG, "doThrow " + e.getId());
 	if (e.getComponent(PickUp.class) != null) throw new GdxRuntimeException("KJFD");
-	((EngineNiz)engine).getSubject("changeLargeBuckets").notify(e, Event.CHANGE_LARGE_BUCKET, null);
+	engine.getSubject("changeLargeBuckets").notify(e, Event.CHANGE_LARGE_BUCKET, null);
 }
 
 static Vector2 tmpV = new Vector2();
@@ -126,8 +128,8 @@ public long startSlashSensor(LayerGuide guide, Entity e, EngineNiz engine,
 
 	e.add(line);
 	
-	engine.addEntity(e);;
-	return e.getId();
+	engine.addEntity(e);
+    return e.getId();
 }
 
 public void doDestroy(LayerGuide guide, Entity e, EngineNiz engine,

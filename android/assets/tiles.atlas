@@ -1,5 +1,5 @@
 
-tiles.png
+tilesprocessed.png
 size: 2048,2048
 format: RGBA8888
 filter: Nearest,Nearest
@@ -26885,7 +26885,7 @@ diff/tile
   offset: 12, 8
   index: 13311
 
-tiles2.png
+tilesprocessed.png
 size: 2048,2048
 format: RGBA8888
 filter: Nearest,Nearest

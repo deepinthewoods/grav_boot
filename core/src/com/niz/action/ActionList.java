@@ -25,8 +25,8 @@ public class ActionList implements Component, Poolable, KryoSerializable{
 	public int lanes;
 	public ActionList(){
 		
-		actions = new DoublyLinkedList();;
-	}
+		actions = new DoublyLinkedList();
+    }
 	
 	public void update(float dt){
 		currentTime += dt;
@@ -62,8 +62,8 @@ public class ActionList implements Component, Poolable, KryoSerializable{
 			}
 			action = next;
 			
-		};
-		//Gdx.app.log(TAG, "update"+actions.size());
+		}
+        //Gdx.app.log(TAG, "update"+actions.size());
 	}
 @Override
 public String toString() {
@@ -76,8 +76,8 @@ public String toString() {
 		s += action.getClass().getSimpleName() + " ";
 		action = next;
 		
-	};
-	return s;
+	}
+    return s;
 }
     @Override
     public void reset() {
@@ -282,8 +282,8 @@ public String toString() {
 			}
 			action = next;
 			
-		};
-		//Gdx.app.log(TAG, "update"+actions.size());
+		}
+        //Gdx.app.log(TAG, "update"+actions.size());
 		
 	}
 	

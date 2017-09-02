@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasSprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntArray;
@@ -49,9 +50,9 @@ public class Animations {
 		itemSprites = new AtlasSprite[NUMBER_OF_ITEMS][NUMBER_OF_ITEM_ANGLES];
 		itemSpinSprites = new AtlasSprite[NUMBER_OF_ITEMS][NUMBER_OF_ITEM_ANGLES];
 		itemTipSprites = new AtlasSprite[NUMBER_OF_ITEMS][NUMBER_OF_ITEM_ANGLES];
-		itemDrawables = new Drawable[NUMBER_OF_ITEMS];
+		itemDrawables = new TextureRegionDrawable[NUMBER_OF_ITEMS];
 		tailSprites = new AtlasSprite[NUMBER_OF_ITEMS][];
-		tailDrawables = new Drawable[NUMBER_OF_ITEMS];
+		tailDrawables = new TextureRegionDrawable[NUMBER_OF_ITEMS];
 		piles = new Sprite[16][8][64];
 		int index = 0;
 		for (int b = 0; b < 2; b++){
@@ -135,7 +136,7 @@ public class Animations {
 	}
 	public static IntMap<ShortArray> guides= new IntMap<ShortArray>();
 	static String fileFolder = "guides/";
-	public static Drawable[] itemDrawables, tailDrawables;
+	public static TextureRegionDrawable[] itemDrawables, tailDrawables;
 	public static IntMap<IntArray> directions = new IntMap<IntArray>();
 	public static RotatedAnimationLayer[] itemLayers = new RotatedAnimationLayer[NUMBER_OF_ITEMS], itemSpinLayers = new RotatedAnimationLayer[NUMBER_OF_ITEMS]
 			, itemTipLayers = new RotatedAnimationLayer[NUMBER_OF_ITEMS];
@@ -885,7 +886,7 @@ public class Animations {
 			AtlasRegion r = s.getAtlasRegion();
 			//s.setCenter(r.offsetX + r.packedWidth / 2, r.offsetY);
 			s.setOriginCenter();
-			
+
 		}
 		itemDrawables[id] = new TextureRegionDrawable(itemSprites[id][0]);
 		itemSpinLayers[id] = AnimationCommand.makeItemFrames(name, id, spinBase, total, atlas);
@@ -906,7 +907,7 @@ public class Animations {
 			AtlasRegion r = s.getAtlasRegion();
 			//s.setCenter(r.offsetX + r.packedWidth / 2, r.offsetY);
 			s.setOriginCenter();
-			
+
 		}
 		itemDrawables[id] = new TextureRegionDrawable(itemSprites[id][0]);
 		itemSpinLayers[id] = AnimationCommand.makeBlockFrames(atlas, blockID, spinBase);

@@ -80,8 +80,8 @@ public class WorkerSystem extends RenderSystem {
 					else {
 						current = queue.removeIndex(0);
 						allPaused = false;
-					};
-				} else {
+					}
+                } else {
 					allPaused = false;
 					ActionList act = actM.get(current);
 					//Gdx.app.log(TAG,  "linear process ");

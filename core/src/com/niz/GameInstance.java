@@ -152,6 +152,7 @@ public class GameInstance implements Screen, Observer {
 	private ImmutableArray<Entity> playerEntities;
 	private InputSystem inputSys;
 	private static Vector3 tmpV = new Vector3();
+	private ShaderSystem shaderSys;
 
 	public void create (boolean headless, boolean newGame) {
 		//this.isServer = serverInst != null;
@@ -191,6 +192,7 @@ public class GameInstance implements Screen, Observer {
 					uiAtlas = new TextureAtlas(Gdx.files.internal("ui.atlas"));
 					break;case 2:
 					playerAtlas = new TextureAtlas(Gdx.files.internal("player.atlas"));
+
 					break;case 3:
 					atlas = new TextureAtlas(Gdx.files.internal("tiles.atlas"));
 					break;case 4:
@@ -348,7 +350,8 @@ public class GameInstance implements Screen, Observer {
 
 					engine.addSystem(new BufferStartSystem());
 					break;case 13:
-					engine.addSystem(new ShaderSystem());						
+						shaderSys = new ShaderSystem();
+					engine.addSystem(shaderSys);
 					break;case 14:
 					lights = new LightRenderSystem(mapRenderCam);
 					engine.addSystem(lights);		
@@ -391,7 +394,7 @@ public class GameInstance implements Screen, Observer {
 					settingsScreen.setObject(Main.prefs, "Settings");
 					break;case 23:
 
-					invScreen = new InventoryScreen(engine, skin, playerAtlas, charScreen, settingsScreen);
+					invScreen = new InventoryScreen(engine, skin, playerAtlas, charScreen, settingsScreen, shaderSys.charShader);
 					invScreen.create(skin, stage, engine);
 					invScreen.init(skin, stage, engine);
 					//invScreen.addTo(stage);
@@ -714,6 +717,7 @@ public class GameInstance implements Screen, Observer {
 			//stage.setDebugAll(true);
 			//stage.act(1f);
 			if (stage != null)stage.act(delta);
+			//stage.getBatch().setShader(shaderSys.);
 			stage.draw();
 			if (invScreen != null){
 				SpriteBatchN bat = (SpriteBatchN) stage.getBatch();

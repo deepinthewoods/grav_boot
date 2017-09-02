@@ -51,11 +51,11 @@ public class SpriteCacheNiz{
 	private static final int CACHE_TOTAL_TARGET = 32;
 	private static final int INDEX_BUFFER_HEIGHT = 66;
 
-	public static Sprite[] sprites = new Sprite[34*512];;
-	private static final Texture atlasTexture = new Texture(Gdx.files.internal("tilesprocessed.png"));
+	public static Sprite[] sprites = new Sprite[34*512];
+	public static final Texture atlasTexture = new Texture(Gdx.files.internal("tilesprocessed.png"));
 	public final Texture indexTexture;
 	private final ShaderProgram cacheShader;
-	public final FrameBuffer indexBuffer;
+	//public static  FrameBuffer indexBuffer;
 	private final ShaderProgram coefficientsShader;
 	private final ShaderProgram positionShader;
 	public boolean hasCa2ched;
@@ -77,8 +77,8 @@ public class SpriteCacheNiz{
 		this.map = map;
 		buffers = new FrameBuffer[(map.width / MapRenderSystem.RENDER_SIZE) * (map.height / MapRenderSystem.RENDER_SIZE)];
 		cacheShader = createDefaultShader();
-		indexBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 128, INDEX_BUFFER_HEIGHT, false);
-		indexBuffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+		//indexBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 128, INDEX_BUFFER_HEIGHT, false);
+		//indexBuffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 		coefficientsShader = coeffsS;
 		positionShader = posShader;
 	}

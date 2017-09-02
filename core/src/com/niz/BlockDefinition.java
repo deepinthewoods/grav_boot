@@ -12,7 +12,6 @@ public abstract class BlockDefinition {
 	public int particleItemID;
 	public int particleCount;
 	public boolean breaksWithBigPieces;
-
 	public abstract void randomUpdate(Map map, int x, int y, int b);
 	
 	public BlockDefinition(){

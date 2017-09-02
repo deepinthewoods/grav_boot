@@ -91,8 +91,8 @@ private Sprite square;
 
 	public static final Color[] LAYER_COLORS = new Color[LightRenderSystem.N_LAYERS];
 	private Texture indexTexture;
-	private Texture atlasTexture;
-	private FrameBuffer indexBuffer;
+	public static Texture atlasTexture;
+	public static  FrameBuffer indexBuffer;
 	private ShaderProgram coefficientsShader;
 	private ShaderProgram positionShader;
 	private ShaderProgram lightRampShader;
@@ -268,23 +268,20 @@ public void update(float deltaTime) {
 	shader.setUniformi("u_index_texture", 1); //passing first texture!!!
 	atlasTexture.bind(0);
 	shader.setUniformi("u_texture", 0);
-
-	//indexBuffer.getColorBufferTexture().bind(1);
-	//shader.setUniformi("u_index_texture", 1); //////passing first texture!!!
-	//map.atlasTexture.bind(0);
-	//shader.setUniformi("u_texture", 0);
-
-
-
 	processSprites();
 
-
-
-
-	////////////////////////
+	batch.end();
+	batch.disableTextureBinding();
+	batch.begin();
+	map.indexBuffer.getColorBufferTexture().bind(1);
+	//indexTexture.bind(1);
+	shader.setUniformi("u_index_texture", 1); //passing first texture!!!
+	map.atlasTexture.bind(0);
+	shader.setUniformi("u_texture", 0);
+	processMap();
 
 	batch.end();
-
+	batch.enableTextureBinding();
 	//shader.begin();
 	//shader.end();
 	//batch.enableBlending();

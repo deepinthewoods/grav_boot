@@ -44,7 +44,7 @@ public class IntegerButton extends TextField implements FieldButton{
 		boolean valid = true;
 		int newVal = 0;
 		try {
-			newVal = Integer.parseInt((String)getText());
+			newVal = Integer.parseInt(getText());
 		} catch (NumberFormatException ex){
 			valid = false;
 		}

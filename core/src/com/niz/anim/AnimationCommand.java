@@ -31,10 +31,10 @@ public class AnimationCommand {
 	public int bitmask = 0;
 	//String fileNamePrefix = "tile";
 	public float deltaMultiplier = 1f;
-	public int skipFrames;;
-		
-	
-	static AnimationContainer make(AnimationCommand c, TextureAtlas atlas, AnimSet animSet, String[] layers, String[] baseLayers, AnimationContainer container, String prefix, String[] spritePrefixes){
+	public int skipFrames;
+
+
+    static AnimationContainer make(AnimationCommand c, TextureAtlas atlas, AnimSet animSet, String[] layers, String[] baseLayers, AnimationContainer container, String prefix, String[] spritePrefixes){
 		for (String sprPrefix : spritePrefixes){
 			
 			for (int y = 0; y < layers.length; y++){
@@ -57,6 +57,7 @@ public class AnimationCommand {
 					//Gdx.app.log(TAG, "layer "+i+ " / "+c.length + " + " + c.offset + baseFileName);
 					
 					frames[i] = (AtlasSprite) atlas.createSprite(fileNamePrefix  , (frameIndex ));
+					frames[i] = new AtlasSprite(frames[i]);
 					if (frames[i] == null) throw new GdxRuntimeException("null frame! "+fileNamePrefix +"   "+i+"  "+c.length +"  "+c.offset +"  "+c.animName + "  " + frameIndex);
 					 
 					//AtlasRegion baseF =  atlas.findRegion(baseFileName  , ( i+c.offset));
@@ -292,6 +293,8 @@ public class AnimationCommand {
 			
 			int frameIndex =  i;
 			frames[i] = (AtlasSprite) atlas.createSprite(fileNamePrefix  , (frameIndex ));
+			frames[i] = new AtlasSprite(frames[i]);
+
 			if (frames[i] == null) throw new GdxRuntimeException("jskld! "+fileNamePrefix +"   "+i+"  " +"  "+total +"  ");
 			
 			//AtlasRegion baseF =  atlas.findRegion(baseFileName  , ( i+c.offset));
@@ -356,7 +359,8 @@ public class AnimationCommand {
 			int frameIndex =  i;
 			//Gdx.app.log(TAG, "guide base "+blockIndex);
 			frames[i] = (AtlasSprite) atlas.createSprite(fileNamePrefix, blockIndex);
-			
+			frames[i] = new AtlasSprite(frames[i]);
+
 			//if (frames[i] == null) throw new GdxRuntimeException("jskld! "+fileNamePrefix +"   "+i+"  " +"  "+total +"  ");
 			
 			//AtlasRegion baseF =  atlas.findRegion(baseFileName  , ( i+c.offset));

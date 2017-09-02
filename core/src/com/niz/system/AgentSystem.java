@@ -31,12 +31,8 @@ public class AgentSystem extends EntitySystem {
 
 	@Override
 	public void update(float deltaTime) {
-		if (entities.size() > 0){
-			engine.simulating = true;
-			//Gdx.app.log("agentsy", "sim");
-		} else {
-			engine.simulating = false;
-		}
+        //Gdx.app.log("agentsy", "sim");
+        engine.simulating = entities.size() > 0;
 		
 	}
 

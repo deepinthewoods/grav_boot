@@ -49,8 +49,8 @@ public class OnMapSystem extends EntitySystem implements Observer, EntityListene
 		posM = ComponentMapper.getFor(Position.class);
 		
 		bucketSystem = engine.getSystem(BucketSystem.class);
-		((EngineNiz)engine).getSubject("changeLargeBuckets").add(this);;
-		emptyMap = new Map(1, 1, atlas, shader, coeffsShader, posShader);
+		((EngineNiz)engine).getSubject("changeLargeBuckets").add(this);
+        emptyMap = new Map(1, 1, atlas, shader, coeffsShader, posShader);
 		engine.addEntityListener(this);
 		this.engine = (EngineNiz) engine;
 		

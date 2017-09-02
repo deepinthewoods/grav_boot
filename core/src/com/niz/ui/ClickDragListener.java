@@ -6,8 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class ClickDragListener extends InputListener {
-	private static final long CLICK_INTERVAL = (long)(0.3f * 1000000000l);;
-	private float tapSquareSize = 14, touchDownX = -1, touchDownY = -1;
+	private static final long CLICK_INTERVAL = (long)(0.3f * 1000000000l);
+    private float tapSquareSize = 14, touchDownX = -1, touchDownY = -1;
 	private int pressedPointer = -1;
 	private int button;
 	private boolean dragging;

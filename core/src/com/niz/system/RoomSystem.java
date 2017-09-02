@@ -33,10 +33,10 @@ public class RoomSystem extends RenderSystem implements Observer {
 
 		this.engine = ((EngineNiz)engine);
 		notifier = this.engine.getSubject("roomeditor");
-		notifier.add(this);;
-		invNotifier = this.engine.getSubject("screen");;
-		invNotifier.add(this);;
-		//Gdx.app.log(TAG, "djfkljafskljkld);sfja;dksjf;sdlkajfd;lsj;sdakfjsdl;kjsd;ljsfdlk");
+		notifier.add(this);
+        invNotifier = this.engine.getSubject("screen");
+        invNotifier.add(this);
+        //Gdx.app.log(TAG, "djfkljafskljkld);sfja;dksjf;sdlkajfd;lsj;sdakfjsdl;kjsd;ljsfdlk");
 		
 	}
 

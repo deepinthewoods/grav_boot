@@ -71,6 +71,7 @@ public class SpriteBatchN implements Batch {
 
     /** The maximum number of sprites rendered in one batch so far. **/
     public int maxSpritesInBatch = 0;
+    private boolean bindTextures;
 
     /** Constructs a new SpriteBatch with a size of 1000, one buffer, and the default shader.
      * @see SpriteBatchN#SpriteBatchN(int, ShaderProgram) */
@@ -1091,5 +1092,13 @@ public class SpriteBatchN implements Batch {
 
     public boolean isDrawing () {
         return drawing;
+    }
+
+    public void enableTextureBinding() {
+        bindTextures = true;
+    }
+
+    public void disableTextureBinding() {
+        bindTextures = false;
     }
 }

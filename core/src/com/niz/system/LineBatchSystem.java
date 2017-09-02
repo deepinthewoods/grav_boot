@@ -219,7 +219,7 @@ public void drawLast(float deltaTime) {
 		w += 1;
 		h += 1;
 		s = Math.min((int)w, s);
-		sw = Math.min((int)h, sw);
+		sw = Math.min(h, sw);
 		//s = Math.max(2, s);
 		//sw = Math.max(2, sw);
 		//w = Main.PPM * 16;
@@ -228,27 +228,27 @@ public void drawLast(float deltaTime) {
 		float speed = 4f;
 		batch.setColor(fadeColor[(int)((phase * speed +id + 0)% fadeColor.length)]);
 		//x-w, y+h, x-w+s, y+htl
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f , (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f + sw, (int)y+(int)h+Main.PX/2f);
+		batch.drawLine(region, (int)x- w +Main.PX/2f , (int)y+ h +Main.PX/2f, (int)x- w +Main.PX/2f + sw, (int)y+ h +Main.PX/2f);
 		//x-w, y+h, x-w, y+h-s tl
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f-s);
+		batch.drawLine(region, (int)x- w +Main.PX/2f, (int)y+ h +Main.PX/2f, (int)x- w +Main.PX/2f, (int)y+ h +Main.PX/2f-s);
 		
 		batch.setColor(fadeColor[(int)((phase * speed +id + 2)% fadeColor.length)]);
 		//x+w-s, y+h, x+w, y+h tr
-		batch.drawLine(region, (int)x+(int)w+Main.PX/2f - sw, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
+		batch.drawLine(region, (int)x+ w +Main.PX/2f - sw, (int)y+ h +Main.PX/2f, (int)x+ w +Main.PX/2f, (int)y+ h +Main.PX/2f);
 		//x+w, y+h, x+w, y+h-s tr
-		batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f-s);
+		batch.drawLine(region, (int)x+ w +Main.PX/2f, (int)y+ h +Main.PX/2f, (int)x+ w +Main.PX/2f, (int)y+ h +Main.PX/2f-s);
 		
 		batch.setColor(fadeColor[(int)((phase * speed +id + 4)% fadeColor.length)]);
 		//x+w-s, y-h, x+w, y-h br
-		batch.drawLine(region, (int)x+(int)w+Main.PX/2f - sw, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine(region, (int)x+ w +Main.PX/2f - sw, (int)y- h +Main.PX/2f, (int)x+ w +Main.PX/2f, (int)y- h +Main.PX/2f);
 		//x+w, y-h+s, x+w, y-h br
-		batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f+s, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine(region, (int)x+ w +Main.PX/2f, (int)y- h +Main.PX/2f+s, (int)x+ w +Main.PX/2f, (int)y- h +Main.PX/2f);
 		
 		batch.setColor(fadeColor[(int)((phase * speed +id + 6)% fadeColor.length)]);
 		//x-w, y-h, x-w+s, y-h bl
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f , (int)y-(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f + sw, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine(region, (int)x- w +Main.PX/2f , (int)y- h +Main.PX/2f, (int)x- w +Main.PX/2f + sw, (int)y- h +Main.PX/2f);
 		//x-w, y-h+s, x-w, y-h bl
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f+s, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine(region, (int)x- w +Main.PX/2f, (int)y- h +Main.PX/2f+s, (int)x- w +Main.PX/2f, (int)y- h +Main.PX/2f);
 
 		if (batch.isFull()){
 			batch.end();
@@ -615,8 +615,8 @@ public void update(float deltaTime) {
 	for (int i = 0; i < roomDefEntities.size(); i++){
 		Entity e = roomDefEntities.get(i);
 		RoomDefinition room = e.getComponent(RoomDefinition.class);
-		float x =  ((int)room.min.x * Main.PPM), y = ((int)room.min.y * Main.PPM);
-		float x2 =  ((int)room.max.x * Main.PPM), y2 = ((int)room.max.y * Main.PPM);
+		float x =  (room.min.x * Main.PPM), y = (room.min.y * Main.PPM);
+		float x2 =  (room.max.x * Main.PPM), y2 = (room.max.y * Main.PPM);
 
 		batch.drawLine(region, (int)x+Main.PX/2f, (int)y+Main.PX/2f, (int)x+Main.PX/2f, (int)y2+Main.PX/2f);
 		batch.drawLine(region, (int)x+Main.PX/2f, (int)y+Main.PX/2f, (int)x2+Main.PX/2f, (int)y+Main.PX/2f);
@@ -639,8 +639,8 @@ public void update(float deltaTime) {
 	for (int i = 0; i < roomDefEntities.size(); i++){
 		Entity e = roomDefEntities.get(i);
 		RoomDefinition room = e.getComponent(RoomDefinition.class);
-		float x =  ((int)room.min9.x * Main.PPM), y = ((int)room.min9.y * Main.PPM);
-		float x2 =  ((int)room.max9.x * Main.PPM), y2 = ((int)room.max9.y * Main.PPM);
+		float x =  (room.min9.x * Main.PPM), y = (room.min9.y * Main.PPM);
+		float x2 =  (room.max9.x * Main.PPM), y2 = (room.max9.y * Main.PPM);
 
 		batch.drawLine(region, (int)x+Main.PX/2f, (int)y+Main.PX/2f, (int)x+Main.PX/2f, (int)y2+Main.PX/2f);
 		batch.drawLine(region, (int)x+Main.PX/2f, (int)y+Main.PX/2f, (int)x2+Main.PX/2f, (int)y+Main.PX/2f);

@@ -47,9 +47,8 @@ public class Room {
 					
 				}
 			}
-		if (entrance.size == 0 || exit.size == 0) return false;
-		return true;
-	}
+        return !(entrance.size == 0 || exit.size == 0);
+    }
 	public int isCorner(){
 		boolean up = false, down = false, left = false, right = false;
 		for (GridPoint2 p : entrance){

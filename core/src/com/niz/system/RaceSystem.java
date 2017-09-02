@@ -153,8 +153,8 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 	}
 
 	Random rand = new Random();
-	private IntArray guideFrameSources = new IntArray();;
-	IntArray guideSources = new IntArray();
+	private IntArray guideFrameSources = new IntArray();
+    IntArray guideSources = new IntArray();
 	@Override
 	public void onNotify(Entity e, Event event, Object c) {
 		//if (true) throw new GdxRuntimeException("");
@@ -176,10 +176,10 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		anim.layerSources =new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};//guide layer that layers use to render
 		
 		//int armIDBack = 0, legID = 0, torsoID = 0, tailID = 0, armIDFront = 0;
-		guideSources.clear();;
+		guideSources.clear();
 
-		
-		//race.raceID[Race.TAIL] = Race.RED_DRAGON;
+
+        //race.raceID[Race.TAIL] = Race.RED_DRAGON;
 		//race.raceID[Race.BACK_ARM] = Race.RED_DRAGON;
 		//race.raceID[Race.BACK_LEG] = Race.RED_DRAGON;
 		//race.raceID[Race.FRONT_ARM] = Race.RED_DRAGON;
@@ -202,10 +202,10 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 								, armsG = new int[racePrefixes.length], tailG = new int[racePrefixes.length]
 										, tailTipG = new int[racePrefixes.length], headG = new int[racePrefixes.length]
 												, neckG = new int[racePrefixes.length]
-						;;
-				
-		
-		for (int i = 0; i < racePrefixes.length; i++){
+						;
+
+
+        for (int i = 0; i < racePrefixes.length; i++){
 			armBack[i] = Data.hash(racePrefixes[i] + "armback");
 			armFront[i] = Data.hash(racePrefixes[i] + "armfront");
 			legFront[i] = Data.hash(racePrefixes[i] + "legfront");
@@ -510,9 +510,9 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		}
 		
 		
-		race.setLimbActions(actions );;
-		
-		//anim.colors[anim.back_arm] = Data.BLUE_INDEX;
+		race.setLimbActions(actions );
+
+        //anim.colors[anim.back_arm] = Data.BLUE_INDEX;
 		//anim.colors[anim.back_leg] = Data.BLUE_INDEX;
 		//anim.colors[anim.torso] = Data.BLUE_INDEX;
 		//anim.colors[anim.head] = Data.BLUE_INDEX;

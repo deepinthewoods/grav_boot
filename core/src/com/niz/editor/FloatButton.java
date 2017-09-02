@@ -45,7 +45,7 @@ public class FloatButton extends TextField implements FieldButton{
 		boolean valid = true;
 		float newVal = 0;
 		try {
-			newVal = Float.parseFloat((String)getText());
+			newVal = Float.parseFloat(getText());
 		} catch (NumberFormatException ex){
 			valid = false;
 		}
