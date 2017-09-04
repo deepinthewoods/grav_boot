@@ -669,23 +669,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		
 		Gdx.gl.glLineWidth(1f);//*/
-		batch.begin();
-		if (!sides[0].isHidden())
-			for (int i = 0; i < BELT_SLOTS; i++){
-				InventoryButton butt2 = belt.buttons[i];
 
-				//if (butt.hash == 0) continue;
-				drawButtonAmount(butt2, batch, font);
-			}
-		
-		if (!sides[3].isHidden())
-			for (int i = 0; i < inv.buttons.size; i++){
-				InventoryButton butt3 = inv.buttons.get(i);
-				//if (butt.hash == 0) continue;
-				//Gdx.app.log(TAG, "draw item amount");
-				drawButtonAmount(butt3, batch, font);
-			}
-		batch.end();
 
 		batch.setColor(Color.WHITE);
 		batch.begin();
@@ -728,16 +712,61 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		batch.setShader(null);
 		batch.enableTextureBinding();
 		batch.begin();
-		if (!sides[3].isHidden())
+		rend.setColor(Color.DARK_GRAY);
+		rend.begin(ShapeType.Line);
+		if (!sides[3].isHidden()) {
+
 			for (int i = 0; i < inv.buttons.size; i++){
 				InventoryButton butt3 = inv.buttons.get(i);
 				//butt3.draw2(batch, 1f);
 				//if (butt.hash == 0) continue;
 				//Gdx.app.log(TAG, "draw item amount");
-				//drawButton(butt3, batch);
+				drawButton(butt3, batch, rend);
 			}
+		}
+		if (!sides[0].isHidden()) {
+
+			for (int i = 0; i < BELT_SLOTS; i++){
+				InventoryButton butt2 = belt.buttons[i];
+
+				//if (butt.hash == 0) continue;
+				drawButton(butt2, batch, rend);
+			}
+		}
+		drawButton(belt.buttons[belt.group.getCheckedIndex()], batch, rend, true);
+		rend.end();
 		batch.end();
-		
+		batch.begin();
+		if (!sides[0].isHidden()) {
+
+			for (int i = 0; i < BELT_SLOTS; i++){
+				InventoryButton butt2 = belt.buttons[i];
+
+				//if (butt.hash == 0) continue;
+				drawButtonAmount(butt2, batch, font);
+			}
+		}
+
+		if (!sides[3].isHidden()) {
+
+			for (int i = 0; i < inv.buttons.size; i++){
+				InventoryButton butt3 = inv.buttons.get(i);
+				//if (butt.hash == 0) continue;
+				//Gdx.app.log(TAG, "draw item amount");
+				drawButtonAmount(butt3, batch, font);
+			}
+		}
+		batch.end();
+		rend.begin(ShapeType.Line);
+		rend.setColor(Color.WHITE);
+		for (int i = 0; i < checkedQueue.size / 4; i++){
+			drawShape(rend, checkedQueue.get(i*4), checkedQueue.get(i*4+1), checkedQueue.get(i*4+2), checkedQueue.get(i*4+3));
+			//Gdx.app.log(TAG,  "checked"+checkedQueue.get(i*4));
+			//rend.setColor(Color.LIGHT_GRAY);
+		}
+
+		checkedQueue.clear();
+		rend.end();
 		if (showInv) return;
 		
 		/*rend.begin(ShapeType.Filled);
@@ -910,14 +939,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 			
 		}
 
-		rend.setColor(Color.WHITE);
-		for (int i = 0; i < checkedQueue.size / 4; i++){
-			drawShape(rend, checkedQueue.get(i*4), checkedQueue.get(i*4+1), checkedQueue.get(i*4+2), checkedQueue.get(i*4+3));
-			//Gdx.app.log(TAG,  "dr"+checkedQueue.get(i*4));
-			rend.setColor(Color.LIGHT_GRAY);
 
-		}
-		checkedQueue.clear();
 		
 		rend.end();
 		
@@ -925,35 +947,29 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	}
 	private Vector2 a = new Vector2(), b = new Vector2(), t = new Vector2(), c = new Vector2();
 
-	private void drawButton(InventoryButton butt, SpriteBatchN batch) {
+	private void drawButton(InventoryButton butt, SpriteBatchN batch, ShapeRenderer rend) {
+		drawButton(butt, batch, rend, false);
+	}
+	private void drawButton(InventoryButton butt, SpriteBatchN batch, ShapeRenderer rend, boolean forceSelected) {
 		ImageN im = (ImageN) butt.getImage();
 
-		float x = im.getX() +
-				butt.getX();
-		float y = im.getY() 
-				+ butt.getY();
-		Actor a = butt.getParent();
-		while (a != null){
-			x += a.getX();
-			y += a.getY();
-			a = a.getParent();
-		}
-		float w = //Main.prefs.inventory_button_width;
-		im.getWidth();
-		float h = //Main.prefs.inventory_button_height;
-		im.getHeight();
-		x -= w/2f;
-		y -= h/2f;
-		
+		a.set(0, 0);
+		b.set(butt.getWidth(), butt.getHeight());
+		butt.localToStageCoordinates(a);
+		butt.localToStageCoordinates(b);
+		float space = 2f;
+		a.add(space, space);
+		b.sub(space, space);
+		b.sub(a);
 		//y = Gdx.graphics.getHeight()-y;
-		
-		if (butt.isChecked()){
+		float x = a.x, y = a.y, w = b.x, h = b.y;
+		if (butt.isChecked() || forceSelected){
 			queueCheckedButtonDraw(x, y, w, h);
 		}
 		//else
-		//drawShape(rend, x, y, w, h);
+		drawShape(rend, x, y, w, h);
 
-		im.draw2(batch, 1f);
+		//im.draw2(batch, 1f);
 
 	}
 	
@@ -993,24 +1009,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 
 
 
-	private void drawButtonTop(InventoryButton butt, ShapeRenderer rend) {
-		Image im = butt.getImage();
 
-		float x = im.getX() + butt.getX();
-		float y = im.getY() + butt.getY();
-		float w = im.getWidth();
-		float h = im.getHeight();
-		x -= w/2f;
-		y += h/2f;
-		
-		y = Gdx.graphics.getHeight()-h;
-		
-		if (butt.isChecked()){
-			queueCheckedButtonDraw(x, y, w, h);
-		} else
-		drawShape(rend, x, y, w, h);
-		
-	}
 
 	private FloatArray checkedQueue = new FloatArray(true, 4);
 	private boolean drawArrow;

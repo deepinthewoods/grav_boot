@@ -17,9 +17,11 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Scaling;
 import com.niz.anim.Animations;
 import com.niz.component.Inventory;
+import com.niz.component.Light;
 import com.niz.item.Item;
 import com.niz.item.ItemDef;
 import com.niz.system.InventorySystem;
+import com.niz.system.SpriteAnimationSystem;
 
 
 public class InventoryButton extends Button{
@@ -135,12 +137,16 @@ public class InventoryButton extends Button{
 	}
 	static Vector2 v = new Vector2(), v2 = new Vector2();
 	public void draw2(SpriteBatchN batch, float alpha) {
+
 		v.set(0, 0);
 		v2.set(getWidth(), getHeight());
 		localToStageCoordinates(v);
 		localToStageCoordinates(v2);
+		float space = 3f;
+		v.add(space, space);
+		v2.sub(space, space);
 		v2.sub(v);
-		drawable.tint(Color.WHITE);
+		drawable.tint(SpriteAnimationSystem.LAYER_COLORS[Light.MAP_FRONT_LAYER]);
 		float ar = (float)drawable.getRegion().getRegionHeight() / (float)drawable.getRegion().getRegionWidth();
 		if (ar > 1f)
 			drawable.draw(batch, v.x, v.y, v2.x / ar, v2.y);
