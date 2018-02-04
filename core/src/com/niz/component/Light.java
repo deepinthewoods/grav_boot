@@ -8,8 +8,8 @@ import com.niz.Main;
 
 public class Light extends BinaryHeap.Node implements Component {
 	public static final int CHARACTER_SPRITES_LAYER_LEFT = 0, CHARACTER_SPRITES_LAYER_RIGHT = 1, MAP_BACK_LAYER = 2
-			, MAP_FRONT_LAYER = 3, MAP_LIT_LAYER = 4, MAP_FOREGROUND_LAYER = 5;
-	public static final int MAX_LAYERS = 6;
+			, MAP_FRONT_LAYER = 3, MAP_LIT_LAYER = 4, MAP_FOREGROUND_LAYER = 5, ITEM_LAYER = 6;
+	public static final int MAX_LAYERS = 7;
 
 	/**
 	 * 
@@ -44,11 +44,12 @@ public class Light extends BinaryHeap.Node implements Component {
 			, new Vector3(.14f, .3f, 5f)//map front
 			, new Vector3(.4f, 3f, 20f)//map lit
 			, new Vector3(.4f, 3f, 20f)//map fg
+			, new Vector3(.4f, 3f, 20f)//map fg
 			}
 	;
 
-	public float[] yOffset = {Main.PX*2, Main.PX*2, Main.PX*16, Main.PX*2, Main.PX*2, Main.PX*2};
+	public float[] yOffset = {Main.PX*2, Main.PX*2, Main.PX*16, Main.PX*2, Main.PX*2, Main.PX*2, Main.PX*20};
 
-	public float[] ambientIntensity = {.03f, .03f, .03f, .3f, .03f, .03f};
+	public float[] ambientIntensity = {.03f, .03f, .03f, .3f, .03f, .03f, 1f};
 
 }

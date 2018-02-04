@@ -4,7 +4,7 @@ precision mediump float;
 
 //fixed number of lights
 #define N_LIGHTS 4
-#define N_LAYERS 6
+#define N_LAYERS 7
 
 //attributes from vertex shader
 varying vec4 vColor;

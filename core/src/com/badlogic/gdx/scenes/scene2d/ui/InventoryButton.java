@@ -146,7 +146,7 @@ public class InventoryButton extends Button{
 		v.add(space, space);
 		v2.sub(space, space);
 		v2.sub(v);
-		drawable.tint(SpriteAnimationSystem.LAYER_COLORS[Light.MAP_FRONT_LAYER]);
+		drawable.tint(SpriteAnimationSystem.LAYER_COLORS[Light.ITEM_LAYER]);
 		float ar = (float)drawable.getRegion().getRegionHeight() / (float)drawable.getRegion().getRegionWidth();
 		if (ar > 1f)
 			drawable.draw(batch, v.x, v.y, v2.x / ar, v2.y);

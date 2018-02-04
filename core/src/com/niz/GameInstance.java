@@ -51,50 +51,7 @@ import com.niz.component.VectorInput;
 import com.niz.observer.Observer;
 import com.niz.observer.Subject;
 import com.niz.observer.Subject.Event;
-import com.niz.system.ActionSystem;
-import com.niz.system.AgentSystem;
-import com.niz.system.BitmaskedCollisionsSystem;
-import com.niz.system.BucketSystem;
-import com.niz.system.BufferEndSystem;
-import com.niz.system.BufferStartSystem;
-import com.niz.system.CameraSystem;
-import com.niz.system.DoorSystem;
-import com.niz.system.DragBlockSystem;
-import com.niz.system.DragControllerSystem;
-import com.niz.system.EntitySerializationSystem;
-import com.niz.system.InputSystem;
-import com.niz.system.InventorySystem;
-import com.niz.system.LightRenderSystem;
-import com.niz.system.LineBatchPostSystem;
-import com.niz.system.LineBatchSystem;
-import com.niz.system.LineMapCollisionSystem;
-import com.niz.system.MapCollisionSystem;
-import com.niz.system.MapRenderSystem;
-import com.niz.system.MapSystem;
-import com.niz.system.OnMapSystem;
-import com.niz.system.OverworldSystem;
-import com.niz.system.ParallaxBackgroundSystem;
-import com.niz.system.PathfindingSystem;
-import com.niz.system.PathfindingUpdateSystem;
-import com.niz.system.Physics2dSystem;
-import com.niz.system.PickUpCollisionsSystem;
-import com.niz.system.PlaceAtStartSystem;
-import com.niz.system.PlayerInputSystem;
-import com.niz.system.PlayerSystem;
-import com.niz.system.ProgressBarSystem;
-import com.niz.system.RaceSystem;
-import com.niz.system.RandomMapUpdateSystem;
-import com.niz.system.RoomCatalogSystem;
-import com.niz.system.RoomSystem;
-import com.niz.system.SelectedPlayerSystem;
-import com.niz.system.ShaderSystem;
-import com.niz.system.ShapeRenderingSystem;
-import com.niz.system.SpeedLimitSystem;
-import com.niz.system.SpriteAnimationSystem;
-import com.niz.system.SpriteAnimationUpdateSystem;
-import com.niz.system.WeaponSensorSystem;
-import com.niz.system.WorkerSystem;
-import com.niz.system.ZoomSystem;
+import com.niz.system.*;
 import com.niz.ui.edgeUI.CharacterScreen;
 import com.niz.ui.edgeUI.InventoryScreen;
 import com.niz.ui.edgeUI.MainMenu;
@@ -318,6 +275,7 @@ public class GameInstance implements Screen, Observer {
 					engine.addSystem(new DragControllerSystem());
 					engine.addSystem(new SelectedPlayerSystem(factory));
 					engine.addSystem(new PlaceAtStartSystem());
+					engine.addSystem(new SpawnSystem());
 
 					engine.addSystem(new OnMapSystem(atlas));
 					engine.addSystem(new MapCollisionSystem());
@@ -346,7 +304,7 @@ public class GameInstance implements Screen, Observer {
 					break;case 12:
 					engine.addSystem(new PreRenderSystem());
 					engine.addSystem(new CameraSystem(gameCamera));
-					//engine.addSystem(new ParallaxBackgroundRenderNoBufferSystem());
+					engine.addSystem(new ParallaxBackgroundRenderNoBufferSystem());
 
 					engine.addSystem(new BufferStartSystem());
 					break;case 13:
@@ -358,7 +316,7 @@ public class GameInstance implements Screen, Observer {
 					break;case 15:
 					shapeR = new ShapeRenderer();			
 					engine.addSystem(new ShapeRenderingSystem());
-					//engine.addSystem(new ParallaxBackgroundSystem());
+					engine.addSystem(new ParallaxBackgroundSystem());
 					break;case 16:
 					engine.addSystem(new MapRenderSystem(gameCamera, mapRenderCam ,  mapBatch, atlas, mapDiffuseTex, mapNormalTex));
 
@@ -462,7 +420,7 @@ public class GameInstance implements Screen, Observer {
 					
 				}
 				float progressDelta = (float)progress / (float)total;
-				Gdx.app.log(TAG,  "creating engine " + progressDelta);
+				//Gdx.app.log(TAG,  "creating engine " + progressDelta);
 				progressSys.setProgressBar(progressBarIndex, progressDelta );
 
 			}

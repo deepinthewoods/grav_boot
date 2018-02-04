@@ -125,7 +125,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 					Body dBody = door.getComponent(Body.class);
 					pPos.pos.set(dPos.x + .5f, dPos.y +1);
 					
-					Gdx.app.log(TAG, "move player" + pPos.pos + dPos);
+					//Gdx.app.log(TAG, "move player" + pPos.pos + dPos);
 					super.clicked(event, x, y);
 				}
 			});
@@ -312,8 +312,9 @@ public class InventoryScreen extends EdgeUI implements Observer{
 
 			@Override
 			public void onNotify(Entity e, Event event, Object c) {
-				Gdx.app.log(TAG, "NOTIFY" + event);	
+				//Gdx.app.log(TAG, "NOTIFY" + event);
 				 if (event == Event.STOP_TOAST){
+				 	//Gdx.app.log(TAG, "stop toast");
 					toastOn = false;
 					toastTimer = 0;
 					for (int i = 0; i < toastLabels.size; i++){
@@ -542,7 +543,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		} else if (event == Event.INVENTORY_TOGGLE){
 			if (on){
 				
-				toastSubject.notify(e, Event.STOP_TOAST, c);
+				//toastSubject.notify(e, Event.STOP_TOAST, c);
 				BooleanInput b = (BooleanInput) c;
 				b.value ^= false;
 				if (settingsOn){

@@ -76,21 +76,21 @@ public class PlatformerFactory extends Factory {
 		for (int i = 0; i < charSelectInventories.length; i++){
 			Inventory inv = new Inventory();
 			charSelectInventories[i] = inv;
-			inv.addItem(16, 6);
+			//inv.addItem(16, 6);
 			
-			inv.addItem(Inventory.defs.get(14), 232);
-			inv.addItem(Inventory.defs.get(15), 232);
-			inv.addItem(Inventory.defs.get(16), 232);
-			inv.addItem(Inventory.defs.get(17), 23);
-			inv.addItem(Inventory.defs.get(18), 23);
-			inv.addItem(Inventory.defs.get(19), 23);
-			inv.addItem(Inventory.defs.get(20), 32);
-			inv.addItem(Inventory.defs.get(25), 23);
-			inv.addItem(Inventory.defs.get(22), 23);
+			//inv.addItem(Inventory.defs.get(14), 232);
+			//inv.addItem(Inventory.defs.get(15), 232);
+			//inv.addItem(Inventory.defs.get(16), 232);
+			//inv.addItem(Inventory.defs.get(17), 23);
+			//inv.addItem(Inventory.defs.get(18), 23);
+			//inv.addItem(Inventory.defs.get(19), 23);
+			//inv.addItem(Inventory.defs.get(20), 32);
+			inv.addItem(Inventory.defs.get(24), 23);
+			//inv.addItem(Inventory.defs.get(22), 23);
 			
 			inv.addItem(Inventory.defs.get(32), 100);
-			inv.addItem(Inventory.defs.get(33), 192);
-			inv.addItem(Inventory.defs.get(34), 197);
+			//inv.addItem(Inventory.defs.get(33), 192);
+			//inv.addItem(Inventory.defs.get(34), 197);
 		}
 		
 		//Inventory inv = charSelectInventories[0];

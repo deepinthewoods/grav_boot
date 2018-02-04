@@ -30,8 +30,13 @@ public class RoomEntry implements Poolable{
 			if (!exitsUsed[i])
 				return i;
 		}
-		// TODO Auto-generated method stub
 		return -1;
 	}
 
+	public void markAllExitsUsed() {
+		for (int i = 0; i < room.exit.size; i++){
+			exitsUsed[i] = true;
+
+		}
+	}
 }

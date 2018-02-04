@@ -79,27 +79,31 @@ public class RoomCatalogSystem extends EntitySystem {
 				for (FileHandle f : roomEF.list()){
 					if (f.isDirectory()){
 						for (FileHandle f2 : f.list()){
-							s += "rooms/"+ f2.name() + "/" + f.name();
+							s += "rooms\\"+ f2.name() + "\\" + f.name();
 							s += "\n";
 						}
 					}
-					s += "rooms/"+f.name();
+					s += "rooms\\"+f.name();
 					s += "\n";
 				}
 				FileHandle out = Gdx.files.internal("roomsList.txt");
 				FileHandle outA = Gdx.files.absolute(out.file().getAbsolutePath());
 				outA.writeString(s, false);
-				//Gdx.app.log(TAG, "list of rooms " + roomF.file().getAbsolutePath());
+				//Gdx.app.log(TAG, "write list of rooms " + roomF.file().getAbsolutePath());
 		}
 		
 		Json json = Data.json;
 		String fileList = Gdx.files.internal("roomslist.txt").readString();
 		String[] names = fileList.split("\n");
-		Gdx.app.log(TAG, "ttitititi " + fileList.length());
+		//Gdx.app.log(TAG, "ttitititi " + names.length);
 		for (String name : names){
 			FileHandle f = Gdx.files.internal(name);
-			if (!f.extension().equals("json")){
-				//Gdx.app.log(TAG, "skipping " + f.name());
+			if (!f.extension().contains("json")){
+				Gdx.app.log(TAG, "skipping " + f.name() + "  extension " + f.extension());
+				continue;
+			}
+			if (!f.exists()){
+				Gdx.app.log(TAG, "skipping  doesn't exist " + f);
 				continue;
 			}
 			Room r = json.fromJson(Room.class, f);

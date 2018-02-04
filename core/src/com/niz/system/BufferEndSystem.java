@@ -79,14 +79,15 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 		}
 		batch.setShader(null);
 		startBuffer.currentBuffer.end();
-		
+		Gdx.app.log(TAG , "zoomed " +zoom);
+
 		if (camSys.zoomedOut){
-			
+
 			batch.getProjectionMatrix().set(camSys.adjustedCamera.combined);
 			//Gdx.app.log(TAG, "draw" + camSys.camera.viewportWidth + "  ,  " + camSys.camera.viewportHeight);
 			//batch.getProjectionMatrix().scale(zoom,  zoom,  zoom);
-			
-			
+
+
 			startBuffer.currentBuffer.getColorBufferTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 			//batch.setShader(shader);
 			blankNormalTexture.bind(1);
@@ -97,9 +98,8 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 
             batch.begin();
 			lightSys.setUniforms(Light.MAP_FRONT_LAYER, shader, true);
-			
+
 			//Gdx.app.log(TAG, "" + camSys.camera.position);
-			
 			batch.draw(startBuffer.currentBuffer.getColorBufferTexture(), 0, 0, OverworldSystem.SCROLLING_MAP_WIDTH * Main.PPM, OverworldSystem.SCROLLING_MAP_HEIGHT * Main.PPM);
 			batch.end();
 			spriteSys.drawLowLOD();
@@ -110,7 +110,7 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 			h *= zoom;
 			batch.getProjectionMatrix().setToOrtho2D(max / 2 - w / 2, max/2+h/2, w,  -h	);
 			//batch.getProjectionMatrix().scale(zoom,  zoom,  zoom);
-			
+			//batch.getProjectionMatrix().scale(zoom, zoom, 1f);
 			
 			startBuffer.currentBuffer.getColorBufferTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 			batch.setShader(null);
@@ -120,10 +120,11 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 			float dh = h - Gdx.graphics.getHeight();
 			float xoff = -dw * .5f;
 			float yoff = -dh * .5f;
+			Gdx.app.log(TAG , "zoomed " +zoom);
 			xoff = 0f;
 			yoff = 0f;
 			//Gdx.app.log(TAG, "zoomedin w " + w + ", h " + h);
-			batch.draw(startBuffer.currentBuffer.getColorBufferTexture(), xoff,yoff, w/zoom, h*Main.ar/zoom);
+			batch.draw(startBuffer.currentBuffer.getColorBufferTexture(), xoff,yoff, w, h*Main.ar);
 			batch.end();
 		}
 		

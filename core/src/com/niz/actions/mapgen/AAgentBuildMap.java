@@ -14,14 +14,7 @@ import com.niz.Blocks;
 import com.niz.action.Action;
 import com.niz.action.ProgressAction;
 import com.niz.anim.Animations;
-import com.niz.component.Body;
-import com.niz.component.Door;
-import com.niz.component.LevelEntrance;
-import com.niz.component.Map;
-import com.niz.component.Position;
-import com.niz.component.RoomDefinition;
-import com.niz.component.SpriteIsMapTexture;
-import com.niz.component.SpriteStatic;
+import com.niz.component.*;
 import com.niz.room.BlockDistribution;
 import com.niz.room.BlockDistributionArray;
 import com.niz.room.Room;
@@ -43,7 +36,7 @@ public class AAgentBuildMap extends ProgressAction {
 	public int bit;
 	public final static int ITERATIONS = 64;
 	private static final String TAG = "build map action";
-	private static final int TOTAL_ROOMS_TARGET = 2;
+	private static final int TOTAL_ROOMS_TARGET = 20;
 	private static final int TOP_FREE_SPACE = 40;
 	private int teleportDiameter = 50;
 	private Array<RoomEntry> main = new Array<RoomEntry>(true, 16), branch = new Array<RoomEntry>(true, 16)
@@ -94,7 +87,7 @@ public class AAgentBuildMap extends ProgressAction {
 			break;
 		case 2://random walk
 			rooms = smallRooms;
-			boolean done = makeRooms(200, 2);
+			boolean done = makeRooms(200, 12);
 		
 			if (done){
 				progress++;
@@ -106,21 +99,23 @@ public class AAgentBuildMap extends ProgressAction {
 				//Gdx.app.log(TAG, "RETRY" + main.size + "  " + mainPathIndex + "  " + retries);
 				if (retries > 20) {
 					//Gdx.app.log(TAG, "cannot progress further, ending" + main.size);
-					if (base.size < TOTAL_ROOMS_TARGET){
+					if (base.size < TOTAL_ROOMS_TARGET){//teleporting
 						//Gdx.app.log(TAG, "JUMP " + base.size);
 						RoomEntry nextR = getNextAvailableRoom();
 						int ind = nextR.getNextUnusedExitIndex();
 						nextR.teleportOut[ind] = true;
 						retries = 0;
-					} else {
+					} else {//continuing, already long enough
 						progress = 5;
-						
+						base.peek().markAllExitsUsed();
 					}
 
 				}
 			}
-			if (base.size > TOTAL_ROOMS_TARGET)
+			if (base.size > TOTAL_ROOMS_TARGET) {
 				progress = 5;
+				base.peek().markAllExitsUsed();
+			}
 			break;
 		case 3://boss room, back to 2 if too small
 			//Gdx.app.log(TAG, "expand");
@@ -198,7 +193,7 @@ public class AAgentBuildMap extends ProgressAction {
 				for (int y = (int) overworld.getHeight((int) (x + map.offset.x) )+1; y < map.height; y++){
 					
 					map.setLocal(x, y, 0);
-					
+					map.setBGLocal(x, y, 0);
 				}
 			}
 			progress++;
@@ -376,7 +371,9 @@ public class AAgentBuildMap extends ProgressAction {
 				} else {
 					
 				}
-				
+				if (entry.getNextUnusedExitIndex() != -1){
+					Gdx.app.log(TAG, "unused exit" + entry.getNextUnusedExitIndex());
+				}
 				//write actual room blocks
 				for (int x = 0; x < entry.room.blocks[0].length; x++)
 					for (int y = 0; y < entry.room.blocks.length; y++){
@@ -407,10 +404,28 @@ public class AAgentBuildMap extends ProgressAction {
 						case LADDER:
 							blockID = 1024;
 							break;
+
 						}
-						
+
+
+
 						map.setLocal(x+entry.offset.x, y + entry.offset.y, blockID);
 						//map.setLocal(x+entry.offset.x, y + entry.offset.y, i);
+						for (BlockDistribution dd : srcDist.val){
+							switch (dd.value){
+								case SPAWN_SMALL:
+									makeSpawnMarker(x+entry.offset.x, y + entry.offset.y, MonsterSpawn.SMALL);
+									break;
+								case SPAWN_MEDIUM:
+									makeSpawnMarker(x+entry.offset.x, y + entry.offset.y, MonsterSpawn.MEDIUM);
+									break;
+								case SPAWN_MINOR_BOSS:
+									makeSpawnMarker(x+entry.offset.x, y + entry.offset.y, MonsterSpawn.MINOR_BOSS);
+									break;
+							}
+						}
+						//special blocks
+
 
 					}
 				map.setLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, 0);
@@ -421,6 +436,19 @@ public class AAgentBuildMap extends ProgressAction {
 			}
 		}
 	}
+
+	private void makeSpawnMarker(int x, int y, int type) {
+		Entity e = parent.engine.createEntity();
+		Position pos = parent.engine.createComponent(Position.class);
+		pos.pos.set(x + .5f, y);
+		e.add(pos);
+		MonsterSpawn spawn = parent.engine.createComponent(MonsterSpawn.class);
+		spawn.type = type;
+
+
+		parent.engine.addEntity(e);
+	}
+
 	private void makeDoor(RoomEntry entry, int exitIndex) {
 		int exDir = Room.getExitBitmask(entry.room, exitIndex);
 		int dx = 0, dy = 0;

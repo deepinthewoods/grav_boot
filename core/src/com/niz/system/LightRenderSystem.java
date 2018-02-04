@@ -24,7 +24,7 @@ import com.niz.observer.Subject.Event;
 
 public class LightRenderSystem extends RenderSystem implements Observer{
 	private static final int NUM_LIGHTS = 4;
-	public static final int N_LAYERS = 6;
+	public static final int N_LAYERS = 7;
 
 	public static final int BUFFER_SIZE = 512;
 
@@ -102,18 +102,13 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 				ZoomInput z = (ZoomInput) c;
 				zoom = z.zoom;
 				if (zoom < 1.01f) {
-					zoom = 1f;
+					//zoom = 1f;
 					return;
 				}
 				//zoom = (float) Math.sqrt(zoom);
-				zoom -= 1f;
-				//zoom *= .101125f;
-				zoom += 1f;
-				//zoom = 1f;
-				//zoom = 1f;
-				zoom += 1f/zoom;
-				zoom += 1f/zoom;
-				zoom /= 2f;
+
+
+
 				zoom = z.zoom;
 			}
 			

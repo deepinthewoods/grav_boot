@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.Array;
 import com.niz.room.BlockDistribution;
 
 public class BlockDistributionArray {
-	Array<BlockDistribution> val = new Array<BlockDistribution>();
+	public Array<BlockDistribution> val = new Array<BlockDistribution>();
 	public float getTotalWeight(){
 		float total = 0;
 		for (BlockDistribution d : val){
@@ -28,18 +28,22 @@ public class BlockDistributionArray {
 		float total = 0;
 		for (BlockDistribution d : val){
 			switch (d.value){
-			case ENTRANCE:
-			case EXIT:
-	
-				break;
-			case BLOCKA:
-			case BLOCKB:
-			case EMPTY:
-			case LADDER:
-				total += d.weight;
-				if (total >= targetWeight)
-					return d;
-				break;
+				case ENTRANCE:
+				case EXIT:
+				case SPAWN_SMALL:
+				case SPAWN_MEDIUM:
+				case SPAWN_MINOR_BOSS:
+					break;
+
+				default:
+				case BLOCKA:
+				case BLOCKB:
+				case EMPTY:
+				case LADDER:
+					total += d.weight;
+					if (total >= targetWeight)
+						return d;
+					break;
 			}
 		}
 		return val.get(val.size-1);

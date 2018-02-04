@@ -20,7 +20,7 @@ public class AStopRunning extends Action {
 		con.pressed[Input.WALK_LEFT] = false;
 		con.pressed[Input.WALK_RIGHT] = false;
 		con.pressed[Input.JUMP] = false;
-		Gdx.app.log("stop running", "" + runs);
+		//Gdx.app.log("stop running", "" + runs);
 		if (runs++ > 1) isFinished = true;
 	}
 

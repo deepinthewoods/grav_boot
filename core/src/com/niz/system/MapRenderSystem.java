@@ -118,6 +118,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 			public void onNotify(Entity e, Event event, Object c) {
 				ZoomInput z = (ZoomInput) c;
 				zoom = z.zoom;
+
 			}
 			
 		});;
@@ -194,15 +195,17 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		//if (true) return;
 		//if (zoom > 1f) return;
 		boolean skipDraw = false;//zoom > Main.PPM+.1f;//1.001f;
+		skipDraw = camSys.zoomedOut;
 		if (skipDraw){
-			hasRendered = false;
-			return;
+			//hasRendered = false;
+			//return;
 		} else{
 			//Gdx.app.log(TAG,  "draw");;
 			hasRendered = true;
 		}
+		camera.zoom = zoom;
 		float originalZoom = camera.zoom;
-		
+		camera.zoom = Math.min(camera.zoom, 22f);
 		camera.update();
 		int 	x0 = (int) camera.position.x
 				, x1 = x0
@@ -243,12 +246,12 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		renderCamera = camera;
 		ShaderProgram shader = this.shader;
 		if (camSys.zoomedOut){
-			renderCamera = zoomOutCamera;
-			shader = null;
+			//renderCamera = zoomOutCamera;
+			//shader = null;
 		} 
 		renderCamera.update();
 		batch.setProjectionMatrix(renderCamera.combined);
-		
+		//Gdx.app.log(TAG,  "zoom " + renderCamera.zoom);;
 		normalTexture.bind(1);
 		diffTexture.bind(0);
 		
@@ -292,9 +295,9 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 
 				map.cache.endDraw();
 			
-				if (skipDraw){
-					batch.end();
-				}
+				//if (skipDraw){
+					//batch.end();
+				//}
 				batch.setShader(null);
 				Texture t = indexBuffer.getColorBufferTexture();
 				batch.enableBlending();

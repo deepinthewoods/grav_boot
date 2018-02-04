@@ -25,7 +25,7 @@ import com.niz.observer.Subject.Event;
 
 public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 	public static float zoom = 1f, zoomOutThreshold = 16f;
-	public static float ZOOM_OUT_MAX = 4.5f;
+	public static float ZOOM_OUT_MAX;
 	public static final int PARALLAX_LAYERS = 6, PARALLAX_NEAR_LAYERS = 0;
 	public static final float[] LAYER_PARALLAX_FACTORS = new float[PARALLAX_LAYERS];
 	public static final float[] LAYER_PARALLAX_FACTORS_ZOOMED_IN = new float[PARALLAX_LAYERS];
@@ -124,9 +124,9 @@ public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 
 	@Override
 	public void update(float deltaTime) {
-		if (!cameraSystem.zoomedOut){
+		//if (!cameraSystem.zoomedOut){
 			draw();
-		}
+		//}
 		
 	}
 	
@@ -148,7 +148,7 @@ public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 			//buffer.currentBuffer.end();
 		}
 		float originalZoom = cameraSystem.camera.zoom;
-		if (originalZoom > 1){
+		if (true || originalZoom > 1){
 			cameraSystem.camera.zoom = 1f;
 			//Gdx.app.log(TAG,  "zoom bigger than 1");
 			//LAYER_PARALLAX_FACTORS[0] = 1f/zoom;
@@ -165,7 +165,7 @@ public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 			float alpha = zm - 1f;
 			alpha = alpha / (zoomOutThreshold-1f);
 			alpha = Math.min(1f, alpha);
-			alpha = Math.max(0f, alpha);
+			//alpha = Math.max(0f, alpha);
 			//Gdx.app.log(TAG, "alpha "+alpha + "  zoom"+zoom);
 			//((x) * (x) * (3 - 2 * (x)))
 			float alphas = alpha * alpha * (3-2*alpha);//smoothstep
@@ -317,7 +317,7 @@ public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 	public void drawFront(){
 		float originalZoom = cameraSystem.camera.zoom;
 		if (originalZoom > 1){
-			cameraSystem.camera.zoom = 1f;
+			//cameraSystem.camera.zoom = 1f;
 			
 			//LAYER_PARALLAX_FACTORS[0] = 1f/zoom;
 			

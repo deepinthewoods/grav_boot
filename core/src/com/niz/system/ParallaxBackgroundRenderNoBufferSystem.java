@@ -13,8 +13,8 @@ public void addedToEngine(Engine engine) {
 }
 @Override
 	public void update(float deltaTime) {
-		if (cameraSystem.zoomedOut){
+		/*if (cameraSystem.zoomedOut){
 			par.draw();
-		}
+		}*/
 	}
 }

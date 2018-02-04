@@ -87,7 +87,7 @@ public class APathfindingPreRun extends Action {
 		}
 		int typeIndex = index & AStar.TYPE_MASK;
 		int ind = index & AStar.INDEX_MASK;
-		Gdx.app.log(TAG, "FDJSKAJLSDFKLSJDFKLDFJSSDFJLDFSJKLSDFJsdfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaKL" + typeIndex + " " + ind);
+		//Gdx.app.log(TAG, "FDJSKAJLSDFKLSJDFKLDFJSSDFJLDFSJKLSDFJsdfaaaaaaaaaaaaaaaaaaaaaaaaaaaaaKL" + typeIndex + " " + ind);
 		if (typeIndex ==  APathfindingJumpAndHold.DELAYED_REVERSE_JUMP && ind == 0){
 			APathFindingDestroyMap dest = Pools.obtain(APathFindingDestroyMap.class);
 			addBeforeMe(dest);

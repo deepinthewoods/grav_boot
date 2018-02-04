@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.EngineNiz;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.gdx.Gdx;
 import com.niz.Main;
 import com.niz.ZoomInput;
 import com.niz.observer.Observer;
@@ -42,6 +43,7 @@ public class ZoomSystem extends EntitySystem implements Observer {
 
 		}
 		zoomAv /= avAmount;
+
 		//Gdx.app.log("zoom", ""+zoomAv + "  / " + ParallaxBackgroundSystem.ZOOM_OUT_MAX + "  ( " + zoom);
 		data.zoom = zoomAv;
 		zoomNotifier.notify(null, null, data);

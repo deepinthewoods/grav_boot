@@ -77,8 +77,8 @@ public class CameraSystem extends RenderSystem implements Observer {
 			public void onNotify(Entity e, Event event, Object c) {
 				ZoomInput z = (ZoomInput) c;
 				//zoom = Math.max(1,  z.zoom);
-				if (z.zoom < 1.01f){
-					zoom  = 1f;
+				if (z.zoom < 1f){
+					zoom  = z.zoom;//1f;
 					zoomedOut = false;
 				}
 				else{
@@ -137,8 +137,9 @@ public OrthographicCamera adjustedCamera;
 		//pos.set(playerPos);
 		if (zoomedOut){
 			//pos.set(OverworldSystem.SCROLLING_MAP_WIDTH / 2, OverworldSystem.SCROLLING_MAP_HEIGHT / 2);
-			//Gdx.app.log(TAG , "zoomed");
+			//
 		}
+		//Gdx.app.log(TAG , "zoomed " +zoom);
 		camera.position.set((int)(pos.x*Main.PPM), (int)(pos.y*Main.PPM), 0);//*/
 		camera.zoom = zoom;
 		camera.update();

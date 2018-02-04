@@ -119,7 +119,7 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 				}
 				
 			};
-			Gdx.app.log(TAG,  "new framebuffer");
+			//Gdx.app.log(TAG,  "new framebuffer");
 			Texture tex =  buffer.getColorBufferTexture();
 			tex.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 		}
