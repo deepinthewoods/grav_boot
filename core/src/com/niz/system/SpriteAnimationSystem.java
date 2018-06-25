@@ -271,7 +271,7 @@ public void update(float deltaTime) {
 	processSprites();
 
 	batch.end();
-	batch.disableTextureBinding();
+	//batch.disableTextureBinding();
 	batch.begin();
 	map.indexBuffer.getColorBufferTexture().bind(1);
 	//indexTexture.bind(1);
@@ -296,9 +296,9 @@ public void update(float deltaTime) {
 	Texture t = indexBuffer.getColorBufferTexture();
 	batch.enableBlending();
 	batch.getProjectionMatrix().setToOrtho2D(0,  0, t.getWidth(), t.getHeight());
-	batch.begin();
-	batch.draw(t, 0, 0);
-	batch.end();
+	//batch.begin();
+	//batch.draw(t, 0, 0);
+	//batch.end();
 
 }
 
@@ -432,7 +432,8 @@ public void processMap(){
 			spr.s.setPosition((int)(v3.x), (int)v3.y);
 			//Gdx.app.log(TAG, "draw "+v3.x+" , "+v3.y);
 			SpriteBatchN theBatch = spr.left?leftBatch:batch;
-			draw(spr.s, theBatch, spr.left, e, layer);
+
+			drawMap(spr.s, theBatch, spr.left, e, layer);
 			
 		}
 		
@@ -451,7 +452,7 @@ public void processMap(){
 			spr.s.setPosition((int)(v3.x), (int)v3.y);
 			//Gdx.app.log(TAG, "draw gib "+v3.x+" , "+v3.y + spr.left);
 			SpriteBatchN theBatch = spr.left?leftBatch:batch;
-			draw(spr.s, theBatch, spr.left, e, layer);
+			drawMap(spr.s, theBatch, spr.left, e, layer);
 			
 		}
 		
@@ -490,6 +491,14 @@ public void draw(Sprite s, SpriteBatchN theBatch, boolean left, Entity entity, i
 	s.setTexture(atlasTexture);
 	s.draw(theBatch);
 }
+
+public void drawMap(Sprite s, SpriteBatchN theBatch, boolean left, Entity entity, int layer) {
+		//Gdx.app.log(TAG, "layer " + layer);
+		s.setColor(LAYER_COLORS[layer]);
+		s.setColor(Color.WHITE);
+		s.setTexture(map.atlasTexture);
+		s.draw(theBatch);
+	}
 
 public void drawLowLOD(){
 	batch.setProjectionMatrix(camSys.adjustedCamera.combined);	
