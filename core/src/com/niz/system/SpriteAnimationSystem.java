@@ -477,7 +477,7 @@ public void processMap(){
 
 			spr.s.setPosition((int)(v3.x), (int)v3.y);
 			SpriteBatchN theBatch = spr.left?leftBatch:batch;
-			draw(spr.s, theBatch, spr.left, e, layer);
+			drawMap(spr.s, theBatch, spr.left, e, layer);
 			
 		}
 		

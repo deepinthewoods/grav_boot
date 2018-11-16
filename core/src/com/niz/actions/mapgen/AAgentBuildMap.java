@@ -31,12 +31,13 @@ public class AAgentBuildMap extends ProgressAction {
 
 	//public int seed;
 	int progress;
+
 	public Map map;
 	private OverworldSystem overworld;
 	public int bit;
 	public final static int ITERATIONS = 64;
 	private static final String TAG = "build map action";
-	private static final int TOTAL_ROOMS_TARGET = 20;
+	private static final int TOTAL_ROOMS_TARGET = 30;
 	private static final int TOP_FREE_SPACE = 40;
 	private int teleportDiameter = 50;
 	private Array<RoomEntry> main = new Array<RoomEntry>(true, 16), branch = new Array<RoomEntry>(true, 16)
@@ -55,7 +56,6 @@ public class AAgentBuildMap extends ProgressAction {
 
 		//float height = overworld.getHeight(x, z, 1f);
 		//for (int x = 0; x < map.width; x++)
-		
 		RoomEntry re;
 		switch (progress){
 		case 0:
@@ -85,10 +85,9 @@ public class AAgentBuildMap extends ProgressAction {
 			//writeToMap(re, 1024);
 			progress++;
 			break;
-		case 2://random walk
+		case 2://make small rooms
 			rooms = smallRooms;
-			boolean done = makeRooms(200, 12);
-		
+			done = makeRooms(50, 12);
 			if (done){
 				progress++;
 			}
@@ -112,10 +111,10 @@ public class AAgentBuildMap extends ProgressAction {
 
 				}
 			}
-			if (base.size > TOTAL_ROOMS_TARGET) {
+			/*if (base.size > TOTAL_ROOMS_TARGET) {
 				progress = 5;
 				base.peek().markAllExitsUsed();
-			}
+			}*/
 			break;
 		case 3://boss room, back to 2 if too small
 			//Gdx.app.log(TAG, "expand");
@@ -127,8 +126,7 @@ public class AAgentBuildMap extends ProgressAction {
 				progress = 0;
 				rooms = smallRooms;
 				int dist = getDistance(main, DistanceType.TOTAL_AREA);
-				boolean greater = false
-						;
+				boolean greater = false;
 				pathDistance [mainPathIndex] = dist;
 				//mainPathIndex++;
 				if (mainPathDone){
@@ -140,7 +138,7 @@ public class AAgentBuildMap extends ProgressAction {
 					int shortestIndex = 0;
 					int shortestDistance = pathDistance[0];
 					for (int i = 1; i < pathDistance.length; i++){
-						if (pathDistance[i] > shortestDistance == greater){
+						if (pathDistance[i] > shortestDistance ){
 							shortestIndex = i;
 							shortestDistance = pathDistance[i];
 						}
@@ -150,14 +148,12 @@ public class AAgentBuildMap extends ProgressAction {
 					mainPathDone = true;
 					//retries = 0;
 					//Gdx.app.log(TAG, "MAIN PATH FOUND" + mainPathIndex);
-					
 				}
-				//progress++;											
+				//progress++;
 			} else{
 				//Gdx.app.log(TAG, "RETRY BIGROOM" + main.size);
 				progress = 0;
 				skipResetSeed = true;
-				
 			}
 			//progress++;
 			break;
@@ -170,7 +166,6 @@ public class AAgentBuildMap extends ProgressAction {
 			progress = 0;
 			mainPathIndex = 0;
 			sidePathIndex++;
-			rooms = smallRooms;
 			retries = 0;
 			break;
 		
@@ -198,7 +193,7 @@ public class AAgentBuildMap extends ProgressAction {
 			}
 			progress++;
 			break;
-		case 6:
+		case 6://done
 			isFinished = true;
 			PooledEntity en = parent.engine.createEntity();
 			Position ePos = parent.engine.createComponent(Position.class);
@@ -233,9 +228,9 @@ public class AAgentBuildMap extends ProgressAction {
 	private void writeToMap(Array<RoomEntry> list, int i) {
 		writeToMap(list, i, false);
 	}
-	private void writeToMap(Array<RoomEntry> list, int i, boolean passages) {
+	private void writeToMap(Array<RoomEntry> list, int i, boolean finalPass) {
 		for (RoomEntry r : list){
-			writeToMap(r, i, passages);
+			writeToMap(r, i, finalPass);
 		}
 	}
 	private int getDistance(Array<RoomEntry> main, DistanceType distanceType) {
@@ -271,7 +266,9 @@ public class AAgentBuildMap extends ProgressAction {
 			
 			Room room = rooms.get(ind);
 			RoomEntry re = Pools.obtain(RoomEntry.class);
-			RoomEntry pre = main.peek();
+			RoomEntry pre = null;
+			pre = main.peek();
+
 			if (room == null) throw new GdxRuntimeException("hklfsd");
 			if (pre == null) throw new GdxRuntimeException("hklfsd" + main.size);
 			int exitIndex = pre.getNextUnusedExitIndex();
@@ -322,6 +319,9 @@ public class AAgentBuildMap extends ProgressAction {
 		}
 		return done;
 	}
+
+
+
 	private boolean mapIsClear(int ax, int ay, int w, int h) {
 		//Gdx.app.log(TAG, "clear " + w + " " + h + "  x " + ax + " , " + ay);
 		//if (ax < 1 || ay < 1 || ax + w >= map.width-1 || ay + h >= map.height-1) return false;
@@ -470,6 +470,7 @@ public class AAgentBuildMap extends ProgressAction {
 			Position pos = parent.engine.createComponent(Position.class);
 			pos.pos.set(entry.offset.x + exit.x + dx + .5f, entry.offset.y + exit.y + dy+1);
 			e.add(pos);
+			Gdx.app.log(TAG, "door " + pos);
 			SpriteStatic sprite = parent.engine.createComponent(SpriteStatic.class);
 			sprite.s = Animations.doors[0];
 			e.add(sprite);
@@ -490,6 +491,7 @@ public class AAgentBuildMap extends ProgressAction {
 			exit = entry.next[exitIndex].room.exit.get(exitIndex);
 			pos.pos.set(entry.next[exitIndex].offset.x + dx - .5f, entry.next[exitIndex].offset.y  + dy+1);
 			e.add(pos);
+			Gdx.app.log(TAG, "door " + pos);
 			SpriteStatic sprite = parent.engine.createComponent(SpriteStatic.class);
 			sprite.s = Animations.doors[1];
 			e.add(sprite);
