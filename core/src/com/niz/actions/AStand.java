@@ -47,7 +47,7 @@ public class AStand extends Action {
 		if (Gdx.input.isKeyJustPressed(Keys.G)){
 			AutoGib c = parent.engine.createComponent(AutoGib.class);
 			parent.e.add(c);
-			//Gdx.app.log(TAG, "jdsklkld");
+			Gdx.app.log(TAG, "jdsklkld");
 		}
 		
 		if (Gdx.input.isKeyJustPressed(Keys.H)){

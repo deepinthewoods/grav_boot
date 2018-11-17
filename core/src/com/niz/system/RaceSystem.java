@@ -529,7 +529,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		switch (race.physicsID){
 		case Race.PHYSICS_NOrMAL:
 			phys.limit.set(10,162, 17);
-			phys.gravity.set(0, -30);
+			phys.gravity.set(0, Physics.STANDARD_GRAVITY);
 			mov.jump_impulse = 17.2f;
 			mov.run_force = 25f;
 			mov.jump_y_force = .44f;

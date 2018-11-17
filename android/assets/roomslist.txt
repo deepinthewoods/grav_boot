@@ -1,6 +1,7 @@
 rooms\downcross.json
 rooms\downsame.json
 rooms\endroom.json
+rooms\room15x15med.json
 rooms\room15x3.json
 rooms\room15x6.json
 rooms\room5x5.json

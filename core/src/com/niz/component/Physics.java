@@ -8,7 +8,8 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 
 public class Physics implements Component, Poolable{
 	private static final String TAG = "physics c ";
-	//public Body body;
+    public static final float STANDARD_GRAVITY = -30;
+    //public Body body;
 	public Vector2 vel = new Vector2();
 	public Vector2 acc = new Vector2();
 	public Vector3 limit = new Vector3(10,10, 10);//z is down
@@ -22,6 +23,11 @@ public class Physics implements Component, Poolable{
 	public boolean left;
 	public boolean wasOnGround, wasOnGround2;
 	public float apexTime;
+
+	public Physics(){
+		super();
+		reset();
+	}
 	@Override
 	public void reset() {
 		//body = null;
@@ -32,7 +38,7 @@ public class Physics implements Component, Poolable{
 		onGround = false;
 		wasOnGround = false;
 		wasOnGround2 = false;
-		gravity.set(0, -30);
+		gravity.set(0, STANDARD_GRAVITY);
 	}
 
 	public void applyLinearImpulse(float x, float y) {

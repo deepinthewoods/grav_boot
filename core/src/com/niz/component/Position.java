@@ -12,6 +12,8 @@ public class Position implements Component, Poolable{
 	public void reset() {
 		
 	}
-	
+	public String toString(){
+		return pos.toString();
+	}
 
 }

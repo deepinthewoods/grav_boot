@@ -23,6 +23,8 @@ import com.niz.system.ProgressBarSystem;
 import com.niz.system.RoomCatalogSystem;
 
 public class AAgentBuildMap extends ProgressAction {
+	private long startTime;
+
 	public enum DistanceType {
 		START_TO_END_DIST
 		, TOTAL_AREA
@@ -37,7 +39,7 @@ public class AAgentBuildMap extends ProgressAction {
 	public int bit;
 	public final static int ITERATIONS = 64;
 	private static final String TAG = "build map action";
-	private static final int TOTAL_ROOMS_TARGET = 30;
+	private static final int TOTAL_ROOMS_TARGET = 50;
 	private static final int TOP_FREE_SPACE = 40;
 	private int teleportDiameter = 50;
 	private Array<RoomEntry> main = new Array<RoomEntry>(true, 16), branch = new Array<RoomEntry>(true, 16)
@@ -45,7 +47,7 @@ public class AAgentBuildMap extends ProgressAction {
 	private boolean expand = true, twoBlocksHigh = true;
 	private int seed;
 	private boolean skipResetSeed;
-	private int[] pathDistance = new int[8];
+	private int[] pathDistance = new int[18];
 	private boolean mainPathDone;
 	private int retries;
 	@Override
@@ -56,11 +58,11 @@ public class AAgentBuildMap extends ProgressAction {
 
 		//float height = overworld.getHeight(x, z, 1f);
 		//for (int x = 0; x < map.width; x++)
+
 		RoomEntry re;
 		switch (progress){
 		case 0:
 			retries++;
-			
 			for (int x = 0; x < map.width; x++)
 				for (int y = 0; y < map.height; y++)
 					map.setLocal(x, y, 0);
@@ -76,18 +78,14 @@ public class AAgentBuildMap extends ProgressAction {
 		case 1://first room
 			writeToMap(base, 1024);
 			main.clear();
-			
 			RoomEntry availRoom = getNextAvailableRoom();
 			if (availRoom == null) throw new GdxRuntimeException("ar null ");
 			main.add(availRoom );
-			
-			//main.add(re);
-			//writeToMap(re, 1024);
 			progress++;
 			break;
 		case 2://make small rooms
 			rooms = smallRooms;
-			done = makeRooms(50, 12);
+			boolean done = makeRooms(30, 10);
 			if (done){
 				progress++;
 			}
@@ -96,7 +94,7 @@ public class AAgentBuildMap extends ProgressAction {
 				progress = 0;
 				skipResetSeed = true;
 				//Gdx.app.log(TAG, "RETRY" + main.size + "  " + mainPathIndex + "  " + retries);
-				if (retries > 20) {
+				if (retries > 10) {
 					//Gdx.app.log(TAG, "cannot progress further, ending" + main.size);
 					if (base.size < TOTAL_ROOMS_TARGET){//teleporting
 						//Gdx.app.log(TAG, "JUMP " + base.size);
@@ -111,21 +109,24 @@ public class AAgentBuildMap extends ProgressAction {
 
 				}
 			}
-			/*if (base.size > TOTAL_ROOMS_TARGET) {
+			if (base.size > TOTAL_ROOMS_TARGET) {
 				progress = 5;
 				base.peek().markAllExitsUsed();
-			}*/
+			}
 			break;
-		case 3://boss room, back to 2 if too small
+		case 3://big room + distance heuristic
 			//Gdx.app.log(TAG, "expand");
 			rooms = bigRooms;
 			done = true;
-			done = makeRooms(100, 1);
+			done = makeRooms(30, 1);
+			if (!done){
+
+			}
 			if (done){
 				retries = 0;
 				progress = 0;
 				rooms = smallRooms;
-				int dist = getDistance(main, DistanceType.TOTAL_AREA);
+				int dist = getDistance(main, DistanceType.START_TO_END_DIST);
 				boolean greater = false;
 				pathDistance [mainPathIndex] = dist;
 				//mainPathIndex++;
@@ -146,8 +147,6 @@ public class AAgentBuildMap extends ProgressAction {
 					progress = 0;
 					mainPathIndex = shortestIndex;
 					mainPathDone = true;
-					//retries = 0;
-					//Gdx.app.log(TAG, "MAIN PATH FOUND" + mainPathIndex);
 				}
 				//progress++;
 			} else{
@@ -168,7 +167,6 @@ public class AAgentBuildMap extends ProgressAction {
 			sidePathIndex++;
 			retries = 0;
 			break;
-		
 		case 5://finalize
 			//Gdx.app.log(TAG, "DONEFIFFNIFNIFNFINIFNIFNFINFNIODODODODONDONDONEONDOEOnDONEDOenDONEOEDNEDONEDONENOD");
 			for (int x = 0; x < map.width; x++)
@@ -178,22 +176,18 @@ public class AAgentBuildMap extends ProgressAction {
 			writeToMap(base, 1024, true);
 			for (int x = 0; x < map.width; x++)
 				for (int y = 0; y < map.height; y++){
-					
 					map.setBGLocal(x, y, Blocks.STONE+r.nextInt(64));
-					
 				}
 			for (int x = 0; x < map.width; x++){
 				//Gdx.app.log(TAG, "DFJHSKAFJDSKLFJASDKFJDSDLSKJSFDLKJFDSKLJFSDDKLF " + (int) overworld.getHeight((int) (x + map.offset.x)));
-				
 				for (int y = (int) overworld.getHeight((int) (x + map.offset.x) )+1; y < map.height; y++){
-					
 					map.setLocal(x, y, 0);
 					map.setBGLocal(x, y, 0);
 				}
 			}
 			progress++;
 			break;
-		case 6://done
+		case 6:
 			isFinished = true;
 			PooledEntity en = parent.engine.createEntity();
 			Position ePos = parent.engine.createComponent(Position.class);
@@ -205,12 +199,8 @@ public class AAgentBuildMap extends ProgressAction {
 			break;
 		}
 		totalIterations++;
-		
 		float progressDelta = (float)base.size / (float)TOTAL_ROOMS_TARGET;
 		progressSys.setProgressBar(progressBarIndex, progressDelta);
-
-		//if (progress > map.width)
-		//isFinished = true;
 	}
 	private RoomEntry getNextAvailableRoom() {
 		for (RoomEntry r : base){
@@ -258,17 +248,15 @@ public class AAgentBuildMap extends ProgressAction {
 		return 0;
 	}
 	private boolean makeRooms(int tries, int maxRooms) {
-		int count = 0, roomCount = 0;
+		int count = 0, roomCount = 0, iterationsCount = 0;
 		boolean done = false;
-		while (!done && count < tries){
+		while (!done && count < tries && iterationsCount < 300){
 			int ind = r.nextInt(rooms.size);
 			//Gdx.app.log(TAG, "ind " + rooms.size);
-			
 			Room room = rooms.get(ind);
 			RoomEntry re = Pools.obtain(RoomEntry.class);
 			RoomEntry pre = null;
 			pre = main.peek();
-
 			if (room == null) throw new GdxRuntimeException("hklfsd");
 			if (pre == null) throw new GdxRuntimeException("hklfsd" + main.size);
 			int exitIndex = pre.getNextUnusedExitIndex();
@@ -277,6 +265,7 @@ public class AAgentBuildMap extends ProgressAction {
 				room = startRooms.get(r.nextInt(startRooms.size-1));
 			}
 			re.room = room;
+			//if (r.nextBoolean()) re.teleportOut[re.getNextUnusedExitIndex()] = true;
 			GridPoint2 exit = pre.room.exit.get(exitIndex);
 			int exDir = Room.getExitBitmask(pre.room, exitIndex);
 			//int entDir = Room.getEntranceBitmask(re.room, re.exitIndex);
@@ -290,6 +279,8 @@ public class AAgentBuildMap extends ProgressAction {
 				re.offset.x += r.nextInt(teleportDiameter) - teleportDiameter/2;
 				re.offset.y += r.nextInt(teleportDiameter) - teleportDiameter/2;
 				if (r.nextBoolean()) teleportDiameter = Math.min(OverworldSystem.SCROLLING_MAP_WIDTH,  teleportDiameter+1);
+			} else {
+				count++;
 			}
 			if ((exDir & Room.LEFT) != 0){
 				re.offset.x -= expand?2:1;
@@ -310,8 +301,8 @@ public class AAgentBuildMap extends ProgressAction {
 					main.peek().exitsUsed[exind] = true;
 				main.add(re);
 				pre.next[exitIndex] = re;
-			}								
-			count++;
+			}
+			iterationsCount++;
 			if (roomCount >= maxRooms){
 				done = true;
 			}
@@ -372,7 +363,7 @@ public class AAgentBuildMap extends ProgressAction {
 					
 				}
 				if (entry.getNextUnusedExitIndex() != -1){
-					Gdx.app.log(TAG, "unused exit" + entry.getNextUnusedExitIndex());
+					Gdx.app.log(TAG, "unused exit" + entry.getNextUnusedExitIndex() +"  " + + entry.room.blocks.length + "," + entry.room.blocks[0].length);
 				}
 				//write actual room blocks
 				for (int x = 0; x < entry.room.blocks[0].length; x++)
@@ -511,7 +502,7 @@ public class AAgentBuildMap extends ProgressAction {
 	}
 	public Action after;
 	public int z;
-	private Array<Room> rooms, bigRooms = new Array<Room>(), smallRooms = new Array<Room>(), startRooms = new Array<Room>();;
+	private Array<Room> rooms, bigRooms = new Array<Room>(), smallRooms = new Array<Room>(), startRooms = new Array<Room>(), endRooms = new Array<Room>();;
 	private Random r;
 	private int mainPathIndex;
 	private int sidePathIndex;
@@ -542,11 +533,14 @@ public class AAgentBuildMap extends ProgressAction {
 		progressSys.deregisterProgressBar(progressBarIndex);
 
 		map = null;
-		addAfterMe(after);	
+		addAfterMe(after);
+		Gdx.app.log(TAG, " time to gen = " + (System.currentTimeMillis() - startTime)/1000f);
 	}
+
 
 	@Override
 	public void onStart() {
+		startTime = System.currentTimeMillis();
 		//Gdx.app.log(TAG, "start"+map.offset + bit);
 		progress = 0;
 		sidePathIndex = 0;
@@ -554,7 +548,7 @@ public class AAgentBuildMap extends ProgressAction {
 		parent.engine.getSystem(RoomCatalogSystem.class).getRoomsForTags(smallRooms, "easy");
 		parent.engine.getSystem(RoomCatalogSystem.class).getRoomsForTags(bigRooms, "easybig");
 		parent.engine.getSystem(RoomCatalogSystem.class).getRoomsForTags(startRooms, "easystart");
-
+		parent.engine.getSystem(RoomCatalogSystem.class).getRoomsForTags(endRooms, "easyend");
 		r = Pools.obtain(Random.class);
 		r.setSeed(overworld.worldDef.seed);
 		seed = MathUtils.random(10000);
@@ -569,7 +563,7 @@ public class AAgentBuildMap extends ProgressAction {
 		totalIterations = 0;
 		re.offset.set(map.width/2, map.height/2);
 		base.add(re);
-//		re.teleportOut[0] = true;
+		re.teleportOut[0] = true;
 		progressSys = parent.engine.getSystem(ProgressBarSystem.class);
 		blockAid = 1024;
 		blockBid = 1024+64;

@@ -142,7 +142,7 @@ public void doDestroy(LayerGuide guide, Entity e, EngineNiz engine,
 		//Gdx.app.log(TAG, "destroy"+b);
 		Sprite s = SpriteCacheNiz.findSprite(b & Map.TILE_MASK);
 		AutoGibSystem gibSys = engine.getSystem(AutoGibSystem.class);
-		gibSys.makeGibs(s, true, tmpV.set(placeTarget.x, placeTarget.y).sub(.5f, .5f), true, AItemFall.class, b, (int) (e.getId() + engine.tick));
+		gibSys.makeGibs(s, false, tmpV.set(placeTarget.x, placeTarget.y).sub(.5f, .5f), true, AItemFall.class, b, (int) (e.getId() + engine.tick));
 	}
 }
 
