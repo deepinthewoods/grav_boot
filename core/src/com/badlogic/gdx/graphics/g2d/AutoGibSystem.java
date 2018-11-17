@@ -9,6 +9,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -19,12 +20,19 @@ import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.niz.BlockDefinition;
+import com.niz.Blocks;
+import com.niz.Data;
+import com.niz.Main;
 import com.niz.action.Action;
 import com.niz.action.ActionList;
+import com.niz.actions.AItemFall;
+import com.niz.anim.AnimationContainer;
+import com.niz.anim.AnimationLayer;
 import com.niz.component.AutoGib;
 import com.niz.component.Body;
 import com.niz.component.CollidesWithMap;
 import com.niz.component.Inventory;
+import com.niz.component.Light;
 import com.niz.component.OnMap;
 import com.niz.component.Physics;
 import com.niz.component.Position;
@@ -38,15 +46,19 @@ import com.niz.system.MapSystem;
 
 public class AutoGibSystem extends EntitySystem {
 	private static final String TAG = "Auto gib system";
-	private Pool<Sprite> spritePool;
+    private final SpriteBatchN batch;
+    private final SpriteBatchN leftBatch;
+    private Pool<Sprite> spritePool;
 	public ComponentMapper<Position> posM = ComponentMapper.getFor(Position.class);
 	public ComponentMapper<SpriteAnimation> spriteM = ComponentMapper.getFor(SpriteAnimation.class);
 	public ComponentMapper<SpriteStatic> spriteStaticM = ComponentMapper.getFor(SpriteStatic.class);
 	protected ComponentMapper<Body> bodyM = ComponentMapper.getFor(Body.class);
 	
 	public AutoGibSystem(OrthographicCamera gameCamera, SpriteBatchN batch, SpriteBatchN leftBatch, Texture diff, final Texture normal, LightRenderSystem lights, Texture mapDiff, Texture mapNormal) {
-		
+
 		makeTables();
+		this.batch = batch;
+		this.leftBatch = leftBatch;
 		
 		spritePool = new Pool<Sprite>(){
 
@@ -192,19 +204,68 @@ public class AutoGibSystem extends EntitySystem {
 
 	@Override
 	public void update(float deltaTime) {
-		//processSprites();
+		processSprites();
+        /*for (int i = 0; i < entities.size(); i++){
+            Entity e = entities.get(i);
+            SpriteAnimation spr = spriteM.get(e);
+
+        }*/
 	}
-	
-	public void draw(Sprite s, SpriteBatchN theBatch, boolean left, Entity entity) {
+    Vector2 v3 = new Vector2();
+    private void processSprites() {
+        int layerI = Light.CHARACTER_SPRITES_LAYER_RIGHT;
+
+        for (int i = 0; i < physicsEntities.size(); i++){
+            Entity e  = physicsEntities.get(i);
+            SpriteAnimation spr = spriteM.get(e);
+            if (!spr.hasStarted) continue;
+            Position pos = posM.get(e);
+            AnimationContainer parent =  spr.currentAnim;
+            //Gdx.app.log(TAG, "process phy "+e.getId());
+            //Gdx.app.log(TAG, "process phy "+pos.pos.y * Main.PPM);
+
+            for (int index = 0; index < parent.layers.size; index++)
+            {
+                AnimationContainer container = parent;
+                AnimationLayer layer;// = parent.layers[index];
+                if (spr.overriddenAnim.get(index)){
+                    container = spr.overriddenAnimationLayers[index];
+                    layer = container.layers.get(0);
+                }
+                else layer = parent.layers.get(index);
+                if (layer == null) {continue;}
+                AtlasSprite s;
+                int frame = spr.frameIndices[index];
+                boolean left = spr.adjustedLeft[index];
+                s = (AtlasSprite) layer.getKeyFrame(frame, left);
+                Vector2 p = layer.offsets[frame];
+
+                int guideLayer = spr.layerSources[index];
+                //guideLayer = 0;
+                Vector2 g = spr.guides.get(guideLayer);
+                v3.set(g.x, g.y);
+                v3.add(0+(left?p.x-s.getAtlasRegion().originalWidth/(float) Main.PPM:-p.x), -p.y).add(pos.pos);
+                v3.scl(16f);
+                s.setPosition((int)v3.x, (int)v3.y);
+                s.setColor(Data.colorFloats[spr.colors[index]]);
+                SpriteBatchN theBatch = left?leftBatch:batch;
+
+                draw(s, theBatch, left, e);//, layerI);
+            }
+        }
+    }
+
+    public void draw(Sprite s, SpriteBatchN theBatch, boolean left, Entity entity) {
 		Vector2 basePos = posM.get(entity).pos;
 		Body eBody = bodyM.get(entity);
-		makeGibs(s, left, basePos, false, null, 0, 0);
+		makeGibs(s, left, basePos, false, null, Blocks.STONE, 0);
 		entity.remove(AutoGib.class);
 	}
 	
 	public void makeGibs(Sprite s, boolean left, Vector2 basePos, boolean isMapTexture, Class<? extends Action> actionClass, int b, int seed){
 		//decompose here
-		//Gdx.app.log("agibsys", "sprite "+s.u + " , "+s.v);
+
+		Gdx.app.log("agibsys", "sprite "+s.u + " , "+s.v);
 		AtlasSprite as = (AtlasSprite) s;
 		BlockDefinition def = MapSystem.getDef(b);
 		
@@ -278,7 +339,7 @@ public class AutoGibSystem extends EntitySystem {
 			;
 			if (left){
 				//pos.pos.add(as.getAtlasRegion().packedWidth/16f - x/16f-w/16f, y/16f);
-				
+				Gdx.app.log(TAG, "LEFT");
 				spr.setFlip(true, false);
 				pos.pos.add(x/16f, y/16f);
 			} else {
@@ -296,6 +357,7 @@ public class AutoGibSystem extends EntitySystem {
 			e.add(body);
 			e.add(actionList);
 			physics.limit.set(10,10, 10);
+			//physics.gravity.set(0, -30);
 			SpriteStatic sprite = engine.createComponent(SpriteStatic.class);
 			sprite.s =  spr;
 			if (isMapTexture){
