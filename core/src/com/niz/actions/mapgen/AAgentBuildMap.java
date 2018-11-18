@@ -156,7 +156,6 @@ public class AAgentBuildMap extends ProgressAction {
 			//progress++;
 			break;
 
-
 		case 4://move current path to base
 			RoomEntry ex = baseStartRoom;
 			int exInd = ex.getNextUnusedUnFilteredExitIndex();
@@ -196,28 +195,16 @@ public class AAgentBuildMap extends ProgressAction {
 					if (baseStartRoom == null) throw new GdxRuntimeException("ar null ");
 					main.add(baseStartRoom);
 					main.peek().teleportOut[main.peek().getNextUnusedUnFilteredExitIndex()] = true;
-					//main.clear();
-					//progress = 0;
-					//skipResetSeed = true;
 					//Gdx.app.log(TAG, "RETRY" + main.size + "  " + mainPathIndex + "  " + retries);
 				}
 
 
 				break;
 		case 6://move current path to base
-			//ex = baseStartRoom;
-			//exInd = ex.getNextUnusedUnFilteredExitIndex();
-			//ex.exitsUsed[exInd] = true;
+
 			main.removeIndex(0);
 			base.addAll(main);
-			//progress = 0;
-			//mainPathIndex = 0;
-			//sidePathIndex++;
-			//retries = 0;
-			/*if (base.size > TOTAL_ROOMS_TARGET) {
-				progress = 5;
 
-			}*/
 			progress = 55;
 			break;
 		case 7://small secondary path rooms
