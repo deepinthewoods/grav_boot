@@ -1,6 +1,7 @@
 package com.niz.room;
 
 import java.util.Iterator;
+import java.util.Queue;
 
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.utils.Array;
@@ -14,6 +15,7 @@ public class Room {
 	public IntMap<BlockDistributionArray> distributions = new IntMap<BlockDistributionArray>();
 	public Array<String> tags = new Array<String>();
 	public transient Array<GridPoint2> entrance = new Array<GridPoint2>(), exit = new Array<GridPoint2>();
+	public transient Array<Array<Dist>> exitFilters = new Array(), entranceFilters = new Array();
 	public transient boolean flipped = false;
 	public Room(Room r) {//makes flipped one. just copies pointers since tags/distr doesn't change
 		super();
@@ -30,6 +32,7 @@ public class Room {
 	public Room(){
 		
 	}
+	Array<Dist> filtersTmp = new Array();
 	public boolean calculatePoints(){
 		while (entrance.size > 0)Pools.free(entrance.pop());
 		while (exit.size > 0)Pools.free(exit.pop());
@@ -37,16 +40,32 @@ public class Room {
 			for (int y = 0; y < blocks[0].length; y++){
 				int b = blocks[x][y];
 				Array<BlockDistribution> dista = distributions.get(b).val;
+				filtersTmp.clear();
+				boolean entranceAdded = false, exitAdded = false;
 				for (int i = 0; i < dista.size; i++){
 					BlockDistribution dist = dista.get(i);
 					if (dist.value == Dist.ENTRANCE){
 						entrance.add(Pools.obtain(GridPoint2.class).set(y, blocks.length-1-x));
+						entranceAdded = true;
 					} else if (dist.value == Dist.EXIT){
 						exit.add(Pools.obtain(GridPoint2.class).set(y, blocks.length-1-x));
+						exitAdded = true;
+					}else if (dist.value == Dist.FILTER_DOUBLEJUMP){
+
+						filtersTmp.add(dist.value);
 					}
-					
+				}
+				if (entranceAdded){
+					Array<Dist> f = new Array<Dist>();
+					f.addAll(filtersTmp);
+					entranceFilters.add(f);
+				} else if (exitAdded){
+					Array<Dist> f = new Array<Dist>();
+					f.addAll(filtersTmp);
+					exitFilters.add(f);
 				}
 			}
+
         return !(entrance.size == 0 || exit.size == 0);
     }
 	public int isCorner(){
