@@ -15,7 +15,7 @@ public class Room {
 	public IntMap<BlockDistributionArray> distributions = new IntMap<BlockDistributionArray>();
 	public Array<String> tags = new Array<String>();
 	public transient Array<GridPoint2> entrance = new Array<GridPoint2>(), exit = new Array<GridPoint2>();
-	public transient Array<Array<Dist>> exitFilters = new Array(), entranceFilters = new Array();
+	public transient Array<IntMap<Dist>> exitFilters = new Array(), entranceFilters = new Array();
 	public transient boolean flipped = false;
 	public Room(Room r) {//makes flipped one. just copies pointers since tags/distr doesn't change
 		super();
@@ -32,7 +32,7 @@ public class Room {
 	public Room(){
 		
 	}
-	Array<Dist> filtersTmp = new Array();
+    IntMap<Dist> filtersTmp = new IntMap();
 	public boolean calculatePoints(){
 		while (entrance.size > 0)Pools.free(entrance.pop());
 		while (exit.size > 0)Pools.free(exit.pop());
@@ -52,16 +52,18 @@ public class Room {
 						exitAdded = true;
 					}else if (dist.value == Dist.FILTER_DOUBLEJUMP){
 
-						filtersTmp.add(dist.value);
+						filtersTmp.put(dist.value.hashCode(), dist.value);
+
 					}
 				}
 				if (entranceAdded){
-					Array<Dist> f = new Array<Dist>();
-					f.addAll(filtersTmp);
+					IntMap<Dist> f = new IntMap<Dist>();
+					f.putAll(filtersTmp);
 					entranceFilters.add(f);
 				} else if (exitAdded){
-					Array<Dist> f = new Array<Dist>();
-					f.addAll(filtersTmp);
+
+                    IntMap<Dist> f = new IntMap<Dist>();
+					f.putAll(filtersTmp);
 					exitFilters.add(f);
 				}
 			}

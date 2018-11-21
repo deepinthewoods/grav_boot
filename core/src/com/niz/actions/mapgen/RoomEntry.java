@@ -2,6 +2,7 @@ package com.niz.actions.mapgen;
 
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.niz.room.Dist;
 import com.niz.room.Room;
@@ -13,10 +14,11 @@ public class RoomEntry implements Poolable{
 	public boolean[] exitsUsed = new boolean[4], teleportOut = new boolean[4];
 	public GridPoint2 offset = new GridPoint2();
 	public RoomEntry[] next = new RoomEntry[4];;
-	
+	public IntMap<Dist> filters = new IntMap<Dist>();
 	public int getBlock(int x, int y) {
 		return 0;
 	}
+	public int stepsFromMainPath = 0;
 	@Override
 	public void reset() {
 		for (int i = 0; i < exitsUsed.length; i++){
@@ -26,6 +28,8 @@ public class RoomEntry implements Poolable{
 		for (int i = 0; i < next.length; i++){
 			next[i] = null;
 		}
+		filters.clear();
+		stepsFromMainPath = 0;
 	}
 	public int getNextUnusedUnFilteredExitIndex() {
 		for (int i = 0; i < room.exit.size; i++){
@@ -44,17 +48,17 @@ public class RoomEntry implements Poolable{
 	/*
 		just returns any exit
 	 */
-	public int getNextUnusedFilteredExitIndex(Array<Dist> filters) {
+	public int getNextUnusedExitIndex() {
 		for (int i = 0; i < room.exit.size; i++){
 			if (!exitsUsed[i] ){
 
-				for (int f = 0; f < filters.size; f++){
 
-				}
 				return i;
 			}
 
 		}
 		return -1;
 	}
+
+
 }
