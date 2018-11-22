@@ -3,6 +3,7 @@ package com.niz.room;
 import java.util.Iterator;
 import java.util.Queue;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.utils.Pools;
 
 public class Room {
 	public static final int LEFT = 1, UP = 2, RIGHT = 4, DOWN = 8;
+	public static final String TAG = "Room";
 	public int[][] blocks;
 	public IntMap<BlockDistributionArray> distributions = new IntMap<BlockDistributionArray>();
 	public Array<String> tags = new Array<String>();
@@ -45,10 +47,12 @@ public class Room {
 				for (int i = 0; i < dista.size; i++){
 					BlockDistribution dist = dista.get(i);
 					if (dist.value == Dist.ENTRANCE){
-						entrance.add(Pools.obtain(GridPoint2.class).set(y, blocks.length-1-x));
+						entrance.add(Pools.obtain(GridPoint2.class).set(blocks[0].length-1-y, blocks.length-1-x));
+						Gdx.app.log(TAG, "entrance added " + entrance.peek());
 						entranceAdded = true;
 					} else if (dist.value == Dist.EXIT){
-						exit.add(Pools.obtain(GridPoint2.class).set(y, blocks.length-1-x));
+						exit.add(Pools.obtain(GridPoint2.class).set(blocks[0].length-1-y, blocks.length-1-x));
+
 						exitAdded = true;
 					}else if (dist.value == Dist.FILTER_DOUBLEJUMP){
 

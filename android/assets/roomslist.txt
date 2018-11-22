@@ -15,7 +15,6 @@ rooms\talldownsame.json
 rooms\tallupcross.json
 rooms\tallupcrossdouble.json.no
 rooms\tallupsame.json
-rooms\tallupsamefilterdoubel.json
 rooms\TESTTEST.TEST
 rooms\upcross.json.no
 rooms\upsame.json.no
