@@ -48,7 +48,7 @@ public class Room {
 					BlockDistribution dist = dista.get(i);
 					if (dist.value == Dist.ENTRANCE){
 						entrance.add(Pools.obtain(GridPoint2.class).set(blocks[0].length-1-y, blocks.length-1-x));
-						Gdx.app.log(TAG, "entrance added " + entrance.peek());
+						//Gdx.app.log(TAG, "entrance added " + entrance.peek());
 						entranceAdded = true;
 					} else if (dist.value == Dist.EXIT){
 						exit.add(Pools.obtain(GridPoint2.class).set(blocks[0].length-1-y, blocks.length-1-x));
