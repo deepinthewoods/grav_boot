@@ -18,7 +18,7 @@ public class APlayer extends Action {
 	@Override
 	public void updateRender(float dt) {
 		OnDoor door = onDoorM.get(parent.e);
-		if (door != null){
+		if (door != null && door.doors.size > 1){
 			subject.notify(parent.e, Event.ON_DOOR, door);
 		}
 	}

@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.IntMap.Entry;
 import com.badlogic.gdx.utils.Pools;
+import com.niz.actions.mapgen.RoomEntry;
 
 public class Room {
 	public static final int LEFT = 1, UP = 2, RIGHT = 4, DOWN = 8;
@@ -131,5 +132,19 @@ public class Room {
 			s += "\n";
 		}
 		return s;
+	}
+
+
+	public boolean isCompatibleWith(RoomEntry pre, int exitIndex) {
+
+		IntMap.Entries<Dist> iter = entranceFilters.get(0).entries();
+		boolean isCompatibile = true;
+		while (iter.hasNext()){
+			Entry<Dist> ent = iter.next();
+			if (!pre.filters.containsKey(ent.key) && !pre.room.exitFilters.get(exitIndex).containsKey(ent.key))
+				isCompatibile = false;
+
+		}
+		return isCompatibile;
 	}
 }

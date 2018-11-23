@@ -8,6 +8,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.LongArray;
@@ -41,8 +42,19 @@ public class DoorSystem extends EntitySystem {
 	public void update(float deltaTime) {
 		for (int i = 0; i < entities.size(); i++){
 			Entity e = entities.get(i);
+			OnDoor currentDoor = onDoorM.get(e);
+			if (currentDoor.doors.size > 1) continue;
+			long id = currentDoor.doors.get(0);
+			Entity door = engine.getEntity(id);
+			Entity player = e;
+			Position pPos = player.getComponent(Position.class);
+			Door doorC = door.getComponent(Door.class);
+			GridPoint2 dPos = doorC.endPoint;
+			Body body = player.getComponent(Body.class);
+			Body dBody = door.getComponent(Body.class);
+			pPos.pos.set(dPos.x + .5f, dPos.y +1);
 			e.remove(OnDoor.class);
-			
+
 		}
 		Body colBody;
 		Vector2 colPos;
@@ -61,8 +73,9 @@ public class DoorSystem extends EntitySystem {
 					ce = engine.getEntity(id);
 					colPos = posM.get(ce).pos;
 					colBody = bodyM.get(ce);
-					if (Math.abs(colPos.x - pos.x) < colBody.width + body.width 
-							&& Math.abs(colPos.y - pos.y) < colBody.height + body.height){
+					if (Math.abs(colPos.x - pos.x) < colBody.width //+ body.width
+							&& Math.abs(colPos.y - pos.y) < colBody.height + body.height
+					){
 						onDoor = onDoorM.get(ce);
 						if (onDoor == null){
 							onDoor = engine.createComponent(OnDoor.class);

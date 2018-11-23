@@ -1,5 +1,6 @@
 package com.niz.actions.mapgen;
 
+import java.util.Comparator;
 import java.util.Random;
 
 import com.badlogic.ashley.core.Entity;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Pools;
 import com.niz.Blocks;
 import com.niz.action.Action;
@@ -17,6 +19,7 @@ import com.niz.anim.Animations;
 import com.niz.component.*;
 import com.niz.room.BlockDistribution;
 import com.niz.room.BlockDistributionArray;
+import com.niz.room.Dist;
 import com.niz.room.Room;
 import com.niz.system.OverworldSystem;
 import com.niz.system.ProgressBarSystem;
@@ -31,6 +34,7 @@ public class AAgentBuildMap extends ProgressAction {
 	public static final int SECONDARY_ROOM_SEGMENT_SIZE = 4;
 	public static final int SECONDARY_ROOM_TRIES = 30;
 
+	private static final int NUMBER_OF_ROOMS_TO_COMPARE = 3;
 	private long startTime;
 	private RoomEntry baseStartRoom;
 	private int baseStartExitIndex;
@@ -442,18 +446,20 @@ public class AAgentBuildMap extends ProgressAction {
 		return 0;
 	}
 	GridPoint2 tmp = new GridPoint2(), endRoomPoint = new GridPoint2();
+	Array<Room> validRooms = new Array<Room>();
+	RoomComparator roomComparator = new RoomComparator();
 	private boolean makeRooms(int tries, int maxRooms, boolean finalPass, boolean filters) {
 		int count = 0, roomCount = 0, iterationsCount = 0;
 		boolean done = false;
 		int triesWithoutSuccess = 0;
 		while (!done && count < tries && iterationsCount < 500) {
-			int ind = r.nextInt(rooms.size);
-			Room room = rooms.get(ind);
+
+
 			RoomEntry re = Pools.obtain(RoomEntry.class);
 			RoomEntry pre = null;
 			pre = main.peek();
 			//pre = getNextAvailableRoomMain();
-			if (room == null) throw new GdxRuntimeException("hklfsd");
+			//if (room == null) throw new GdxRuntimeException("hklfsd");
 			if (pre == null) throw new GdxRuntimeException("hklfsd" + main.size);
 			int exitIndex = 0;
 			if (filters) {
@@ -461,9 +467,36 @@ public class AAgentBuildMap extends ProgressAction {
 			} else {
 				exitIndex = pre.getNextUnusedUnFilteredExitIndex();
 			}
+			if (exitIndex == -1) throw new GdxRuntimeException("no exits left");
+			roomComparator.setPre(pre, exitIndex);
+			validRooms.clear();
+			Room room = null;
+			if (filters){
+				int ind = 0;
+				Room rm = null;
+				for (int i = 0; i < NUMBER_OF_ROOMS_TO_COMPARE; i++){
+					ind = r.nextInt(rooms.size);
+					rm = rooms.get(ind);
+					while (rm.exit.size > 1 | !rm.isCompatibleWith(pre, exitIndex)) {
+						ind = r.nextInt(rooms.size);
+						rm = rooms.get(ind);
+					}
+					validRooms.add(rm);
+				}
+				validRooms.sort(roomComparator);
+				room = validRooms.peek();
+                //Gdx.app.log(TAG, "room filters " + pre.filters);
+			} else {
+				Room rm = null;
+				do {
+					int ind = r.nextInt(rooms.size);
+					rm = rooms.get(ind);
+				} while (!rm.isCompatibleWith(pre, exitIndex));
+				room = rm;
+			}
+
 			//Gdx.app.log(TAG, "ind " + rooms.size + "  " + room.flipped + "  " + pre.teleportOut[exitIndex]);
 
-			if (exitIndex == -1) throw new GdxRuntimeException("no exits left");
 			/*if (pre.teleportOut[exitIndex]){
 				room = startRooms.get(r.nextInt(startRooms.size-1));
 			}*/
@@ -588,55 +621,47 @@ public class AAgentBuildMap extends ProgressAction {
 					//map.setBGLocal(x+entry.offset.x, y + entry.offset.y, i);
 				}
 		}
-		for (int x = 0; x < entry.room.exit.size; x++){
-			if (expand){
-				int dx = 0, dy = 0;
-				int exitIndex = x;
-				//exitIndex = 0;
-				int exDir = Room.getExitBitmask(entry.room, exitIndex);
-				if ((exDir & Room.LEFT) != 0){
-					dx = -1;
-				} else if ((exDir & Room.RIGHT) != 0){
-					dx = 1;
-				}else
-				if ((exDir & Room.UP) != 0){
-					dy = 1;
-				} else if ((exDir & Room.DOWN) != 0){
-					dy = -1;
-				}
 
-				GridPoint2 exit = entry.room.exit.get(exitIndex);
-				if (finalPass){
+		if (finalPass){
+
+			for (int x = 0; x < entry.room.exit.size; x++){//exit doors
+				if (expand){
+					int dx = 0, dy = 0;
+					int exitIndex = x;
+					//exitIndex = 0;
+					int exDir = Room.getExitBitmask(entry.room, exitIndex);
+					if ((exDir & Room.LEFT) != 0){
+						dx = -1;
+					} else if ((exDir & Room.RIGHT) != 0){
+						dx = 1;
+					}else
+					if ((exDir & Room.UP) != 0){
+						dy = 1;
+					} else if ((exDir & Room.DOWN) != 0){
+						dy = -1;
+					}
+
+					GridPoint2 exit = entry.room.exit.get(exitIndex);
+
 					if (entry.teleportOut[exitIndex]){
 						makeDoor(entry, exitIndex);
 					} else {
-
 					}
 					if (entry.getNextUnusedUnFilteredExitIndex() != -1){
 						Gdx.app.log(TAG, "unused exit" + entry.getNextUnusedUnFilteredExitIndex() +"  " + + entry.room.blocks.length + "," + entry.room.blocks[0].length);
 					}
-
 					if (entry.teleportOut[exitIndex]){
 
 					} else {
 						map.setLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, 0);
 						map.setLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, 0);
-
 					}
-					//map.setBGLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, Blocks.STONE + 64);
-					//map.setBGLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, Blocks.STONE + 64);
-
-					//map.setBGLocal(entry.offset.x + entry.room.entrance.get(0).x, entry.offset.y + entry.room.entrance.get(0).y, Blocks.STONE + 128);
-					//map.setBGLocal(entry.offset.x + exit.x, entry.offset.y + exit.y, Blocks.STONE +64);
-
-					//map.setBGLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, 0);
-					//map.setBGLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, 0);
 
 				}
+
 			}
 
-		}
-		if (finalPass){
+
 			//write actual room blocks
 			for (int x = 0; x < entry.room.blocks[0].length; x++)
 				for (int y = 0; y < entry.room.blocks.length; y++){
@@ -691,7 +716,10 @@ public class AAgentBuildMap extends ProgressAction {
 
 
 				}
+
 		}
+
+
 	}
 
 	private void makeSpawnMarker(int x, int y, int type) {
@@ -839,6 +867,39 @@ public class AAgentBuildMap extends ProgressAction {
 		progressSys = parent.engine.getSystem(ProgressBarSystem.class);
 		blockAid = 1024;
 		blockBid = 1024+64;
+	}
+
+	private class RoomComparator implements Comparator<Room> {
+		private RoomEntry pre;
+		private int preExitIndex;
+
+		public void setPre(RoomEntry room, int exitIndex){
+			this.pre = room;
+			this.preExitIndex = exitIndex;
+		}
+		@Override
+		public int compare(Room r1, Room r2) {
+			int c1 = 0, c2 = 0;
+			IntMap<Dist> exitF = pre.room.exitFilters.get(preExitIndex);
+			IntMap.Entries<Dist> entries = exitF.entries();
+			while (entries.hasNext()){
+				IntMap.Entry<Dist> entry = entries.next();
+				if (r1.entranceFilters.get(0).containsKey(entry.key))
+					c1++;
+				if (r2.entranceFilters.get(0).containsKey(entry.key))
+					c2++;
+			}
+			entries = pre.filters.entries();
+			while (entries.hasNext()){
+				IntMap.Entry<Dist> entry = entries.next();
+				if (r1.entranceFilters.get(0).containsKey(entry.key))
+					c1++;
+				if (r2.entranceFilters.get(0).containsKey(entry.key))
+					c2++;
+			}
+
+			return c1 - c2;
+		}
 	}
 
 	/*private int generateBlock(int bx, int by) {
