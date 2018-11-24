@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.LongArray;
 import com.niz.component.Body;
 import com.niz.component.Door;
 import com.niz.component.OnDoor;
+import com.niz.component.Player;
 import com.niz.component.Position;
 
 public class DoorSystem extends EntitySystem {
@@ -28,6 +29,7 @@ public class DoorSystem extends EntitySystem {
 	static ComponentMapper<Position>posM = ComponentMapper.getFor(Position.class);
 	static ComponentMapper<Body>bodyM = ComponentMapper.getFor(Body.class);
 	static ComponentMapper<OnDoor>onDoorM = ComponentMapper.getFor(OnDoor.class);
+	private Family doorCollisionFamily;
 
 	@Override
 	public void addedToEngine(Engine engine) {
@@ -35,6 +37,7 @@ public class DoorSystem extends EntitySystem {
 		entities = engine.getEntitiesFor(family );
 		Family familyDoors = Family.all(Door.class, Position.class, Body.class).get();
 		doorEntities = engine.getEntitiesFor(familyDoors);
+		doorCollisionFamily = Family.all( Position.class, Body.class, Player.class).get();
 		buckets = engine.getSystem(BucketSystem.class);
 		this.engine = (EngineNiz) engine;
 	}
@@ -71,6 +74,7 @@ public class DoorSystem extends EntitySystem {
 				for (int j = 0; j < ar.size; j++){
 					id = ar.get(j);
 					ce = engine.getEntity(id);
+					if (!doorCollisionFamily.matches(ce)) return;
 					colPos = posM.get(ce).pos;
 					colBody = bodyM.get(ce);
 					if (Math.abs(colPos.x - pos.x) < colBody.width //+ body.width
