@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.Pools;
 import com.niz.Data;
 import com.niz.action.LimbAction;
 import com.niz.actions.ADestroyBackHand;
+import com.niz.actions.ADestroyFrontHand;
 import com.niz.actions.ADoNothing;
 import com.niz.actions.APlaceBackHand;
 import com.niz.actions.APlaceFrontHand;
@@ -570,7 +571,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 			{ADoNothing.class},
 			{ASlashBackHand.class},
 			{AThrustBackHand.class},
-			{ADestroyBackHand.class}
+			{ADestroyBackHand.class, ADestroyFrontHand.class}
 	};
 	@Override
 	public void entityRemoved(Entity entity) {
