@@ -8,13 +8,11 @@ rooms\room8x5.json
 rooms\room8x8defork.json.no
 rooms\room8x8fork.json
 rooms\startroom.json
-rooms\talldowncross.json
+rooms\talldown.json
 rooms\talldowncrossDJ.json
-rooms\talldownsame.json
-rooms\tallupcross.json
+rooms\tallup.json
 rooms\tallupcrossDJ.json
 rooms\tallupcrossdouble.json.no
-rooms\tallupsame.json
 rooms\TESTTEST.TEST
 rooms\upcross.json.no
 rooms\upsame.json.no

@@ -10,7 +10,6 @@ import com.niz.room.Room;
 public class RoomEntry implements Poolable{
 
 	public Room room;
-	public int entranceIndex;
 	public boolean[] exitsUsed = new boolean[4], teleportOut = new boolean[4];
 	public GridPoint2 offset = new GridPoint2();
 	public RoomEntry[] next = new RoomEntry[4];;

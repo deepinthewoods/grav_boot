@@ -127,7 +127,7 @@ public class AAgentBuildMap extends ProgressAction {
 					retries = 0;
 					progress = 0;
 					rooms = smallRooms;
-					int dist = getDistance(main, AAgentBuildMapRandomSeeded.DistanceType.TOTAL_AREA);
+					int dist = getDistance(main, AAgentBuildMap.DistanceType.TOTAL_AREA);
 					boolean greater = false;
 					pathDistance [mainPathIndex] = dist;
 					//mainPathIndex++;
@@ -415,14 +415,14 @@ public class AAgentBuildMap extends ProgressAction {
 			writeToMap(r, i, finalPass);
 		}
 	}
-	private int getDistance(Array<RoomEntry> main, AAgentBuildMapRandomSeeded.DistanceType distanceType) {
-		if (distanceType == AAgentBuildMapRandomSeeded.DistanceType.START_TO_END_DIST){
+	private int getDistance(Array<RoomEntry> main, AAgentBuildMap.DistanceType distanceType) {
+		if (distanceType == AAgentBuildMap.DistanceType.START_TO_END_DIST){
 			RoomEntry finalR = main.peek();
 			RoomEntry firstR = main.get(0);
 			int dx = Math.abs(finalR.offset.x - firstR.offset.x);
 			int dy = Math.abs(finalR.offset.y - firstR.offset.y);
 			return dx * dx + dy * dy;
-		} else if (distanceType == AAgentBuildMapRandomSeeded.DistanceType.TOTAL_AREA){
+		} else if (distanceType == AAgentBuildMap.DistanceType.TOTAL_AREA){
 			RoomEntry firstR = main.get(0);
 			int x0 = firstR.offset.x;
 			int x1 = firstR.offset.x + firstR.room.blocks[0].length;
@@ -436,7 +436,7 @@ public class AAgentBuildMap extends ProgressAction {
 				y1 = Math.max(y1, rm.offset.y + rm.room.blocks.length);
 			}
 			return (x1 - x0) * (y1 - y0);
-		} else if (distanceType == AAgentBuildMapRandomSeeded.DistanceType.CLOSEST_TO_END_ROOM){
+		} else if (distanceType == AAgentBuildMap.DistanceType.CLOSEST_TO_END_ROOM){
 			RoomEntry finalR = main.peek();
 			//tmp.set(finalR.offset).add(finalR.room.blocks.length * (finalR.room.flipped?-1:1), finalR.room.blocks[0].length);
 			//endRoomPoint.set(endRoom.offset).add(endRoom.room.blocks.length * (endRoom.room.flipped?-1:1), endRoom.room.blocks[0].length);
@@ -505,34 +505,41 @@ public class AAgentBuildMap extends ProgressAction {
 			GridPoint2 exit = pre.room.exit.get(exitIndex);
 			int exDir = Room.getExitBitmask(pre.room, exitIndex);
 			//int entDir = Room.getEntranceBitmask(re.room, re.exitIndex);
-			re.offset.set(pre.offset);
-			re.offset.x += exit.x;
-			re.offset.y += exit.y;
-			re.offset.x -= re.room.entrance.get(re.entranceIndex).x;
-			re.offset.y -= re.room.entrance.get(re.entranceIndex).y;
-			//Gdx.app.log(TAG, "entrance " + re.room.entrance.get(re.entranceIndex) + exit);
-			if (pre.teleportOut[exitIndex]) {
 
-			} else {
-			}
-			count++;
+
+			boolean found = false;
+			boolean teleported = false;
+
+
+			int entranceIndex = 0;
 			int w = re.room.blocks[0].length;
 			int h = re.room.blocks.length;
-			if ((exDir & Room.LEFT) != 0) {
-				re.offset.x -= expand ? 2 : 1;
-				//w++;
-			} else if ((exDir & Room.RIGHT) != 0) {
-				re.offset.x += expand ? 2 : 1;
-				//w--;
-			} else if ((exDir & Room.UP) != 0) {
-				re.offset.y += expand ? 2 : 1;
-				//h--;
-			} else if ((exDir & Room.DOWN) != 0) {
-				re.offset.y -= expand ? 2 : 1;
-				//h++;
+			while (!found && re.room.entrance.size > entranceIndex){
+
+				re.offset.set(pre.offset);
+				re.offset.x += exit.x;
+				re.offset.y += exit.y;
+				re.offset.x -= re.room.entrance.get(entranceIndex).x;
+				re.offset.y -= re.room.entrance.get(entranceIndex).y;
+				//Gdx.app.log(TAG, "entrance " + re.room.entrance.get(re.entranceIndex) + exit);
+				count++;
+				if ((exDir & Room.LEFT) != 0) {
+					re.offset.x -= expand ? 2 : 1;
+					//w++;
+				} else if ((exDir & Room.RIGHT) != 0) {
+					re.offset.x += expand ? 2 : 1;
+					//w--;
+				} else if ((exDir & Room.UP) != 0) {
+					re.offset.y += expand ? 2 : 1;
+					//h--;
+				} else if ((exDir & Room.DOWN) != 0) {
+					re.offset.y -= expand ? 2 : 1;
+					//h++;
+				}
+				found = mapIsClear(re.offset.x, re.offset.y, w, h);
+				entranceIndex++;
 			}
 
-			boolean found = mapIsClear(re.offset.x, re.offset.y, w, h), teleported = false;
 			if (!found && triesWithoutSuccess > tries / 2) {
 				re.offset.x += r.nextInt(teleportDiameter) - teleportDiameter / 2;
 				re.offset.y += r.nextInt(teleportDiameter) - teleportDiameter / 2;
@@ -859,7 +866,7 @@ public class AAgentBuildMap extends ProgressAction {
 		RoomEntry re = Pools.obtain(RoomEntry.class);
 		int index = r.nextInt(startRooms.size);
 		re.room = startRooms.get(index);
-		re.entranceIndex = 0;
+
 		totalIterations = 0;
 		re.offset.set(map.width/2, map.height/2);
 		base.add(re);
