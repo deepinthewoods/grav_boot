@@ -6,3 +6,4 @@ public enum Dist {
 	FILTER_DOUBLEJUMP
 
 }
+

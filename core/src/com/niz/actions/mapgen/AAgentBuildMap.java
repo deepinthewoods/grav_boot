@@ -506,10 +506,8 @@ public class AAgentBuildMap extends ProgressAction {
 			int exDir = Room.getExitBitmask(pre.room, exitIndex);
 			//int entDir = Room.getEntranceBitmask(re.room, re.exitIndex);
 
-
 			boolean found = false;
 			boolean teleported = false;
-
 
 			int entranceIndex = 0;
 			int w = re.room.blocks[0].length;

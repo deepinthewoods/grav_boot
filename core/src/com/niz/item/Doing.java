@@ -5,7 +5,7 @@ import com.niz.action.Action;
 /**
  * @author Niall Quinlan
  *
- * 
+ *
  */
 public class Doing {
 	public static final int ARROW_PLACE = 0, ARROW_THROW = 1;
@@ -15,7 +15,7 @@ public class Doing {
 				;
 		name = string;
 	}
-	
+
 	public Doing(String string, int limb, int doingType, int arrow) {
 		this(string, limb, doingType);
 		arrowType = arrow;
@@ -29,7 +29,7 @@ public class Doing {
 	public String name;
 	
 	//public Class<? extends Action> onTouchDown;
-	//TODO result for ai planning
+
 	public int limbIndex;
 	public int doingTypeIndex;
 
