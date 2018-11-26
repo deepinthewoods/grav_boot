@@ -5,6 +5,7 @@ precision mediump float;
 //fixed number of lights
 #define N_LIGHTS 4
 #define N_LAYERS 6
+#define N_LIGHTS_F 4.0
 
 //attributes from vertex shader
 varying vec4 vColor;
@@ -42,7 +43,7 @@ void main() {
 	//RGBA of our diffuse color
 	vec4 DiffuseColor = texture2D(u_texture, vTexCoord);
 
-	int index = int(mod(vTexCoord.x * 128.0 + (DiffuseColor.r * 0.0000000001), N_LIGHTS));
+	int index = int(mod(vTexCoord.x * 128.0 + (DiffuseColor.r * 0.0000000001), N_LIGHTS_F));
 
 	int layerIndex = int((vTexCoord.x * 128.0 ) / float(N_LIGHTS));
 

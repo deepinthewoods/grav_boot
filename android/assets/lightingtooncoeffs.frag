@@ -22,19 +22,18 @@ uniform vec3 LightPos[N_LIGHTS * N_LAYERS];     //light position, normalized
 uniform vec3 Falloff[N_LIGHTS * N_LAYERS];      //attenuation coefficients
 uniform vec4 LightColor[N_LIGHTS];   //light RGBA -- alpha is intensity
 uniform float Zoom;
-//Flat shading in four steps
-#define STEP_A 0.2
-#define STEP_B 0.55
-#define STEP_C 1.0
-#define STEP_D 1.4
 
 // uniform float Test[2];
+float modd();
+float modd(float x, float y){
+return (x - y*floor(x/y));
+}
 
 void main() {
 	//RGBA of our diffuse color
 	vec4 DiffuseColor = texture2D(u_texture, vTexCoord);
 
-	int index = int(mod(vTexCoord.x * 128.0 + (DiffuseColor.r * 0.0000000001), N_LIGHTS));
+	int index = int(modd(vTexCoord.x * 128.0 + (DiffuseColor.r * 0.0000000001), float(N_LIGHTS)));
 
 	int layerIndex = int((vTexCoord.x * 128.0 + DiffuseColor.r * 0.0000000001) / float(N_LIGHTS));
 
