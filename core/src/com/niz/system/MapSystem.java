@@ -9,7 +9,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.niz.BlockDefinition;
-import com.niz.WorldDefinition;
 import com.niz.blocks.LavaBlockDef;
 import com.niz.blocks.LiquidSlopeBlockDef;
 import com.niz.blocks.SlopeBlockDefinition;

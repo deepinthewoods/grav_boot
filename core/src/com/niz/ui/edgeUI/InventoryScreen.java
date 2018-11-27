@@ -295,7 +295,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		toastTitleLabel.setX(0);
 		toastTitleLabel.setY(Gdx.graphics.getHeight());
 		toastTitleLabel.setTouchable(Touchable.disabled);
-		//stage.addActor(toastTitleLabel);
+		stage.addActor(toastTitleLabel);
 		
 		for (int i = 0; i < TOTAL_TOAST_LABELS; i++){
 			//Label lab = new Label("--"+i, skin, "iteminfo");
@@ -1116,7 +1116,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	public void addTo(Stage stage) {
 		
 		super.addTo(stage);
-		//stage.addActor(toastTitleLabel);
+		stage.addActor(toastTitleLabel);
 		for (int i = 0; i < toastLabels.size; i++){
 			DoingLabel t = toastLabels.get(i);
 			stage.addActor(t);

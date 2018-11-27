@@ -248,6 +248,7 @@ public class AutoGibSystem extends EntitySystem {
                 v3.scl(16f);
                 s.setPosition((int)v3.x, (int)v3.y);
                 s.setColor(Data.colorFloats[spr.colors[index]]);
+
                 SpriteBatchN theBatch = left?leftBatch:batch;
 
                 draw(s, theBatch, left, e);//, layerI);

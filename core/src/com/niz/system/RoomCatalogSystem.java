@@ -93,7 +93,7 @@ public class RoomCatalogSystem extends EntitySystem {
 		}
 		
 		Json json = Data.json;
-		String fileList = Gdx.files.internal("roomslist.txt").readString();
+		String fileList = Gdx.files.internal("roomsList.txt").readString();
 		String[] names = fileList.split("\n");
 		//Gdx.app.log(TAG, "ttitititi " + names.length);
 		for (String name : names){

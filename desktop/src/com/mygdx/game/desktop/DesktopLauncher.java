@@ -16,6 +16,8 @@ public class DesktopLauncher {
 		config.width = 640;
 		config.height = 480;
 		config.vSyncEnabled = false;
+		config.useGL30 = true;
+
 		new LwjglApplication(new Main(){
 
 			@Override

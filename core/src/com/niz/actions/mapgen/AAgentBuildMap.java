@@ -27,12 +27,12 @@ import com.niz.system.RoomCatalogSystem;
 
 public class AAgentBuildMap extends ProgressAction {
 
-	private static final int TOTAL_ROOMS_TARGET = 25;
-	private static final int MAIN_PATH_COMPARES = 8;
+	private static final int TOTAL_ROOMS_TARGET = 15;
+	private static final int MAIN_PATH_COMPARES = 2;
 
 
 	public static final int SECONDARY_ROOM_SEGMENT_SIZE = 4;
-	public static final int SECONDARY_ROOM_TRIES = 30;
+	public static final int SECONDARY_ROOM_TRIES = 10;
 
 	private static final int NUMBER_OF_ROOMS_TO_COMPARE = 3;
 	private long startTime;
