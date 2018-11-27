@@ -1,7 +1,6 @@
 package com.niz.blocks;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.MathUtils;
 import com.niz.BlockDefinition;
 import com.niz.Blocks;
 import com.niz.component.Map;
@@ -17,7 +16,7 @@ public class LavaBlockDef extends BlockDefinition {
 	public static int LEFT_MASK = 1 << Map.DATA_BITS, LEFT_BITS = Map.DATA_BITS;
 	static final int[] dxa = {-1, 1, 0, 0}, dya = {0, 0, -1, 1};
 	private static final String TAG = "Lava block def";
-	private static final int HALF_BLOCK = Blocks.WATER , FULL_BLOCK = Blocks.WATER + 32;
+	private static final int HALF_BLOCK = Blocks.LAVA , FULL_BLOCK = Blocks.LAVA + 32;
     private static final boolean CLUMPS = false;
 	private static final int LIQUID_INDEX = 1;
 	int bottom;
