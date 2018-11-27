@@ -17,6 +17,7 @@ public class LineBatchPostSystem extends RenderSystem {
 	@Override
 	public void update(float deltaTime) {
 		lineSys.drawLast(deltaTime);
+
 	}
 
 	

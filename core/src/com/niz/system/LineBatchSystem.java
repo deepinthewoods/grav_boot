@@ -153,18 +153,18 @@ public LineBatchSystem(TextureAtlas playerAtlas, Texture playerDiffuseTex, Textu
 
 @Override
 public void addedToEngine(Engine engine) {
-	batch = new LineBatchNiz(10);
+	ShaderSystem shaderSys = engine.getSystem(ShaderSystem.class);
+	shader = shaderSys.shader;
+	batch = new LineBatchNiz(1000, null);
 	batch.setColor(Color.GREEN);
 	super.addedToEngine(engine);
 	camSys = engine.getSystem(CameraSystem.class);
 	family = Family.all(Body.class, Position.class, PickUp.class).get();
 	pickUpEntities = engine.getEntitiesFor(family);
-	ShaderSystem shaderSys = engine.getSystem(ShaderSystem.class);
 	blockOutlineEntities = engine.getEntitiesFor(Family.all(Position.class, BlockOutline.class).get());
 	//spriteShader = shaderSys.spriteShader;
 	//backShader = shaderSys.backShader;
-	shader = shaderSys.shader;
-	
+
 	lineBodyEntities = engine.getEntitiesFor(Family.all(LineBody.class, Position.class).get());
 	
 	blockLineEntities = engine.getEntitiesFor(Family.all(BlockLine.class, Position.class).get());
@@ -192,7 +192,8 @@ public void drawLast(float deltaTime) {
 	//if (true) return;
 	batch.setColor(Color.WHITE);
 	batch.setProjectionMatrix(camSys.camera.combined);
-	batch.clearCache();
+	//batch.clearCache();
+	//batch.setShader(null);
 	batch.begin();
 	phase += deltaTime;
 	normal.bind(1);
@@ -250,7 +251,7 @@ public void drawLast(float deltaTime) {
 		//x-w, y-h+s, x-w, y-h bl
 		batch.drawLine(region, (int)x- w +Main.PX/2f, (int)y- h +Main.PX/2f+s, (int)x- w +Main.PX/2f, (int)y- h +Main.PX/2f);
 
-		if (batch.isFull()){
+		/*if (batch.isFull()){
 			batch.end();
 			batch.beginDraw();
 			lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_LEFT, shader);
@@ -258,7 +259,7 @@ public void drawLast(float deltaTime) {
 			batch.end();
 			batch.clearCache();
 			batch.begin();
-		}
+		}*/
 		
 	}
 	
@@ -281,21 +282,21 @@ public void drawLast(float deltaTime) {
 		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 		batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 		
-		check(lights);
+		//check(lights);
 		x += drag.spacing * Main.PPM;
 		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
 		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 		batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 		
-		check(lights);
+		//check(lights);
 		x += -drag.spacing * 2 * Main.PPM;
 		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
 		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 		batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 
-		check(lights);
+		//check(lights);
 		
 	}
 	
@@ -319,12 +320,12 @@ public void drawLast(float deltaTime) {
 			batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 			batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 			//Gdx.app.log(TAG,  "render block outline "+x);
-			if (batch.isFull()){
+			/*if (batch.isFull()){
 				batch.end();
 				batch.beginDraw();
 				lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_LEFT, shader);
 				batch.render();
-		}
+			}*/
 		
 //		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 //		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
@@ -332,9 +333,9 @@ public void drawLast(float deltaTime) {
 //		batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 //		
 
-			batch.end();
+			/*batch.end();
 			batch.clearCache();
-			batch.begin();
+			batch.begin();*/
 		}
 		
 	}
@@ -345,7 +346,7 @@ public void drawLast(float deltaTime) {
 }
 
 
-private void check(LightRenderSystem lights2) {
+/*private void check(LightRenderSystem lights2) {
 	if (batch.isFull()){
 		batch.end();
 		batch.beginDraw();
@@ -355,13 +356,13 @@ private void check(LightRenderSystem lights2) {
 		batch.clearCache();
 		batch.begin();
 	}
-}
+}*/
 
 @Override
 public void update(float deltaTime) {
 	//if (true) return;
 	batch.setProjectionMatrix(camSys.camera.combined);
-	batch.clearCache();
+	//batch.clearCache();
 	batch.begin();
 	phase += deltaTime;
 	normal.bind(1);
@@ -407,7 +408,7 @@ public void update(float deltaTime) {
 		//x-w, y-h+s, x-w, y-h bl
 		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f+s, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 
-		if (batch.isFull()){
+		/*if (batch.isFull()){
 			batch.end();
 			batch.beginDraw();
 			lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_LEFT, shader);
@@ -415,7 +416,7 @@ public void update(float deltaTime) {
 			batch.end();
 			batch.clearCache();
 			batch.begin();
-		}
+		}*/
 		
 	}
 	
@@ -428,7 +429,7 @@ public void update(float deltaTime) {
 	
 	//batch.drawLine(region, 0, 0, 1000, 1000);
 
-	if (batch.isFull()){
+	/*if (batch.isFull()){
 		batch.end();
 		batch.beginDraw();
 		lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_LEFT, shader);
@@ -436,7 +437,7 @@ public void update(float deltaTime) {
 		batch.end();
 		batch.clearCache();
 		batch.begin();
-	}
+	}*/
 	
 	
 	for (int i = 0; i < lineBodyEntities.size(); i++){
@@ -482,7 +483,7 @@ public void update(float deltaTime) {
 		
 		
 		
-		if (batch.isFull()){
+		/*if (batch.isFull()){
 			batch.end();
 			batch.beginDraw();
 			lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_LEFT, shader);
@@ -490,7 +491,7 @@ public void update(float deltaTime) {
 			batch.end();
 			batch.clearCache();
 			batch.begin();
-		}
+		}*/
 	}
 	
 	for (int i = 0; i < blockLineEntities.size(); i++){
@@ -536,7 +537,7 @@ public void update(float deltaTime) {
 		
 		
 		
-		if (batch.isFull()){
+		/*if (batch.isFull()){
 			batch.end();
 			batch.beginDraw();
 			lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_LEFT, shader);
@@ -544,7 +545,7 @@ public void update(float deltaTime) {
 			batch.end();
 			batch.clearCache();
 			batch.begin();
-		}
+		}*/
 	}
 	
 	
@@ -570,7 +571,7 @@ public void update(float deltaTime) {
 		batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 		
 
-		if (batch.isFull()){
+		/*if (batch.isFull()){
 			batch.end();
 			batch.beginDraw();
 			lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_LEFT, shader);
@@ -578,7 +579,7 @@ public void update(float deltaTime) {
 			batch.end();
 			batch.clearCache();
 			batch.begin();
-		}
+		}*/
 		
 	}
 	
@@ -599,7 +600,7 @@ public void update(float deltaTime) {
 		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 		batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 		
-		if (batch.isFull()){
+		/*if (batch.isFull()){
 			batch.end();
 			batch.beginDraw();
 			lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_LEFT, shader);
@@ -607,7 +608,7 @@ public void update(float deltaTime) {
 			batch.end();
 			batch.clearCache();
 			batch.begin();
-		}
+		}*/
 		
 	}
 	
@@ -623,15 +624,15 @@ public void update(float deltaTime) {
 		batch.drawLine(region, (int)x2+Main.PX/2f, (int)y2+Main.PX/2f, (int)x2+Main.PX/2f, (int)y+Main.PX/2f);
 		batch.drawLine(region, (int)x2+Main.PX/2f, (int)y2+Main.PX/2f, (int)x+Main.PX/2f, (int)y2+Main.PX/2f);
 
-		if (batch.isFull()){
-			batch.end();
-			batch.beginDraw();
-			lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_LEFT, shader);
-			batch.render();
-			batch.end();
-			batch.clearCache();
-			batch.begin();
-		}
+//		if (batch.isFull()){
+//			batch.end();
+//			batch.beginDraw();
+//			lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_LEFT, shader);
+//			batch.render();
+//			batch.end();
+//			batch.clearCache();
+//			batch.begin();
+//		}
 		
 	}
 	
@@ -646,16 +647,16 @@ public void update(float deltaTime) {
 		batch.drawLine(region, (int)x+Main.PX/2f, (int)y+Main.PX/2f, (int)x2+Main.PX/2f, (int)y+Main.PX/2f);
 		batch.drawLine(region, (int)x2+Main.PX/2f, (int)y2+Main.PX/2f, (int)x2+Main.PX/2f, (int)y+Main.PX/2f);
 		batch.drawLine(region, (int)x2+Main.PX/2f, (int)y2+Main.PX/2f, (int)x+Main.PX/2f, (int)y2+Main.PX/2f);
-
-		if (batch.isFull()){
-			batch.end();
-			batch.beginDraw();
-			lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_LEFT, shader);
-			batch.render();
-			batch.end();
-			batch.clearCache();
-			batch.begin();
-		}
+//
+//		if (batch.isFull()){
+//			batch.end();
+//			batch.beginDraw();
+//			lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_LEFT, shader);
+//			batch.render();
+//			batch.end();
+//			batch.clearCache();
+//			batch.begin();
+//		}
 		
 	}
 	
@@ -663,10 +664,10 @@ public void update(float deltaTime) {
 	
 
 	
-	batch.beginDraw();
-	lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_LEFT, shader);
-	batch.render();
-	batch.end();
+	//batch.beginDraw();
+	//lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_LEFT, shader);
+	//batch.render();
+	//batch.end();
 	
 	
 	super.update(deltaTime);
