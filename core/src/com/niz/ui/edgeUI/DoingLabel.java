@@ -74,6 +74,7 @@ public class DoingLabel extends Stack{
 			public void clicked(InputEvent event, float x, float y) {
 				DoingLabel l= (DoingLabel) event.getListenerActor();
 				BeltButton b = l.butt;
+				if (b == null) return;
 				if (b.item == null) b.item = Inventory.defaultItem;
 				c.value = index;
 				c.item = b.item;

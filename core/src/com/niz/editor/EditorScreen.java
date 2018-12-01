@@ -784,7 +784,7 @@ public class EditorScreen extends EdgeUI implements Observer{
 		
 		EditorTable newTable = tableP.obtain();
 		newTable.set(table, o, "["+name+"]");
-        newTable.setBackground(Styles.tableBack[o.hashCode()%Styles.tableBack.length]);
+        newTable.setBackground(Styles.tableBack[Math.abs(o.hashCode())%Styles.tableBack.length]);
 		ArrayExpander expander = arrayExpanderP.obtain();
 		
 		boolean shouldExpand = expandedStore.containsKey(o);
@@ -853,7 +853,6 @@ public class EditorScreen extends EdgeUI implements Observer{
 		newTable.setBackground(Styles.tableBack[object.hashCode()%Styles.tableBack.length]);
 		Expander expander = expanderP.obtain();
 		//expander.clear();
-		
 		
 		boolean shouldExpand = expandedStore.containsKey(object);
 		//if (shouldExpand)throw new GdxRuntimeException("hh");

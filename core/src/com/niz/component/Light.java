@@ -38,13 +38,13 @@ public class Light extends BinaryHeap.Node implements Component {
 	public boolean isOn = true;
 
 	public Vector3[] falloff = {
-			new Vector3(.4f, 3f, 20f)//character l
-			, new Vector3(.4f, 3f, 20f)//character r
+			new Vector3(.14f, .3f, 5f)//character l
+			, new Vector3(.14f, .3f, 5f)//character r
 			, new Vector3(.94f, 9f, 10f)//map back layer
 			, new Vector3(.14f, .3f, 5f)//map front
-			, new Vector3(.4f, 3f, 20f)//map lit
-			, new Vector3(.4f, 3f, 20f)//map fg
-			, new Vector3(.4f, 3f, 20f)//map fg
+			, new Vector3(.14f, .3f, 5f)//map lit
+			, new Vector3(.14f, .3f, 5f)//map fg
+			, new Vector3(.4f, 3f, 20f)//map fg?
 			}
 	;
 

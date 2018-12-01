@@ -7,14 +7,11 @@ import java.io.IOException;
 import com.badlogic.ashley.core.EngineNiz;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasSprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntArray;
@@ -42,7 +39,8 @@ public class Animations {
 	public static Sprite blank;
 	public static TextureRegion[] doingTypeImages;
 	public static AtlasSprite[] doors = new AtlasSprite[8];
-	
+	private static Sprite rpgSprite;
+
 	public static void init(TextureAtlas atlas, EngineNiz engine, TextureAtlas uiAtlas, TextureAtlas mapAtlas){
 		blank = atlas.createSprite("diff/blank2");
 		//if (blank  == null) throw new GdxRuntimeException(" jkl");
@@ -66,6 +64,7 @@ public class Animations {
 		createGuideSprites("");
 		createGuideSprites("player");
 		createGuideSprites("dragon");
+		createGuideSprites("rpg");
 		guides.put(Data.hash("centreblockguide"), new ShortArray(new short[]{16, 16}));
 		//1-40 walk
 		createPlayerSprites("player", atlas, engine);
@@ -124,6 +123,8 @@ public class Animations {
 		//createTailSprites(atlas, "tentaclepiecesmall", 0, "tentacleguide", 24);
 		//createWeaponSprites(atlas, "potion", 3);
 		createDoorSprites(mapAtlas);
+
+		blank = uiAtlas.createSprite("button");
 	}
 	private static void createDoorSprites(TextureAtlas atlas) {
 		for (int i = 0; i < 2; i++){
@@ -146,6 +147,7 @@ public class Animations {
 				, "handfrontguidetip", "handbackguidetip", "tailguide", "tailtipguide", "headguidetip", "tailtipguidetip"
 				, "handswordguide", "handaxeguide", "handaxeguide", "handgunguide", "tentacleguide", "tentacleguidetip", "torso2guide"
 				, "handdefaultguide" , "spin0guide", "spin1guide", "spin2guide", "spin3guide", "spin4guide", "spin5guide", "spin6guide", "spin7guide"
+
 				};
 		
 		for (String layer : layers){
@@ -199,17 +201,12 @@ public class Animations {
 			"", "legsguide", "legsguide"
 	};
 	
-	public static String[] armLayers = {"armback", 
-			 "armfront"};
-	public static String[] armBaseLayers = {"armsguide", 
-			"armsguide"};
-	
+	public static String[] armLayers = {"armback", "armfront"};
+	public static String[] armBaseLayers = {"armsguide", "armsguide"};
 	public static String[] armGuideLayers = {
-			
 			  "handbackguide", "handfrontguide"
 			, "handbackguidetip", "handfrontguidetip" };
 	public static String[] armBaseGuideLayers = {
-		  
 		 "armsguide", "armsguide"
 		, "handbackguide", "handfrontguide"
 	};
@@ -240,23 +237,32 @@ public class Animations {
 	
 	public static String[] neckLayers = {"neck"};
 	public static String[] neckBaseLayers = {"neckguide"};
-	
 	public static String[] neckGuideLayers = {"headguide"
 			};
 	public static String[] neckBaseGuideLayers = {"neckguide"
 	};
 	
 	public static String[] tailLayers = {"tail"};
+
+
+	public static String rpg = "rpg";
+	public static String[] rpgs = {"rpg"};
+	public static String[] rpgLayers;
 	public static String[] tailBaseLayers = {"tailguide"};
-	
 	public static String[] tailGuideLayers = { "tailtipguide"};
-	public static String[] tailBaseGuideLayers = {
-		  "tailguide"
-	};
-	
+	public static String[] tailBaseGuideLayers = {"tailguide"};
+
+	public static String[] rpgGuideLayers;// = {"rpg"};
+	public static String[] rpgBaseGuideLayers;// = {"legsguide"};
+
+
+
+
 	
 	public static String dragon = "dragon";
 	public static String[] dragons = {"reddragon", "greendragon", "whitedragon"}, players = {"player"};
+
+
 	//public static TextureRegion[] doingTypeImages;
 	public static TextureRegion[] doingLimbImages;
 	public static Sprite[][][] piles;
@@ -267,7 +273,40 @@ public class Animations {
 		//animSet.add("walk", true, false, true, false, .0512f, frames);
 		//name loop random vel 1f 
 		
-		
+		rpgSprite = atlas.createSprite("diff/rpg1");
+		TextureRegion[][] rpgSplits = rpgSprite.split(18, 20);
+
+		final AtlasSprite[][] rpgSprites = new AtlasSprite[26 * 2][12 * 3];
+		rpgLayers = new String[26 * 2];
+		rpgGuideLayers = new String[26 * 2];
+		rpgBaseGuideLayers = new String[26 * 2];
+
+		for (int i = 0; i < rpgLayers.length; i++){
+			rpgLayers[i] = "rpg" + i;
+			rpgGuideLayers[i] = "armsguide";
+			rpgBaseGuideLayers[i] = "legsguide";
+
+		}
+
+		for (int i = 0; i < rpgSprites.length; i+=2) {
+			//Gdx.app.log(TAG, "make sprite group  " + i );
+			for (int j = 0; j < 12; j++) {
+				TextureRegion split;
+				//Gdx.app.log(TAG, "make sprite " + i + " " + j);
+				split = rpgSplits[i][j];
+				rpgSprites[i][j + 12] = new TextureAtlas.AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
+				split = rpgSplits[i + 1][j];
+				rpgSprites[i][j] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
+				split = rpgSplits[i + 1][j];
+				rpgSprites[i][j + 24] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
+				split = rpgSplits[i + 12][j];
+				rpgSprites[i + 1][j + 12] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
+				split = rpgSplits[i + 12][j];
+				rpgSprites[i + 1][j] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
+				split = rpgSplits[i + 12][j];
+				rpgSprites[i + 1][j + 24] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
+			}
+		}
 		
 		final float dragonWalkDelta = 0.1f;
 		//int offset, length;
@@ -275,6 +314,8 @@ public class Animations {
 		WorkerSystem workSys = engine.getSystem(WorkerSystem.class);
 		
 		ProgressAction walk = new ProgressAction(){
+
+
 
 			@Override
 			public void update(float dt) {
@@ -290,9 +331,12 @@ public class Animations {
 				AnimationContainer container = new AnimationContainer();
 				//AnimationCommand.make(c, atlas, animSet, layers, baseLayers, container, player, players);
 				//AnimationCommand.makeGuideFrames(c, atlas, animSet, guideLayers, baseGuideLayers, container, player, players);
+
+
 				AnimationCommand.make(c, atlas, animSet, legLayers, legBaseLayers, container, player, players);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, legGuideLayers, legBaseGuideLayers, container, player);
-				c.skipFrames = 2;
+
+
 				AnimationCommand.make(c, atlas, animSet, torsoLayers, torsoBaseLayers, container, player, players);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, torsoGuideLayers, torsoBaseGuideLayers, container, player);
 				AnimationCommand.make(c, atlas, animSet, armLayers, armBaseLayers, container, player, players);
@@ -339,7 +383,13 @@ public class Animations {
 				
 				//AnimationCommand.make(c, atlas, animSet, tailLayers, tailBaseLayers, container, dragon, dragons);
 				//AnimationCommand.makeGuideFrames(c, atlas, animSet, tailGuideLayers, tailBaseGuideLayers, container, dragon, dragons);
-				
+
+				int w = 12;
+				c.offset = 0;
+				c.length = 3;
+				AnimationCommand.make(c, atlas, animSet, rpgLayers, rpgSprites, rpgBaseGuideLayers, container, rpg, rpgs);
+				AnimationCommand.makeGuideFrames(c, atlas, animSet, rpgGuideLayers, rpgBaseGuideLayers, container, rpg);
+
 				isFinished = true;
 			}
 
@@ -410,6 +460,13 @@ public class Animations {
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, neckGuideLayers, neckBaseGuideLayers, container, dragon);
 				AnimationCommand.make(c, atlas, animSet, headLayers, headBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, headGuideLayers, headBaseGuideLayers, container, dragon);
+
+				int w = 12;
+				c.offset = 0;
+				c.length = 3;
+				AnimationCommand.make(c, atlas, animSet, rpgLayers, rpgSprites, rpgBaseGuideLayers, container, rpg, rpgs);
+				AnimationCommand.makeGuideFrames(c, atlas, animSet, rpgGuideLayers, rpgBaseGuideLayers, container, rpg);
+
 				isFinished = true;
 			}
 
@@ -480,6 +537,13 @@ public class Animations {
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, neckGuideLayers, neckBaseGuideLayers, container, dragon);
 				AnimationCommand.make(c, atlas, animSet, headLayers, headBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, headGuideLayers, headBaseGuideLayers, container, dragon);
+
+				int w = 12;
+				c.offset = 0;
+				c.length = 3;
+				AnimationCommand.make(c, atlas, animSet, rpgLayers, rpgSprites, rpgBaseGuideLayers, container, rpg, rpgs);
+				AnimationCommand.makeGuideFrames(c, atlas, animSet, rpgGuideLayers, rpgBaseGuideLayers, container, rpg);
+
 				isFinished = true;
 			}
 
@@ -554,7 +618,12 @@ public class Animations {
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, neckGuideLayers, neckBaseGuideLayers, container, dragon);
 				AnimationCommand.make(c, atlas, animSet, headLayers, headBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, headGuideLayers, headBaseGuideLayers, container, dragon);
-				
+
+				int w = 12;
+				c.offset = 0;
+				c.length = 3;
+				AnimationCommand.make(c, atlas, animSet, rpgLayers, rpgSprites, rpgBaseGuideLayers, container, rpg, rpgs);
+				AnimationCommand.makeGuideFrames(c, atlas, animSet, rpgGuideLayers, rpgBaseGuideLayers, container, rpg);
 				
 				isFinished = true;
 			}
@@ -627,12 +696,18 @@ public class Animations {
 				AnimationCommand.make(c, atlas, animSet, armLayers, armBaseLayers, container, player, players);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, player);
 				c.offset -= 13;
-				
-				
+
 				c.offset += 21;
 				
-				if (prog >= 9) isFinished = true;
-				
+				if (prog >= 9) {
+					int w = 12;
+					c.offset = 0;
+					c.length = 3;
+					AnimationCommand.make(c, atlas, animSet, rpgLayers, rpgSprites, rpgBaseGuideLayers, container, rpg, rpgs);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, rpgGuideLayers, rpgBaseGuideLayers, container, rpg);
+
+					isFinished = true;
+				}
 			}
 
 			@Override
@@ -686,8 +761,8 @@ public class Animations {
 				AnimationCommand.make(c, atlas, animSet, armLayers, armBaseLayers, container, player, players);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, player);
 				c.offset -= 13;
-				
-				
+
+
 				//if (prog >= 9) 
 					isFinished = true;
 				

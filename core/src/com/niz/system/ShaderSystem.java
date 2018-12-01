@@ -68,7 +68,8 @@ public class ShaderSystem extends RenderSystem implements Observer {
 		if (!shader.isCompiled())
 			throw new GdxRuntimeException("Could not compile shader: "+shader.getLog());
 
-		charShader = new ShaderProgram(vert, "#define IMMEDIATE \n" + frag);
+		charShader = new ShaderProgram(vert, //"#define IMMEDIATE \n" +
+				frag);
 		//Gdx.app.log(TAG,  "shader \n"+FRAG + "\n\n\n vert  \n\n\n"+VERT);
 		if (!charShader.isCompiled())
 			throw new GdxRuntimeException("Could not compile shader: "+charShader.getLog());
@@ -142,12 +143,7 @@ public class ShaderSystem extends RenderSystem implements Observer {
 		lShader.begin();
 		AMBIENT_COLOR.set(.1f, .1f, .1f);
 		
-		//our normal map
-		//lShader.setUniformi("u_texture", 0);
-		//lShader.setUniformi("u_normals", 1); //GL_TEXTURE1
-		
-		//lShader.setUniformi("u_texture", 0);
-		//lShader.setUniformi("u_normals", 1); //GL_TEXTURE1
+
 		shader.setUniformi("u_texture", 0);
 		shader.setUniformi("u_index_texture", 1); //GL_TEXTURE1
 		//lShader.setUniformf("AmbientColor", AMBIENT_COLOR.x, AMBIENT_COLOR.y, AMBIENT_COLOR.z, 1f);
@@ -170,28 +166,7 @@ public class ShaderSystem extends RenderSystem implements Observer {
 			throw new GdxRuntimeException("Could not compile shader: "+lightRampShader.getLog());
 	}
 
-	private ShaderProgram makeShader() {
-		ShaderProgram shad = new ShaderProgram(Gdx.files.internal("lighting.vert"), Gdx.files.internal("lightingtoon.frag"));
-		//Gdx.app.log(TAG,  "shader \n"+FRAG + "\n\n\n vert  \n\n\n"+VERT);
-		if (!shad.isCompiled())
-			throw new GdxRuntimeException("Could not compile shader: "+shad.getLog());
-		//print any warnings
-		if (shad.getLog().length()!=0)
-			System.out.println(shad.getLog());
-		//setup default uniforms
-		shad.begin();
-		
-		//our normal map
-		//shad.setUniformi("u_texture", 0);
-		//shad.setUniformi("u_normals", 1); //GL_TEXTURE1
-		
-		//shad.setUniformi("u_texture", 0);
-		//shad.setUniformi("u_normals", 1); //GL_TEXTURE1
-		//shader.setUniformf("AmbientColor", AMBIENT_COLOR.x, AMBIENT_COLOR.y, AMBIENT_COLOR.z, 1f);
 
-		shad.end();
-		return shad;
-	}
 
 
 

@@ -25,10 +25,10 @@ public class AnimSet {
 			AtlasSprite[] frames, int bitmask, String string,
 			AnimationContainer container, Vector2[] offsets) {
 		//int hash = Data.hash(string);
-		
-		for (int i = 0; i < frames.length; i++){
-			if (frames[i] == null) throw new GdxRuntimeException("frame is null  "+i);
-		}
+		//if (frames == null) throw new GdxRuntimeException("null frames");
+		//for (int i = 0; i < frames.length; i++){
+		//	if (frames[i] == null) throw new GdxRuntimeException("frame is null  "+i);
+		//}
 		AnimationLayer anim = container.newLayer(delta, frames);
 		anim.offsets = offsets;
 		//anim.flipped = anim.doFlip();;

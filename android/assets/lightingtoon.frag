@@ -33,8 +33,6 @@ const float POSITION_PIXEL_HEIGHT = 3.1 / 66.0;
 const float RAMP_PIXEL_HEIGHT = 4.1 / 66.0;
 const float ONE_PIXEL = 1.0 / 128.0;
 const float LAYERS_SPACE = 4.0 / 128.0;
-//const float[] CLAMPS = {0.4, 0.4, 0.4, 0.4, 0.7, 0.7, 0.7, 1.0, 1.0, 1.0};
-// uniform float Test[2];
 
 void main() {
 	//RGBA of our diffuse color

@@ -11,6 +11,7 @@ import com.badlogic.ashley.core.RenderSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -338,18 +339,20 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		batch.draw(indexTexture, 0, 3, indexBuffer.getWidth(), 1);
 		batch.end();
 
-		batch.setShader(lightRampShader);
+		/*batch.setShader(lightRampShader);
 		//lights.setUniformsNew(coefficientsShader, shader, positionShader);
 		batch.begin();
 		//any texture
 		batch.draw(indexTexture, 0, 4, indexBuffer.getWidth(), 1);
+		batch.end();*/
+
+		batch.setShader(null);
+		batch.setColor(Color.WHITE);
+		batch.begin();
+		SpriteAnimationSystem.drawColorRamp(batch, indexBuffer.getWidth());
 		batch.end();
 
-		//batch.setShader(fxSshader);
-		//batch.begin();
-		//any texture
-		//batch.draw(indexTexture, 0, 3, indexBuffer.getWidth(), indexBuffer.getHeight()-3);
-		//batch.end();
+
 		indexBuffer.end();
 
 	}

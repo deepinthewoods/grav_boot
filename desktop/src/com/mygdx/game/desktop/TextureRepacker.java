@@ -9,10 +9,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PixmapPacker;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntArray;
 
 import org.omg.IOP.TAG_ALTERNATE_IIOP_ADDRESS;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 import static com.badlogic.gdx.Gdx.input;
 
@@ -24,7 +30,45 @@ import static com.badlogic.gdx.Gdx.input;
 class TextureRepacker {
 
     private static final String TAG = "texture repacker";
+    public static void processGuideSpritesFromSprite(FileHandle file, String name, int w, int h, int colorToMatch){
+        Pixmap pix = new Pixmap(file);
+        int width = pix.getWidth();
+        if (width % w != 0) throw new GdxRuntimeException("not cleanly tileable");
+        int height = pix.getHeight();
+        if (height % h != 0) throw new GdxRuntimeException("not cleanly tileable");
+        int ww = width / w;
+        int hh = height / h;
+        FileHandle outFileint = Gdx.files.internal("guides/" + name);//prefix+layer); // i.e guides/playertorsoguide
+        FileHandle outFile = Gdx.files.absolute(outFileint.file().getAbsolutePath());
+        DataOutputStream os = new DataOutputStream(outFile.write(false, 100));
+        int total = 0;
+        for (int i = 0; i < ww; i++)
+            for (int k = 0; k < hh; k++){
+                for (int x = 0; x < w; x++)
+                    for (int y = 0; y < h; y++){
+                        int pixel = pix.getPixel(x + i * w, y + k * h);
+                        Color.rgba8888ToColor(c, pixel);
+                        if (c.a > .5f){
+                            if (pixel == colorToMatch)
+                            try {
+                                GridPoint2 guide = new GridPoint2(x, y);
+                                os.writeShort(guide.x);
+                                os.writeShort(guide.y);
+                                total++;
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+            }
+        try {
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Gdx.app.log(TAG, "saved guides " + name + " " + total);
 
+    }
 
     public static void process(String tiles, String inName) {
        // if (true) return;
@@ -82,5 +126,36 @@ class TextureRepacker {
     static Color c = new Color();
     public static float toFloat(int i){
         return (i + .5f ) / 128f;
+    }
+
+
+    public static void createGuideSpritesIdentical(FileHandle file, String name, int w, int h, GridPoint2 guide) {
+        Pixmap pix = new Pixmap(file);
+        int width = pix.getWidth();
+        if (width % w != 0) throw new GdxRuntimeException("not cleanly tileable");
+        int height = pix.getHeight();
+        if (height % h != 0) throw new GdxRuntimeException("not cleanly tileable");
+        int ww = width / w;
+        int hh = height / h;
+        FileHandle outFileint = Gdx.files.internal("guides/" + name);//prefix+layer); // i.e guides/playertorsoguide
+        FileHandle outFile = Gdx.files.absolute(outFileint.file().getAbsolutePath());
+        DataOutputStream os = new DataOutputStream(outFile.write(false, 100));
+        for (int i = 0; i < ww * hh; i++){
+            try {
+                os.writeShort(guide.x);
+                os.writeShort(guide.y);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+
+        try {
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

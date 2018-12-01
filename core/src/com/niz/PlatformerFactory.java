@@ -72,6 +72,17 @@ public class PlatformerFactory extends Factory {
 		charSelectRaces[1].raceID[Race.HEAD] = Race.RED_DRAGON;
 		charSelectRaces[1].raceID[Race.TAIL] = Race.RED_DRAGON;
 
+
+		/*charSelectRaces[3].raceID[Race.FRONT_ARM] = Race.NONE;
+		charSelectRaces[3].raceID[Race.BACK_ARM] = Race.NONE;
+		charSelectRaces[3].raceID[Race.BACK_LEG] = Race.NONE;
+		charSelectRaces[3].raceID[Race.FRONT_LEG] = Race.NONE;
+		charSelectRaces[3].raceID[Race.TORSO] = Race.RPG;
+		charSelectRaces[3].raceID[Race.NECK] = Race.NONE;
+		charSelectRaces[3].raceID[Race.HEAD] = Race.NONE;
+		charSelectRaces[3].raceID[Race.TAIL] = Race.NONE;*/
+
+
 		charSelectInventories = new Inventory[CHAR_SELECT_CHARACTERS];
 		for (int i = 0; i < charSelectInventories.length; i++){
 			Inventory inv = new Inventory();

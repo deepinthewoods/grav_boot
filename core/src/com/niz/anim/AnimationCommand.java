@@ -34,64 +34,140 @@ public class AnimationCommand {
 	public int skipFrames;
 
 
-    static AnimationContainer make(AnimationCommand c, TextureAtlas atlas, AnimSet animSet, String[] layers, String[] baseLayers, AnimationContainer container, String prefix, String[] spritePrefixes){
+
+	static void make(AnimationCommand c, TextureAtlas atlas, AnimSet animSet, String[] layers, String[] baseLayers, AnimationContainer container, String prefix, String[] spritePrefixes){
 		for (String sprPrefix : spritePrefixes){
-			
+			AtlasSprite[][] layersArr = new AtlasSprite[layers.length][];
+			Vector2[][] offsetArr = new Vector2[layers.length][];
+			makeArrays(
+					c, atlas, layers, baseLayers, prefix, sprPrefix
+					, layersArr, offsetArr
+			);
+			makeActual(c, animSet, layersArr, offsetArr, container, prefix, sprPrefix, layers);
+		}
+	}
+
+	static void make(AnimationCommand c, TextureAtlas atlas, AnimSet animSet, String[] layers, AtlasSprite[][] layersArr, Vector2[][] offsetArr, AnimationContainer container, String prefix, String[] spritePrefixes){
+		for (String sprPrefix : spritePrefixes){
+
+			makeArrays(
+					c, atlas, null, null, prefix, sprPrefix
+					, layersArr, offsetArr
+			);
+			makeActual(c, animSet, layersArr, offsetArr, container, prefix, sprPrefix, layers);
+		}
+	}
+	static void make(AnimationCommand c, TextureAtlas atlas, AnimSet animSet, String[] layers, AtlasSprite[][] layersArr, String[] baseLayers, AnimationContainer container, String prefix, String[] spritePrefixes){
+		for (String sprPrefix : spritePrefixes){
+			//AtlasSprite[][] layersArr = new AtlasSprite[layers.length][];
+			Vector2[][] offsetArr = new Vector2[layers.length][];
+			makeArrays(
+					c, atlas, null, baseLayers, prefix, sprPrefix
+					, layersArr, offsetArr
+			);
+			makeActual(c, animSet, layersArr, offsetArr, container, prefix, sprPrefix, layers);
+		}
+	}
+
+	static void makeArrays(AnimationCommand c, TextureAtlas atlas, String[] layers, String[] baseLayers, String prefix, String spritePrefix, AtlasSprite[][] layersArr, Vector2[][] offsetArr){
+		if (layers != null)
 			for (int y = 0; y < layers.length; y++){
-				AtlasSprite[] frames = new AtlasSprite[c.length / (1+c.skipFrames)];
-				AtlasSprite[] tipFrames = new AtlasSprite[c.length / (1+c.skipFrames)];
-				String fileNamePrefix = "diff/"+sprPrefix+layers[y];
-				String baseFileName = prefix+baseLayers[y];
-				ShortArray base = Animations.guides.get(Data.hash(baseFileName));
-				Vector2[] offsets = new Vector2[c.length / (1+c.skipFrames)];
-				if (atlas.findRegion(fileNamePrefix, 0) == null){
-					if (
-							fileNamePrefix.contains("neck") 
-							||
-							fileNamePrefix.contains("tail")
-							)continue;
-				}
-				boolean hasTip = atlas.findRegion(fileNamePrefix+"tip", 0) != null;
+				AtlasSprite[] frames = new AtlasSprite[c.length / (c.skipFrames+1)];
+				//Vector2[] offsets = new Vector2[frames.length];
 				int frameIndex = c.offset;
-				for (int i = 0; i < c.length / (1+c.skipFrames); i++){
+				String fileNamePrefix = "diff/"+spritePrefix+layers[y];
+				//String baseFileName = prefix+baseLayers[y];
+				//ShortArray base = Animations.guides.get(Data.hash(baseFileName));
+
+				if (atlas.findRegion(fileNamePrefix, 0) == null){
+					if (fileNamePrefix.contains("neck")
+									||
+									fileNamePrefix.contains("tail")	){ continue;
+					}
+				}
+				for (int i = 0; i < frames.length; i++){
 					//Gdx.app.log(TAG, "layer "+i+ " / "+c.length + " + " + c.offset + baseFileName);
-					
+
 					frames[i] = (AtlasSprite) atlas.createSprite(fileNamePrefix  , (frameIndex ));
 					frames[i] = new AtlasSprite(frames[i]);
 					if (frames[i] == null) throw new GdxRuntimeException("null frame! "+fileNamePrefix +"   "+i+"  "+c.length +"  "+c.offset +"  "+c.animName + "  " + frameIndex);
-					 
+
 					//AtlasRegion baseF =  atlas.findRegion(baseFileName  , ( i+c.offset));
-					
-					if (base == null) throw new GdxRuntimeException("jskld! "+baseFileName);
-					
-					Vector2 offset = new Vector2();
-					//offset.set(frames[i].getAtlasRegion().offsetX, frames[i].getAtlasRegion().offsetY);
-					short baseX = base.get(frameIndex*2);
-					short baseY = base.get(frameIndex*2+1);
-					//Gdx.app.log(TAG, "guide base "+baseX+","+baseY + "  " + layers[y] + "  " + baseFileName);
-					offset.set(baseX, baseY);
-					offset.scl(Main.PX);
-					
-					offsets[i] = offset;
+
+
 					frameIndex++;
 					frameIndex += c.skipFrames;
 					//i += c.skipFrames;
 				}
-				
-				
-				AnimSet.addLayerToContainer(c.delta  * (1+c.skipFrames), c, frames, c.bitmask, sprPrefix+layers[y], container, offsets);				
-				
+				if (layersArr != null)
+					layersArr[y] = frames;
+
 			}
-			
+	if (offsetArr != null)
+		for (int y = 0; y < offsetArr.length; y++){
+			//AtlasSprite[] frames = new AtlasSprite[c.length / (c.skipFrames+1)];
+			Vector2[] offsets = new Vector2[c.length / (c.skipFrames+1)];
+			int frameIndex = c.offset;
+
+			//String fileNamePrefix = "diff/"+spritePrefix+layers[y];
+			String baseFileName = prefix+baseLayers[y];
+			ShortArray base = Animations.guides.get(Data.hash(baseFileName));
+
+			/*if (atlas.findRegion(baseFileName, 0) == null){
+				if (fileNamePrefix.contains("neck")
+						||
+						fileNamePrefix.contains("tail")	){ continue;
+				}
+			}*/
+			for (int i = 0; i < offsets.length; i++){
+				//Gdx.app.log(TAG, "layer "+i+ " / "+c.length + " + " + c.offset + baseFileName);
+
+				//frames[i] = (AtlasSprite) atlas.createSprite(fileNamePrefix  , (frameIndex ));
+				//frames[i] = new AtlasSprite(frames[i]);
+				//if (frames[i] == null) throw new GdxRuntimeException("null frame! "+fileNamePrefix +"   "+i+"  "+c.length +"  "+c.offset +"  "+c.animName + "  " + frameIndex);
+
+				//AtlasRegion baseF =  atlas.findRegion(baseFileName  , ( i+c.offset));
+
+				if (base == null) throw new GdxRuntimeException("no file for guides ! "+baseFileName);
+
+				Vector2 offset = new Vector2();
+				//offset.set(frames[i].getAtlasRegion().offsetX, frames[i].getAtlasRegion().offsetY);
+				short baseX = base.get(frameIndex*2);
+				short baseY = base.get(frameIndex*2+1);
+				//Gdx.app.log(TAG, "guide base "+baseX+","+baseY + "  " + layers[y] + "  " + baseFileName);
+				offset.set(baseX, baseY);
+				offset.scl(Main.PX);
+
+				offsets[i] = offset;
+				frameIndex++;
+				frameIndex += c.skipFrames;
+				//i += c.skipFrames;
+			}
+			//if (layersArr != null)
+			//	layersArr[y] = frames;
+			if (offsetArr != null)
+				offsetArr[y] = offsets;
+			//Gdx.app.log(TAG, "save array " + y + " " + layersArr[y] + offsetArr[y] + " " + layersArr.length + " " + offsetArr.length);
+		}
+	}
+
+	static AnimationContainer makeActual(AnimationCommand c, AnimSet animSet, AtlasSprite[][] layers, Vector2[][] offsetArray, AnimationContainer container, String prefix, String spritePrefix, String[] layerNames){
+			for (int y = 0; y < layers.length; y++) {
+				//
+				AtlasSprite[] frames = layers[y];
+				if (frames == null){
+					Gdx.app.log(TAG, "null frames " + spritePrefix + layers[y] + "  " + layerNames[y]);
+					continue;
+				}
+				Vector2[] offsets = offsetArray[y];
+				AnimSet.addLayerToContainer(c.delta * (1 + c.skipFrames), c, frames, c.bitmask, spritePrefix + layerNames[y], container, offsets);
+			}
 			//container.isVelocityDependant = c.velocityDependant;
 			container.randomStart = c.randomStart;
 			container.bitmask = c.bitmask;
 			animSet.add(c.animName, container);
-		}
 		return container;
-
 	}
-
 
 	public static void makeGuideFrames(AnimationCommand c, TextureAtlas atlas,
 			AnimSet animSet, String[] layers, String[] baseLayers
@@ -109,8 +185,7 @@ public class AnimationCommand {
 			ShortArray main = Animations.guides.get(Data.hash(fileName));
 			ShortArray tip = Animations.guides.get(Data.hash(fileName+"tip"));
 			boolean hasTip = tip != null;
-			
-			
+			if (main == null) throw new GdxRuntimeException("jskld! "+fileName +"   "+"  "+y +"  "+c.length );
 			//if (base != null)
 			//Gdx.app.log(TAG, "guide layer "+baseFileName+c.offset + "  hash:"+Data.hash(baseFileName) + "  len"+
 			//base.size);
@@ -120,7 +195,7 @@ public class AnimationCommand {
 			for (int i = 0; i < c.length / (1+c.skipFrames); i++){
 				
 				//frames[i] = (AtlasSprite) atlas.createSprite(fileName  , (frameIndex));
-				if (main == null) throw new GdxRuntimeException("jskld! "+fileName +"   "+i+"  "+y +"  "+c.length );
+
 				//AtlasRegion baseF =  atlas.findRegion(baseFileName  , ( i+c.offset));
 				//Gdx.app.log(TAG, "guide "+i+ " / "+c.length + " + " + c.offset);
 				short mainX = main.get(frameIndex*2);
@@ -141,8 +216,7 @@ public class AnimationCommand {
 					short baseX = base.get(frameIndex*2);
 					short baseY = base.get(frameIndex*2+1);
 					offset.sub(baseX, baseY);
-					
-					
+
 					if (hasTip){
 						tmpV.set(tip.get(frameIndex*2), tip.get(frameIndex*2+1));
 						tmpV.sub(mainX, mainY);
@@ -160,18 +234,9 @@ public class AnimationCommand {
 				
 				frameIndex++;
 				frameIndex += c.skipFrames;
-				
 			}
-				
-				
-			
-				
-			AnimSet.addGuideToContainer(c.animName, c.loop, c.randomStart, c.velocityDependant, c.delta, c.bitmask, prefix+layers[y], container, offsets, angles);				
-				
-			
+			AnimSet.addGuideToContainer(c.animName, c.loop, c.randomStart, c.velocityDependant, c.delta, c.bitmask, prefix+layers[y], container, offsets, angles);
 		}
-		
-		
 		//animSet.addGuide(c.animName, container);
 	}
 
@@ -180,9 +245,6 @@ public class AnimationCommand {
 			TextureAtlas atlas, String layers,
 			 AnimationContainer container,
 			String prefix, int startAngle, int endAngle) {
-		
-		
-		
 
 		//frames = new AtlasSprite[c.length];
 		//tipFrames = new AtlasSprite[c.length];
@@ -404,4 +466,7 @@ public class AnimationCommand {
 		layer.flipped = layer.doFlip();
 		return layer;
 	}
+
+
+
 }

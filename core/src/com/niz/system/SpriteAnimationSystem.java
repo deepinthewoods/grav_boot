@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasSprite;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -28,7 +29,7 @@ import com.niz.Data;
 import com.niz.Main;
 import com.niz.anim.AnimationContainer;
 import com.niz.anim.AnimationLayer;
-import com.niz.anim.SpriteCacheNiz;
+import com.niz.anim.Animations;
 import com.niz.component.Body;
 import com.niz.component.DragOption;
 import com.niz.component.Light;
@@ -47,7 +48,7 @@ private static final String TAG = "sprite anim system";
 
 private static final Vector3 LIGHT_POS = new Vector3(.5f,.5f, 1f/200f);
 
-public ComponentMapper<Position> posM = ComponentMapper.getFor(Position.class);
+	public ComponentMapper<Position> posM = ComponentMapper.getFor(Position.class);
 public ComponentMapper<SpriteAnimation> spriteM = ComponentMapper.getFor(SpriteAnimation.class);
 public ComponentMapper<SpriteStatic> spriteStaticM = ComponentMapper.getFor(SpriteStatic.class);
 protected ComponentMapper<Body> bodyM = ComponentMapper.getFor(Body.class);
@@ -143,8 +144,7 @@ public void addedToEngine(Engine engine) {
 	
 	Family statBodyMGibFam = Family.all(Position.class, SpriteStatic.class, SpriteIsMapTexture.class, Body.class, Item.class).get();
 	staticGibMapEntities = engine.getEntitiesFor(statBodyMGibFam);
-	
-	
+
 	Family allFam = Family.all(Position.class, SpriteAnimation.class).exclude(SpriteStatic.class, DragOption.class).get();
 	allEntities = engine.getEntitiesFor(allFam);
 	Family dragFam = Family.all(Position.class, SpriteAnimation.class, DragOption.class).exclude(SpriteStatic.class).get();
@@ -155,7 +155,7 @@ public void addedToEngine(Engine engine) {
 	//Family family = new Family();
 	//Gdx.app.log(TAG, "added "+(staticEntities == null));
 	//Family.all;
-	((EngineNiz) engine).getSubject("resize").add(this);;
+	((EngineNiz) engine).getSubject("resize").add(this);
 	engine.addEntityListener(Family.one(SpriteAnimation.class).get(), this);
 
 	indexTexture = new Texture(Gdx.files.internal("playerindexTexture.png"));
@@ -181,7 +181,7 @@ private float viewportSize;
 		Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.setShader(null);
-
+		batch.setColor(Color.WHITE);
 		batch.enableBlending();
 		batch.setColor(Color.WHITE);
 		batch.begin();
@@ -213,11 +213,58 @@ private float viewportSize;
 		//any texture
 		//batch.draw(indexTexture, 0, 3, indexBuffer.getWidth(), indexBuffer.getHeight()-3);
 		//batch.end();
+		batch.setShader(null);
+		batch.setColor(Color.WHITE);
+		batch.begin();
+		drawColorRamp(batch, indexBuffer.getWidth());
+		batch.end();
 		indexBuffer.end();
 
 	}
 
-@Override
+	static void drawColorRamp(SpriteBatchN batch, int width) {
+
+		Sprite s = Animations.blank;
+		//batch.setColor(Color.BLACK);
+		batch.setColor(Color.BLACK);
+		batch.draw(s, 0, 4, width, 1);
+		for (int toons = 0; toons < Main.prefs.toon_levels; toons++){
+			float level = toons / (float)(Main.prefs.toon_levels - 1) ;
+			float alpha = toons / (float)(Main.prefs.toon_levels) ;
+			alpha = rampEase(alpha, Main.prefs.toon_type);
+			level = rampEase(level, Main.prefs.toon_type);
+			batch.setColor(level, level, level, 1f);
+			//s.setColor(Color.MAGENTA);
+			int toonBegin = (int)(alpha * width) ;
+			batch.draw(s, toonBegin, 4, width, 1);
+			//Gdx.app.log(TAG, "ramp alpha " + level + " begin " + toonBegin);
+		}
+
+
+		s.setColor(Color.WHITE);
+		//batch.draw(indexTexture, 0, 4, indexBuffer.getWidth(), 1);
+	}
+
+	private static float rampEase(float a, int toon) {
+
+
+			switch (toon){
+				case 0:return a;
+				case 1:a = Interpolation.exp5.apply(a);
+				case 2:a = Interpolation.pow3.apply(a);
+				case 3:a = Interpolation.swing.apply(a);
+				case 4:a = Interpolation.circleIn.apply(a);
+				case 5:a = Interpolation.circleOut.apply(a);
+				case 6:a = Interpolation.sineIn.apply(a);
+				case 7:a = Interpolation.sineOut.apply(a);
+				case 8:a = Interpolation.bounce.apply(a);
+			}
+
+
+		return a;
+	}
+
+	@Override
 public void update(float deltaTime) {
 	
 	//if (true) return;
@@ -294,15 +341,18 @@ public void update(float deltaTime) {
 
 	batch.setShader(null);
 	Texture t = indexBuffer.getColorBufferTexture();
+
 	batch.enableBlending();
 	batch.getProjectionMatrix().setToOrtho2D(0,  0, t.getWidth(), t.getHeight());
-	//batch.begin();
-	//batch.draw(t, 0, 0);
-	//batch.end();
+	batch.begin();
+	batch.draw(t, 0, 0);
+	batch.end();
 
 }
 
-public void processSprites() {
+
+
+	public void processSprites() {
 	//Gdx.app.log(TAG, "process phys:"+physicsEntities.size() + "  static:");
 	
 	///////////////////////////////////////////////
@@ -327,6 +377,10 @@ public void processSprites() {
 			}
 			else layer = parent.layers.get(index);
 			if (layer == null) {continue;}
+			if (layer.offsets == null){
+				Gdx.app.log(TAG, "null offsets " + index);
+				continue;
+			}
 			AtlasSprite s;
 			int frame = spr.frameIndices[index];
 			boolean left = spr.adjustedLeft[index];

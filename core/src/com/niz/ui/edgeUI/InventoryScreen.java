@@ -705,7 +705,6 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		shader.setUniformi("u_texture", 0);
 		for (InventoryButton b : InventoryButton.itemDrawList){
 			b.draw2(batch, 1f);
-
 		}
 		batch.end();
 		InventoryButton.blockDrawList.clear();

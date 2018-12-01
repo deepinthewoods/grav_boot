@@ -50,8 +50,11 @@ public class ArrayAddButton extends TextButton implements Poolable, FieldButton{
 		try {
 			o.add(ClassReflection.newInstance(type));
 		} catch (ReflectionException e) {
-			e.printStackTrace();
-			throw new GdxRuntimeException("failed to add new class of type "+type);
+			if (type.isAssignableFrom(Boolean.class)) ;
+				//o.add(new Boolean(false));
+			else
+				e.printStackTrace();
+			//throw new GdxRuntimeException("failed to add new class of type "+type);
 		}
 		editor.queueRefresh(expander);
 		isChecked = true;

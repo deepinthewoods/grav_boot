@@ -112,6 +112,7 @@ public class GameInstance implements Screen, Observer {
 	private ShaderSystem shaderSys;
 
 	public void create (boolean headless, boolean newGame) {
+
 		//this.isServer = serverInst != null;
 		//this.isClient = clientInst != null;
 		//Log.DEBUG();
