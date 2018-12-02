@@ -65,8 +65,31 @@ public class AnimationCommand {
 					c, atlas, null, baseLayers, prefix, sprPrefix
 					, layersArr, offsetArr
 			);
+			layersArr = trimArray(c, layersArr, layers);
 			makeActual(c, animSet, layersArr, offsetArr, container, prefix, sprPrefix, layers);
 		}
+	}
+
+	private static AtlasSprite[][] trimArray(AnimationCommand c, AtlasSprite[][] layersArr, String[] layers) {
+		AtlasSprite[][] arr = new AtlasSprite[layers.length][];
+		for (int y = 0; y < layers.length; y++){
+			int frameIndex = c.offset;
+
+			AtlasSprite[] frames = new AtlasSprite[c.length / (c.skipFrames+1)];
+			for (int i = 0; i < frames.length; i++){
+				//Gdx.app.log(TAG, "layer "+i+ " / "+c.length + " + " + c.offset + baseFileName);
+
+				//frames[i] = (AtlasSprite) atlas.createSprite(fileNamePrefix  , (frameIndex ));
+				frames[i] = new AtlasSprite(layersArr[y][frameIndex]);
+
+				frameIndex++;
+				frameIndex += c.skipFrames;
+				//i += c.skipFrames;
+			}
+			arr[y] = frames;
+		}
+
+		return arr;
 	}
 
 	static void makeArrays(AnimationCommand c, TextureAtlas atlas, String[] layers, String[] baseLayers, String prefix, String spritePrefix, AtlasSprite[][] layersArr, Vector2[][] offsetArr){
@@ -175,6 +198,8 @@ public class AnimationCommand {
 		
 			
 		for (int y = 0; y < layers.length; y++){
+			if (layers[y] == null)
+				throw new GdxRuntimeException("null layer! "+ prefix+"   "+"  "+y +"  "+c.length );
 			//frames = new AtlasSprite[c.length];
 			//tipFrames = new AtlasSprite[c.length];
 			Vector2[] offsets = new Vector2[c.length];
@@ -185,7 +210,17 @@ public class AnimationCommand {
 			ShortArray main = Animations.guides.get(Data.hash(fileName));
 			ShortArray tip = Animations.guides.get(Data.hash(fileName+"tip"));
 			boolean hasTip = tip != null;
-			if (main == null) throw new GdxRuntimeException("jskld! "+fileName +"   "+"  "+y +"  "+c.length );
+			if (main == null){
+				//throw new GdxRuntimeException("jskld! "+fileName +"   "+"  "+y +"  "+c.length );
+				Gdx.app.log(TAG, "null guide, replacing with empty "+fileName +"   "+"  "+y +"  "+c.length );
+				for (int i = 0; i < c.length / (1+c.skipFrames); i++){
+					offsets[i] = new Vector2(0, 0);
+
+				}
+				AnimSet.addGuideToContainer(c.animName, c.loop, c.randomStart, c.velocityDependant, c.delta, c.bitmask, prefix+layers[y], container, offsets, angles);
+
+				continue;
+			}
 			//if (base != null)
 			//Gdx.app.log(TAG, "guide layer "+baseFileName+c.offset + "  hash:"+Data.hash(baseFileName) + "  len"+
 			//base.size);

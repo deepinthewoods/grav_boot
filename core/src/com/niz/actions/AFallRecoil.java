@@ -19,7 +19,7 @@ import com.niz.component.Position;
 import com.niz.component.SpriteAnimation;
 
 public class AFallRecoil extends Action{
-	private static final String TAG = "Fall action";
+	private static final String TAG = "Fall recoil action";
 	static final long EARLY_JUMP_THRESHOLD = (long) (.2f / Main.timeStep);
 	
 	private static ComponentMapper<Physics> physM = ComponentMapper.getFor(Physics.class);

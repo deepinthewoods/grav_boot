@@ -54,13 +54,13 @@ public class PlatformerFactory extends Factory {
 	public Race[] charSelectRaces, pathfindingRaces;
 	public Inventory[] charSelectInventories, pathfindingInventories;
 	//private Map map;
-	public static final int CHAR_SELECT_CHARACTERS = 8, PATHFINDING_COUNT = 32;
+	public static final int CHAR_SELECT_CHARACTERS = 1, PATHFINDING_COUNT = 32;
 	public PlatformerFactory(){
 		charSelectRaces = new Race[CHAR_SELECT_CHARACTERS];
 		for (int i = 0; i < charSelectRaces.length; i++){
 			charSelectRaces[i] = new Race();
 		}
-		charSelectRaces[2].raceID[Race.BACK_ARM] = Race.RED_DRAGON;
+/*		charSelectRaces[2].raceID[Race.BACK_ARM] = Race.RED_DRAGON;
 		charSelectRaces[2].raceID[Race.FRONT_ARM] = Race.RED_DRAGON;
 		
 		charSelectRaces[1].raceID[Race.FRONT_ARM] = Race.RED_DRAGON;
@@ -70,17 +70,18 @@ public class PlatformerFactory extends Factory {
 		charSelectRaces[1].raceID[Race.TORSO] = Race.RED_DRAGON;
 		charSelectRaces[1].raceID[Race.NECK] = Race.RED_DRAGON;
 		charSelectRaces[1].raceID[Race.HEAD] = Race.RED_DRAGON;
-		charSelectRaces[1].raceID[Race.TAIL] = Race.RED_DRAGON;
+		charSelectRaces[1].raceID[Race.TAIL] = Race.RED_DRAGON;*/
 
 
-		/*charSelectRaces[3].raceID[Race.FRONT_ARM] = Race.NONE;
-		charSelectRaces[3].raceID[Race.BACK_ARM] = Race.NONE;
-		charSelectRaces[3].raceID[Race.BACK_LEG] = Race.NONE;
-		charSelectRaces[3].raceID[Race.FRONT_LEG] = Race.NONE;
-		charSelectRaces[3].raceID[Race.TORSO] = Race.RPG;
-		charSelectRaces[3].raceID[Race.NECK] = Race.NONE;
-		charSelectRaces[3].raceID[Race.HEAD] = Race.NONE;
-		charSelectRaces[3].raceID[Race.TAIL] = Race.NONE;*/
+		charSelectRaces[0].raceID[Race.FRONT_ARM] = Race.NONE;
+		charSelectRaces[0].raceID[Race.BACK_ARM] = Race.NONE;
+		charSelectRaces[0].raceID[Race.BACK_LEG] = Race.NONE;
+		charSelectRaces[0].raceID[Race.FRONT_LEG] = Race.NONE;
+		charSelectRaces[0].raceID[Race.NECK] = Race.NONE;
+		charSelectRaces[0].raceID[Race.HEAD] = Race.NONE;
+		charSelectRaces[0].raceID[Race.TAIL] = Race.NONE;//*/
+		charSelectRaces[0].raceID[Race.TORSO] = Race.RPG;
+
 
 
 		charSelectInventories = new Inventory[CHAR_SELECT_CHARACTERS];
@@ -280,7 +281,7 @@ public class PlatformerFactory extends Factory {
 		}
 		
 		///////pathfinding stuff
-
+/*
 		for (int i = 0; i < 4; i++){
 			//makePathfinder(engine, i, APathfindingJumpAndHold.NORMAL_JUMP);
 			makePathfinder(engine, i, APathfindingJumpAndHold.STANDING_JUMP);
@@ -291,7 +292,7 @@ public class PlatformerFactory extends Factory {
 			//makePathfinder(engine, i, APathfindingJumpAndHold.DELAYED_REVERSE_JUMP);
 			makePathfinder(engine, i, APathfindingJumpAndHold.WALLJUMP);
 		}
-		
+		//*/
 		
 	}
 	private void makePathfinder(EngineNiz engine, int i, int type) {

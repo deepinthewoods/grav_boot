@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasSprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 public class AnimationLayer extends Animation {
 	
@@ -44,9 +45,15 @@ public class AnimationLayer extends Animation {
 		return this.getKeyFrames().length;
 	}
 
-	public int getKeyFrameIndex(float f, LayerGuide guide) {
-		
-		return getKeyFrameIndex(f);
+	public int getKeyFrameIndex(float f, LayerGuide guide, int size) {
+
+		int keyFrameIndex = getKeyFrameIndex(f);
+		if (keyFrameIndex >= getKeyFrames().length){
+			throw new GdxRuntimeException("frame error");
+			//keyFrameIndex = 0;
+		}
+
+		return keyFrameIndex;
 	}
 
 }

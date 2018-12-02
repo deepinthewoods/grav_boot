@@ -59,6 +59,11 @@ public int tail_tip_g;
 public boolean alignWithBodyBottom = true;
 static IntArray tmpLayerIDs = new IntArray(), tmpGuideIDs = new IntArray();
 
+public String toString(){
+	String s = "";
+
+	return s;
+}
 
 
 	public SpriteAnimation(){
@@ -79,12 +84,14 @@ static IntArray tmpLayerIDs = new IntArray(), tmpGuideIDs = new IntArray();
 			current = animID;
 			Array<AnimationContainer> arr = anims.anims.get(animID);
 			currentAnim.set(arr.get(0), layerIDs, guideIDs);
-			//Gdx.app.log(TAG, "start anim ");
-			 {
+			Gdx.app.log(TAG, "start anim " + Data.getString(animID));
+			{
 				
 				if ((currentAnim.bitmask & prevBitmask) != 0){
 					//Gdx.app.log("", "keep time");
-				}
+					for (int i = 0; i < time.length; i++){
+						//time[i] = 0f;
+					}				}
 				else {
 					for (int i = 0; i < time.length; i++){
 						time[i] = 0f;
@@ -92,8 +99,10 @@ static IntArray tmpLayerIDs = new IntArray(), tmpGuideIDs = new IntArray();
 				}
 				
 				if (currentAnim.randomStart){//random start with same bitmask
+					//Gdx.app.log(TAG, "random start anim");
 					for (int i = 0; i < time.length; i++){
 						//time[i] = MathUtils.random(currentAnim.getAnimationDuration());
+
 					}
 				}
 				
@@ -199,18 +208,27 @@ static IntArray tmpLayerIDs = new IntArray(), tmpGuideIDs = new IntArray();
 		
 		for (int i = Math.max(1,  smallest); i < guides.size; i++){
 			Guide g = null;
+			int total = 0;
 			//if (){
 			if (overriddenGuides.get(i)){
 				g = overriddenGuideLayers[i];
-				//Gdx.app.log(TAG, "OVERRIDDEN");
+
+				Gdx.app.log(TAG, "OVERRIDDEN");
 			} else {
-				g = currentAnim.guides.get(i);				
+				g = currentAnim.guides.get(i);
 			}
+			/*if (currentAnim.layers.get(guideFrameSources[i]) != null)
+				Gdx.app.log(TAG, "g "+currentAnim.layers.get(guideFrameSources[i]).getNumberOfFrames() +
+                "  " + Data.getString(layerIDs.get(guideFrameSources[i]))
+
+                );//*/
+			//total = g.offsets.length;
 			//} else {
 				
 			//}
 			LayerGuide actual = guides.get(i);
 			int frame = frameIndices[guideFrameSources[i]];
+
 			actual.set(guides.get(guideSources[i]));
 			boolean adjLeft = left;
 			if (isAngleFlipGuideLayer[i]){
@@ -230,11 +248,18 @@ static IntArray tmpLayerIDs = new IntArray(), tmpGuideIDs = new IntArray();
 			}
 			else {
 				//Gdx.app.log(TAG, "RRRRRRRRRRR "+Data.getString(guideIDs.get(i)) + " framesrc:"+Data.getString(layerIDs.get(guideFrameSources[i]))+overriddenGuides.get(i)+g.offsets.length);
-				if (g == null)Gdx.app.log(TAG, "RRRRRRRRRRR "+Data.getString(guideIDs.get(i)) + "  " + frame + " hash:"+guideIDs.get(i)
+				/*if (g == null || frame >= g.offsets.length)Gdx.app.log(TAG, "RRRRRRRRRRR "+Data.getString(guideIDs.get(i)) + "  " + frame + " hash:"+guideIDs.get(i)
 						+ Animations.guides.containsKey(guideIDs.get(i)) + (currentAnim.getGuide(i) == null)
-						+ "  guideT "+currentAnim.guides.size + " / " + i
-						);
+						+ "  guideT "+currentAnim.guides.size + " / " + i + "  "
+						+ currentAnim
+				);//*/
+				if (frame >= total){
+					//Gdx.app.log(TAG, "frame index too big");
+					//frame %= total;
+					//frameIndices[guideFrameSources[i]] = frame;
+				}
 				actual.add(g.offsets[frame]);
+
 				actual.rotation = (360 + 180 - g.angles[frame]) % 360;
 				
 				//actual.rotation = g.angles[frame];

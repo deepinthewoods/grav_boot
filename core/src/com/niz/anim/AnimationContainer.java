@@ -58,7 +58,7 @@ public class AnimationContainer {
 	
 	public Guide getGuide(int i) {
 		int key = guideKeyToIndex.get(i, -1);
-		if (key == -1) return null;//throw new GdxRuntimeException("jfskdl"+i+" !   "+Data.hash("dragonlegsguide"));
+		if (key == -1) return null;//throw new GdxRuntimeException("jfskdl"+i+" !   "+Data.hash("dragonlegsguide"));//
 		return guides.get(key);
 	}
 	public AnimationLayer getLayer(int i) {

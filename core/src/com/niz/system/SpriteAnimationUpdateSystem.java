@@ -9,6 +9,8 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasSprite;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.niz.Data;
 import com.niz.anim.AnimationContainer;
 import com.niz.anim.AnimationLayer;
 import com.niz.component.Body;
@@ -119,11 +121,16 @@ public class SpriteAnimationUpdateSystem extends EntitySystem {
 				AtlasSprite s;// = (AtlasSprite) spriteInstance.getKeyFrame(spr.time, spr.left);
 				//Gdx.app.log(TAG, "drawpre"+spriteInstance.getKeyFrame(0f).getRegionHeight());
 				//if (s == null) continue;
-				int fr = layer.getKeyFrameIndex(spr.time[index], spr.guides.get(spr.layerSources[index]));
+				int fr = layer.getKeyFrameIndex(spr.time[index], spr.guides.get(spr.layerSources[index]), container.guides.size);
+
+				//Gdx.app.log(TAG, "frame error " + spr.currentAnim.guides.size + "  " + fr);// Data.getString(spr.guideIDs.get(index)));
+
+
+
 				if (spr.frameIndices[index] != fr){
 					if (index < smallestChangedIndex)
 						smallestChangedIndex = index;
-					
+
 					spr.frameIndices[index] = fr;
 					//Gdx.app.log(TAG, "update frame"+fr);
 				}

@@ -31,6 +31,9 @@ class TextureRepacker {
 
     private static final String TAG = "texture repacker";
     public static void processGuideSpritesFromSprite(FileHandle file, String name, int w, int h, int colorToMatch){
+        processGuideSpritesFromSprite(file, name, w, h, colorToMatch, 0, 0);
+    }
+    public static void processGuideSpritesFromSprite(FileHandle file, String name, int w, int h, int colorToMatch, int offsetX, int offsetY){
         Pixmap pix = new Pixmap(file);
         int width = pix.getWidth();
         if (width % w != 0) throw new GdxRuntimeException("not cleanly tileable");
@@ -51,7 +54,7 @@ class TextureRepacker {
                         if (c.a > .5f){
                             if (pixel == colorToMatch)
                             try {
-                                GridPoint2 guide = new GridPoint2(x, y);
+                                GridPoint2 guide = new GridPoint2(x+ offsetX, y + offsetY);
                                 os.writeShort(guide.x);
                                 os.writeShort(guide.y);
                                 total++;
@@ -157,5 +160,27 @@ class TextureRepacker {
             e.printStackTrace();
         }
 
+    }
+
+    public static void createGuideSpritesIdentical(String name, int total, GridPoint2 guide) {
+        FileHandle outFileint = Gdx.files.internal("guides/" + name);//prefix+layer); // i.e guides/playertorsoguide
+
+        FileHandle outFile = Gdx.files.absolute(outFileint.file().getAbsolutePath());
+        DataOutputStream os = new DataOutputStream(outFile.write(false, 100));
+        for (int i = 0; i < total; i++){
+            try {
+                os.writeShort(guide.x);
+                os.writeShort(guide.y);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        try {
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

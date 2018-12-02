@@ -378,7 +378,7 @@ public void update(float deltaTime) {
 			else layer = parent.layers.get(index);
 			if (layer == null) {continue;}
 			if (layer.offsets == null){
-				Gdx.app.log(TAG, "null offsets " + index);
+				Gdx.app.log(TAG, ("null offsets " + index));
 				continue;
 			}
 			AtlasSprite s;

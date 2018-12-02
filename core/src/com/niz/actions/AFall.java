@@ -132,7 +132,7 @@ public class AFall extends Action {
 	@Override
 	public void onEnd() {
 		// TODO Auto-generated method stub
-
+		//Gdx.app.log(TAG, "end");
 	}
 
 	@Override

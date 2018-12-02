@@ -141,6 +141,7 @@ public class AJump extends Action{
 			resetXLimit = false;
 			physM.get(parent.e).limit.x = xLimit;
 		}
+		//Gdx.app.log(TAG, "end");
 	}
 
 	@Override

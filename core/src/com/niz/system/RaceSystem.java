@@ -193,8 +193,8 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		
 		//int LEGS_G = 0, TORSO_G = 0, NECK_G = 0, HEAD_G = 0, 
 						//ARMS_G = 0, HAND_BACK_G = 0, HAND_FRONT_G = 0, TAIL_G = 0;
-		String[] racePrefixes = {"player", "reddragon", "greeddragon", "whitedragon", "rpg1", "rpg2"};
-		String[] guidePrefixes = {"player", "dragon", "dragon", "dragon", "rpg", "rpg"};
+		String[] racePrefixes = {"player", "reddragon", "greeddragon", "whitedragon", "rpg1", "none"};
+		String[] guidePrefixes = {"player", "dragon", "dragon", "dragon", "rpg", "none"};
 		int[] armBack = new int[racePrefixes.length], armFront = new int[racePrefixes.length], legBack = new int[racePrefixes.length], legFront = new int[racePrefixes.length],
 				torso = new int[racePrefixes.length], head = new int[racePrefixes.length], tail = new int[racePrefixes.length], neck = new int[racePrefixes.length]
 						
@@ -271,6 +271,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		
 		i++;
 		switch (race.raceID[Race.TAIL]){
+			case Race.NONE:
 		case Race.HUMAN:i--;
 		anim.itemLayersByLimbIndex[Race.LIMB_TAIL] = -1;
 
@@ -341,8 +342,8 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		}
 		i++;
 		switch (race.raceID[Race.TORSO]){
+			case Race.RPG:
 			case Race.NONE:
-		case Race.RPG:
 		case Race.HUMAN:
 			anim.guideIDs.add(neckG[race.raceID[Race.TORSO]]);
 			guideFrameSources.add(anim.torso);
@@ -372,6 +373,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		}
 		i++;
 		switch (race.raceID[Race.TORSO]){
+			case Race.RPG:
 			case Race.NONE:
 		case Race.HUMAN:
 		case Race.RED_DRAGON:			
@@ -399,6 +401,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		}
 		i++;
 		switch (race.raceID[Race.TORSO]){
+			case Race.RPG:
 			case Race.NONE:
 		case Race.HUMAN:
 		case Race.RED_DRAGON:
@@ -464,6 +467,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		}
 		i++;
 		switch (race.raceID[Race.TORSO]){
+			case Race.RPG:
 			case Race.NONE:
 		case Race.HUMAN:
 		case Race.RED_DRAGON:
@@ -498,6 +502,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		}
 		i++;
 		switch (race.raceID[Race.TAIL]){
+
 			case Race.NONE:
 		case Race.HUMAN:i--;
 		break;
