@@ -60,7 +60,7 @@ void main() {
         vec3 Falloff = texture2D(u_index_texture, vec2(layerIndex * LAYERS_SPACE, COEFFICIENTS_PIXEL_HEIGHT)).rgb;
         Falloff.g *= 10.0;
         Falloff.b *= 50.0;
-
+        
         //Falloff *= 0.0000000001;
         //Falloff.r += 0.4;
        // Falloff.g += 3.0;

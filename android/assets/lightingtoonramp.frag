@@ -46,7 +46,7 @@ void main() {
 
 	int layerIndex = int((vTexCoord.x * 128.0 ) / float(N_LIGHTS));
 
-    vec3 v = vec3(float(int((vTexCoord.x) * 3)) / 2. , 0., 0.);
+    vec3 v = vec3(float(int((vTexCoord.x) * 3.)) / 2. , 0., 0.);
 	//v = vec3(vTexCoord.x, 0., 0.);
     //v.xy += 1.0;
     //v.xy *= 0.5;
