@@ -58,8 +58,9 @@ public class ZoomSystem extends EntitySystem implements Observer {
 		if (zoom > ParallaxBackgroundSystem.ZOOM_OUT_MAX){
 			zoom = ParallaxBackgroundSystem.ZOOM_OUT_MAX;
 		}
-			
-		
+//		if (zoom < 1f)
+//			zoom = 1f;
+//
 	}
 	
 	

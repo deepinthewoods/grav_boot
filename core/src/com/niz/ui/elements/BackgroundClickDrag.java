@@ -85,14 +85,18 @@ public class BackgroundClickDrag extends UIElement {
 
             }
 			
-
+            Vector2 old1 = new Vector2(), old2 = new Vector2();
             @Override
             public void pinch(InputEvent event, Vector2 initialPointer1, Vector2 initialPointer2, Vector2 pointer1, Vector2 pointer2) {
+                if (old1.equals(pointer1) && old2.equals(pointer2)) return;//this was firing off every frame
+                old1.set(pointer1);
+                old2.set(pointer2);
+                //if (event.isHandled()) return;
                 vec4.v.set(initialPointer1);
                 vec4.v2.set(initialPointer2);
                 vec4.v3.set(pointer1);
                 vec4.v4.set(pointer2);
-
+                event.handle();
                 if (subjects != null){
                     subjects[0].notify(null, Event.CANCEL_TOUCH, null);
                     pressed = false;

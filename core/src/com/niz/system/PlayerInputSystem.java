@@ -13,11 +13,14 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.niz.Input;
+import com.niz.ZoomInput;
 import com.niz.component.ButtonInput;
 import com.niz.component.Control;
 import com.niz.component.Player;
 import com.niz.component.VectorInput2;
+import com.niz.component.VectorInput4;
 import com.niz.observer.Observer;
+import com.niz.observer.Subject;
 import com.niz.observer.Subject.Event;
 import com.niz.ui.edgeUI.InventoryScreen;
 
@@ -29,6 +32,8 @@ public class PlayerInputSystem extends RenderSystem implements Observer {
 	private ShapeRenderingSystem shape;
 	private CameraSystem cameraSys;
 	private InventoryScreen invScreen;
+	private ZoomInput zoomInput = new ZoomInput();
+	private Subject zoomSubject;
 
 	public PlayerInputSystem(EngineNiz engine, InventoryScreen invScreen){
 		engine.getSubject("playerControl").add(this);
@@ -43,6 +48,9 @@ public class PlayerInputSystem extends RenderSystem implements Observer {
 		entities = engine.getEntitiesFor(Family.all(Control.class, Player.class).get());
 		shape = engine.getSystem(ShapeRenderingSystem.class);
 		cameraSys = engine.getSystem(CameraSystem.class);
+		EngineNiz engineNiz = (EngineNiz) engine;
+
+		zoomSubject = engineNiz.getSubject("zoominput");
 
 	}
 
@@ -100,10 +108,27 @@ public class PlayerInputSystem extends RenderSystem implements Observer {
 			//Gdx.app.log("", "notified"+con.rotation);
 		}
 		
-		
-	}
+		if (event == Event.PINCH){
+			VectorInput4 vec = (VectorInput4) c;
+			float d = vec.v3.dst(vec.v4);
+		    if (vec.v.equals(oldInitial1) && vec.v2.equals(oldInitial2)) {
+            } else {
+		        zoomDist = d;
 
+			}
+
+			zoomInput.zoom = zoomDist/d;
+			zoomDist = d;
+
+
+			zoomSubject.notify(null, null, zoomInput);
+			Gdx.app.log(TAG, "NOTRIFY ZOOM " + zoomInput.zoom);
+            oldInitial1.set(vec.v);
+            oldInitial2.set(vec.v2);
+		}
+	}
+	float zoomDist = 1f;
 	Vector3 tmpV = new Vector3();
-	Vector2 tmpV2 = new Vector2();
+	Vector2 tmpV2 = new Vector2(), oldInitial1 = new Vector2(), oldInitial2 = new Vector2();
 
 }

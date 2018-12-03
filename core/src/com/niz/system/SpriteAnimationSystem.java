@@ -345,7 +345,7 @@ public void update(float deltaTime) {
 	batch.enableBlending();
 	batch.getProjectionMatrix().setToOrtho2D(0,  0, t.getWidth(), t.getHeight());
 	batch.begin();
-	batch.draw(t, 0, 0);
+	//batch.draw(t, 0, 0);
 	batch.end();
 
 }
