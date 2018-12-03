@@ -70,6 +70,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	private ShaderProgram positionShader;
 	public Texture atlasTexture;// = new Texture(Gdx.files.internal("tilesprocessed.png"));
 	private ShaderProgram lightRampShader;
+	private BufferStartSystem bufferSys;
 
 
 	public MapRenderSystem(OrthographicCamera gameCamera, OrthographicCamera zoomOutCamera, SpriteBatchN batch, TextureAtlas atlas, Texture diffTexture, Texture normalTexture) {
@@ -105,7 +106,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		positionShader = shaderSys.posShader;
 		lightRampShader = shaderSys.lightRampShader;
 		//shader = createDefaultShader();
-		
+		bufferSys = engine.getSystem(BufferStartSystem.class);
 		lights = engine.getSystem(LightRenderSystem.class);
 		buffer = engine.getSystem(BufferStartSystem.class);
 		family = Family.one(Map.class).get();
@@ -204,9 +205,10 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 			//Gdx.app.log(TAG,  "draw");;
 			hasRendered = true;
 		}
-		camera.zoom = zoom;
+		//camera.zoom = zoom;
 		float originalZoom = camera.zoom;
 		camera.zoom = Math.min(camera.zoom, 22f);
+
 		camera.update();
 		int 	x0 = (int) camera.position.x
 				, x1 = x0
@@ -245,6 +247,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		camera.update();
 		
 		renderCamera = camera;
+		renderCamera.zoom = 1f;
 		ShaderProgram shader = this.shader;
 		if (camSys.zoomedOut){
 			//renderCamera = zoomOutCamera;
@@ -273,14 +276,13 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 				int[] tiles = map.tiles, backTiles = map.backTiles;
 				batch.setProjectionMatrix(renderCamera.combined);
 				if (Gdx.input.isKeyPressed(Input.Keys.P))map.setDirtyAll();
-				map.cache.beginDraw(skipDraw, batch, lights);
-				map.cache.beginDrawBack(lights);
-				//if (false)                                                           
+
+				//if (false)
 				endbp:
 				{
 					for (int x = x0; x <= x1; x++){
 						for (int y = y0; y <= y1; y++){
-							map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, 0, batch, indexBuffer, atlasTexture);
+							map.cache.cache(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, 0, batch, indexBuffer, atlasTexture);
 							//if (count++ > 6) break endbp;
 							int dupeOffset = OverworldSystem.SCROLLING_MAP_WIDTH* OverworldSystem.SCROLLING_MAP_TOTAL_SIZE * Main.PPM;
 							if (map.duplicateRenderL){
@@ -293,9 +295,26 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 					}
 
 				}
+				bufferSys.currentBuffer.begin();
+				map.cache.beginDraw(skipDraw, batch, lights);
+				map.cache.beginDrawBack(lights);
+				for (int x = x0; x <= x1; x++){
+					for (int y = y0; y <= y1; y++){
+						map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, 0, batch, indexBuffer, atlasTexture);
+						//if (count++ > 6) break endbp;
+						int dupeOffset = OverworldSystem.SCROLLING_MAP_WIDTH* OverworldSystem.SCROLLING_MAP_TOTAL_SIZE * Main.PPM;
+						if (map.duplicateRenderL){
+							//map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, -dupeOffset);
+						}
+						if (map.duplicateRenderR){
+							//map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, dupeOffset);
+						}
+					}
+				}
+
 
 				map.cache.endDraw();
-			
+				bufferSys.currentBuffer.end();
 				//if (skipDraw){
 					//batch.end();
 				//}

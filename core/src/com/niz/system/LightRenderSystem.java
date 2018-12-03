@@ -100,16 +100,13 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 			@Override
 			public void onNotify(Entity e, Event event, Object c) {
 				ZoomInput z = (ZoomInput) c;
-				zoom = z.zoom;
-				if (zoom < 1.01f) {
-					//zoom = 1f;
-					return;
-				}
+				//zoom = z.zoom;
+				zoom = 1f;
 				//zoom = (float) Math.sqrt(zoom);
 
 
 
-				zoom = z.zoom;
+				//zoom = z.zoom;
 			}
 			
 		});;

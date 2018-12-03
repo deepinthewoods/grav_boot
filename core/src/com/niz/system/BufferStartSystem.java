@@ -29,7 +29,7 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 
 	private ImmutableArray<Entity> lights;
 	private OrthographicCamera camera;
-	public boolean disabled = !false;
+	public boolean disabled = false;
 	public boolean hasStarted;
 	private float viewportHeight;
 
@@ -62,6 +62,8 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 			
 		});;
 		//disabled = true;
+		buffer.getColorBufferTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+		mapBuffer.getColorBufferTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 	}
 
 	@Override
@@ -90,11 +92,11 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 			return;
 		}
 
-		currentBuffer.begin();
+		//currentBuffer.begin();
 		if (!camSys.zoomedOut){
 			Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-			
+			//Gdx.app.log(TAG, "buffer start");
 		}
 		
 		
@@ -109,7 +111,7 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 			if (buffer != null){
 				buffer.dispose();
 			}
-			buffer = new FrameBuffer(Format.RGBA8888, (int) viewportWidth, (int) (viewportWidth), false){
+			buffer = new FrameBuffer(Format.RGBA8888, (int) viewportWidth, (int) (viewportHeight), false){
 
 				@Override
 				protected Texture createColorTexture() {

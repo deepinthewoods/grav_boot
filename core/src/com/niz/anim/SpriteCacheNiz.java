@@ -163,62 +163,28 @@ public class SpriteCacheNiz{
 		int v = (OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_TOTAL_SIZE )/ MapRenderSystem.RENDER_SIZE;
 		wx = ((wx % v) + v) % v;
 		if (xOffset < 0){
-			
 			//Gdx.app.log(TAG, "draw " + x + " wx:" + wx + " y:" + y);
 		}
 		if (wx < 0 || wy < 0 || wx >= map.width/MapRenderSystem.RENDER_SIZE || wy >= map.height/MapRenderSystem.RENDER_SIZE){
-			//int width = (OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_TOTAL_SIZE) / MapRenderSystem.RENDER_SIZE;
-			//wx = (((wx % width) + width) % width);
-			//if (wy == 0)
-			////Gdx.app.log(TAG, "draw afatwe " + x + " wx:" + wx + " y:" + y);
-			//if (wx < 0 || wy < 0 || wx >= map.width/MapRenderSystem.RENDER_SIZE || wy >= map.height/MapRenderSystem.RENDER_SIZE){
-				
 				return;
 				
 			//}  
 		}
 		//setAllDirty = true;
 		int index = wy + wx*(map.width/MapRenderSystem.RENDER_SIZE);
-		
-		//x *= MapRenderSystem.RENDER_SIZE;
-		//y *= MapRenderSystem.RENDER_SIZE;
-		
-		//Gdx.app.log(TAG,  "draw "+ "  index "+index + " wx "+wx+" wy"+wy + " tot"+map.width);
-		//if (x != 0 || y != 0) return;
-		//if (x >= 0) return;
 		mat.set(camera.combined);
 		mat.translate(Main.PPM*(x)*(MapRenderSystem.RENDER_SIZE) +map.offset.x*Main.PPM, Main.PPM*(y)*(MapRenderSystem.RENDER_SIZE)+map.offset.y*Main.PPM, 0);
 		mat.translate(xOffset, 0, 0);
 		map.renderMatrix.set(mat);
-		//if (moveX) 
-			//mat.translate(Main.PPM*(x)*(MapRenderSystem.RENDER_SIZE) +map.offset.x*Main.PPM, Main.PPM*(y)*(MapRenderSystem.RENDER_SIZE)+map.offset.y*Main.PPM, 0);
-		//Gdx.app.log(TAG,  "draw "+ "  index "+index + " wx "+(Main.PPM*(x)*(MapRenderSystem.RENDER_SIZE) +map.offset.x*Main.PPM)/Main.PPM+" wy"+(Main.PPM*(y)*(MapRenderSystem.RENDER_SIZE)+map.offset.y*Main.PPM)/Main.PPM + " tot");
-		//bshader.begin();
-		//bshader.end();
-			
+
 		populateCurrentBatches(index);
 		
-		if (cachedTotal < CACHE_TOTAL_TARGET && (map.dirty[index] || setAllDirty)){
-			//map.dirtyRuns[wx] = true;
-			//Gdx.app.log(TAG,  "cache chunk  "+index + setAllDirty);
 
-			cacheChunk(map, index, tiles, backTiles, batch);
-			cachedTotal++;
-			map.dirty[index] = false;
-		}
 		
 		//Gdx.gl.glDisable(GL20.GL_BLEND);
 		drawnBits.set(index);
-		
-		//if (shader == null){
-		//	currentBBatch.setColor(.3f, .3f, .3f, 1f);
-		//}else currentBBatch.setColor(1f,  1f,  1f,  1f);
-		//if (shader == null) return;
 
 		batch.setProjectionMatrix(mat);
-		//zeroMatrix.idt();
-		//batch.setTransformMatrix(zeroMatrix);
-		//batch.getProjectionMatrix().setToOrtho2D(0, 0, MapRenderSystem.RENDER_SIZE * Main.PPM, MapRenderSystem.RENDER_SIZE * Main.PPM);
 		batch.disableBlending();
 		batch.enableBlending();
 		batch.setShader(shader);
@@ -242,6 +208,44 @@ public class SpriteCacheNiz{
 		v3.set(0, 0, 0);
 		mat.getTranslation(v3);
 		//Gdx.app.log(TAG, "draw" + v3);
+
+	}
+
+	public void cache(Map map, int x, int y, int[] tiles, int[] backTiles, OrthographicCamera camera, LightRenderSystem lights, BufferStartSystem buffer, boolean setAllDirty, ShaderProgram shader, int xOffset, SpriteBatchN batch, FrameBuffer indexBuffer, Texture atlasTexture) {
+		x -= map.offset.x/MapRenderSystem.RENDER_SIZE;
+		y -= map.offset.y/MapRenderSystem.RENDER_SIZE;
+		int wy =  y;//(int) (y -( map.offset.y/MapRenderSystem.RENDER_SIZE));
+		int wx =  x;//(int) (x -( map.offset.x/MapRenderSystem.RENDER_SIZE));
+		wx += xOffset / (MapRenderSystem.RENDER_SIZE * Main.PPM);
+		int v = (OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_TOTAL_SIZE )/ MapRenderSystem.RENDER_SIZE;
+		wx = ((wx % v) + v) % v;
+		if (xOffset < 0){
+			//Gdx.app.log(TAG, "draw " + x + " wx:" + wx + " y:" + y);
+		}
+		if (wx < 0 || wy < 0 || wx >= map.width/MapRenderSystem.RENDER_SIZE || wy >= map.height/MapRenderSystem.RENDER_SIZE){
+			//int width = (OverworldSystem.SCROLLING_MAP_WIDTH * OverworldSystem.SCROLLING_MAP_TOTAL_SIZE) / MapRenderSystem.RENDER_SIZE;
+			return;
+		}
+		int index = wy + wx*(map.width/MapRenderSystem.RENDER_SIZE);
+
+		mat.set(camera.combined);
+		mat.translate(Main.PPM*(x)*(MapRenderSystem.RENDER_SIZE) +map.offset.x*Main.PPM, Main.PPM*(y)*(MapRenderSystem.RENDER_SIZE)+map.offset.y*Main.PPM, 0);
+		mat.translate(xOffset, 0, 0);
+		map.renderMatrix.set(mat);
+
+		populateCurrentBatches(index);
+
+		if (cachedTotal < CACHE_TOTAL_TARGET && (map.dirty[index] || setAllDirty)){
+			//map.dirtyRuns[wx] = true;
+			//Gdx.app.log(TAG,  "cache chunk  "+index + setAllDirty);
+
+			cacheChunk(map, index, tiles, backTiles, batch);
+			cachedTotal++;
+			map.dirty[index] = false;
+		}
+
+		//Gdx.gl.glDisable(GL20.GL_BLEND);
+
 
 	}
 	Vector3 v3 = new Vector3();

@@ -57,6 +57,7 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 		lightSys = engine.getSystem(LightRenderSystem.class);
 		shader = engine.getSystem(ShaderSystem.class).shader;
 		spriteSys = engine.getSystem(SpriteAnimationSystem.class);
+
 	}
 	
 	@Override
@@ -75,11 +76,13 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 	@Override
 	public void update(float deltaTime) {
 		if (!startBuffer.hasStarted){
+			Gdx.app.log(TAG , "no buffer " +zoom);
+
 			return;
 		}
 		batch.setShader(null);
-		startBuffer.currentBuffer.end();
-		Gdx.app.log(TAG , "zoomed " +zoom);
+		//startBuffer.currentBuffer.end();
+		//Gdx.app.log(TAG , "zoomed " +zoom);
 
 		if (camSys.zoomedOut){
 
@@ -102,29 +105,32 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 			//Gdx.app.log(TAG, "" + camSys.camera.position);
 			batch.draw(startBuffer.currentBuffer.getColorBufferTexture(), 0, 0, OverworldSystem.SCROLLING_MAP_WIDTH * Main.PPM, OverworldSystem.SCROLLING_MAP_HEIGHT * Main.PPM);
 			batch.end();
-			spriteSys.drawLowLOD();
+			//spriteSys.drawLowLOD();
 		} else {
 
-			float w =  (Gdx.graphics.getWidth() ), h =  (Gdx.graphics.getHeight()), max = (Main.ar > 1?Math.max(w,  h):Math.min(w, h));
-			w *= zoom;
-			h *= zoom;
+			float w =  (Gdx.graphics.getWidth() ), h =  (Gdx.graphics.getHeight()  ), max = (Main.ar > 1?Math.max(w,  h):Math.min(w, h));
 			batch.getProjectionMatrix().setToOrtho2D(max / 2 - w / 2, max/2+h/2, w,  -h	);
+
 			//batch.getProjectionMatrix().scale(zoom,  zoom,  zoom);
 			//batch.getProjectionMatrix().scale(zoom, zoom, 1f);
-			
+			batch.getProjectionMatrix().setToOrtho2D(-w/2, -h/2, w,  h	);
+
+
 			startBuffer.currentBuffer.getColorBufferTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 			batch.setShader(null);
 			
 			batch.begin();
-			float dw = w - Gdx.graphics.getWidth();
-			float dh = h - Gdx.graphics.getHeight();
+			float dw = w - max;//Gdx.graphics.getWidth();
+			float dh = h - max;//Gdx.graphics.getHeight();
 			float xoff = -dw * .5f;
 			float yoff = -dh * .5f;
-			Gdx.app.log(TAG , "zoomed " +zoom);
-			xoff = 0f;
-			yoff = 0f;
+			//Gdx.app.log(TAG , "zoomed " +zoom);
+			//xoff = 0f;
+			//yoff = 0f;
 			//Gdx.app.log(TAG, "zoomedin w " + w + ", h " + h);
-			batch.draw(startBuffer.currentBuffer.getColorBufferTexture(), xoff,yoff, w, h*Main.ar);
+			w /= zoom;
+			h /= zoom;
+			batch.draw(startBuffer.currentBuffer.getColorBufferTexture(), -w/2, h/2, w, -h);
 			batch.end();
 		}
 		
