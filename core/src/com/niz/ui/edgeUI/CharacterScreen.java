@@ -30,7 +30,7 @@ public class CharacterScreen extends EdgeUI implements Observer {
 	private Subject raceNotifier;
 	public StartGameButton startGameButton;
 
-	public CharacterScreen(EngineNiz engine, Skin skin, TextureAtlas playerAtlas){
+	public CharacterScreen(EngineNiz engine, Skin skin){
 		this.engine = engine;
         engine.getSubject("inventoryToggle").add(this);
         raceNotifier = engine.getSubject("populatepaperdoll");

@@ -23,7 +23,7 @@ import com.niz.observer.Observer;
 import com.niz.observer.Subject.Event;
 
 public class LightRenderSystem extends RenderSystem implements Observer{
-	private static final int NUM_LIGHTS = 4;
+	public static final int NUM_LIGHTS = 4;
 	public static final int N_LAYERS = 7;
 
 	public static final int BUFFER_SIZE = 512;
@@ -216,7 +216,7 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 							light.yOffset[layer];
 					//Gdx.app.log(TAG, "pos  "+light.position + "  " + (layer * NUM_LIGHTS * 3 +index*3));
 					index++;
-					maxAmbient = Math.max(maxAmbient, light.ambientIntensity[layer]);
+					maxAmbient = 0;//Math.max(maxAmbient, light.ambientIntensity[layer]);
 				}
 			}
 			ambient[layer] = maxAmbient;
@@ -238,14 +238,14 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 			}
 		}
 
-		shader.begin();
-		shader.setUniform3fv(falloffLoc, falloff, 0, falloff.length);
-		shader.end();
-
-		posShader.begin();
-		posShader.setUniform3fv(posLoc, pos, 0, pos.length);
-
-		posShader.end();
+//		shader.begin();
+//		shader.setUniform3fv(falloffLoc, falloff, 0, falloff.length);
+//		shader.end();
+//
+//		posShader.begin();
+//		posShader.setUniform3fv(posLoc, pos, 0, pos.length);
+//
+//		posShader.end();
 
 		resolutionArr[0] = viewportSize;
 		resolutionArr[1] = viewportSize;

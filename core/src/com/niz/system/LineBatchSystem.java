@@ -56,12 +56,8 @@ public ComponentMapper<Position> posM = ComponentMapper.getFor(Position.class);
 public ComponentMapper<SpriteAnimation> spriteM = ComponentMapper.getFor(SpriteAnimation.class);
 public ComponentMapper<SpriteStatic> spriteStaticM = ComponentMapper.getFor(SpriteStatic.class);
 protected ComponentMapper<Body> bodyM = ComponentMapper.getFor(Body.class);
-private Texture normal;
 protected ComponentMapper<BlockLine> blockLineM = ComponentMapper.getFor(BlockLine.class);
 
-private Texture diffuse;
-private TextureAtlas atlas;
-private Sprite region;
 private LightRenderSystem lights;
 private ShaderProgram shader;
 private ImmutableArray<Entity> lineBodyEntities;
@@ -143,12 +139,8 @@ private ImmutableArray<Entity> playerEntities;
 		new Color(iif, iif, iif, 1f)
  */
 
-public LineBatchSystem(TextureAtlas playerAtlas, Texture playerDiffuseTex, Texture playerNormalTex, LightRenderSystem lights) {
+public LineBatchSystem(LightRenderSystem lights) {
 	this.lights = lights;
-	atlas = playerAtlas;
-	diffuse = playerDiffuseTex;
-	normal = playerNormalTex;
-	region = atlas.createSprite("diff/line");
 }
 
 @Override
@@ -196,8 +188,8 @@ public void drawLast(float deltaTime) {
 	//batch.setShader(null);
 	batch.begin();
 	phase += deltaTime;
-	normal.bind(1);
-	diffuse.bind(0);
+//	normal.bind(1);
+//	diffuse.bind(0);
 	Gdx.gl.glEnable(GL20.GL_BLEND);
 	Gdx.gl.glLineWidth(1f);
 	
@@ -229,27 +221,27 @@ public void drawLast(float deltaTime) {
 		float speed = 4f;
 		batch.setColor(fadeColor[(int)((phase * speed +id + 0)% fadeColor.length)]);
 		//x-w, y+h, x-w+s, y+htl
-		batch.drawLine(region, (int)x- w +Main.PX/2f , (int)y+ h +Main.PX/2f, (int)x- w +Main.PX/2f + sw, (int)y+ h +Main.PX/2f);
+		batch.drawLine((int)x- w +Main.PX/2f , (int)y+ h +Main.PX/2f, (int)x- w +Main.PX/2f + sw, (int)y+ h +Main.PX/2f);
 		//x-w, y+h, x-w, y+h-s tl
-		batch.drawLine(region, (int)x- w +Main.PX/2f, (int)y+ h +Main.PX/2f, (int)x- w +Main.PX/2f, (int)y+ h +Main.PX/2f-s);
+		batch.drawLine((int)x- w +Main.PX/2f, (int)y+ h +Main.PX/2f, (int)x- w +Main.PX/2f, (int)y+ h +Main.PX/2f-s);
 		
 		batch.setColor(fadeColor[(int)((phase * speed +id + 2)% fadeColor.length)]);
 		//x+w-s, y+h, x+w, y+h tr
-		batch.drawLine(region, (int)x+ w +Main.PX/2f - sw, (int)y+ h +Main.PX/2f, (int)x+ w +Main.PX/2f, (int)y+ h +Main.PX/2f);
+		batch.drawLine( (int)x+ w +Main.PX/2f - sw, (int)y+ h +Main.PX/2f, (int)x+ w +Main.PX/2f, (int)y+ h +Main.PX/2f);
 		//x+w, y+h, x+w, y+h-s tr
-		batch.drawLine(region, (int)x+ w +Main.PX/2f, (int)y+ h +Main.PX/2f, (int)x+ w +Main.PX/2f, (int)y+ h +Main.PX/2f-s);
+		batch.drawLine( (int)x+ w +Main.PX/2f, (int)y+ h +Main.PX/2f, (int)x+ w +Main.PX/2f, (int)y+ h +Main.PX/2f-s);
 		
 		batch.setColor(fadeColor[(int)((phase * speed +id + 4)% fadeColor.length)]);
 		//x+w-s, y-h, x+w, y-h br
-		batch.drawLine(region, (int)x+ w +Main.PX/2f - sw, (int)y- h +Main.PX/2f, (int)x+ w +Main.PX/2f, (int)y- h +Main.PX/2f);
+		batch.drawLine( (int)x+ w +Main.PX/2f - sw, (int)y- h +Main.PX/2f, (int)x+ w +Main.PX/2f, (int)y- h +Main.PX/2f);
 		//x+w, y-h+s, x+w, y-h br
-		batch.drawLine(region, (int)x+ w +Main.PX/2f, (int)y- h +Main.PX/2f+s, (int)x+ w +Main.PX/2f, (int)y- h +Main.PX/2f);
+		batch.drawLine( (int)x+ w +Main.PX/2f, (int)y- h +Main.PX/2f+s, (int)x+ w +Main.PX/2f, (int)y- h +Main.PX/2f);
 		
 		batch.setColor(fadeColor[(int)((phase * speed +id + 6)% fadeColor.length)]);
 		//x-w, y-h, x-w+s, y-h bl
-		batch.drawLine(region, (int)x- w +Main.PX/2f , (int)y- h +Main.PX/2f, (int)x- w +Main.PX/2f + sw, (int)y- h +Main.PX/2f);
+		batch.drawLine( (int)x- w +Main.PX/2f , (int)y- h +Main.PX/2f, (int)x- w +Main.PX/2f + sw, (int)y- h +Main.PX/2f);
 		//x-w, y-h+s, x-w, y-h bl
-		batch.drawLine(region, (int)x- w +Main.PX/2f, (int)y- h +Main.PX/2f+s, (int)x- w +Main.PX/2f, (int)y- h +Main.PX/2f);
+		batch.drawLine( (int)x- w +Main.PX/2f, (int)y- h +Main.PX/2f+s, (int)x- w +Main.PX/2f, (int)y- h +Main.PX/2f);
 
 		/*if (batch.isFull()){
 			batch.end();
@@ -277,24 +269,24 @@ public void drawLast(float deltaTime) {
 		float w = 1.5f * Main.PPM;
 		float h = 1.5f * Main.PPM;
 		
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
-		batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 		
 		//check(lights);
 		x += drag.spacing * Main.PPM;
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
-		batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 		
 		//check(lights);
 		x += -drag.spacing * 2 * Main.PPM;
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
-		batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 
 		//check(lights);
 		
@@ -315,10 +307,10 @@ public void drawLast(float deltaTime) {
 			Connection<PathNode> con = it.next();
 			PathNode node = con.getFromNode();
 			float x =  (node.x * Main.PPM), y = (node.y * Main.PPM);
-			batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
-			batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
-			batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
-			batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+			batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+			batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
+			batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+			batch.drawLine( (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 			//Gdx.app.log(TAG,  "render block outline "+x);
 			/*if (batch.isFull()){
 				batch.end();
@@ -365,8 +357,8 @@ public void update(float deltaTime) {
 	//batch.clearCache();
 	batch.begin();
 	phase += deltaTime;
-	normal.bind(1);
-	diffuse.bind(0);
+	//normal.bind(1);
+	//diffuse.bind(0);
 	Gdx.gl.glEnable(GL20.GL_BLEND);
 	Gdx.gl.glLineWidth(1f);
 	
@@ -386,27 +378,27 @@ public void update(float deltaTime) {
 		float speed = 9f;
 		batch.setColor(Color.CYAN);
 		//x-w, y+h, x-w+s, y+htl
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f , (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f + s, (int)y+(int)h+Main.PX/2f);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f , (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f + s, (int)y+(int)h+Main.PX/2f);
 		//x-w, y+h, x-w, y+h-s tl
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f-s);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f-s);
 		
 		//batch.setColor(fadeColor[(int)((phase * speed + 2)% fadeColor.length)]);
 		//x+w-s, y+h, x+w, y+h tr
-		batch.drawLine(region, (int)x+(int)w+Main.PX/2f - s, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
+		batch.drawLine( (int)x+(int)w+Main.PX/2f - s, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
 		//x+w, y+h, x+w, y+h-s tr
-		batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f-s);
+		batch.drawLine( (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f-s);
 		
 		//batch.setColor(fadeColor[(int)((phase * speed + 4)% fadeColor.length)]);
 		//x+w-s, y-h, x+w, y-h br
-		batch.drawLine(region, (int)x+(int)w+Main.PX/2f - s, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x+(int)w+Main.PX/2f - s, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 		//x+w, y-h+s, x+w, y-h br
-		batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f+s, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f+s, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 		
 		//batch.setColor(fadeColor[(int)((phase * speed + 6)% fadeColor.length)]);
 		//x-w, y-h, x-w+s, y-h bl
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f , (int)y-(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f + s, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f , (int)y-(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f + s, (int)y-(int)h+Main.PX/2f);
 		//x-w, y-h+s, x-w, y-h bl
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f+s, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f+s, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 
 		/*if (batch.isFull()){
 			batch.end();
@@ -511,8 +503,8 @@ public void update(float deltaTime) {
 		tmpV2.scl(Main.PPM);
 		//Gdx.app.log(TAG,  "render line "+line.offsetA+line.offsetB);
 		batch.setColor(PLACE_LINE_COLOR);
-		batch.drawLine(region, (int)tmpV.x+Main.PX/2f, (int)tmpV.y+Main.PX/2f, (int)tmpV3.x+Main.PX/2f, (int)tmpV3.y+Main.PX/2f);
-		batch.drawLine(region, (int)tmpV2.x+Main.PX/2f, (int)tmpV2.y+Main.PX/2f, (int)tmpV3.x+Main.PX/2f, (int)tmpV3.y+Main.PX/2f);
+		batch.drawLine( (int)tmpV.x+Main.PX/2f, (int)tmpV.y+Main.PX/2f, (int)tmpV3.x+Main.PX/2f, (int)tmpV3.y+Main.PX/2f);
+		batch.drawLine( (int)tmpV2.x+Main.PX/2f, (int)tmpV2.y+Main.PX/2f, (int)tmpV3.x+Main.PX/2f, (int)tmpV3.y+Main.PX/2f);
 
 		
 		/*v.set(p).add(line.offsetA);
@@ -565,10 +557,10 @@ public void update(float deltaTime) {
 		float w = .5f * Main.PPM;
 		float h = .5f * Main.PPM;
 		
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
-		batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 		
 
 		/*if (batch.isFull()){
@@ -595,10 +587,10 @@ public void update(float deltaTime) {
 		float w = .125f * Main.PPM;
 		float h = .125f * Main.PPM;
 		
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
-		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
-		batch.drawLine(region, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
+		batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
+		batch.drawLine( (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 		
 		/*if (batch.isFull()){
 			batch.end();
@@ -619,10 +611,10 @@ public void update(float deltaTime) {
 		float x =  (room.min.x * Main.PPM), y = (room.min.y * Main.PPM);
 		float x2 =  (room.max.x * Main.PPM), y2 = (room.max.y * Main.PPM);
 
-		batch.drawLine(region, (int)x+Main.PX/2f, (int)y+Main.PX/2f, (int)x+Main.PX/2f, (int)y2+Main.PX/2f);
-		batch.drawLine(region, (int)x+Main.PX/2f, (int)y+Main.PX/2f, (int)x2+Main.PX/2f, (int)y+Main.PX/2f);
-		batch.drawLine(region, (int)x2+Main.PX/2f, (int)y2+Main.PX/2f, (int)x2+Main.PX/2f, (int)y+Main.PX/2f);
-		batch.drawLine(region, (int)x2+Main.PX/2f, (int)y2+Main.PX/2f, (int)x+Main.PX/2f, (int)y2+Main.PX/2f);
+		batch.drawLine( (int)x+Main.PX/2f, (int)y+Main.PX/2f, (int)x+Main.PX/2f, (int)y2+Main.PX/2f);
+		batch.drawLine( (int)x+Main.PX/2f, (int)y+Main.PX/2f, (int)x2+Main.PX/2f, (int)y+Main.PX/2f);
+		batch.drawLine( (int)x2+Main.PX/2f, (int)y2+Main.PX/2f, (int)x2+Main.PX/2f, (int)y+Main.PX/2f);
+		batch.drawLine( (int)x2+Main.PX/2f, (int)y2+Main.PX/2f, (int)x+Main.PX/2f, (int)y2+Main.PX/2f);
 
 //		if (batch.isFull()){
 //			batch.end();
@@ -643,10 +635,10 @@ public void update(float deltaTime) {
 		float x =  (room.min9.x * Main.PPM), y = (room.min9.y * Main.PPM);
 		float x2 =  (room.max9.x * Main.PPM), y2 = (room.max9.y * Main.PPM);
 
-		batch.drawLine(region, (int)x+Main.PX/2f, (int)y+Main.PX/2f, (int)x+Main.PX/2f, (int)y2+Main.PX/2f);
-		batch.drawLine(region, (int)x+Main.PX/2f, (int)y+Main.PX/2f, (int)x2+Main.PX/2f, (int)y+Main.PX/2f);
-		batch.drawLine(region, (int)x2+Main.PX/2f, (int)y2+Main.PX/2f, (int)x2+Main.PX/2f, (int)y+Main.PX/2f);
-		batch.drawLine(region, (int)x2+Main.PX/2f, (int)y2+Main.PX/2f, (int)x+Main.PX/2f, (int)y2+Main.PX/2f);
+		batch.drawLine( (int)x+Main.PX/2f, (int)y+Main.PX/2f, (int)x+Main.PX/2f, (int)y2+Main.PX/2f);
+		batch.drawLine( (int)x+Main.PX/2f, (int)y+Main.PX/2f, (int)x2+Main.PX/2f, (int)y+Main.PX/2f);
+		batch.drawLine( (int)x2+Main.PX/2f, (int)y2+Main.PX/2f, (int)x2+Main.PX/2f, (int)y+Main.PX/2f);
+		batch.drawLine( (int)x2+Main.PX/2f, (int)y2+Main.PX/2f, (int)x+Main.PX/2f, (int)y2+Main.PX/2f);
 //
 //		if (batch.isFull()){
 //			batch.end();

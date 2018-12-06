@@ -54,7 +54,7 @@ public class AutoGibSystem extends EntitySystem {
 	public ComponentMapper<SpriteStatic> spriteStaticM = ComponentMapper.getFor(SpriteStatic.class);
 	protected ComponentMapper<Body> bodyM = ComponentMapper.getFor(Body.class);
 	
-	public AutoGibSystem(OrthographicCamera gameCamera, SpriteBatchN batch, SpriteBatchN leftBatch, Texture diff, final Texture normal, LightRenderSystem lights, Texture mapDiff, Texture mapNormal) {
+	public AutoGibSystem(OrthographicCamera gameCamera, SpriteBatchN batch, SpriteBatchN leftBatch, LightRenderSystem lights) {
 
 		makeTables();
 		this.batch = batch;
@@ -64,7 +64,7 @@ public class AutoGibSystem extends EntitySystem {
 
 			@Override
 			protected Sprite newObject() {
-				AtlasRegion reg = new AtlasRegion(normal, 0, 0, 0, 0);
+				AtlasRegion reg = new AtlasRegion(null, 0, 0, 0, 0);
 				
 				return new Sprite(reg);
 			}

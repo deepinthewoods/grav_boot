@@ -7,6 +7,7 @@ import java.io.IOException;
 import com.badlogic.ashley.core.EngineNiz;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -40,9 +41,12 @@ public class Animations {
 	public static TextureRegion[] doingTypeImages;
 	public static AtlasSprite[] doors = new AtlasSprite[8];
 	private static Sprite rpgSprite;
+	public static Texture processedPlayerTexture;
 
 	public static void init(TextureAtlas atlas, EngineNiz engine, TextureAtlas uiAtlas, TextureAtlas mapAtlas){
 		blank = atlas.createSprite("diff/blank2");
+		processedPlayerTexture = new Texture(Gdx.files.internal("playerprocessed.png"));
+
 		//if (blank  == null) throw new GdxRuntimeException(" jkl");
 		anim = new IntMap<AnimSet>();
 		itemSprites = new AtlasSprite[NUMBER_OF_ITEMS][NUMBER_OF_ITEM_ANGLES];
@@ -278,6 +282,13 @@ public class Animations {
 		//name loop random vel 1f 
 		
 		rpgSprite = atlas.createSprite("diff/rpg1");
+		float one = 1f/2048f;
+		/*rpgSprite.setRegion(rpgSprite.getU()+one
+		, rpgSprite.getV()+one
+		, rpgSprite.getU2()-one
+		, rpgSprite.getV2()-one);*/
+		rpgSprite.setRegion(rpgSprite.getRegionX()+1, rpgSprite.getRegionY()+1, rpgSprite.getRegionWidth()-2, rpgSprite.getRegionHeight()-2);
+
 		TextureRegion[][] rpgSplits = rpgSprite.split(18, 20);
 
 		final AtlasSprite[][] rpgSprites = new AtlasSprite[26 * 2][12 * 3];
@@ -288,27 +299,37 @@ public class Animations {
 		for (int i = 0; i < rpgLayers.length; i++){
 			rpgLayers[i] = "torso";
 			//rpgGuideLayers[i] = "torsoguide";
-			rpgBaseGuideLayers[i] = "torsoguide";
+			rpgBaseGuideLayers[i] = "legsguide";
 			rpgs[i] = "rpg" +i;
 		}
+		//Gdx.app.log(TAG, "make sprite group  " + rpgSplits.length + "  w " + rpgSplits[0].length );
 
-		for (int i = 0; i < rpgSprites.length; i+=2) {
-			//Gdx.app.log(TAG, "make sprite group  " + i );
+		int half = rpgSprites.length / 2;
+		for (int i = 0; i < half; i+=1) {
+			Gdx.app.log(TAG, "make sprite group  " + rpgSprites.length + "  splits " + rpgSplits.length );
+
 			for (int j = 0; j < 12; j++) {
 				TextureRegion split;
-				//Gdx.app.log(TAG, "make sprite " + i + " " + j);
-				split = rpgSplits[i][j];
-				rpgSprites[i][j + 12] = new TextureAtlas.AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
-				split = rpgSplits[i + 1][j];
+				Gdx.app.log(TAG, "make sprite " + i*3 + " " + j);
+				int y = i * 3;
+				split = rpgSplits[y][j];
+				rpgSprites[i][j + 12] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
+
+				split = rpgSplits[y+1][j];
 				rpgSprites[i][j] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
-				split = rpgSplits[i + 1][j];
+
+				split = rpgSplits[y+2][j];
 				rpgSprites[i][j + 24] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
-				split = rpgSplits[i + 12][j];
-				rpgSprites[i + 1][j + 12] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
-				split = rpgSplits[i + 12][j];
-				rpgSprites[i + 1][j] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
-				split = rpgSplits[i + 12][j];
-				rpgSprites[i + 1][j + 24] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
+
+
+				split = rpgSplits[y][j];
+				rpgSprites[i+half][j + 12] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
+
+				split = rpgSplits[y+1][j];
+				rpgSprites[i+half][j] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
+
+				split = rpgSplits[y+2][j];
+				rpgSprites[i+half][j + 24] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
 			}
 		}
 		
@@ -1047,7 +1068,7 @@ public class Animations {
 	private static final String PREFIX = "diff/";
 	private static void createWeaponSprites(TextureAtlas atlas, String name, int id, String base, String spinBase, String tipBase, int total) {
 		
-		itemLayers[id] = AnimationCommand.makeItemFrames(name, id, base, total, atlas);
+		itemLayers[id] = AnimationCommand.makeItemFrames(name, id, base, total, atlas, processedPlayerTexture);
 		itemSprites[id] = (AtlasSprite[]) itemLayers[id].getKeyFrames();
 		for (int i = 0; i < itemSprites[id].length; i++){
 			AtlasSprite s = itemSprites[id][i];
@@ -1057,9 +1078,9 @@ public class Animations {
 
 		}
 		itemDrawables[id] = new TextureRegionDrawable(itemSprites[id][0]);
-		itemSpinLayers[id] = AnimationCommand.makeItemFrames(name, id, spinBase, total, atlas);
+		itemSpinLayers[id] = AnimationCommand.makeItemFrames(name, id, spinBase, total, atlas, processedPlayerTexture);
 		itemSpinSprites[id] = (AtlasSprite[]) itemSpinLayers[id].getKeyFrames();
-		itemTipLayers[id] = AnimationCommand.makeItemFrames(name, id, tipBase, total, atlas);
+		itemTipLayers[id] = AnimationCommand.makeItemFrames(name, id, tipBase, total, atlas, processedPlayerTexture);
 		itemTipSprites[id] = (AtlasSprite[]) itemTipLayers[id].getKeyFrames();
 		//weaponDrawables[id] = new TextureRegionDrawable(weaponSprites[id][0]);
 	}
@@ -1068,7 +1089,7 @@ public class Animations {
 	
 	private static void createBlockSprite(TextureAtlas atlas, int id, String base, String spinBase, String tipBase, int blockID) {
 		
-		itemLayers[id] = AnimationCommand.makeBlockFrames(atlas, blockID, base);
+		itemLayers[id] = AnimationCommand.makeBlockFrames(atlas, blockID, base, processedPlayerTexture);
 		itemSprites[id] = (AtlasSprite[]) itemLayers[id].getKeyFrames();
 		for (int i = 0; i < itemSprites[id].length; i++){
 			AtlasSprite s = itemSprites[id][i];
@@ -1078,15 +1099,15 @@ public class Animations {
 
 		}
 		itemDrawables[id] = new TextureRegionDrawable(itemSprites[id][0]);
-		itemSpinLayers[id] = AnimationCommand.makeBlockFrames(atlas, blockID, spinBase);
+		itemSpinLayers[id] = AnimationCommand.makeBlockFrames(atlas, blockID, spinBase, processedPlayerTexture);
 		itemSpinSprites[id] = (AtlasSprite[]) itemSpinLayers[id].getKeyFrames();
-		itemTipLayers[id] = AnimationCommand.makeBlockFrames(atlas, blockID, tipBase);
+		itemTipLayers[id] = AnimationCommand.makeBlockFrames(atlas, blockID, tipBase, processedPlayerTexture);
 		itemTipSprites[id] = (AtlasSprite[]) itemTipLayers[id].getKeyFrames();
 	}
 	private static void createTailSprites(TextureAtlas atlas, String name, int id, String base, int total) {
 		
 		RotatedAnimationLayer tailLayers;
-		tailLayers = AnimationCommand.makeItemFrames(name, id, base, total, atlas);
+		tailLayers = AnimationCommand.makeItemFrames(name, id, base, total, atlas, processedPlayerTexture);
 		tailSprites[id] = (AtlasSprite[]) tailLayers.getKeyFrames();
 		tailDrawables[id] = new TextureRegionDrawable(tailSprites[id][0]);
 	}

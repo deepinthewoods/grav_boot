@@ -70,7 +70,7 @@ public class LineBatchNiz{
         r.end();
     }
 
-    public void drawLine(Sprite region, float x, float y, float x2, float y2) {
+    public void drawLine(float x, float y, float x2, float y2) {
         r.line(x, y, x2, y2);
     }
     Color c = new Color();

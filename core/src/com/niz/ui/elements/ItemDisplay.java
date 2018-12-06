@@ -115,21 +115,19 @@ public class ItemDisplay extends UIElement {
 						
 						clearEquipButtons();
 						
-						
-						
 						BeltButton butt =  editor.belt.buttons[editor.belt.group.getCheckedIndex()];
 						//int index = beltIndexOF(act2.item.hash, act2.index);
 						
 						beltRefreshSubject.notify(e, Event.BELT_REMOVE_DUPES, act.item);
 						butt.setFrom(act.item, e);
-						
+
 						beltRefreshSubject.notify(e, Event.BELT_REFRESH, inv);
 						butt.setShaking();
-						
+
 						inv.setActiveItem(butt.hash, butt.doingSlot);
 						inv.dirtyLimbs = true;
 						invNotifier.notify(butt.e, Event.EQUIP_ITEM, null);
-						
+
 						//toastNotifier.notify(null, Event.BELT_TOUCH_START, null);
 						//c.item = butt.item;
 						//c.value = butt.doingSlot;
@@ -261,7 +259,7 @@ public class ItemDisplay extends UIElement {
 			
 			InventoryButton butt = pool.obtain();
 			//ItemDef def = in.getItemAt(i).getDef();
-			butt.getImage().setDrawable(Animations.itemDrawables[def.id]);
+			//butt.getImage().setDrawable(Animations.itemDrawables[def.id]);
 			//butt.getImage().setOrigin(Align.center);
 //			Sprite s = Animations.weaponSprites[def.id][0];
 	//		if (s != null){

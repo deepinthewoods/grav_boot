@@ -66,9 +66,10 @@ public class InventoryButton extends Button{
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		if (item == null) return;
+		//if (true) return;
 		ItemDef def = Inventory.defs.get(item.id);
 
-		if (def.isBlock)
+		if (def.isBlock )
 			addBlockDraw(this);
 		else
 			addItemDraw(this);
@@ -86,7 +87,7 @@ public class InventoryButton extends Button{
 			}
 		}
 		
-		super.draw(batch, parentAlpha);
+		//super.draw(batch, parentAlpha);
 
 		
 
@@ -147,6 +148,8 @@ public class InventoryButton extends Button{
 		v2.sub(space, space);
 		v2.sub(v);
 		drawable.tint(SpriteAnimationSystem.LAYER_COLORS[Light.ITEM_LAYER]);
+		//image.setColor(Color.WHITE);
+		//drawable.tint(Color.WHITE);
 		float ar = (float)drawable.getRegion().getRegionHeight() / (float)drawable.getRegion().getRegionWidth();
 		if (ar > 1f)
 			drawable.draw(batch, v.x, v.y, v2.x / ar, v2.y);

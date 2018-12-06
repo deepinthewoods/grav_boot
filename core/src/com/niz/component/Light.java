@@ -44,12 +44,12 @@ public class Light extends BinaryHeap.Node implements Component {
 			, new Vector3(.14f, .3f, 5f)//map front
 			, new Vector3(.14f, .3f, 5f)//map lit
 			, new Vector3(.14f, .3f, 5f)//map fg
-			, new Vector3(.4f, 3f, 20f)//map fg?
+			, new Vector3(.14f, .3f, 5f)//item layer ie inv
 			}
 	;
 
-	public float[] yOffset = {Main.PX*2, Main.PX*2, Main.PX*16, Main.PX*2, Main.PX*2, Main.PX*2, Main.PX*20};
+	public float[] yOffset = {Main.PX*2, Main.PX*2, Main.PX*16, Main.PX*2, Main.PX*2, Main.PX*2, Main.PX*2};
 
-	public float[] ambientIntensity = {.03f, .03f, .03f, .3f, .03f, .03f, 1f};
+	public float[] ambientIntensity = {.03f, .03f, .03f, .3f, .03f, .03f, .03f};
 
 }

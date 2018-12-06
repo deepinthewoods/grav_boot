@@ -27,7 +27,7 @@ import com.niz.system.RoomCatalogSystem;
 
 public class AAgentBuildMap extends ProgressAction {
 
-	private static final int TOTAL_ROOMS_TARGET = 15;
+	private static final int TOTAL_ROOMS_TARGET = 10;
 	private static final int MAIN_PATH_COMPARES = 2;
 
 
@@ -64,8 +64,8 @@ public class AAgentBuildMap extends ProgressAction {
 	private boolean expand = true, twoBlocksHigh = true;
 	private int seed;
 	private boolean skipResetSeed;
-	private int[] pathDistance = new int[28];
-	private int[] sidePathIndices = new int[28];
+	private int[] pathDistance = new int[18];
+	private int[] sidePathIndices = new int[18];
 
 	private boolean mainPathDone;
 	private int retries;

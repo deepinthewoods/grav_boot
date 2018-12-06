@@ -1,0 +1,1 @@
+convert -colors 128 player2.png PNG32:player2quantized.png

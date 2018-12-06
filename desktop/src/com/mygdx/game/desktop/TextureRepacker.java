@@ -45,8 +45,8 @@ class TextureRepacker {
         FileHandle outFile = Gdx.files.absolute(outFileint.file().getAbsolutePath());
         DataOutputStream os = new DataOutputStream(outFile.write(false, 100));
         int total = 0;
-        for (int i = 0; i < ww; i++)
-            for (int k = 0; k < hh; k++){
+        for (int k = 0; k < hh; k++)
+            for (int i = 0; i < ww; i++)
                 for (int x = 0; x < w; x++)
                     for (int y = 0; y < h; y++){
                         int pixel = pix.getPixel(x + i * w, y + k * h);
@@ -63,7 +63,7 @@ class TextureRepacker {
                             }
                         }
                     }
-            }
+
         try {
             os.close();
         } catch (IOException e) {
@@ -112,6 +112,7 @@ class TextureRepacker {
             c.set(storedColors.get(count));
             indexPix.drawPixel(count, 0, Color.rgba8888(c));
         }
+
         for (;count < indexPix.getWidth(); count++){
             c.set(Color.MAGENTA);
             indexPix.drawPixel(count, 0, Color.rgba8888(c));

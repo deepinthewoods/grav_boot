@@ -84,7 +84,7 @@ public String toString(){
 			current = animID;
 			Array<AnimationContainer> arr = anims.anims.get(animID);
 			currentAnim.set(arr.get(0), layerIDs, guideIDs);
-			Gdx.app.log(TAG, "start anim " + Data.getString(animID));
+			//Gdx.app.log(TAG, "start anim " + Data.getString(animID));
 			{
 				
 				if ((currentAnim.bitmask & prevBitmask) != 0){

@@ -3,6 +3,7 @@ package com.niz.ui.edgeUI;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.EngineNiz;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
@@ -60,6 +62,7 @@ import com.niz.item.ItemDef;
 import com.niz.observer.Observer;
 import com.niz.observer.Subject;
 import com.niz.observer.Subject.Event;
+import com.niz.system.LightRenderSystem;
 import com.niz.system.MapRenderSystem;
 import com.niz.system.SpriteAnimationSystem;
 import com.niz.ui.elements.BackgroundClickDrag;
@@ -81,6 +84,9 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	private static final float TOAST_SPEED = 1f;
 	private static final float TOAST_DELAY = 1f;
 	private final ShaderProgram shader;
+	private final MapRenderSystem map;
+	private final LightRenderSystem lights;
+	private final SpriteAnimationSystem spriteRenderer;
 	public BeltTable belt;
 	private ControllerButton btnPad;
 	private ControllerSliderBoolean slider;
@@ -98,11 +104,13 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	private TextButton[] doorButtons;
 	private Table doorTable;
 	
-	public InventoryScreen(final EngineNiz engine, Skin skin, TextureAtlas atlas, CharacterScreen charScr, SettingsScreen setScr, ShaderProgram indexedShader){
+	public InventoryScreen(final EngineNiz engine, Skin skin, CharacterScreen charScr, SettingsScreen setScr, ShaderProgram indexedShader){
 		this.shader = indexedShader;
 		settingsScreen = setScr;
 		charScreen = charScr;
-		
+		map = engine.getSystem(MapRenderSystem.class);
+		lights = engine.getSystem(LightRenderSystem.class);
+		spriteRenderer = engine.getSystem(SpriteAnimationSystem.class);
 		this.skin = skin;
 		
 		doorTable = new Table();
@@ -442,7 +450,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 			}
 			
 		}
-		else if (event == Event.BELT_REFRESH){
+		else if (event == Event.BELT_REFRESH ){
 
 			Inventory in = (Inventory) c;
 			for (int i = 0; i <  InventoryScreen.BELT_SLOTS; i++){
@@ -636,6 +644,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	}
 
 	Vector2 tmpV = new Vector2(), tmpV2 = new Vector2(), tmpV3 = new Vector2(), tmpV4 = new Vector2(), tmpV5 = new Vector2();
+	Matrix4 matrix = new Matrix4();
 	private boolean doorButtonsWasOn;
 
 	public void draw(ShapeRenderer rend, SpriteBatchN batch, BitmapFont font) {
@@ -671,7 +680,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		
 		Gdx.gl.glLineWidth(1f);//*/
 
-
+		batch.setShader(null);
 		batch.setColor(Color.WHITE);
 		batch.begin();
 		/*if (!sides[0].isHidden())
@@ -684,29 +693,60 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		//DRAW BUTtoN IMAGES MANUALLY
 		//indexBuffer.getColorBufferTexture().bind(1);
 		//indexTexture.bind(1);
+//		batch.end();
+//        matrix.set(batch.getProjectionMatrix());
+//		map.drawAllWhiteColorRamp(batch);
+//		map.drawColors();
+//		batch.getProjectionMatrix().set(matrix);
+//		//lights.setUniformsNew(null, shader, null);
+//
+//
+//		batch.setShader(shader);
+//		batch.disableTextureBinding();
+//		shader.begin();
+//		SpriteAnimationSystem.indexBuffer.getColorBufferTexture().bind(1);
+//		shader.setUniformi("u_index_texture", 1); //passing first texture!!!
+//		SpriteAnimationSystem.atlasTexture.bind(0);
+//		shader.setUniformi("u_texture", 0);
+//		shader.end();
+//		batch.begin();
+
+		matrix.set(batch.getProjectionMatrix());
+		spriteRenderer.drawColors();
+
 		batch.end();
+		map.drawAllWhiteColorRamp(batch);
+		batch.getProjectionMatrix().set(matrix);
+		
 		batch.setShader(shader);
+		matrix.set(batch.getProjectionMatrix());
+		spriteRenderer.drawColors();
+		batch.getProjectionMatrix().set(matrix);
+		batch.setColor(Color.WHITE);
 		batch.disableTextureBinding();
-		batch.begin();
 		SpriteAnimationSystem.indexBuffer.getColorBufferTexture().bind(1);
 		shader.setUniformi("u_index_texture", 1); //passing first texture!!!
 		SpriteAnimationSystem.atlasTexture.bind(0);
 		shader.setUniformi("u_texture", 0);
-		//batch.end();batch.setShader(null);batch.begin();
+		batch.begin();
+
+		for (InventoryButton b : InventoryButton.itemDrawList){//works with blocks
+			b.draw2(batch, 1f);
+		}
+		//batch.end();
+
+		//matrix.set(batch.getProjectionMatrix());
+		//map.drawColors();
+		//batch.getProjectionMatrix().set(matrix);
+
+		//batch.begin();
 		for (InventoryButton b : InventoryButton.blockDrawList){
 			b.draw2(batch, 1f);
-//			Gdx.app.log(TAG, "dtaw block");
+			//Gdx.app.log(TAG, "draw block " + b.item);
 		}
 		batch.end();
-		batch.begin();
-		SpriteAnimationSystem.indexBuffer.getColorBufferTexture().bind(1);
-		shader.setUniformi("u_index_texture", 1); //passing first texture!!!
-		SpriteAnimationSystem.atlasTexture.bind(0);
-		shader.setUniformi("u_texture", 0);
-		for (InventoryButton b : InventoryButton.itemDrawList){
-			b.draw2(batch, 1f);
-		}
-		batch.end();
+
+
 		InventoryButton.blockDrawList.clear();
 		InventoryButton.itemDrawList.clear();
 		batch.setShader(null);

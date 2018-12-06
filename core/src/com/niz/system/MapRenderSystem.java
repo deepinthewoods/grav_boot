@@ -21,14 +21,18 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatchN;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.niz.Main;
 import com.niz.ZoomInput;
+import com.niz.anim.Animations;
 import com.niz.component.Map;
 import com.niz.observer.Observer;
 import com.niz.observer.Subject.Event;
+
+import static com.niz.system.LightRenderSystem.NUM_LIGHTS;
 
 public class MapRenderSystem extends RenderSystem implements EntityListener, IDisposeable {
 	
@@ -48,8 +52,8 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	private Sprite[] sprites;
 	private Sprite s;
 	private Vector3 tmpV = new Vector3();
-	private Texture normalTexture;
-	private Texture diffTexture;
+	//private Texture normalTexture;
+	//private Texture diffTexture;
 	ShaderProgram shader;
 	private LightRenderSystem lights;
 	private BufferStartSystem buffer;
@@ -68,14 +72,14 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	private OrthographicCamera zoomOutCamera;
 	private ShaderProgram coefficientsShader;
 	private ShaderProgram positionShader;
-	public Texture atlasTexture;// = new Texture(Gdx.files.internal("tilesprocessed.png"));
+	public static Texture atlasTexture;// = new Texture(Gdx.files.internal("tilesprocessed.png"));
 	private ShaderProgram lightRampShader;
 	private BufferStartSystem bufferSys;
 
 
-	public MapRenderSystem(OrthographicCamera gameCamera, OrthographicCamera zoomOutCamera, SpriteBatchN batch, TextureAtlas atlas, Texture diffTexture, Texture normalTexture) {
-		this.diffTexture = diffTexture;
-		this.normalTexture = normalTexture;
+	public MapRenderSystem(OrthographicCamera gameCamera, OrthographicCamera zoomOutCamera, SpriteBatchN batch, TextureAtlas atlas) {
+		//this.diffTexture = diffTexture;
+		//this.normalTexture = normalTexture;
 		this.camera = gameCamera;//mapCollisionCamera;
 		this.renderCamera = gameCamera;
 		this.zoomOutCamera = zoomOutCamera;
@@ -109,6 +113,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		bufferSys = engine.getSystem(BufferStartSystem.class);
 		lights = engine.getSystem(LightRenderSystem.class);
 		buffer = engine.getSystem(BufferStartSystem.class);
+
 		family = Family.one(Map.class).get();
 		engine.addEntityListener(family, this);
 		mapM = ComponentMapper.getFor(Map.class);
@@ -256,8 +261,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		renderCamera.update();
 		batch.setProjectionMatrix(renderCamera.combined);
 		//Gdx.app.log(TAG,  "zoom " + renderCamera.zoom);;
-		normalTexture.bind(1);
-		diffTexture.bind(0);
+
 		
 		boolean setAllDirty = false;
 		if (skipDraw != skippedDraw){
@@ -265,7 +269,10 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		}
 		
 		x0 -= 1;//meh, dupe rendering doesn't work without this4
-		start();
+		//start();
+		drawColors();
+		drawIndexVariables();
+
 		int count = 0;
 		{
 			
@@ -323,7 +330,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 				batch.enableBlending();
 				batch.getProjectionMatrix().setToOrtho2D(0,  0, t.getWidth(), t.getHeight());
 				batch.begin();
-				//batch.draw(t, 0, 0);
+				batch.draw(t, 0, 0);
 				batch.end();
 			}
 			camera.zoom = originalZoom;
@@ -368,12 +375,170 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		batch.setShader(null);
 		batch.setColor(Color.WHITE);
 		batch.begin();
-		SpriteAnimationSystem.drawColorRamp(batch, indexBuffer.getWidth());
+		drawColorRamp(batch, indexBuffer.getWidth());
 		batch.end();
 
 
 		indexBuffer.end();
 
+	}
+
+	public void drawColors(){
+		indexBuffer.begin();
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, indexBuffer.getWidth(), indexBuffer.getHeight());
+		//Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
+		//Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		batch.setShader(null);
+		batch.setColor(Color.WHITE);
+		batch.enableBlending();
+		batch.begin();
+		batch.draw(indexTexture, 0, 0);
+		batch.end();
+		indexBuffer.end();
+	}
+
+	private void drawIndexVariables() {
+		indexBuffer.begin();
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, indexBuffer.getWidth(), indexBuffer.getHeight());
+
+		batch.setShader(null);
+		batch.setColor(Color.WHITE);
+		batch.enableBlending();
+
+		lights.setUniformsNew(coefficientsShader, shader, positionShader);
+		batch.setShader(null);
+		batch.begin();
+		drawCoefficients(batch, indexBuffer.getWidth());
+		//any texture
+		//batch.draw(indexTexture, 0, 2, indexBuffer.getWidth(), 1);
+		batch.end();
+
+		if (false){
+			batch.setShader(positionShader);
+			batch.begin();
+			//drawCoefficients(batch, indexBuffer.getWidth());
+			//any texture
+			batch.draw(indexTexture, 0, 3, indexBuffer.getWidth(), 1);
+			batch.end();
+		} else {
+			batch.begin();
+			//any texture
+			drawPositions(batch, indexBuffer.getWidth());
+			//batch.draw(indexTexture, 0, 3, indexBuffer.getWidth(), 1);
+			batch.end();
+		}
+
+
+		batch.setShader(null);
+		batch.setColor(Color.WHITE);
+		batch.begin();
+		drawColorRamp(batch, indexBuffer.getWidth());
+		batch.end();
+		//drawIndexVariables();
+		indexBuffer.end();
+
+	}
+
+	private void drawPositions(SpriteBatchN batch, int width) {
+		Sprite s = Animations.blank;
+		s.setSize(1f, 1f);
+		for (int layer = 0, pixel = 0; layer < LightRenderSystem.N_LAYERS; layer++)
+			for (int light = 0; light < NUM_LIGHTS; light++){
+				//int color = c.toIntBits();
+				s.setPosition(pixel, 3);
+				vec3.set(lights.pos[layer * NUM_LIGHTS * 3 +light*3]
+						, lights.pos[layer * NUM_LIGHTS * 3 +light*3+1]
+						, lights.pos[layer * NUM_LIGHTS * 3 +light*3+2]);
+				//vec3.scl(1f, COEFFS_Y_SCALAR, COEFFS_Z_SCALAR);
+				s.setColor(vec3.x, vec3.y, vec3.z, 1f);
+				//if (pixel%4==1) s.setColor(1f, 0f, 1f, 1f);
+				s.draw(batch);
+				pixel++;
+			}
+	}
+	private Vector3 vec3 = new Vector3();
+	public static final float COEFFS_Y_SCALAR = 1f / 10f;
+	public static final float COEFFS_Z_SCALAR = 1f / 50f;
+	private void drawCoefficients(SpriteBatchN batch, int width) {
+		Sprite s = Animations.blank;
+		s.setSize(1f, 1f);
+		for (int layer = 0, pixel = 0; layer < LightRenderSystem.N_LAYERS; layer++)
+			for (int light = 0; light < NUM_LIGHTS; light++){
+				//int color = c.toIntBits();
+				s.setPosition(pixel, 2);
+				vec3.set(lights.falloff[layer * NUM_LIGHTS * 3 +light*3]
+						, lights.falloff[layer * NUM_LIGHTS * 3 +light*3+1]
+						, lights.falloff[layer * NUM_LIGHTS * 3 +light*3+2]);
+				vec3.scl(1f, COEFFS_Y_SCALAR, COEFFS_Z_SCALAR);
+				s.setColor(vec3.x, vec3.y, vec3.z, 1f);
+				//if (pixel%4==1) s.setColor(1f, 0f, 1f, 1f);
+				s.draw(batch);
+				pixel++;
+			}
+	}
+
+	public static void drawAllWhiteColorRamp(SpriteBatchN batch) {
+		indexBuffer.begin();
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, indexBuffer.getWidth(), indexBuffer.getHeight());
+
+		batch.setShader(null);
+		batch.setColor(Color.WHITE);
+		batch.enableBlending();
+		batch.setColor(Color.WHITE);
+		Sprite s = Animations.blank;
+		//batch.setColor(Color.BLACK);
+		s.setColor(Color.WHITE);
+		batch.begin();
+		batch.draw(s, 0, 4, indexBuffer.getWidth(), 1);
+		batch.end();
+
+
+		s.setColor(Color.WHITE);
+		indexBuffer.end();
+		//batch.draw(indexTexture, 0, 4, indexBuffer.getWidth(), 1);
+	}
+
+	static void drawColorRamp(SpriteBatchN batch, int width) {
+		//if (true) return;
+		Sprite s = Animations.blank;
+		batch.setColor(Color.BLACK);
+		batch.draw(s, 0, 4, width, 1);
+		batch.setColor(Color.RED);
+		for (int toons = 0; toons < Main.prefs.toon_levels; toons++){
+			float level = toons / (float)(Main.prefs.toon_levels - 1) ;
+			float alpha = toons / (float)(Main.prefs.toon_levels) ;
+			alpha = rampEase(alpha, Main.prefs.toon_type);
+			level = rampEase(level, Main.prefs.toon_type);
+
+			batch.setColor(level, level, level, 1f);
+			//s.setColor(Color.MAGENTA);
+			int toonBegin = (int)(alpha * width) ;
+			batch.draw(s, toonBegin, 4, width, 1);
+			//Gdx.app.log(TAG, "ramp alpha " + level + " begin " + toonBegin);
+		}
+
+
+		s.setColor(Color.WHITE);
+		//batch.draw(indexTexture, 0, 4, indexBuffer.getWidth(), 1);
+	}
+
+	private static float rampEase(float a, int toon) {
+
+
+		switch (toon){
+			case 0:return a;
+			case 1:a = Interpolation.exp5.apply(a);
+			case 2:a = Interpolation.pow3.apply(a);
+			case 3:a = Interpolation.swing.apply(a);
+			case 4:a = Interpolation.circleIn.apply(a);
+			case 5:a = Interpolation.circleOut.apply(a);
+			case 6:a = Interpolation.sineIn.apply(a);
+			case 7:a = Interpolation.sineOut.apply(a);
+			case 8:a = Interpolation.bounce.apply(a);
+		}
+
+
+		return a;
 	}
 
 	@Override

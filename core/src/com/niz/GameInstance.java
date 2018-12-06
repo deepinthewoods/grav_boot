@@ -68,10 +68,10 @@ public class GameInstance implements Screen, Observer {
 	public static float accum;
 	private float deltaTime;
 	private InputMultiplexer mux;
-	private Texture playerDiffuseTex;
-	private Texture playerNormalTex;
-	private Texture mapDiffuseTex;
-	private Texture mapNormalTex;
+	//private Texture playerDiffuseTex;
+	//private Texture playerNormalTex;
+	//private Texture mapDiffuseTex;
+	//private Texture mapNormalTex;
 	private String[] numberStrings = new String[1000];
 	private BitmapFont font;
 	private OrthographicCamera camera;
@@ -151,6 +151,7 @@ public class GameInstance implements Screen, Observer {
 					break;case 2:
 					playerAtlas = new TextureAtlas(Gdx.files.internal("player.atlas"));
 
+
 					break;case 3:
 					atlas = new TextureAtlas(Gdx.files.internal("tiles.atlas"));
 					break;case 4:
@@ -186,15 +187,15 @@ public class GameInstance implements Screen, Observer {
 					//viewport = new NoneViewport(uiCamera);
 					//viewport = new ScalingViewport(Scaling.fill, 1000, 1000, uiCamera);
 
-					playerDiffuseTex = playerAtlas.findRegion("diff/playertorso", 0).getTexture();
-					playerNormalTex = playerAtlas.findRegion("normal/playertorso", 0).getTexture();
+//					playerDiffuseTex = playerAtlas.findRegion("diff/playertorso", 0).getTexture();
+//					playerNormalTex = playerAtlas.findRegion("normal/playertorso", 0).getTexture();
 					//playerNormalTex = new Texture(Gdx.files.internal("playerprocessed.png"));
 					//if () throw new GdxRuntimeException("kl");
-					Gdx.app.log(TAG,  "d " + playerDiffuseTex.getMagFilter() + playerDiffuseTex.getMinFilter() + playerDiffuseTex.getDepth());
-					Gdx.app.log(TAG,  "n " + playerNormalTex.getMagFilter() + playerNormalTex.getMinFilter() + playerNormalTex.getDepth());
-					mapDiffuseTex = atlas.findRegion("diff/tile", 1024).getTexture();
-
-					mapNormalTex = atlas.findRegion("normal/tile", 1024).getTexture();
+//					Gdx.app.log(TAG,  "d " + playerDiffuseTex.getMagFilter() + playerDiffuseTex.getMinFilter() + playerDiffuseTex.getDepth());
+//					Gdx.app.log(TAG,  "n " + playerNormalTex.getMagFilter() + playerNormalTex.getMinFilter() + playerNormalTex.getDepth());
+//					mapDiffuseTex = atlas.findRegion("diff/tile", 1024).getTexture();
+//
+//					mapNormalTex = atlas.findRegion("normal/tile", 1024).getTexture();
 					mux = new InputMultiplexer();
 					mux.addProcessor(new InputProcessor(){
 						
@@ -319,19 +320,19 @@ public class GameInstance implements Screen, Observer {
 					engine.addSystem(new ShapeRenderingSystem());
 					engine.addSystem(new ParallaxBackgroundSystem());
 					break;case 16:
-					engine.addSystem(new MapRenderSystem(gameCamera, mapRenderCam ,  mapBatch, atlas, mapDiffuseTex, mapNormalTex));
+					engine.addSystem(new MapRenderSystem(gameCamera, mapRenderCam ,  mapBatch, atlas));
+					engine.addSystem(new BufferEndSystem(batch, blankNormalTexture));
 
 					break;case 17:
 					engine.addSystem(new RaceSystem());
 					engine.addSystem(new WeaponSensorSystem());
-					engine.addSystem(new LineBatchSystem(playerAtlas, playerDiffuseTex, playerNormalTex, lights));
+					engine.addSystem(new LineBatchSystem(lights));
 					break;case 18:
-					engine.addSystem(new SpriteAnimationSystem(gameCamera, rightBatch, playerDiffuseTex, playerNormalTex, lights, mapDiffuseTex, mapNormalTex));
+					engine.addSystem(new SpriteAnimationSystem(gameCamera, rightBatch, lights));
 					break;case 19:
 					engine.addSystem(new LineBatchPostSystem());
 					//engine.addSystem(new ParallaxBackgroundFrontLayersRenderingSystem());
-					engine.addSystem(new AutoGibSystem(gameCamera, rightBatch, leftBatch, playerDiffuseTex, playerNormalTex, lights, mapDiffuseTex, mapNormalTex));;
-					engine.addSystem(new BufferEndSystem(batch, blankNormalTexture));
+					engine.addSystem(new AutoGibSystem(gameCamera, rightBatch, leftBatch,  lights));;
 					resize();
 					break;case 20:
 					engine.addSystem(new DragBlockSystem());
@@ -341,7 +342,7 @@ public class GameInstance implements Screen, Observer {
 					break;case 21:
 
 					
-					charScreen = new CharacterScreen(engine, skin, playerAtlas);
+					charScreen = new CharacterScreen(engine, skin);
 					charScreen.create(skin, stage, engine);
 					charScreen.init(skin, stage, engine);
 					break;case 22:
@@ -353,7 +354,7 @@ public class GameInstance implements Screen, Observer {
 					settingsScreen.setObject(Main.prefs, "Settings");
 					break;case 23:
 
-					invScreen = new InventoryScreen(engine, skin, playerAtlas, charScreen, settingsScreen, shaderSys.charShader);
+					invScreen = new InventoryScreen(engine, skin, charScreen, settingsScreen, shaderSys.shader);
 					invScreen.create(skin, stage, engine);
 					invScreen.init(skin, stage, engine);
 					//invScreen.addTo(stage);
@@ -527,16 +528,16 @@ public class GameInstance implements Screen, Observer {
 			;
 	@Override
 	public void dispose() {
-		if (playerDiffuseTex != null)playerDiffuseTex.dispose();// = playerAtlas.findRegion("diff/player", 0).getTexture();
-		if (playerNormalTex != null)playerNormalTex.dispose();// = playerAtlas.findRegion("normal/player", 0).getTexture();
-		if (mapDiffuseTex != null)mapDiffuseTex.dispose();// = atlas.findRegion("diff/tile", 0).getTexture();
-		if (mapNormalTex != null)mapNormalTex.dispose();// = atlas.findRegion("normal/tile", 0).getTexture();
+//		if (playerDiffuseTex != null)playerDiffuseTex.dispose();// = playerAtlas.findRegion("diff/player", 0).getTexture();
+//		if (playerNormalTex != null)playerNormalTex.dispose();// = playerAtlas.findRegion("normal/player", 0).getTexture();
+//		if (mapDiffuseTex != null)mapDiffuseTex.dispose();// = atlas.findRegion("diff/tile", 0).getTexture();
+//		if (mapNormalTex != null)mapNormalTex.dispose();// = atlas.findRegion("normal/tile", 0).getTexture();
 		engine.dispose();
 		if (atlas != null){
 			
 			atlas.dispose();
 			uiAtlas.dispose();
-			playerAtlas.dispose();
+//			playerAtlas.dispose();
 		}
 	}
 
@@ -676,7 +677,9 @@ public class GameInstance implements Screen, Observer {
 			//stage.setDebugAll(true);
 			//stage.act(1f);
 			if (stage != null)stage.act(delta);
-			//stage.getBatch().setShader(shaderSys.);
+			//stage.getBatch().setShader(shaderSys.shader);
+			stage.getBatch().setShader(null);
+			batch.enableBlending();
 			stage.draw();
 			if (invScreen != null){
 				SpriteBatchN bat = (SpriteBatchN) stage.getBatch();

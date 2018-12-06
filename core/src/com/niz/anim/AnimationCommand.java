@@ -1,6 +1,7 @@
 package com.niz.anim;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasSprite;
 import com.badlogic.gdx.math.Vector2;
@@ -375,7 +376,7 @@ public class AnimationCommand {
 
 
 	public static RotatedAnimationLayer makeItemFrames(String name, int id,
-			String baseName, int total, TextureAtlas atlas) {
+													   String baseName, int total, TextureAtlas atlas, Texture processedPlayerTexture) {
 		String prefix = "";
 		AtlasSprite[] frames = new AtlasSprite[total];
 		AtlasSprite[] tipFrames = new AtlasSprite[total];
@@ -397,7 +398,7 @@ public class AnimationCommand {
 			//AtlasRegion baseF =  atlas.findRegion(baseFileName  , ( i+c.offset));
 			
 			if (base == null) throw new GdxRuntimeException("jskld! "+baseFileName);
-
+			frames[i].setTexture(processedPlayerTexture);
 			Vector2 offset = new Vector2();
 			//offset.set(frames[i].getAtlasRegion().offsetX, frames[i].getAtlasRegion().offsetY);
 			short baseX = base.get(frameIndex*2);
@@ -438,12 +439,12 @@ public class AnimationCommand {
 
 
 	public static RotatedAnimationLayer makeBlockFrames(TextureAtlas atlas, int blockIndex,
-			String baseName) {
+														String baseName, Texture processedPlayerTexture) {
 		int total = 1;
 		blockIndex &= Map.VARIANT_MASK;
 		String prefix = "";
 		AtlasSprite[] frames = new AtlasSprite[total];
-		AtlasSprite[] tipFrames = new AtlasSprite[total];
+		//AtlasSprite[] tipFrames = new AtlasSprite[total];
 		
 		String fileNamePrefix = "diff/"+prefix+"block";
 		String baseFileName = prefix+baseName;
@@ -457,7 +458,7 @@ public class AnimationCommand {
 			//Gdx.app.log(TAG, "guide base "+blockIndex);
 			frames[i] = (AtlasSprite) atlas.createSprite(fileNamePrefix, blockIndex);
 			frames[i] = new AtlasSprite(frames[i]);
-
+			frames[i].setTexture(processedPlayerTexture);
 			//if (frames[i] == null) throw new GdxRuntimeException("jskld! "+fileNamePrefix +"   "+i+"  " +"  "+total +"  ");
 			
 			//AtlasRegion baseF =  atlas.findRegion(baseFileName  , ( i+c.offset));
