@@ -144,14 +144,10 @@ public class GameInstance implements Screen, Observer {
 			public void update(float dt) {
 				switch (progress++){
 				case 1:
-				
 					factory =  new PlatformerFactory();//new RunnerFactory();//
-					
 					uiAtlas = new TextureAtlas(Gdx.files.internal("ui.atlas"));
 					break;case 2:
 					playerAtlas = new TextureAtlas(Gdx.files.internal("player.atlas"));
-
-
 					break;case 3:
 					atlas = new TextureAtlas(Gdx.files.internal("tiles.atlas"));
 					break;case 4:
@@ -170,32 +166,14 @@ public class GameInstance implements Screen, Observer {
 					font = new BitmapFont(Gdx.files.internal("font/Pixel-12.fnt"), Gdx.files.internal("font/pixelfonts.png"), false);
 					font.setUseIntegerPositions(false);
 					viewport = new ScreenViewport(uiCamera);
-
-					stage = new Stage(viewport, batch);		
-					
+					stage = new Stage(viewport, batch);
 					mapBatch = new SpriteBatchN(10);
-
 					rightBatch = new SpriteBatchN(5460);
 					gameCamera = new OrthographicCamera(10, 10);//Main.PPM*Main.VIEWPORT_SIZE, (int)(Main.PPM*Main.VIEWPORT_SIZE/Main.ar));
-					
-					
-					
 					if (uiAtlas.createSprite("button") == null) throw new GdxRuntimeException("kjl");
 					Styles.makeSkin(skin, uiAtlas);
 					
-					//viewport = new ExtendViewport(100, 100, camera);
-					//viewport = new NoneViewport(uiCamera);
-					//viewport = new ScalingViewport(Scaling.fill, 1000, 1000, uiCamera);
 
-//					playerDiffuseTex = playerAtlas.findRegion("diff/playertorso", 0).getTexture();
-//					playerNormalTex = playerAtlas.findRegion("normal/playertorso", 0).getTexture();
-					//playerNormalTex = new Texture(Gdx.files.internal("playerprocessed.png"));
-					//if () throw new GdxRuntimeException("kl");
-//					Gdx.app.log(TAG,  "d " + playerDiffuseTex.getMagFilter() + playerDiffuseTex.getMinFilter() + playerDiffuseTex.getDepth());
-//					Gdx.app.log(TAG,  "n " + playerNormalTex.getMagFilter() + playerNormalTex.getMinFilter() + playerNormalTex.getDepth());
-//					mapDiffuseTex = atlas.findRegion("diff/tile", 1024).getTexture();
-//
-//					mapNormalTex = atlas.findRegion("normal/tile", 1024).getTexture();
 					mux = new InputMultiplexer();
 					mux.addProcessor(new InputProcessor(){
 						
@@ -260,17 +238,10 @@ public class GameInstance implements Screen, Observer {
 					defaultCam = new OrthographicCamera(1f, 1f);
 					defaultCam.setToOrtho(true, 1f, 1f);
 					
-					
-					
-					
 					menuKeySubject = engine.getSubject("inventoryToggle");
 					invRefreshSubject = engine.getSubject("inventoryRefresh");
 					zoomSubject = engine.getSubject("zoominput");
 					zoomInput = new ZoomInput();
-
-					
-					
-					
 					
 					engine.addSystem(new RoomSystem());
 					engine.addSystem(new RoomCatalogSystem());

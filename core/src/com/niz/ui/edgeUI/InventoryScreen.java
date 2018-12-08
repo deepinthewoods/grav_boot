@@ -717,7 +717,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		batch.end();
 		map.drawAllWhiteColorRamp(batch);
 		batch.getProjectionMatrix().set(matrix);
-		
+
 		batch.setShader(shader);
 		matrix.set(batch.getProjectionMatrix());
 		spriteRenderer.drawColors();
