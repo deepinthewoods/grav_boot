@@ -131,7 +131,6 @@ public class ACameraFollowPlayer extends Action {
 	private float zoom;
 
 	private boolean zoomedOut;
-	private OrthographicCamera cam;
 	@Override
 	public void onStart() {
 		fast = false;
@@ -151,7 +150,6 @@ public class ACameraFollowPlayer extends Action {
 			}
 		}
 		);
-		cam = parent.engine.getSystem(CameraSystem.class).adjustedCamera;
 		range = Gdx.graphics.getHeight() / Main.PPM;
 		range /= 6;
 		

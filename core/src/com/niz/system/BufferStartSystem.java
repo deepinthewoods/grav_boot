@@ -28,7 +28,6 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 	public FrameBuffer currentBuffer, mapBuffer;
 
 	private ImmutableArray<Entity> lights;
-	private OrthographicCamera camera;
 	public boolean disabled = false;
 	public boolean hasStarted;
 	private float viewportHeight;
@@ -49,7 +48,6 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 	public void addedToEngine(Engine engine) {
 		lights = engine.getEntitiesFor(Family.all(Light.class).get());
 		camSys = engine.getSystem(CameraSystem.class);
-		camera = camSys.camera;
 		((EngineNiz) engine).getSubject("resize").add(this);;
 		((EngineNiz) engine).getSubject("zoom").add(new Observer(){
 
@@ -80,13 +78,13 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 		else currentBuffer = buffer;
 
 		hasStarted = true;
-		tmpV.set(camera.position);
-		camera.setToOrtho(false, viewportWidth, (int)(viewportHeight));
-		camera.position.set(tmpV);
-		camera.update();
-		camSys.adjustedCamera.position.set(tmpV);
-		camSys.adjustedCamera.zoom = camera.zoom;
-		camSys.adjustedCamera.update();
+		//tmpV.set(camSys.camera.position);
+//		camera.setToOrtho(false, viewportWidth, (int)(viewportHeight));
+//		camera.position.set(tmpV);
+//		camera.update();
+//		camSys.adjustedCamera.position.set(tmpV);
+//		camSys.adjustedCamera.zoom = camera.zoom;
+//		camSys.adjustedCamera.update();
 		if (disabled){
 			hasStarted = false;
 			return;

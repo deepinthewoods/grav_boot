@@ -90,7 +90,7 @@ public abstract class Action extends BinaryHeap.Node implements Poolable{
 
 
 	public void updateRender(float dt) {
-		// TODO Auto-generated method stub
+
 		
 	}
 

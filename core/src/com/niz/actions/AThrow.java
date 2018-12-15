@@ -1,9 +1,11 @@
 package com.niz.actions;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.niz.Data;
+import com.niz.GameInstance;
 import com.niz.Input;
 import com.niz.action.LimbAction;
 import com.niz.anim.AnimationContainer;
@@ -47,6 +49,8 @@ public abstract class AThrow extends LimbAction {
 
 	@Override
 	public void update(float dt) {
+		//Gdx.app.log(TAG, "update");
+
 		SpriteAnimation anim = animM .get(parent.e);
 		Position pos = posM.get(parent.e);
 		limb_index = getLimbIndex(anim);
@@ -60,7 +64,8 @@ public abstract class AThrow extends LimbAction {
 		} else {
 			started = true;
 		}
-		if (started){		
+		if (started){
+			GameInstance.unPause = true;
 			AnimationContainer layer = anim.overriddenAnimationLayers[limb_index];
 			if (layer == null || layer.layers.get(0).isAnimationFinished(anim.time[limb_index])){
 				if (cooldown)
@@ -81,36 +86,55 @@ public abstract class AThrow extends LimbAction {
 					if (guide_layer != -1){
 						anim.overrideGuide(guide_layer, animID);
 					}
-					
+					//anim.updateGuides(1, anim.left);
 				}
 				
 			}
 			
 		} else {//!started
-			float angle = control.rotation.angle();
-			throwAngle = angle;
-			angle += 10;
-			if (angle > 360) angle -= 360;
-			int newIndex = (int)angle/20;
-			
-			if (newIndex != angleIndex){
-				//Gdx.app.log(TAG, "klj  "+newIndex);
-				angleIndex = newIndex;
-				int animID = Data.hash("throw"+angleIndex);
-				AnimationLayer layer = anim.overrideAnimationForLayer(limb_index, animID).layers.get(0);
-				if (guide_layer != -1){
-					anim.overrideGuide(guide_layer, animID);
-				}
-				angle -= 10;
-				if (angle < 0) angle += 360;
-				anim.angles[limb_index] = angle;
-				if (item_layer_index != -1)anim.angles[item_layer_index] = angle;
-
-			}
+			updateAim(control, anim);
 		}
 	}
 
-	
+	private void updateAim(Control control, SpriteAnimation anim) {
+		float angle = control.rotation.angle();
+		throwAngle = angle;
+		angle += 10;
+		if (angle > 360) angle -= 360;
+		int newIndex = (int)angle/20;
+
+		if (newIndex != angleIndex){
+			Gdx.app.log(TAG, "update aim " + newIndex);
+			//Gdx.app.log(TAG, "klj  "+newIndex);
+			angleIndex = newIndex;
+			int animID = Data.hash("throw"+angleIndex);
+			AnimationLayer layer = anim.overrideAnimationForLayer(limb_index, animID).layers.get(0);
+			anim.time[item_layer_index] = 0f;
+			anim.frameIndices[item_layer_index] = 0;
+            anim.time[limb_index] = 0f;
+            anim.frameIndices[limb_index] = 0;
+			if (guide_layer != -1){
+				anim.overrideGuide(guide_layer, animID);
+			}
+			angle -= 10;
+			if (angle < 0) angle += 360;
+			anim.angles[limb_index] = angle;
+			//anim.angles[item_layer_index] = angle;
+			if (item_layer_index != -1)anim.angles[item_layer_index] = angle;
+			anim.updateGuides(1, anim.left);
+		}
+	}
+
+
+	@Override
+	public void updateRender(float dt) {
+		//Gdx.app.log(TAG, "updaterender");
+		/*SpriteAnimation anim = animM .get(parent.e);
+		Control control = controlM.get(parent.e);
+		if (!started)
+			updateAim(control, anim);*/
+		update(0f);
+	}
 
 	@Override
 	public void onEnd() {
@@ -145,8 +169,6 @@ public abstract class AThrow extends LimbAction {
 		
 	}
 
-	
 
-	
 
 }

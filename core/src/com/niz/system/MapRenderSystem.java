@@ -45,8 +45,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	public final Texture indexTexture;
 
 	private Array<Vector2> topTiles = new Array<Vector2>();
-	OrthographicCamera camera;
-	//private 
+	//private
 	//OrthographicCamera defaultCamera;
 	private SpriteBatchN batch;
 	private Sprite[] sprites;
@@ -67,7 +66,6 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	public boolean hasRendered;
 	private boolean skippedDraw;
 	private MapSystem mapSys;
-	private OrthographicCamera renderCamera;
 	private CameraSystem camSys;
 	private OrthographicCamera zoomOutCamera;
 	private ShaderProgram coefficientsShader;
@@ -77,11 +75,9 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	private BufferStartSystem bufferSys;
 
 
-	public MapRenderSystem(OrthographicCamera gameCamera, OrthographicCamera zoomOutCamera, SpriteBatchN batch, TextureAtlas atlas) {
+	public MapRenderSystem(SpriteBatchN batch, TextureAtlas atlas) {
 		//this.diffTexture = diffTexture;
 		//this.normalTexture = normalTexture;
-		this.camera = gameCamera;//mapCollisionCamera;
-		this.renderCamera = gameCamera;
 		this.zoomOutCamera = zoomOutCamera;
 		//defaultCamera = defaultCam;
 		this.batch = batch;
@@ -211,9 +207,9 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 			hasRendered = true;
 		}
 		//camera.zoom = zoom;
-		float originalZoom = camera.zoom;
-		camera.zoom = Math.min(camera.zoom, 22f);
-
+		//camera.zoom = Math.min(camera.zoom, 22f);
+		OrthographicCamera camera = camSys.mapDrawCamera;
+		//float originalZoom = camera.zoom;
 		camera.update();
 		int 	x0 = (int) camera.position.x
 				, x1 = x0
@@ -248,11 +244,12 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 			y1 = t;
 		}
 		y1++;
-		camera.zoom = originalZoom;
-		camera.update();
-		
-		renderCamera = camera;
-		renderCamera.zoom = 1f;
+		//camera.zoom = originalZoom;
+		//camera.update();
+
+		OrthographicCamera renderCamera = camera;
+
+		//renderCamera.zoom = 1f;
 		ShaderProgram shader = this.shader;
 		if (camSys.zoomedOut){
 			//renderCamera = zoomOutCamera;
@@ -303,6 +300,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 
 				}
 				bufferSys.currentBuffer.begin();
+
 				map.cache.beginDraw(skipDraw, batch, lights);
 				map.cache.beginDrawBack(lights);
 				for (int x = x0; x <= x1; x++){
@@ -319,23 +317,22 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 					}
 				}
 
-
 				map.cache.endDraw();
 				bufferSys.currentBuffer.end();
 				//if (skipDraw){
 					//batch.end();
 				//}
-				batch.setShader(null);
-				Texture t = indexBuffer.getColorBufferTexture();
-				batch.enableBlending();
-				batch.getProjectionMatrix().setToOrtho2D(0,  0, t.getWidth(), t.getHeight());
-				batch.begin();
-				//batch.draw(t, 0, 0);
-				batch.end();
+//				batch.setShader(null);
+//				Texture t = indexBuffer.getColorBufferTexture();
+//				batch.enableBlending();
+//				batch.getProjectionMatrix().setToOrtho2D(0,  0, t.getWidth(), t.getHeight());
+//				batch.begin();
+//				//batch.draw(t, 0, 0);
+//				batch.end();
 			}
-			camera.zoom = originalZoom;
-			camera.update();
-			renderCamera.update();
+			//camera.zoom = originalZoom;
+			//camera.update();
+			//renderCamera.update();
 			skippedDraw = skipDraw;
 
 		}

@@ -207,7 +207,8 @@ public class SpriteCacheNiz{
 		batch.end();
 		v3.set(0, 0, 0);
 		mat.getTranslation(v3);
-		//Gdx.app.log(TAG, "draw" + v3);
+
+		//Gdx.app.log(TAG, "draw " + x + "," + y);
 
 	}
 

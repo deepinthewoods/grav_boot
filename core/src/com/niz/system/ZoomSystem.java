@@ -34,30 +34,27 @@ public class ZoomSystem extends EntitySystem implements Observer {
 	public void update(float deltaTime) {
 		//if (zoom < ParallaxBackgroundSystem.ZOOM_OUT_MAX)
 		float avAmount = 5f;
-		if (zoom > .999f && zoom < ZOOM_DETENT_MAX){
-			zoomAv = zoomAv * (avAmount - 1f) + Math.min(ParallaxBackgroundSystem.ZOOM_OUT_MAX, 1f);
+		zoomAv *= 10;
+		zoomAv += zoom;
+		zoomAv /= 11;
 
-		}	else 
-		{
-			zoomAv = zoomAv * (avAmount - 1f) + Math.min(ParallaxBackgroundSystem.ZOOM_OUT_MAX, zoom);
-
-		}
-		zoomAv /= avAmount;
+		//zoomAv /= avAmount;
 
 		//Gdx.app.log("zoom", ""+zoomAv + "  / " + ParallaxBackgroundSystem.ZOOM_OUT_MAX + "  ( " + zoom);
 		data.zoom = zoomAv;
 		zoomNotifier.notify(null, null, data);
 	}
 	ZoomInput data = new ZoomInput();
-	private float zoom = 1f, zoomAv;
+	private float zoom = 1f, zoomAv = 1f;
 	@Override
 	public void onNotify(Entity e, Event event, Object c) {
 		ZoomInput z = (ZoomInput) c;
 		zoom *= z.zoom;
 		//zoom = Math.min(ParallaxBackgroundSystem.ZOOM_OUT_MAX, zoom);
-		if (zoom > ParallaxBackgroundSystem.ZOOM_OUT_MAX){
-			zoom = ParallaxBackgroundSystem.ZOOM_OUT_MAX;
-		}
+		//if (zoom > ParallaxBackgroundSystem.ZOOM_OUT_MAX){
+		//	zoom = ParallaxBackgroundSystem.ZOOM_OUT_MAX;
+		//}
+		//Gdx.app.log("zoom onNotify ", "" + zoom);
 //		if (zoom < 1f)
 //			zoom = 1f;
 //

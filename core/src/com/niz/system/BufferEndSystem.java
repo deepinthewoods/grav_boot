@@ -84,30 +84,12 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 		//startBuffer.currentBuffer.end();
 		//Gdx.app.log(TAG , "zoomed " +zoom);
 
-		if (camSys.zoomedOut){
-
-			batch.getProjectionMatrix().set(camSys.adjustedCamera.combined);
-			//Gdx.app.log(TAG, "draw" + camSys.camera.viewportWidth + "  ,  " + camSys.camera.viewportHeight);
-			//batch.getProjectionMatrix().scale(zoom,  zoom,  zoom);
+		if (camSys.zoomedOut && false){
 
 
-			startBuffer.currentBuffer.getColorBufferTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
-			//batch.setShader(shader);
-			blankNormalTexture.bind(1);
-			startBuffer.currentBuffer.getColorBufferTexture().bind(0);
-			//batch.enableBlending();
-			batch.disableBlending();
-			batch.setShader(null);
-
-            batch.begin();
-			lightSys.setUniforms(Light.MAP_FRONT_LAYER, shader, true);
-
-			//Gdx.app.log(TAG, "" + camSys.camera.position);
-			batch.draw(startBuffer.currentBuffer.getColorBufferTexture(), 0, 0, OverworldSystem.SCROLLING_MAP_WIDTH * Main.PPM, OverworldSystem.SCROLLING_MAP_HEIGHT * Main.PPM);
-			batch.end();
 			//spriteSys.drawLowLOD();
 		} else {
-
+			//if (true) return;
 			float w =  (Gdx.graphics.getWidth() ), h =  (Gdx.graphics.getHeight()  ), max = (Main.ar > 1?Math.max(w,  h):Math.min(w, h));
 			batch.getProjectionMatrix().setToOrtho2D(max / 2 - w / 2, max/2+h/2, w,  -h	);
 
@@ -115,21 +97,17 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 			//batch.getProjectionMatrix().scale(zoom, zoom, 1f);
 			batch.getProjectionMatrix().setToOrtho2D(-w/2, -h/2, w,  h	);
 
-
 			startBuffer.currentBuffer.getColorBufferTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 			batch.setShader(null);
-			
+			//batch.disableBlending();
 			batch.begin();
 			float dw = w - max;//Gdx.graphics.getWidth();
 			float dh = h - max;//Gdx.graphics.getHeight();
-			float xoff = -dw * .5f;
-			float yoff = -dh * .5f;
 			//Gdx.app.log(TAG , "zoomed " +zoom);
-			//xoff = 0f;
-			//yoff = 0f;
-			//Gdx.app.log(TAG, "zoomedin w " + w + ", h " + h);
 			w /= zoom;
 			h /= zoom;
+			w = (int)w;
+			h = (int)h;
 			batch.draw(startBuffer.currentBuffer.getColorBufferTexture(), -w/2, h/2, w, -h);
 			batch.end();
 		}

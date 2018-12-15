@@ -59,10 +59,11 @@ import com.niz.ui.edgeUI.SettingsScreen;
 
 public class GameInstance implements Screen, Observer {
 
-	
+
+	public static boolean unPause;
 	SpriteBatchN batch;
 	public EngineNiz engine;
-	private OrthographicCamera gameCamera;
+	//private OrthographicCamera gameCamera;
 	private OrthographicCamera uiCamera;
 	
 	public static float accum;
@@ -113,8 +114,6 @@ public class GameInstance implements Screen, Observer {
 
 	public void create (boolean headless, boolean newGame) {
 
-		//this.isServer = serverInst != null;
-		//this.isClient = clientInst != null;
 		//Log.DEBUG();
 		//GLProfiler.enable();
 		final GameInstance inst = this;
@@ -137,7 +136,6 @@ public class GameInstance implements Screen, Observer {
 
 			private ProgressBarSystem progressSys;
 			private int progress, total = 30;
-			private OrthographicCamera mapRenderCam;
 			private Texture blankNormalTexture;
 
 			@Override
@@ -157,9 +155,9 @@ public class GameInstance implements Screen, Observer {
 					skin = new Skin();
 					camera = new OrthographicCamera();
 					camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-					mapRenderCam = new OrthographicCamera();
-					mapRenderCam.setToOrtho(true, OverworldSystem.SCROLLING_MAP_WIDTH * Main.PPM, OverworldSystem.SCROLLING_MAP_WIDTH * Main.PPM);
-					mapRenderCam.position.set(OverworldSystem.SCROLLING_MAP_WIDTH * Main.PPM / 2, OverworldSystem.SCROLLING_MAP_WIDTH * Main.PPM / 2, 0);
+					//mapRenderCam = new OrthographicCamera();
+					//mapRenderCam.setToOrtho(false, Gdx.graphics.getWidth() * Main.PPM, Gdx.graphics.getHeight() * Main.PPM);
+					//mapRenderCam.position.set(OverworldSystem.SCROLLING_MAP_WIDTH * Main.PPM / 2, OverworldSystem.SCROLLING_MAP_WIDTH * Main.PPM / 2, 0);
 					for (int i = 0; i < 1000; i++){
 						numberStrings [i] = ""+i;
 					}
@@ -169,14 +167,11 @@ public class GameInstance implements Screen, Observer {
 					stage = new Stage(viewport, batch);
 					mapBatch = new SpriteBatchN(10);
 					rightBatch = new SpriteBatchN(5460);
-					gameCamera = new OrthographicCamera(10, 10);//Main.PPM*Main.VIEWPORT_SIZE, (int)(Main.PPM*Main.VIEWPORT_SIZE/Main.ar));
+					//gameCamera = new OrthographicCamera(10, 10);//Main.PPM*Main.VIEWPORT_SIZE, (int)(Main.PPM*Main.VIEWPORT_SIZE/Main.ar));
 					if (uiAtlas.createSprite("button") == null) throw new GdxRuntimeException("kjl");
 					Styles.makeSkin(skin, uiAtlas);
-					
-
 					mux = new InputMultiplexer();
 					mux.addProcessor(new InputProcessor(){
-						
 						@Override
 						public boolean keyDown(int keycode) {
 							switch (keycode){
@@ -226,23 +221,23 @@ public class GameInstance implements Screen, Observer {
 						public boolean scrolled(int amount) {
 							if (amount > 0) zoomInput.zoom = 1.2f;
 							else zoomInput.zoom = 1f/1.2f;
-							
+							Gdx.app.log("zoom", " " + zoomInput.zoom);
 							zoomSubject.notify(null, null, zoomInput);
 							return false;				}
 						
 					});
 					mux.addProcessor(stage);
-					
 					Gdx.input.setInputProcessor(mux);
-					
 					defaultCam = new OrthographicCamera(1f, 1f);
 					defaultCam.setToOrtho(true, 1f, 1f);
-					
 					menuKeySubject = engine.getSubject("inventoryToggle");
 					invRefreshSubject = engine.getSubject("inventoryRefresh");
 					zoomSubject = engine.getSubject("zoominput");
 					zoomInput = new ZoomInput();
-					
+					zoomInput.zoom = 1f;
+					zoomSubject.notify(null, null, zoomInput);
+
+
 					engine.addSystem(new RoomSystem());
 					engine.addSystem(new RoomCatalogSystem());
 					engine.addSystem(new DragControllerSystem());
@@ -276,34 +271,34 @@ public class GameInstance implements Screen, Observer {
 
 					break;case 12:
 					engine.addSystem(new PreRenderSystem());
-					engine.addSystem(new CameraSystem(gameCamera));
-					engine.addSystem(new ParallaxBackgroundRenderNoBufferSystem());
+					engine.addSystem(new CameraSystem());
+					//engine.addSystem(new ParallaxBackgroundRenderNoBufferSystem());
 
 					engine.addSystem(new BufferStartSystem());
 					break;case 13:
 						shaderSys = new ShaderSystem();
 					engine.addSystem(shaderSys);
 					break;case 14:
-					lights = new LightRenderSystem(mapRenderCam);
+					lights = new LightRenderSystem();
 					engine.addSystem(lights);		
 					break;case 15:
 					shapeR = new ShapeRenderer();			
 					engine.addSystem(new ShapeRenderingSystem());
-					engine.addSystem(new ParallaxBackgroundSystem());
+					//engine.addSystem(new ParallaxBackgroundSystem());
 					break;case 16:
-					engine.addSystem(new MapRenderSystem(gameCamera, mapRenderCam ,  mapBatch, atlas));
-					engine.addSystem(new BufferEndSystem(batch, blankNormalTexture));
+					engine.addSystem(new MapRenderSystem(mapBatch, atlas));
 
 					break;case 17:
 					engine.addSystem(new RaceSystem());
 					engine.addSystem(new WeaponSensorSystem());
-					engine.addSystem(new LineBatchSystem(lights));
 					break;case 18:
-					engine.addSystem(new SpriteAnimationSystem(gameCamera, rightBatch, lights));
+					engine.addSystem(new SpriteAnimationSystem(rightBatch, lights));
+					engine.addSystem(new BufferEndSystem(batch, blankNormalTexture));
+					engine.addSystem(new LineBatchSystem(lights));
 					break;case 19:
 					engine.addSystem(new LineBatchPostSystem());
 					//engine.addSystem(new ParallaxBackgroundFrontLayersRenderingSystem());
-					engine.addSystem(new AutoGibSystem(gameCamera, rightBatch, leftBatch,  lights));;
+					engine.addSystem(new AutoGibSystem(rightBatch, leftBatch,  lights));;
 					resize();
 					break;case 20:
 					engine.addSystem(new DragBlockSystem());
@@ -312,13 +307,11 @@ public class GameInstance implements Screen, Observer {
 					//resize();
 					break;case 21:
 
-					
 					charScreen = new CharacterScreen(engine, skin);
 					charScreen.create(skin, stage, engine);
 					charScreen.init(skin, stage, engine);
 					break;case 22:
 
-					//charScreen.addTo(stage);;
 					settingsScreen = new SettingsScreen(skin, engine);
 					settingsScreen.create(skin, stage, engine);
 					settingsScreen.init(skin, stage, engine);
@@ -328,8 +321,7 @@ public class GameInstance implements Screen, Observer {
 					invScreen = new InventoryScreen(engine, skin, charScreen, settingsScreen, shaderSys.shader);
 					invScreen.create(skin, stage, engine);
 					invScreen.init(skin, stage, engine);
-					//invScreen.addTo(stage);
-					
+
 					charScreen.invScreen = invScreen;
 					settingsScreen.invScreen = invScreen;
 					break;case 24:
@@ -343,7 +335,6 @@ public class GameInstance implements Screen, Observer {
 
 					playerInput = new PlayerInputSystem(engine, invScreen);
 					engine.addSystem(playerInput);
-					
 					engine.addSystem(new PlayerSystem());;
 					//break;case 26:
 
@@ -364,7 +355,6 @@ public class GameInstance implements Screen, Observer {
 						
 						OverworldSystem over = engine.getSystem(OverworldSystem.class);
 						over.setForNewGameScreen();
-						
 
 						ProgressAction lvlSelect = new ProgressAction(){
 
@@ -398,14 +388,11 @@ public class GameInstance implements Screen, Observer {
 
 			}
 
-			
-
 			@Override
 			public void onStart() {
 				progress = 0;
 				super.onStart();
 				progressSys = parent.engine.getSystem(ProgressBarSystem.class);
-
 			}
 
 			@Override
@@ -414,14 +401,8 @@ public class GameInstance implements Screen, Observer {
 				
 			}
 			
-			
-			
-			
 		});
-		
-		
 		resize();
-		
 	}
 	
 	protected void resize() {
@@ -443,15 +424,12 @@ public class GameInstance implements Screen, Observer {
 			
 			int error1 = width % (i)
 					, error2 = height % ((int)(i*Main.ar));
-			//error1 = Math.min(error1, i*Main.PPM-error1);
-			//error2 = Math.min(error2, i*Main.PPM-error2);
 			int error = error1 + error2;
 			if (error < lowestError){
 				lowestError = error;
 				lowestIndex = i;
 			}
 		}
-		//if (true) throw new GdxRuntimeException("jkl)");
 		//Gdx.app.log(TAG, "resize");
 		if (uiCamera != null){
 			uiCamera.setToOrtho(false, width, height);
@@ -459,39 +437,17 @@ public class GameInstance implements Screen, Observer {
 			//uiCamera.position.set(0, 0, 0);
 			uiCamera.update();
 		}
-		//Main.VIEWPORT_SIZE = lowestIndex;
 		//Gdx.app.log(TAG, "resize"+lowestIndex);
-		//BufferStartSystem.BUFFER_SIZE = lowestIndex*Main.PPM;
 		resC.v.x = lowestIndex;
 		if (stage != null){
-			//viewport.setScreenHeight(Gdx.graphics.getHeight());
-			//viewport.setScreenWidth(Gdx.graphics.getWidth());
-			//stage.setViewport(viewport);
-			//invScreen.invalidate();
-			//viewport = new NoneViewport(uiCamera);
 			viewport = new ScalingViewport(Scaling.none, width, height, uiCamera);
-
-			//viewport = new ScreenViewport(uiCamera);
-			//stage.clear();
-			//invScreen.getTable().remove();
 			stage.setViewport(viewport);
-			
 			stage.getViewport().update(width, height, true);
-			
-			//invScreen = new InventoryScreen(invScreen, engine, skin, atlas);
-			//invScreen.create(skin, stage, engine);
-			//invScreen.init(skin, stage, engine);
-			//stage.addActor(invScreen.getTable());
-			//invScreen.getTable().layout();
-			//invScreen.init(skin, stage, engine);
-		
 		}
 		resC.v.x = width;
 		resC.v.y = height;
 		engine.getSubject("resize").notify(null, Event.RESIZE, resC);
-		
 		//engine.getSubject("inventoryRefresh").notify(null, Event.INVENTORY_REFRESH, resC);
-
 	}
 	private VectorInput resC = new VectorInput();
 	private WorldDefinition worldDef;
@@ -528,7 +484,6 @@ public class GameInstance implements Screen, Observer {
 			batch.setColor(Color.WHITE);
 			
 		}
-		
 		deltaTime = delta;//Gdx.graphics.getDeltaTime();
 		inputSys.update(deltaTime);
 		ActionSystem actionSys = engine.getSystem(ActionSystem.class);
@@ -544,21 +499,20 @@ public class GameInstance implements Screen, Observer {
 					(!con.pressed[Input.JUMP] && !con.pressed[Input.WALK_LEFT] && !con.pressed[Input.WALK_RIGHT])
 					
 					) paused = true;
-			//if (paused) deltaTime = 0f;
-			
+			if (unPause){
+			    paused = false;
+			    unPause = false;
+            }
+			if (paused) deltaTime = 0f;
 		}
-		
-		
 		if (deltaTime > .1f) deltaTime = .1f;
 		
 		accum += deltaTime;
 		float timeStep = Main.timeStep;
 		while (accum > timeStep){
 			engine.tick++;
-			
 			accum -= timeStep;
 			//Gdx.app.log(TAG,  "render"+accum + isClient + deltaTime);;
-			
 			engine.update(timeStep);
 			if (engine.simulating ){
 				//Gdx.app.log(TAG,  "sim"+accum);;
@@ -570,7 +524,6 @@ public class GameInstance implements Screen, Observer {
 		engine.render(deltaTime);
 		if (!engine.getSystem(WorkerSystem.class).allPaused){
 			if (showingLogo ){
-				
 				float h = Gdx.graphics.getWidth()/20, w = h*3,  x = Gdx.graphics.getWidth()/2 - w/2, y = Gdx.graphics.getHeight()/2 - h/2;
 				batch.getProjectionMatrix().setToOrtho2D(0,  0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 				batch.begin();
@@ -581,10 +534,7 @@ public class GameInstance implements Screen, Observer {
 			}
 		} else showingLogo = false;//*/
 		//if (isClient)Gdx.app.log(TAG,  "stepped"); else Gdx.app.log(TAG,  "stepped server");
-
-		
 		if (camera != null){
-			
 			batch.setProjectionMatrix(camera.combined);
 			batch.setColor(Color.WHITE);;
 			batch.begin();
@@ -658,10 +608,6 @@ public class GameInstance implements Screen, Observer {
 				invScreen.draw(shapeR, bat, Styles.inventoryFont);
 			}
 		}
-		
-		
-		//if (isClient)Gdx.app.log(TAG,  "drawn");
-		
 	}
 
 	@Override
@@ -704,29 +650,19 @@ public class GameInstance implements Screen, Observer {
 			invScreen.setRoomEditor(false);
 		}
 		factory.def = def;
-		//engine.getSystem(MapSystem.class).worldDef = def;
-		
 		engine.getSystem(EntitySerializationSystem.class).worldDef = def;
 		
 		OverworldSystem overworld = engine.getSystem(OverworldSystem.class);
 		overworld.simplexNoise = new SimplexNoise(def.seed);
 		overworld.setProcessing(true);
 		overworld.worldDef = def;
-		//if (overworld.worldDef == null) throw new GdxRuntimeException("jfkds");
-		//else  if (true)throw new GdxRuntimeException("jfkds");
 		ParallaxBackgroundSystem parall = engine.getSystem(ParallaxBackgroundSystem.class);
 		if (parall != null) parall.setProcessing(true);
 		factory.startMap(engine);
 		playerArr = Data.entityArrayPool.obtain();
-		//if (playerFile == null){
-		factory.createPlayer(engine, playerArr, def);			
-		//} else {
-			//factory.loadPlayer(engine, playerFile, invScreen.belt, playerArr);			
-		//}
+		factory.createPlayer(engine, playerArr, def);
 		overworld.startLoadingChunksFor(playerArr);
-		//engine.getSystem(OverworldSystem.class).printHeights();
 		playerArr = null;
-		
 		engine.getSystem(PathfindingUpdateSystem.class).setJumpPaths();
 	}
 	
@@ -736,7 +672,6 @@ public class GameInstance implements Screen, Observer {
 		if (event == Event.WORLD_DEFINITION_SET){
 			this.worldDef = (WorldDefinition)c;
 		}
-		
 	}
 
 	public void startWorld(WorldDefinition def) {
@@ -750,12 +685,7 @@ public class GameInstance implements Screen, Observer {
 			SelectedPlayer sel = new SelectedPlayer();
 			sel.def = def;
 			player.add(sel);
-			
-			
 		}
 		startNewGame(def);
 	}
-
-	
-
 }

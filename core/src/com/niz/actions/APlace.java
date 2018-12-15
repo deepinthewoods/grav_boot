@@ -66,6 +66,7 @@ public abstract class APlace extends LimbAction {
 	private long lineEntityID;
 	@Override
 	public void update(float dt) {
+		//Gdx.app.log(TAG, "update ");
 		SpriteAnimation anim = animM .get(parent.e);
 		Position pos = posM.get(parent.e);
 		limb_index = getLimbIndex(anim);

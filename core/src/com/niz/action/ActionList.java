@@ -266,7 +266,7 @@ public String toString() {
 				action.onStart();
 			}
 			action.updateRender(dt);
-			//Gdx.app.log(TAG, "updated");
+			//Gdx.app.log(TAG, "updated " + action.getClass());
 			if (action.isBlocking)
 				lanes |= action.lanes;
 			

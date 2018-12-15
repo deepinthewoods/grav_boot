@@ -51,10 +51,8 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 
 	private CameraSystem camSys;
 
-	private OrthographicCamera zoomOutCamera;
 
-	public LightRenderSystem(OrthographicCamera zoomCamera) {
-		zoomOutCamera = zoomCamera;
+	public LightRenderSystem() {
 		//posLoc[0] = shader.getUniformLocation("LightPos[0]");
 		//colorLoc[0] = shader.getUniformLocation("LightColor[0]");
 		//falloffLoc[0] = shader.getUniformLocation("Falloff[0]");

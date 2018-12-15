@@ -82,4 +82,9 @@ public class AUseInventory extends Action {
 	public void onStart() {
 	}
 
+	@Override
+	public void updateRender(float dt) {
+//		super.updateRender(dt);
+		update(0f);
+	}
 }

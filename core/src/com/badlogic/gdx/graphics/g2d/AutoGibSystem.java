@@ -54,23 +54,13 @@ public class AutoGibSystem extends EntitySystem {
 	public ComponentMapper<SpriteStatic> spriteStaticM = ComponentMapper.getFor(SpriteStatic.class);
 	protected ComponentMapper<Body> bodyM = ComponentMapper.getFor(Body.class);
 	
-	public AutoGibSystem(OrthographicCamera gameCamera, SpriteBatchN batch, SpriteBatchN leftBatch, LightRenderSystem lights) {
+	public AutoGibSystem(SpriteBatchN batch, SpriteBatchN leftBatch, LightRenderSystem lights) {
 
 		makeTables();
 		this.batch = batch;
 		this.leftBatch = leftBatch;
 		
-		spritePool = new Pool<Sprite>(){
-
-			@Override
-			protected Sprite newObject() {
-				AtlasRegion reg = new AtlasRegion(null, 0, 0, 0, 0);
-				
-				return new Sprite(reg);
-			}
-			
-		};
-		Pools.set(Sprite.class, spritePool);
+		spritePool = Pools.get(Sprite.class);
 	}
 
 
@@ -266,7 +256,7 @@ public class AutoGibSystem extends EntitySystem {
 	public void makeGibs(Sprite s, boolean left, Vector2 basePos, boolean isMapTexture, Class<? extends Action> actionClass, int b, int seed){
 		//decompose here
 
-		Gdx.app.log("agibsys", "sprite "+s.u + " , "+s.v);
+		//Gdx.app.log("agibsys", "sprite "+s.u + " , "+s.v);
 		AtlasSprite as = (AtlasSprite) s;
 		BlockDefinition def = MapSystem.getDef(b);
 		
@@ -279,7 +269,7 @@ public class AutoGibSystem extends EntitySystem {
 			arr = decompositions[size][seed % decompositions[size].length];
 		for (int i = 0; i < arr.size; i+=4){
 			Sprite spr = spritePool.obtain();
-			
+			spr.setRegion(as.getAtlasRegion());
 			AtlasRegion reg = as.getAtlasRegion();
 			
 			//reg.setRegion(s.getAtlasRegion());

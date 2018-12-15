@@ -17,13 +17,10 @@ import com.niz.action.ActionList;
 public class ActionSystem extends EntitySystem implements EntityListener{
 	private static final String TAG = "action system";
 	ComponentMapper<ActionList> actionMap = ComponentMapper.getFor(ActionList.class);
-
     public BinaryHeap<Action> actions = new BinaryHeap<Action>();
 	private ImmutableArray<Entity> entities;
 	private EngineNiz engine;
 
-
-	
 	@Override
 	public void addedToEngine(Engine engine) {
 		entities = engine.getEntitiesFor(Family.all(ActionList.class).get());
@@ -81,7 +78,7 @@ public class ActionSystem extends EntitySystem implements EntityListener{
             }
             a.unDelay();
         }
-        //Gdx.app.log(TAG, "update");
+        //Gdx.app.log(TAG, "update render");
 
         for (int i = 0, s = entities.size(); i < s; i++) {
           

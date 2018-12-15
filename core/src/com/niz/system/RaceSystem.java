@@ -113,7 +113,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 					int layerID = anim.itemLayersByLimbIndex[i];
 					if (layerID == -1) continue;
 					int itemID = inv.getItemIDByLimb(i);
-						Gdx.app.log(TAG, "DRITY"+layerID + " " + i);
+					//	Gdx.app.log(TAG, "DRITY"+layerID + " " + i);
 					AnimationContainer layer = anim.overrideSpriteForLayer(layerID, Animations.itemLayers[itemID]);
 					if (layer.layers.get(0) == null) continue;
 					//layer.layers.get(0).angleDependantFlip = false;

@@ -60,7 +60,6 @@ private static ComponentMapper<DragOption> dragM = ComponentMapper.getFor(DragOp
 
 private SpriteBatchN batch;
 //protected ImmutableArray<Entity> entities;
-private OrthographicCamera camera;
 private ComponentMapper<Physics> physM = ComponentMapper.getFor(Physics.class);
 protected MapRenderSystem map;
 private SpriteBatchN leftBatch;
@@ -106,10 +105,9 @@ private Sprite square;
 	private int u_texture;
 	private int u_index_texture;
 
-	public SpriteAnimationSystem(OrthographicCamera gameCamera, SpriteBatchN batch, LightRenderSystem lights) {
+	public SpriteAnimationSystem(SpriteBatchN batch, LightRenderSystem lights) {
 	this.lights = lights;
 	this.batch = batch;
-	this.camera = gameCamera;
 	this.leftBatch = batch;
 //	this.diffTexture = diff;
 //	this.uvTexture = normal;
@@ -123,7 +121,6 @@ private Sprite square;
 	square = new Sprite(new Texture(pixmap));
 	for (int i = 0; i < LAYER_COLORS.length; i++){
 		LAYER_COLORS[i] = new Color((float)(i + .5f) / 128f, 0f, 0f, 1f);
-
 	}
 }
 
@@ -248,30 +245,15 @@ public void update(float deltaTime) {
 	bufferSys.currentBuffer.begin();
 	//TODO dt += Main.accum;
 	//if (map == null) return;
-	batch.setProjectionMatrix(map.camera.combined);
+	batch.setProjectionMatrix(camSys.mapDrawCamera.combined);
+
 	batch.setColor(Color.WHITE);
-	float sc = Gdx.graphics.getWidth()/viewportSize;
-	sc *= 2;
-	sc = 1f;
+//	float sc = Gdx.graphics.getWidth()/viewportSize;
+//	sc *= 2;
+//	sc = 1f;
 	//batch.setShader(null);;
 	//leftBatch.setShader(null);
-	batch.getProjectionMatrix().scale(sc, sc, sc);
-
-	Gdx.gl.glDisable(GL20.GL_BLEND);
-	batch.setShader(shader);
-	//batch.setShader(null);
-	batch.begin();
-	//processMap();
-	batch.end();
-	//mapNormal.bind(1);
-	//mapDiff.bind(0);
-	batch.begin();
-	//lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_RIGHT, shader, null);
-	//batch.render();
-	batch.end();
-	//uvTextureLeft.bind(1);
-	//diffTexture.bind(0);
-	//leftBatch.enableBlending();
+//	batch.getProjectionMatrix().scale(sc, sc, sc);
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -300,6 +282,7 @@ public void update(float deltaTime) {
 	processMap();
 
 	batch.end();
+	bufferSys.currentBuffer.end();
 	batch.enableTextureBinding();
 	//shader.begin();
 	//shader.end();
@@ -311,16 +294,15 @@ public void update(float deltaTime) {
 	//batch.render();
 	//batch.end();
 
-	batch.setShader(null);
-	Texture t = indexBuffer.getColorBufferTexture();
+//	batch.setShader(null);
+//	Texture t = indexBuffer.getColorBufferTexture();
 
-	batch.enableBlending();
-	batch.getProjectionMatrix().setToOrtho2D(0,  0, t.getWidth(), t.getHeight());
-	batch.begin();
+//	batch.enableBlending();
+//	batch.getProjectionMatrix().setToOrtho2D(0,  0, t.getWidth(), t.getHeight());
+//	batch.begin();
 	//batch.draw(t, 0, 0);
-	batch.end();
+//	batch.end();
 	//drawColors();
-	bufferSys.currentBuffer.end();
 }
 
 	public void processSprites() {
@@ -391,7 +373,7 @@ public void update(float deltaTime) {
 			Body body = bodyM.get(e);
 			Vector2 p = posM.get(e).pos;
 			v3.set(p.x - body.width, p.y-body.height);
-			map.camera.update();
+			//map.camera.update();
 			v3.scl(16);
 			spr.s.setPosition((int)(v3.x), (int)v3.y);
 			//Gdx.app.log(TAG, "draw "+v3.x+" , "+v3.y);
@@ -449,7 +431,7 @@ public void processMap(){
 			Vector2 p = posM.get(e).pos;
 			//v3.set(p.x - body.width, p.y-body.height);
 			v3.set(p.x, p.y);
-			map.camera.update();
+			//map.camera.update();
 			v3.scl(Main.PPM);
 			spr.s.setPosition((int)(v3.x), (int)v3.y);
 			//Gdx.app.log(TAG, "draw "+v3.x+" , "+v3.y);
@@ -466,7 +448,7 @@ public void processMap(){
 			Body body = bodyM.get(e);
 			Vector2 p = posM.get(e).pos;
 			v3.set(p.x - body.width, p.y-body.height);
-			map.camera.update();
+			//map.camera.update();
 			v3.scl(Main.PPM);
 
 			spr.s.setPosition((int)(v3.x), (int)v3.y);
@@ -489,7 +471,7 @@ public void processMap(){
 			float fy = ar.offsetY;// + ar.packedHeight/2;
 			v3.set(p.x - fx * Main.PX , p.y - fy * Main.PX - body.height);
 			//v3.set(p.x, p.y);
-			map.camera.update();
+			//map.camera.update();
 			//Gdx.app.log(TAG, "draw static body "+v3.x+" , "+v3.y + "   ---  " + fy);
 			v3.scl(Main.PPM);
 			spr.s.setPosition((int)(v3.x), (int)v3.y);
@@ -516,7 +498,7 @@ public void drawMap(Sprite s, SpriteBatchN theBatch, boolean left, Entity entity
 	}
 
 public void drawLowLOD(){
-	batch.setProjectionMatrix(camSys.adjustedCamera.combined);	
+	batch.setProjectionMatrix(camSys.camera.combined);
 	float sc = Gdx.graphics.getWidth()/viewportSize;
 	sc *= 2;
 	sc = 1f;
