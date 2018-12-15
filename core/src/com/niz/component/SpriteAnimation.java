@@ -64,14 +64,11 @@ public String toString(){
 
 	return s;
 }
-
-
 	public SpriteAnimation(){
 		reset();
 	}
 
 	public Component set(int id){
-		
 		return this;
 	}
 	
@@ -180,7 +177,6 @@ public String toString(){
 		overriddenGuideLayers[index].set(other.getGuide(guideIDs.get(index)));;
 		overriddenGuideLayerIDs[index] = animID;
 	}
-	
 
 	@Override
 	public void reset() {
@@ -203,7 +199,6 @@ public String toString(){
 		
 	}
 	
-	
 	public void updateGuides(int smallest, boolean left) {
 		
 		for (int i = Math.max(1,  smallest); i < guides.size; i++){
@@ -212,15 +207,13 @@ public String toString(){
 			//if (){
 			if (overriddenGuides.get(i)){
 				g = overriddenGuideLayers[i];
-
-				Gdx.app.log(TAG, "OVERRIDDEN");
+				//Gdx.app.log(TAG, "OVERRIDDEN");
 			} else {
 				g = currentAnim.guides.get(i);
 			}
 			/*if (currentAnim.layers.get(guideFrameSources[i]) != null)
 				Gdx.app.log(TAG, "g "+currentAnim.layers.get(guideFrameSources[i]).getNumberOfFrames() +
                 "  " + Data.getString(layerIDs.get(guideFrameSources[i]))
-
                 );//*/
 			//total = g.offsets.length;
 			//} else {
@@ -259,9 +252,7 @@ public String toString(){
 					//frameIndices[guideFrameSources[i]] = frame;
 				}
 				actual.add(g.offsets[frame]);
-
 				actual.rotation = (360 + 180 - g.angles[frame]) % 360;
-				
 				//actual.rotation = g.angles[frame];
 				//Gdx.app.log(TAG, "guide "+i+" source:"+guideSources[i] + "  actual:"+g.offsets[frame] + "  angle:"+g.angles[frame]);
 			}
@@ -272,17 +263,16 @@ public String toString(){
 	public void disableGuideOverride(int index) {
 		overriddenGuides.clear(index);
 		time[index] = time[back_leg];
-
 		//frameIndices[index] = -1;
 	}
 
 	public void switchItemLimbToAngleFlipped(int limb) {
 		int item_layer_index = itemLayersByLimbIndex[limb];
-
 		//int itemID = inv.getItemIDByLimb(limb);
 		//AnimationContainer layer = overrideSpriteForLayer(item_layer_index, Animations.weaponLayers[itemID]);
 		//AnimationContainer layer = getLayer(this.itemLayersByLimbIndex[limb]));
-		//getLayer(itemLayersByLimbIndex[limb]).angleDependantFlip = true;
+		//getLayer(itemLayersByLimbIndex[limb]).angleDependantF
+		// lip = true;
 		isAngleFlipLayer[item_layer_index] = true;
 		isAngleFlipGuideLayer[guideLayersByLimbIndex[limb]] = true;
 		//frameIndices[item_layer_index] = -1;
@@ -327,25 +317,21 @@ public String toString(){
 		guideIDs.clear();
 		layerIDs.add(0);
 		guideIDs.add(0);
-		
 		if (guideFrameSources == null) guideFrameSources = new int[1];
 		guideFrameSources[0] = 0;;// = {0, 2, 2, 2, 1, 1, 1, 2};//animation layer that the guide takes its's frame from
 		if (guideSources == null) guideSources = new int[1];
 		guideSources[0] = 0;// = {-1, 0, 1, 2, 1, 4, 4, 1};//refers to the other guides it inherits position from
 		if (layerSources == null) layerSources = new int[1];
 		layerSources[0] = 0;
-		
 		this.overrideSpriteForLayer(0, layer);
 		
 		guides.clear();
 		guides.add(new LayerGuide());
 		guides.get(0).rotation = rotation;
 		//if (layer.angleDependantFlip) guides.get(0).rotation = (180 - guides.get(0).rotation + 360)%360;
-		
 		hasStarted = true;
 		//this.adjustedLeft[0] = true;
 		//this.isAngleFlipGuideLayer[0] = true;
-		
 	}
 
 	public void syncAllTimesWithLayer(int layerIndex) {

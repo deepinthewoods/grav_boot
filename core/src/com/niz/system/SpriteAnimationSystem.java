@@ -102,6 +102,9 @@ private Sprite square;
 	private ShaderProgram positionShader;
 	private ShaderProgram lightRampShader;
 	private Color c = new Color();
+	private BufferStartSystem bufferSys;
+	private int u_texture;
+	private int u_index_texture;
 
 	public SpriteAnimationSystem(OrthographicCamera gameCamera, SpriteBatchN batch, LightRenderSystem lights) {
 	this.lights = lights;
@@ -156,6 +159,7 @@ public void addedToEngine(Engine engine) {
 	//physicsEntities = engine.getEntitiesFor(Family.getFor(Position.class, SpriteAnimation.class, Physics.class));
 	map = engine.getSystem(MapRenderSystem.class);
 	camSys = engine.getSystem(CameraSystem.class);
+	bufferSys = engine.getSystem(BufferStartSystem.class);
 	//Family family = new Family();
 	//Gdx.app.log(TAG, "added "+(staticEntities == null));
 	//Family.all;
@@ -167,6 +171,8 @@ public void addedToEngine(Engine engine) {
 	//indexBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 128, MapRenderSystem.INDEX_BUFFER_HEIGHT, false);
 	indexBuffer = map.indexBuffer;
 	//indexBuffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+	u_texture = shaderSys.shader.getUniformLocation("u_texture");
+	u_index_texture = shaderSys.shader.getUniformLocation("u_index_texture");
 }
 
 @Override
@@ -182,7 +188,7 @@ private float viewportSize;
 
 	private void start() {
 
-		lights.setUniformsNew(coefficientsShader, shader, positionShader);
+		lights.setUniformsNew(coefficientsShader, false, shader, positionShader, true);
 		drawColors();
 
 	}
@@ -239,7 +245,7 @@ public void update(float deltaTime) {
 	//if (true) return;
 	start();
 	if (camSys.zoomedOut) return;
-	
+	bufferSys.currentBuffer.begin();
 	//TODO dt += Main.accum;
 	//if (map == null) return;
 	batch.setProjectionMatrix(map.camera.combined);
@@ -250,17 +256,13 @@ public void update(float deltaTime) {
 	//batch.setShader(null);;
 	//leftBatch.setShader(null);
 	batch.getProjectionMatrix().scale(sc, sc, sc);
-	
 
 	Gdx.gl.glDisable(GL20.GL_BLEND);
 	batch.setShader(shader);
 	//batch.setShader(null);
 	batch.begin();
-
 	//processMap();
-	
 	batch.end();
-
 	//mapNormal.bind(1);
 	//mapDiff.bind(0);
 	batch.begin();
@@ -271,7 +273,6 @@ public void update(float deltaTime) {
 	//diffTexture.bind(0);
 	//leftBatch.enableBlending();
 
-
 	////////////////////////////////////////////////////////////////////////////////////////////
 
 	batch.enableBlending();
@@ -280,20 +281,22 @@ public void update(float deltaTime) {
 	//batch.setShader(null);
 	batch.begin();
 	indexBuffer.getColorBufferTexture().bind(1);
-	shader.setUniformi("u_index_texture", 1); //passing first texture!!!
+	shader.setUniformi(u_index_texture, 1); //passing first texture!!!
 	atlasTexture.bind(0);
-	shader.setUniformi("u_texture", 0);
+	shader.setUniformi(u_texture, 0);
 	processSprites();
 
 	batch.end();
+	bufferSys.currentBuffer.end();
 	//batch.disableTextureBinding();
 	map.drawColors();
+	bufferSys.currentBuffer.begin();
 	batch.begin();
 	map.indexBuffer.getColorBufferTexture().bind(1);
 	//indexTexture.bind(1);
-	shader.setUniformi("u_index_texture", 1); //passing first texture!!!
+	shader.setUniformi(u_index_texture, 1); //passing first texture!!!
 	map.atlasTexture.bind(0);
-	shader.setUniformi("u_texture", 0);
+	shader.setUniformi(u_texture, 0);
 	processMap();
 
 	batch.end();
@@ -314,19 +317,17 @@ public void update(float deltaTime) {
 	batch.enableBlending();
 	batch.getProjectionMatrix().setToOrtho2D(0,  0, t.getWidth(), t.getHeight());
 	batch.begin();
-	batch.draw(t, 0, 0);
+	//batch.draw(t, 0, 0);
 	batch.end();
 	//drawColors();
+	bufferSys.currentBuffer.end();
 }
-
-
 
 	public void processSprites() {
 	//Gdx.app.log(TAG, "process phys:"+physicsEntities.size() + "  static:");
-	
+
 	///////////////////////////////////////////////
 	int layerI = Light.CHARACTER_SPRITES_LAYER_RIGHT;
-
 
 	for (int i = 0; i < dragEntities.size(); i++){
 		Entity e  = dragEntities.get(i);
@@ -407,7 +408,6 @@ public void update(float deltaTime) {
 		AnimationContainer parent =  spr.currentAnim;
 		//Gdx.app.log(TAG, "process phy "+e.getId());
 		//Gdx.app.log(TAG, "process phy "+pos.pos.y * Main.PPM);
-
 		for (int index = 0; index < parent.layers.size; index++)
 		{
 			AnimationContainer container = parent;
@@ -451,15 +451,12 @@ public void processMap(){
 			v3.set(p.x, p.y);
 			map.camera.update();
 			v3.scl(Main.PPM);
-
 			spr.s.setPosition((int)(v3.x), (int)v3.y);
 			//Gdx.app.log(TAG, "draw "+v3.x+" , "+v3.y);
 			SpriteBatchN theBatch = spr.left?leftBatch:batch;
 
 			drawMap(spr.s, theBatch, spr.left, e, layer);
-			
 		}
-		
 	}
 	
 	if (staticGibMapEntities != null){
@@ -476,7 +473,6 @@ public void processMap(){
 			//Gdx.app.log(TAG, "draw gib "+v3.x+" , "+v3.y + spr.left);
 			SpriteBatchN theBatch = spr.left?leftBatch:batch;
 			drawMap(spr.s, theBatch, spr.left, e, layer);
-			
 		}
 		
 	}
@@ -491,19 +487,15 @@ public void processMap(){
 			AtlasRegion ar = os.getAtlasRegion();
 			float fx = ar.offsetX + ar.packedWidth/2;
 			float fy = ar.offsetY;// + ar.packedHeight/2;
-
 			v3.set(p.x - fx * Main.PX , p.y - fy * Main.PX - body.height);
 			//v3.set(p.x, p.y);
 			map.camera.update();
 			//Gdx.app.log(TAG, "draw static body "+v3.x+" , "+v3.y + "   ---  " + fy);
 			v3.scl(Main.PPM);
-
 			spr.s.setPosition((int)(v3.x), (int)v3.y);
 			SpriteBatchN theBatch = spr.left?leftBatch:batch;
 			drawMap(spr.s, theBatch, spr.left, e, layer);
-			
 		}
-		
 	}
 }
 
@@ -529,16 +521,9 @@ public void drawLowLOD(){
 	sc *= 2;
 	sc = 1f;
 	//batch.setColor(Color.RED);
-
 	batch.getProjectionMatrix().scale(sc, sc, sc);batch.begin();
-	
 	processSpritesLowLOD();
-	
-	
-	
-	
 	////////////////////////
-	
 	batch.end();
 	batch.setShader(null);
 	//uvTexture.bind(1);
@@ -548,14 +533,11 @@ public void drawLowLOD(){
 	//batch.render();
 	batch.end();
 	batch.setShader(shader);
-	
 }
 
 private void processSpritesLowLOD() {
-
 	//Gdx.app.log(TAG, "process phys:"+physicsEntities.size() + "  static:");
 	int layer = Light.CHARACTER_SPRITES_LAYER_RIGHT;
-
 	///////////////////////////////////////////////
 	for (int i = 0; i < physicsEntities.size(); i++){
 		Entity e  = physicsEntities.get(i);
@@ -576,7 +558,6 @@ private void processSpritesLowLOD() {
 		//batch.setColor(Color.WHITE);
 	}
 	square.setColor(Color.BLUE);
-
 	for (int i = 0; i < dragEntities.size(); i++){
 		Entity e  = dragEntities.get(i);
 		SpriteAnimation spr = spriteM.get(e);
@@ -594,7 +575,6 @@ private void processSpritesLowLOD() {
 		draw(square, batch, spr.left, e, layer);
 	}
 	//batch.setColor(Color.WHITE);
-
 	//Gdx.app.log(TAG, "update "+(staticEntities == null));
 	if (staticEntities != null){
 		for (int i = 0; i < staticEntities.size(); i++){
@@ -612,10 +592,7 @@ private void processSpritesLowLOD() {
 			draw(square, batch, spr.left, e, layer);
 		}
 	}
-
 	//batch.setColor(Color.WHITE);
-
-	
 	if (staticMapEntities != null){
 		for (int i = 0; i < staticMapEntities.size(); i++){
 			Entity e  = staticMapEntities.get(i);
@@ -689,8 +666,6 @@ private void processSpritesLowLOD() {
 		
 	}
 	//batch.setColor(Color.WHITE);
-
-	
 }
 
 @Override
