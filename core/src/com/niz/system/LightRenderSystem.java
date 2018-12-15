@@ -76,14 +76,10 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 				
 				//Gdx.app.log(TAG,  ""+s);;
 			}
-			
 				posLoc = posShader.getUniformLocation("LightPos[0]");
 				colorLoc = shader.getUniformLocation("LightColor[0]");
 				falloffLoc = coeffShader.getUniformLocation("Falloff[0]");
 				ambientLoc = shader.getUniformLocation("AmbientColor[0]");
-				
-
-				
 
 		}
 		
@@ -100,7 +96,7 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 			@Override
 			public void onNotify(Entity e, Event event, Object c) {
 				ZoomInput z = (ZoomInput) c;
-				//zoom = z.zoom;
+				zoom = z.zoom;
 				zoom = 1f;
 				//zoom = (float) Math.sqrt(zoom);
 
@@ -188,8 +184,10 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 	public void setUniformsData(int layer, ShaderProgram shader, boolean zoomOut){
 
 	}
-
-	public void setUniformsNew(ShaderProgram shader, boolean zoomOut, ShaderProgram lightShader, ShaderProgram posShader) {
+    public void setUniformsNew(ShaderProgram shader, boolean zoomOut, ShaderProgram lightShader, ShaderProgram posShader) {
+        setUniformsNew(shader, zoomOut, lightShader, posShader, false);
+    }
+	public void setUniformsNew(ShaderProgram shader, boolean zoomOut, ShaderProgram lightShader, ShaderProgram posShader, boolean writeUniforms) {
 		//if (true) return;
 		if (shader == null) return;
 		//if (layer == this.MAP_BACK_LAYER){
@@ -244,16 +242,18 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 //
 //		posShader.begin();
 //		posShader.setUniform3fv(posLoc, pos, 0, pos.length);
-//
 //		posShader.end();
 
 		resolutionArr[0] = viewportSize;
 		resolutionArr[1] = viewportSize;
-		lightShader.begin();
-		lightShader.setUniformf("Resolution", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		lightShader.setUniform1fv(ambientLoc, ambient, 0, ambient.length);//maxAmbient);
-		lightShader.setUniformf("Zoom", zoom);
-		lightShader.end();
+		if (writeUniforms || true){
+    		lightShader.begin();
+		    lightShader.setUniformf("Resolution", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		    //lightShader.setUniform1fv(ambientLoc, ambient, 0, ambient.length);//maxAmbient);
+		    lightShader.setUniformf("Zoom", zoom);
+		    lightShader.end();
+
+        }
 	}
 	float[] pos = new float[NUM_LIGHTS*3 * N_LAYERS], falloff = new float[NUM_LIGHTS*3* N_LAYERS];
 	@Override

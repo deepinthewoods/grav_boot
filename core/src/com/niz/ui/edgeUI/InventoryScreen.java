@@ -683,33 +683,6 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		batch.setShader(null);
 		batch.setColor(Color.WHITE);
 		batch.begin();
-		/*if (!sides[0].isHidden())
-			for (int i = 0; i < BELT_SLOTS; i++){
-				InventoryButton butt2 = belt.buttons[i];
-				butt2.draw2(batch, 1f);
-				//if (butt.hash == 0) continue;
-				//drawButton(butt2, batch);
-			}*/
-		//DRAW BUTtoN IMAGES MANUALLY
-		//indexBuffer.getColorBufferTexture().bind(1);
-		//indexTexture.bind(1);
-//		batch.end();
-//        matrix.set(batch.getProjectionMatrix());
-//		map.drawAllWhiteColorRamp(batch);
-//		map.drawColors();
-//		batch.getProjectionMatrix().set(matrix);
-//		//lights.setUniformsNew(null, shader, null);
-//
-//
-//		batch.setShader(shader);
-//		batch.disableTextureBinding();
-//		shader.begin();
-//		SpriteAnimationSystem.indexBuffer.getColorBufferTexture().bind(1);
-//		shader.setUniformi("u_index_texture", 1); //passing first texture!!!
-//		SpriteAnimationSystem.atlasTexture.bind(0);
-//		shader.setUniformi("u_texture", 0);
-//		shader.end();
-//		batch.begin();
 
 		matrix.set(batch.getProjectionMatrix());
 		spriteRenderer.drawColors();
@@ -733,19 +706,11 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		for (InventoryButton b : InventoryButton.itemDrawList){//works with blocks
 			b.draw2(batch, 1f);
 		}
-		//batch.end();
-
-		//matrix.set(batch.getProjectionMatrix());
-		//map.drawColors();
-		//batch.getProjectionMatrix().set(matrix);
-
-		//batch.begin();
 		for (InventoryButton b : InventoryButton.blockDrawList){
 			b.draw2(batch, 1f);
 			//Gdx.app.log(TAG, "draw block " + b.item);
 		}
 		batch.end();
-
 
 		InventoryButton.blockDrawList.clear();
 		InventoryButton.itemDrawList.clear();
@@ -755,7 +720,6 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		rend.setColor(Color.DARK_GRAY);
 		rend.begin(ShapeType.Line);
 		if (!sides[3].isHidden()) {
-
 			for (int i = 0; i < inv.buttons.size; i++){
 				InventoryButton butt3 = inv.buttons.get(i);
 				//butt3.draw2(batch, 1f);
@@ -765,11 +729,8 @@ public class InventoryScreen extends EdgeUI implements Observer{
 			}
 		}
 		if (!sides[0].isHidden()) {
-
 			for (int i = 0; i < BELT_SLOTS; i++){
 				InventoryButton butt2 = belt.buttons[i];
-
-				//if (butt.hash == 0) continue;
 				drawButton(butt2, batch, rend);
 			}
 		}
@@ -778,20 +739,16 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		batch.end();
 		batch.begin();
 		if (!sides[0].isHidden()) {
-
 			for (int i = 0; i < BELT_SLOTS; i++){
 				InventoryButton butt2 = belt.buttons[i];
-
 				//if (butt.hash == 0) continue;
 				drawButtonAmount(butt2, batch, font);
 			}
 		}
 
 		if (!sides[3].isHidden()) {
-
 			for (int i = 0; i < inv.buttons.size; i++){
 				InventoryButton butt3 = inv.buttons.get(i);
-				//if (butt.hash == 0) continue;
 				//Gdx.app.log(TAG, "draw item amount");
 				drawButtonAmount(butt3, batch, font);
 			}
@@ -804,7 +761,6 @@ public class InventoryScreen extends EdgeUI implements Observer{
 			//Gdx.app.log(TAG,  "checked"+checkedQueue.get(i*4));
 			//rend.setColor(Color.LIGHT_GRAY);
 		}
-
 		checkedQueue.clear();
 		rend.end();
 		if (showInv) return;
@@ -945,8 +901,6 @@ public class InventoryScreen extends EdgeUI implements Observer{
 			drawShape(rend, x, y, w, h, sl.cutOff);
 			x += .5 * w * slider.slider.getValue() + w/2f;
 			float dy = h * .3f;
-			
-			
 			if (settingsOn){
 				
 				c.set(x, y +h/2);
@@ -975,14 +929,9 @@ public class InventoryScreen extends EdgeUI implements Observer{
 			} else {
 				rend.line(x,  y+dy, x, y+h-dy);
 			}
-			
-			
 		}
 
-
-		
 		rend.end();
-		
 		
 	}
 	private Vector2 a = new Vector2(), b = new Vector2(), t = new Vector2(), c = new Vector2();
@@ -992,7 +941,6 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	}
 	private void drawButton(InventoryButton butt, SpriteBatchN batch, ShapeRenderer rend, boolean forceSelected) {
 		ImageN im = (ImageN) butt.getImage();
-
 		a.set(0, 0);
 		b.set(butt.getWidth(), butt.getHeight());
 		butt.localToStageCoordinates(a);
@@ -1008,9 +956,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		}
 		//else
 		drawShape(rend, x, y, w, h);
-
 		//im.draw2(batch, 1f);
-
 	}
 	
 	private void drawButtonAmount(InventoryButton butt, SpriteBatchN batch, BitmapFont font) {
@@ -1030,31 +976,12 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		im.getWidth();
 		float h = //Main.prefs.inventory_button_height;
 		butt.getHeight();
-		//x -= w/2f;
-		
-		
-		//y = Gdx.graphics.getHeight()-y;
-		
-		
-		//drawText(butt.amountLabel, batch, x, y, w, h);
-//		font.draw(batch, butt.amountLabel, x+font.getCapHeight()*.5f, y + font.getCapHeight()*1.5f);
-		
 		font.draw(batch, butt.amountLabel, x+font.getCapHeight()*.25f, y + font.getCapHeight()+font.getCapHeight()*.25f);
-		//if (butt.amountLabel.length() > 0)Gdx.app.log(TAG, ""+ butt.amountLabel+"  "+ x+font.getCapHeight()*.5f+"  "+ (y + h - font.getCapHeight()*.5f));
-		
-		
 	}
 	
-	
-
-
-
-
-
 	private FloatArray checkedQueue = new FloatArray(true, 4);
 	private boolean drawArrow;
 	private Vector2 arrowAngle = new Vector2();
-
 	private int arrowType;
 	private boolean settingsOn;
 	private float doorButtonFontHeight;
@@ -1065,7 +992,6 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		checkedQueue.add(w);
 		checkedQueue.add(h);
 		//Gdx.app.log(TAG,  "q");
-
 	}
 
 	private void drawShape(ShapeRenderer rend, float x, float y, float width,
@@ -1073,8 +999,6 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		rend.rect(x, y, width, height);
 		//Gdx.app.log(TAG,  "drwa"+x+" , "+y+"  "+height);
 	}
-
-
 
 	private void drawShape(ShapeRenderer rend, float x, float y, float w,
 			float h, int cutOff) {
@@ -1149,8 +1073,6 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		sides[8].unHide();
 	}
 
-
-
 	@Override
 	public void addTo(Stage stage) {
 		
@@ -1161,7 +1083,6 @@ public class InventoryScreen extends EdgeUI implements Observer{
 			stage.addActor(t);
 		}
 		//stage.addActor(doorTable);
-		
 	}
 
 	public void changeToHUD() {
@@ -1173,16 +1094,6 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		on = true;
 	}
 
-	/*public void changeToSettingsScreen() {
-		on = false;
-		theStage.clear();
-		
-		sides[3].hide();
-		sides[7].hide();
-		sides[6].unHide();
-		sides[8].unHide();
-	}*/
-	
 	public ObjectMap<Actor, Array<EventListener>> cachedListeners = new ObjectMap<Actor, Array<EventListener>>();
 	private boolean cutOffJump;
 	private boolean cutOffMove;
@@ -1284,9 +1195,6 @@ public class InventoryScreen extends EdgeUI implements Observer{
 				prevY = Gdx.input.getY(pointer);
 			}
 		});
-		
-		
-	
 	}
 
 	public void setDrawArrow(Entity e, Vector2 rotation) {

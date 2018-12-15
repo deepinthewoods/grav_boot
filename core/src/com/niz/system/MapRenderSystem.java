@@ -330,7 +330,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 				batch.enableBlending();
 				batch.getProjectionMatrix().setToOrtho2D(0,  0, t.getWidth(), t.getHeight());
 				batch.begin();
-				batch.draw(t, 0, 0);
+				//batch.draw(t, 0, 0);
 				batch.end();
 			}
 			camera.zoom = originalZoom;
@@ -412,7 +412,6 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		//any texture
 		//batch.draw(indexTexture, 0, 2, indexBuffer.getWidth(), 1);
 		batch.end();
-
 		if (false){
 			batch.setShader(positionShader);
 			batch.begin();
@@ -428,7 +427,6 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 			batch.end();
 		}
 
-
 		batch.setShader(null);
 		batch.setColor(Color.WHITE);
 		batch.begin();
@@ -436,7 +434,6 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		batch.end();
 		//drawIndexVariables();
 		indexBuffer.end();
-
 	}
 
 	private void drawPositions(SpriteBatchN batch, int width) {
