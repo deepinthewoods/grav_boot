@@ -50,6 +50,8 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 	private ImmutableArray<Entity> playerEntities;
 
 	private CameraSystem camSys;
+	private int resolutionLoc;
+	private int zoomLoc;
 
 
 	public LightRenderSystem() {
@@ -80,6 +82,8 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 				ambientLoc = shader.getUniformLocation("AmbientColor[0]");
 
 		}
+		resolutionLoc = shader.getUniformLocation("Resolution");
+		zoomLoc = shader.getUniformLocation("Zoom");
 		
 		lights = engine.getEntitiesFor(Family.all(Light.class, Position.class).get());
 		startBuffer = engine.getSystem(BufferStartSystem.class);
@@ -246,9 +250,9 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 		resolutionArr[1] = viewportSize;
 		if (writeUniforms || true){
     		lightShader.begin();
-		    lightShader.setUniformf("Resolution", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		    lightShader.setUniformf(resolutionLoc, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		    //lightShader.setUniform1fv(ambientLoc, ambient, 0, ambient.length);//maxAmbient);
-		    lightShader.setUniformf("Zoom", zoom);
+		    lightShader.setUniformf(zoomLoc, zoom);
 		    lightShader.end();
 
         }

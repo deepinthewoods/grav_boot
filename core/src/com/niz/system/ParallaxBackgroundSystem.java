@@ -144,9 +144,9 @@ public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 			}
 			
 		}*/
-		if (cameraSystem.zoomedOut){
-			//buffer.currentBuffer.end();
-		}
+//		if (cameraSystem.zoomedOut){
+//			//buffer.currentBuffer.end();
+//		}
 		float originalZoom = cameraSystem.camera.zoom;
 		if (true || originalZoom > 1){
 			cameraSystem.camera.zoom = 1f;
@@ -196,11 +196,11 @@ public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 			//}
 		}
 		
-		if (cameraSystem.zoomedOut){
+//		if (cameraSystem.zoomedOut){
 			drawSelfLayer = true;
-		} else {
-			drawSelfLayer = false;
-		}
+//		} else {
+//			drawSelfLayer = false;
+//		}
 			//startZ = 0;
 		//else 
 		//startZ++;
@@ -309,9 +309,9 @@ public class ParallaxBackgroundSystem extends RenderSystem implements Observer {
 		//cameraSystem.camera.position.y += 1000;
 		//Gdx.app.log(TAG, "cam y adjust "+LAYER_PARALLAX_OFFSETS[zValue]);
 		cameraSystem.camera.update();
-		if (cameraSystem.zoomedOut){
+//		if (cameraSystem.zoomedOut){
 			//buffer.currentBuffer.begin();
-		}
+//		}
 	}
 	
 	public void drawFront(){

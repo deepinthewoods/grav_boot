@@ -62,7 +62,7 @@ public class CameraSystem extends RenderSystem implements Observer {
 		adjustedCamera = new OrthographicCamera();
 	}
 
-	public boolean zoomedOut;
+//	public boolean zoomedOut;
 
 	@Override
 	public void addedToEngine(Engine engine) {
@@ -81,10 +81,10 @@ public class CameraSystem extends RenderSystem implements Observer {
 				//zoom = Math.max(1,  z.zoom);
 				if (z.zoom < 1.001f){
 					zoom  = z.zoom;//
-					zoomedOut = false;
+//					zoomedOut = false;
 				}
 				else{
-					zoomedOut = true;
+//					zoomedOut = true;
 					zoom = z.zoom;
 				}
 				//zoom = 1f;
@@ -135,10 +135,10 @@ Vector2 tmpV = new Vector2();
 		}
 		playerPos = posM.get(playerEntities.get(0)).pos;
 		pos.set(playerPos);
-		if (zoomedOut){
-			//pos.set(OverworldSystem.SCROLLING_MAP_WIDTH / 2, OverworldSystem.SCROLLING_MAP_HEIGHT / 2);
-			//
-		}
+//		if (zoomedOut){
+//			//pos.set(OverworldSystem.SCROLLING_MAP_WIDTH / 2, OverworldSystem.SCROLLING_MAP_HEIGHT / 2);
+//			//
+//		}
 		//Gdx.app.log(TAG , "zoomed " +zoom + "  " + camera.position);
 		camera.position.set((int)(pos.x*Main.PPM), (int)(pos.y*Main.PPM), 0);//*/
 		camera.zoom = zoom;

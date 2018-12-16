@@ -81,8 +81,8 @@ public class ShaderSystem extends RenderSystem implements Observer {
 		shader.begin();
 		
 		//our normal map
-		shader.setUniformi("u_texture", 0);
-		shader.setUniformi("u_index_texture", 1); //GL_TEXTURE1
+//		shader.setUniformi("u_texture", 0);
+//		shader.setUniformi("u_index_texture", 1); //GL_TEXTURE1
 		
 		//shader.setUniformi("u_texture", 0);
 		//shader.setUniformi("u_index_texture", 1); //GL_TEXTURE1
@@ -144,8 +144,8 @@ public class ShaderSystem extends RenderSystem implements Observer {
 		AMBIENT_COLOR.set(.1f, .1f, .1f);
 		
 
-		shader.setUniformi("u_texture", 0);
-		shader.setUniformi("u_index_texture", 1); //GL_TEXTURE1
+		//shader.setUniformi("u_texture", 0);
+		//shader.setUniformi("u_index_texture", 1); //GL_TEXTURE1
 		//lShader.setUniformf("AmbientColor", AMBIENT_COLOR.x, AMBIENT_COLOR.y, AMBIENT_COLOR.z, 1f);
 
 		lShader.end();

@@ -94,6 +94,11 @@ private CameraSystem camSys;
 private Sprite square;
 
 	public static final Color[] LAYER_COLORS = new Color[LightRenderSystem.N_LAYERS];
+	static {
+		for (int i = 0; i < LAYER_COLORS.length; i++){
+			LAYER_COLORS[i] = new Color((float)(i + .5f) / 128f, 0f, 0f, 1f);
+		}
+	}
 	private Texture indexTexture;
 	public static Texture atlasTexture;
 	public static  FrameBuffer indexBuffer;
@@ -119,9 +124,7 @@ private Sprite square;
 	pixmap.fill();
 	
 	square = new Sprite(new Texture(pixmap));
-	for (int i = 0; i < LAYER_COLORS.length; i++){
-		LAYER_COLORS[i] = new Color((float)(i + .5f) / 128f, 0f, 0f, 1f);
-	}
+
 }
 
 @Override
@@ -239,9 +242,9 @@ private float viewportSize;
 	@Override
 public void update(float deltaTime) {
 	
-	//if (true) return;
+//	if (true) return;
 	start();
-	if (camSys.zoomedOut) return;
+//	if (camSys.zoomedOut) return;
 	bufferSys.currentBuffer.begin();
 	//TODO dt += Main.accum;
 	//if (map == null) return;

@@ -115,7 +115,7 @@ public class GameInstance implements Screen, Observer {
 	public void create (boolean headless, boolean newGame) {
 
 		//Log.DEBUG();
-		//GLProfiler.enable();
+//		GLProfiler.enable();
 		final GameInstance inst = this;
 		this.headless = headless;
 		batch = new SpriteBatchN(50);
@@ -163,6 +163,7 @@ public class GameInstance implements Screen, Observer {
 					}
 					font = new BitmapFont(Gdx.files.internal("font/Pixel-12.fnt"), Gdx.files.internal("font/pixelfonts.png"), false);
 					font.setUseIntegerPositions(false);
+					font.getData().setScale(2f);
 					viewport = new ScreenViewport(uiCamera);
 					stage = new Stage(viewport, batch);
 					mapBatch = new SpriteBatchN(10);
@@ -224,7 +225,7 @@ public class GameInstance implements Screen, Observer {
 							Gdx.app.log("zoom", " " + zoomInput.zoom);
 							zoomSubject.notify(null, null, zoomInput);
 							return false;				}
-						
+
 					});
 					mux.addProcessor(stage);
 					Gdx.input.setInputProcessor(mux);
@@ -237,6 +238,8 @@ public class GameInstance implements Screen, Observer {
 					zoomInput.zoom = 1f;
 					zoomSubject.notify(null, null, zoomInput);
 
+					shaderSys = new ShaderSystem();
+					engine.addSystem(shaderSys);
 
 					engine.addSystem(new RoomSystem());
 					engine.addSystem(new RoomCatalogSystem());
@@ -276,8 +279,6 @@ public class GameInstance implements Screen, Observer {
 
 					engine.addSystem(new BufferStartSystem());
 					break;case 13:
-						shaderSys = new ShaderSystem();
-					engine.addSystem(shaderSys);
 					break;case 14:
 					lights = new LightRenderSystem();
 					engine.addSystem(lights);		
@@ -503,7 +504,7 @@ public class GameInstance implements Screen, Observer {
 			    paused = false;
 			    unPause = false;
             }
-			if (paused) deltaTime = 0f;
+//			if (paused) deltaTime = 0f;
 		}
 		if (deltaTime > .1f) deltaTime = .1f;
 		
@@ -565,16 +566,21 @@ public class GameInstance implements Screen, Observer {
 					//s += "fps:"+String.format("%.1f",1f/deltaTime);
 					//
 				}*/
-			String s = "fps:"+Gdx.graphics.getFramesPerSecond() + " " + GLProfiler.calls + " drawc:" + GLProfiler.drawCalls;
+
+			String s = "fps:"+Gdx.graphics.getFramesPerSecond() ;//+ " " + GLProfiler.calls + " drawc:" + GLProfiler.drawCalls
+//					+ "\nbind: " + GLProfiler.textureBindings + "  shad: " + GLProfiler.shaderSwitches
+//					+ " vcount:" + GLProfiler.vertexCount.total
+//					;
+//			GLProfiler.reset();
+
 			/*s += " sw:"+GLProfiler.shaderSwitches;
 			s += " tex:"+GLProfiler.textureBindings;
 			s += " vert:"+GLProfiler.vertexCount.average;
-			GLProfiler.reset();
 			/*s += "\n";
 			s += Gdx.app.getJavaHeap()>>20 ;
 			s += " ";
 			s += Gdx.app.getNativeHeap()>>20;*/
-			font.draw(batch, 
+			font.draw(batch,
 						s, 100, font.getLineHeight()*8);
 				
 			

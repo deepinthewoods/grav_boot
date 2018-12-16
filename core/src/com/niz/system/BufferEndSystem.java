@@ -84,11 +84,12 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 		//startBuffer.currentBuffer.end();
 		//Gdx.app.log(TAG , "zoomed " +zoom);
 
-		if (camSys.zoomedOut && false){
+//		if (camSys.zoomedOut && false){
 
 
 			//spriteSys.drawLowLOD();
-		} else {
+//		} else
+			{
 			//if (true) return;
 			float w =  (Gdx.graphics.getWidth() ), h =  (Gdx.graphics.getHeight()  ), max = (Main.ar > 1?Math.max(w,  h):Math.min(w, h));
 			batch.getProjectionMatrix().setToOrtho2D(max / 2 - w / 2, max/2+h/2, w,  -h	);
@@ -99,7 +100,7 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 
 			startBuffer.currentBuffer.getColorBufferTexture().setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 			batch.setShader(null);
-			//batch.disableBlending();
+			batch.disableBlending();
 			batch.begin();
 			float dw = w - max;//Gdx.graphics.getWidth();
 			float dh = h - max;//Gdx.graphics.getHeight();
@@ -110,6 +111,7 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 			h = (int)h;
 			batch.draw(startBuffer.currentBuffer.getColorBufferTexture(), -w/2, h/2, w, -h);
 			batch.end();
+			batch.enableBlending();
 		}
 		
 	}

@@ -60,13 +60,12 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 
 
 	private Bits loaded = new Bits(SCROLLING_MAP_TOTAL_SIZE), shouldLoad = new Bits(SCROLLING_MAP_TOTAL_SIZE), tmpBits = new Bits(SCROLLING_MAP_TOTAL_SIZE), loading = new Bits(SCROLLING_MAP_TOTAL_SIZE), saving = new Bits(SCROLLING_MAP_TOTAL_SIZE);
-	public ShaderProgram coeffsShader;
 	Pool<Map> mapPool = new Pool<Map>(){
 
 		@Override
 		protected Map newObject() {
 			// TODO Auto-generated method stub
-			return new Map(OverworldSystem.SCROLLING_MAP_WIDTH, OverworldSystem.SCROLLING_MAP_HEIGHT, atlas, shader, coeffsShader, posShader);
+			return new Map(OverworldSystem.SCROLLING_MAP_WIDTH, OverworldSystem.SCROLLING_MAP_HEIGHT, atlas, shaderSys.shader, shaderSys.coeffsShader, shaderSys.posShader);
 		}
 
 		@Override
@@ -111,7 +110,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 	private ImmutableArray<Entity> playerEntities;
 
 	private Factory factory;;
-	public ShaderProgram posShader;
+	private ShaderSystem shaderSys;
 
 	public OverworldSystem(TextureAtlas atlas, Factory factory){
 		this.atlas = atlas;
@@ -154,7 +153,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		//saveThread.onResume();
 		workSys = engine.getSystem(WorkerSystem.class);
 		positionEntities = engine.getEntitiesFor(Family.one(Position.class).get());
-		
+		shaderSys = engine.getSystem(ShaderSystem.class);
 		
 	}
 
@@ -419,7 +418,6 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 
 	public WorldDefinition worldDef;
 
-	public ShaderProgram shader;
 
 	
 
@@ -557,7 +555,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		if (newGameScreen) throw new GdxRuntimeException("already on new game screen");
 		newGameScreen = true;
 		if (newGameMap == null){
-			newGameMap = new Map(OverworldSystem.NEW_GAME_MAP_WIDTH, OverworldSystem.NEW_GAME_HEIGHT, atlas, shader, coeffsShader, posShader);
+			newGameMap = new Map(OverworldSystem.NEW_GAME_MAP_WIDTH, OverworldSystem.NEW_GAME_HEIGHT, atlas, shaderSys.shader, shaderSys.coeffsShader, shaderSys.posShader);
 			for (int x = 0; x < 256; x++){
 				for (int y = 0; y < 256; y++){
 					newGameMap.setBG(x,  y, Blocks.STONE);

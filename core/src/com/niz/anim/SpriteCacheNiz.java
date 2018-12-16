@@ -54,15 +54,17 @@ public class SpriteCacheNiz{
 	public static Sprite[] sprites = new Sprite[34*512];
 	public static final Texture atlasTexture = new Texture(Gdx.files.internal("tilesprocessed.png"));
 	public final Texture indexTexture;
-	private final ShaderProgram cacheShader;
+	public final ShaderProgram cacheShader;
 	//public static  FrameBuffer indexBuffer;
 	private final ShaderProgram coefficientsShader;
 	private final ShaderProgram positionShader;
+	private final int u_index_texture;
+	private final int u_texture;
 	public boolean hasCa2ched;
 	public int cachedTotal;
 	private static TextureAtlas atlas;
 
-	private ShaderProgram shader;
+//	private ShaderProgram shader;
 	private Matrix4 mat = new Matrix4();
 	private int[] backTiles;
 
@@ -70,7 +72,7 @@ public class SpriteCacheNiz{
 	private FrameBuffer[] buffers;
 
 	public SpriteCacheNiz(Map map, TextureAtlas atlas, ShaderProgram shader, ShaderProgram coeffsS, ShaderProgram posShader){
-		this.shader = shader;
+//		this.shader = shader;
 		//atlasTexture = atlas.getTextures().first();
 		indexTexture = new Texture(Gdx.files.internal("tilesindexTexture.png"));
 		//atlasTexture = new Texture(Gdx.files.internal("tilesprocessed.png"));
@@ -81,6 +83,8 @@ public class SpriteCacheNiz{
 		//indexBuffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 		coefficientsShader = coeffsS;
 		positionShader = posShader;
+		u_index_texture = shader.getUniformLocation("u_index_texture");
+		u_texture = shader.getUniformLocation("u_texture");
 	}
 	/** Returns a new instance of the default shader used by SpriteBatch for GL2 when no shader is specified. */
 	static public ShaderProgram createDefaultShader () {
@@ -185,17 +189,17 @@ public class SpriteCacheNiz{
 		drawnBits.set(index);
 
 		batch.setProjectionMatrix(mat);
-		batch.disableBlending();
-		batch.enableBlending();
-		batch.setShader(shader);
+		//batch.disableBlending();
+		//batch.enableBlending();
+		//batch.setShader(shader);
 		//batch.setShader(null);
 		batch.begin();
 		//lights.setUniforms(Light.MAP_FRONT_LAYER, shader);
 		indexBuffer.getColorBufferTexture().bind(1);
 		//indexTexture.bind(1);
-		shader.setUniformi("u_index_texture", 1); //passing first texture!!!
+		shader.setUniformi(u_index_texture, 1); //passing first texture!!!
 		SpriteCacheNiz.atlasTexture.bind(0);
-		shader.setUniformi("u_texture", 0);
+		shader.setUniformi(u_texture, 0);
 
 		//lights.setUniforms(Light.MAP_BACK_LAYER, shader);
 		Texture tex = buffers[index].getColorBufferTexture();
@@ -205,8 +209,8 @@ public class SpriteCacheNiz{
 
 		//batch.render();
 		batch.end();
-		v3.set(0, 0, 0);
-		mat.getTranslation(v3);
+		//v3.set(0, 0, 0);
+		//mat.getTranslation(v3);
 
 		//Gdx.app.log(TAG, "draw " + x + "," + y);
 
@@ -315,8 +319,8 @@ public class SpriteCacheNiz{
 		buffers[index].begin();
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		//batch.setShader(cacheShader);
-		batch.enableBlending();
-		batch.setShader(cacheShader);
+		//batch.enableBlending();
+		//batch.setShader(cacheShader);
 		//batch.setColor(Color.BLACK);
 		batch.setColor(Color.WHITE);
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, w, h);

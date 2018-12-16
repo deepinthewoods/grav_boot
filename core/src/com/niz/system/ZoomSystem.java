@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.EngineNiz;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.ashley.core.RenderSystem;
 import com.badlogic.gdx.Gdx;
 import com.niz.Main;
 import com.niz.ZoomInput;
@@ -11,7 +12,7 @@ import com.niz.observer.Observer;
 import com.niz.observer.Subject;
 import com.niz.observer.Subject.Event;
 
-public class ZoomSystem extends EntitySystem implements Observer {
+public class ZoomSystem extends RenderSystem implements Observer {
 
 	private static final float ZOOM_DETENT_MAX = 1.3f;
 	private Subject zoomNotifier;

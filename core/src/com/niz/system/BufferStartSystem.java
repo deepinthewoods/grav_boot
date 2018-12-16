@@ -73,9 +73,10 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 	private float viewportWidth;
 	@Override
 	public void update(float deltaTime) {
-		if (camSys.zoomedOut)
-			currentBuffer = mapBuffer;
-		else currentBuffer = buffer;
+//		if (camSys.zoomedOut)
+//			currentBuffer = mapBuffer;
+//		else
+			currentBuffer = buffer;
 
 		hasStarted = true;
 		//tmpV.set(camSys.camera.position);
@@ -91,11 +92,11 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 		}
 
 		currentBuffer.begin();
-		if (!camSys.zoomedOut){
+//		if (!camSys.zoomedOut){
 			Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 			//Gdx.app.log(TAG, "buffer start");
-		}
+//		}
 		currentBuffer.end();
 		
 		

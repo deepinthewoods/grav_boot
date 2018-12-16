@@ -10,6 +10,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.niz.component.Buckets;
 import com.niz.component.Map;
 import com.niz.component.OnMap;
@@ -29,12 +30,10 @@ public class OnMapSystem extends EntitySystem implements Observer, EntityListene
 	private ComponentMapper<Buckets> bucketM;
 	private ComponentMapper<Position> posM;
 	private EngineNiz engine;
-	ShaderProgram shader;
 	private TextureAtlas atlas;
-	public ShaderProgram coeffsShader;
-	public ShaderProgram posShader;
+	private ShaderSystem shaderSys;
 
-    public OnMapSystem(TextureAtlas atlas){
+	public OnMapSystem(TextureAtlas atlas){
 		
 		this.atlas = atlas;
 		
@@ -49,8 +48,11 @@ public class OnMapSystem extends EntitySystem implements Observer, EntityListene
 		posM = ComponentMapper.getFor(Position.class);
 		
 		bucketSystem = engine.getSystem(BucketSystem.class);
+		shaderSys = engine.getSystem(ShaderSystem.class);
 		((EngineNiz)engine).getSubject("changeLargeBuckets").add(this);
-        emptyMap = new Map(1, 1, atlas, shader, coeffsShader, posShader);
+		if (atlas == null) throw new GdxRuntimeException("null");
+        if (shaderSys == null) throw new GdxRuntimeException("null");
+        emptyMap = new Map(1, 1, atlas, shaderSys.shader, shaderSys.coeffsShader, shaderSys.posShader);
 		engine.addEntityListener(this);
 		this.engine = (EngineNiz) engine;
 		

@@ -25,6 +25,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.niz.Main;
 import com.niz.ZoomInput;
 import com.niz.anim.Animations;
@@ -36,7 +37,7 @@ import static com.niz.system.LightRenderSystem.NUM_LIGHTS;
 
 public class MapRenderSystem extends RenderSystem implements EntityListener, IDisposeable {
 	
-	public static final int RENDER_SIZE = 		64;
+	public static final int RENDER_SIZE = 	64;
 	private static final String TAG = "MapRenderSystem";
 	private static final Vector3 LIGHT_POS = new Vector3(53f,.753f,0.51075f);
 	private static final int OVERDRAW_PIXELS = 10;
@@ -53,7 +54,6 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	private Vector3 tmpV = new Vector3();
 	//private Texture normalTexture;
 	//private Texture diffTexture;
-	ShaderProgram shader;
 	private LightRenderSystem lights;
 	private BufferStartSystem buffer;
 	private Family family;
@@ -63,7 +63,6 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	private ShaderSystem shaderSys;
 	private EngineNiz engine;
 	float zoom = 1f;
-	public boolean hasRendered;
 	private boolean skippedDraw;
 	private MapSystem mapSys;
 	private CameraSystem camSys;
@@ -101,7 +100,6 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		
 		//spriteShader = shaderSys.spriteShader;
 		
-		shader = shaderSys.shader;
 		coefficientsShader = shaderSys.coeffsShader;
 		positionShader = shaderSys.posShader;
 		lightRampShader = shaderSys.lightRampShader;
@@ -128,13 +126,10 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		camSys = engine.getSystem(CameraSystem.class);
 		mapSys = engine.getSystem(MapSystem.class);
 		OnMapSystem onMap = engine.getSystem(OnMapSystem.class);
-		onMap.shader = shader;
-		onMap.coeffsShader = shaderSys.coeffsShader;
-		onMap.posShader = shaderSys.posShader;
+
 		OverworldSystem over = engine.getSystem(OverworldSystem.class);
-		over.shader = shader;
-		over.coeffsShader = shaderSys.coeffsShader;
-		over.posShader = shaderSys.posShader;
+		//if (shader == null) throw new GdxRuntimeException("fsjdkfdksl");
+
 
 		Map[] maps = new Map[3];
 		for (int i = 0; i < maps.length; i++){
@@ -195,16 +190,15 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 
 	@Override
 	public void update(float deltaTime) {
-		//if (true) return;
+//		if (true) return;
 		//if (zoom > 1f) return;
 		boolean skipDraw = false;//zoom > Main.PPM+.1f;//1.001f;
-		skipDraw = camSys.zoomedOut;
+//		skipDraw = camSys.zoomedOut;
 		if (skipDraw){
 			//hasRendered = false;
 			//return;
 		} else{
 			//Gdx.app.log(TAG,  "draw");;
-			hasRendered = true;
 		}
 		//camera.zoom = zoom;
 		//camera.zoom = Math.min(camera.zoom, 22f);
@@ -250,11 +244,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		OrthographicCamera renderCamera = camera;
 
 		//renderCamera.zoom = 1f;
-		ShaderProgram shader = this.shader;
-		if (camSys.zoomedOut){
-			//renderCamera = zoomOutCamera;
-			//shader = null;
-		} 
+
 		renderCamera.update();
 		batch.setProjectionMatrix(renderCamera.combined);
 		//Gdx.app.log(TAG,  "zoom " + renderCamera.zoom);;
@@ -280,32 +270,28 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 				int[] tiles = map.tiles, backTiles = map.backTiles;
 				batch.setProjectionMatrix(renderCamera.combined);
 				if (Gdx.input.isKeyPressed(Input.Keys.P))map.setDirtyAll();
-
+				batch.setShader(map.cache.cacheShader);
+				batch.disableBlending();
 				//if (false)
 				endbp:
 				{
 					for (int x = x0; x <= x1; x++){
 						for (int y = y0; y <= y1; y++){
-							map.cache.cache(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, 0, batch, indexBuffer, atlasTexture);
+							map.cache.cache(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shaderSys.shader, 0, batch, indexBuffer, atlasTexture);
 							//if (count++ > 6) break endbp;
-							int dupeOffset = OverworldSystem.SCROLLING_MAP_WIDTH* OverworldSystem.SCROLLING_MAP_TOTAL_SIZE * Main.PPM;
-							if (map.duplicateRenderL){
-								//map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, -dupeOffset);
-							}
-							if (map.duplicateRenderR){
-								//map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, dupeOffset);
-							}
+
 						}
 					}
 
 				}
 				bufferSys.currentBuffer.begin();
-
+				batch.setShader(shaderSys.shader);
+//				batch.setShader(null);
 				map.cache.beginDraw(skipDraw, batch, lights);
 				map.cache.beginDrawBack(lights);
 				for (int x = x0; x <= x1; x++){
 					for (int y = y0; y <= y1; y++){
-						map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shader, 0, batch, indexBuffer, atlasTexture);
+						map.cache.draw(map, x, y, tiles, backTiles, renderCamera, lights, buffer, setAllDirty, shaderSys.shader, 0, batch, indexBuffer, atlasTexture);
 						//if (count++ > 6) break endbp;
 						int dupeOffset = OverworldSystem.SCROLLING_MAP_WIDTH* OverworldSystem.SCROLLING_MAP_TOTAL_SIZE * Main.PPM;
 						if (map.duplicateRenderL){
@@ -349,7 +335,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		batch.draw(indexTexture, 0, 0);
 		batch.end();
 		batch.setShader(coefficientsShader);
-		lights.setUniformsNew(coefficientsShader, shader, positionShader);
+		lights.setUniformsNew(coefficientsShader, shaderSys.shader, positionShader);
 		batch.begin();
 		//any texture
 		batch.draw(indexTexture, 0, 2, indexBuffer.getWidth(), 1);
@@ -402,7 +388,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		batch.setColor(Color.WHITE);
 		batch.enableBlending();
 
-		lights.setUniformsNew(coefficientsShader, shader, positionShader);
+		lights.setUniformsNew(coefficientsShader, shaderSys.shader, positionShader);
 		batch.setShader(null);
 		batch.begin();
 		drawCoefficients(batch, indexBuffer.getWidth());

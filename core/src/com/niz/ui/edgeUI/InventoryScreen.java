@@ -87,6 +87,8 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	private final MapRenderSystem map;
 	private final LightRenderSystem lights;
 	private final SpriteAnimationSystem spriteRenderer;
+	private final int u_texture;
+	private final int u_index_texture;
 	public BeltTable belt;
 	private ControllerButton btnPad;
 	private ControllerSliderBoolean slider;
@@ -106,6 +108,8 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	
 	public InventoryScreen(final EngineNiz engine, Skin skin, CharacterScreen charScr, SettingsScreen setScr, ShaderProgram indexedShader){
 		this.shader = indexedShader;
+		u_index_texture = shader.getUniformLocation("u_index_texture");
+		u_texture = shader.getUniformLocation("u_texture");
 		settingsScreen = setScr;
 		charScreen = charScr;
 		map = engine.getSystem(MapRenderSystem.class);
@@ -680,8 +684,8 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		
 		Gdx.gl.glLineWidth(1f);//*/
 
-		batch.setShader(null);
-		batch.setColor(Color.WHITE);
+		//batch.setShader(null);
+		//batch.setColor(Color.WHITE);
 		batch.begin();
 
 		matrix.set(batch.getProjectionMatrix());
@@ -698,9 +702,9 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		batch.setColor(Color.WHITE);
 		batch.disableTextureBinding();
 		SpriteAnimationSystem.indexBuffer.getColorBufferTexture().bind(1);
-		shader.setUniformi("u_index_texture", 1); //passing first texture!!!
+		//shader.setUniformi(u_index_texture, 1); //passing first texture!!!
 		SpriteAnimationSystem.atlasTexture.bind(0);
-		shader.setUniformi("u_texture", 0);
+		//shader.setUniformi(u_texture, 0);
 		batch.begin();
 
 		for (InventoryButton b : InventoryButton.itemDrawList){//works with blocks
