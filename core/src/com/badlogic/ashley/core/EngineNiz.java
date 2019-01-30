@@ -98,7 +98,7 @@ public class EngineNiz extends Engine{
 	
 	public long tick;
 	
-	public boolean debug;
+	public boolean debug = !true;
 	
 	public boolean simulating = true;
 
@@ -320,7 +320,7 @@ public class EngineNiz extends Engine{
 		for(int i=0; i<systems.size; i++){
 			EntitySystem system = systems.get(i);
 			if (system.checkProcessing()) {
-				//if (debug)Gdx.app.log(TAG, "updating "+system.getClass());
+				if (debug)Gdx.app.log(TAG, "updating "+system.getClass());
 				if (system instanceof RenderSystem == render)system.update(deltaTime);
 			}
 

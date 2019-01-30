@@ -2,6 +2,7 @@ package com.niz.component;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.BinaryHeap;
 import com.niz.Main;
@@ -10,8 +11,9 @@ public class Light extends BinaryHeap.Node implements Component {
 	public static final int CHARACTER_SPRITES_LAYER_LEFT = 0, CHARACTER_SPRITES_LAYER_RIGHT = 1, MAP_BACK_LAYER = 2
 			, MAP_FRONT_LAYER = 3, MAP_LIT_LAYER = 4, MAP_FOREGROUND_LAYER = 5, ITEM_LAYER = 6;
 	public static final int MAX_LAYERS = 7;
+	public int falloffIndex, height;
 
-	/**
+    /**
 	 * 
 	 */
 	//public Vector3 falloff = new Vector3(.053f, .13f, 35f);

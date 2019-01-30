@@ -38,6 +38,7 @@ import static com.niz.system.LightRenderSystem.NUM_LIGHTS;
 public class MapRenderSystem extends RenderSystem implements EntityListener, IDisposeable {
 	
 	public static final int RENDER_SIZE = 	64;
+
 	private static final String TAG = "MapRenderSystem";
 	private static final Vector3 LIGHT_POS = new Vector3(53f,.753f,0.51075f);
 	private static final int OVERDRAW_PIXELS = 10;
@@ -54,7 +55,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	private Vector3 tmpV = new Vector3();
 	//private Texture normalTexture;
 	//private Texture diffTexture;
-	private LightRenderSystem lights;
+	protected LightUpdateSystem lights;
 	private BufferStartSystem buffer;
 	private Family family;
 	private ComponentMapper<Map> mapM;
@@ -74,13 +75,13 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	private BufferStartSystem bufferSys;
 
 
-	public MapRenderSystem(SpriteBatchN batch, TextureAtlas atlas) {
+	public MapRenderSystem(SpriteBatchN batch, TextureAtlas atlas, LightUpdateSystem lights) {
 		//this.diffTexture = diffTexture;
 		//this.normalTexture = normalTexture;
 		this.zoomOutCamera = zoomOutCamera;
 		//defaultCamera = defaultCam;
 		this.batch = batch;
-		
+		this.lights = lights;
 		float ar = Gdx.graphics.getWidth()/(float)Gdx.graphics.getHeight();
 		
 		//this.shader = shader;
@@ -105,7 +106,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 		lightRampShader = shaderSys.lightRampShader;
 		//shader = createDefaultShader();
 		bufferSys = engine.getSystem(BufferStartSystem.class);
-		lights = engine.getSystem(LightRenderSystem.class);
+
 		buffer = engine.getSystem(BufferStartSystem.class);
 
 		family = Family.one(Map.class).get();
@@ -191,6 +192,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 	@Override
 	public void update(float deltaTime) {
 //		if (true) return;
+		//if (lights == null) return;
 		//if (zoom > 1f) return;
 		boolean skipDraw = false;//zoom > Main.PPM+.1f;//1.001f;
 //		skipDraw = camSys.zoomedOut;

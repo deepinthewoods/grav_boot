@@ -7,18 +7,23 @@ import java.io.IOException;
 import com.badlogic.ashley.core.EngineNiz;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasSprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.ShortArray;
 import com.niz.Data;
+import com.niz.Main;
 import com.niz.action.ProgressAction;
 import com.niz.component.Race;
 import com.niz.item.Doing;
@@ -42,6 +47,11 @@ public class Animations {
 	public static AtlasSprite[] doors = new AtlasSprite[8];
 	private static Sprite rpgSprite;
 	public static Texture processedPlayerTexture;
+	private static final int LIGHT_FALLOFF_INDICES = 10;
+	private static final int LIGHT_HEIGHT_INDICES = 4;
+	public static Sprite[][] lightFalloffSprites = new Sprite[LIGHT_FALLOFF_INDICES][LIGHT_HEIGHT_INDICES];
+	private static final int LIGHT_SIZE_PIXELS = 128;
+	public static final float HALF_LIGHT_SIZE = (float)(LIGHT_SIZE_PIXELS )/2f;
 
 	public static void init(TextureAtlas atlas, EngineNiz engine, TextureAtlas uiAtlas, TextureAtlas mapAtlas){
 		blank = atlas.createSprite("diff/blank2");
@@ -91,9 +101,6 @@ public class Animations {
 			createBlockSprite(atlas,  100+i, "centreblockguide", "centreblockguide", "centreblockguide",  100+i);
 		}
 		
-		
-		
-		
 		createWeaponSprites(atlas, "sword", 16, "playerspin0guide", "playerspin2guide", "playerspin5guide", 24);
 		createWeaponSprites(atlas, "axe", 17, "playerspin0guide", "playerspin2guide", "playerspin5guide", 24);
 		createWeaponSprites(atlas, "scimitar", 18, "playerspin0guide", "playerspin2guide", "playerspin4guide", 24);
@@ -130,7 +137,42 @@ public class Animations {
 		createDoorSprites(mapAtlas);
 
 		blank = uiAtlas.createSprite("button");
+
+		createLightSprites();
 	}
+
+	static Color col = new Color();
+	static Vector3 falloff = new Vector3(), vec = new Vector3();
+
+	private static void createLightSprites() {
+		Pixmap pix = new Pixmap(LIGHT_SIZE_PIXELS, LIGHT_SIZE_PIXELS, Pixmap.Format.RGBA8888);
+		falloff.set(.14f, .3f, 5f);
+		for (int falloffIndex = 0; falloffIndex < LIGHT_FALLOFF_INDICES; falloffIndex++)
+			for (int heightIndex = 0; heightIndex < LIGHT_HEIGHT_INDICES; heightIndex++){
+				pix.setColor(Color.BLACK);
+				pix.fill();
+				int size = pix.getWidth();
+				int half = size/2;
+				float height =  (heightIndex - LIGHT_HEIGHT_INDICES/2);//pixels
+				for (int i = 0; i < size; i++)
+					for (int j = 0; j < size; j++){
+					vec.set(i - half, j - half, height);
+
+                    vec.scl(1f/half);
+					float D = vec.len();
+					float attenuation = 1.0f / ( falloff.x + (falloff.y*D) + (falloff.z*D*D) );
+					col.set(attenuation, D, 0, 1f);
+					//col.set(Color.WHITE);
+					pix.setColor(col);
+					pix.drawPixel(i, j);
+					Gdx.app.log(TAG, "light pixel dist: " + D + "  att:" + attenuation);
+				}
+
+				lightFalloffSprites[falloffIndex][heightIndex] = new Sprite(new Texture(pix));
+				lightFalloffSprites[falloffIndex][heightIndex].setSize(HALF_LIGHT_SIZE * 2 , HALF_LIGHT_SIZE * 2);
+			}
+	}
+
 	private static void createDoorSprites(TextureAtlas atlas) {
 		for (int i = 0; i < 2; i++){
 			AtlasRegion reg = atlas.findRegion("diff/doorway", i);

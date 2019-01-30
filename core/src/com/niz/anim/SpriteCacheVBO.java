@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,10 +17,11 @@
 package com.niz.anim;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatchN;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -37,54 +38,64 @@ import com.niz.component.Light;
 import com.niz.component.Map;
 import com.niz.system.BufferStartSystem;
 import com.niz.system.LightRenderSystem;
-import com.niz.system.LightUpdateSystem;
 import com.niz.system.MapRenderSystem;
 import com.niz.system.MapSystem;
 import com.niz.system.OverworldSystem;
 import com.niz.system.SpriteAnimationSystem;
 
-import static com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888;
-
-public class SpriteCacheNiz {
+public class SpriteCacheVBO {
 	private static final String TAG = "sprite cache";
 	private static final String SPRITE_FILENAME_PREFIX = "diff/tile";
 	private static final int CACHE_TOTAL_TARGET = 32;
 	private static final int INDEX_BUFFER_HEIGHT = 66;
+	private static final int NUM_VERTS = 6;
+	private static final int NUM_INDICES = 6;
 
 	public static Sprite[] sprites = new Sprite[34*512];
 	public static final Texture atlasTexture = new Texture(Gdx.files.internal("tilesprocessed.png"));
-	public final Texture indexTexture;
 	public final ShaderProgram cacheShader;
-	//public static  FrameBuffer indexBuffer;
-	private final ShaderProgram coefficientsShader;
-	private final ShaderProgram positionShader;
 	private final int u_index_texture;
 	private final int u_texture;
-	public boolean hasCa2ched;
+	private final int[] totalVerts;
+	private final short[] meshIndices;
 	public int cachedTotal;
 	private static TextureAtlas atlas;
 
-	//	private ShaderProgram shader;
+//	private ShaderProgram shader;
 	private Matrix4 mat = new Matrix4();
 	private int[] backTiles;
 
 	private Map map;
-	private FrameBuffer[] buffers;
+	private Mesh[] buffers;
+	private int totalV;
 
-	public SpriteCacheNiz(Map map, TextureAtlas atlas, ShaderProgram shader, ShaderProgram coeffsS, ShaderProgram posShader){
+	float[] verts = new float[MapRenderSystem.RENDER_SIZE * MapRenderSystem.RENDER_SIZE * NUM_VERTS * 4];
+
+	public SpriteCacheVBO(Map map, TextureAtlas atlas, ShaderProgram shader, ShaderProgram coeffsS, ShaderProgram posShader){
 //		this.shader = shader;
 		//atlasTexture = atlas.getTextures().first();
-		indexTexture = new Texture(Gdx.files.internal("tilesindexTexture.png"));
+		//indexTexture = new Texture(Gdx.files.internal("tilesindexTexture.png"));
 		//atlasTexture = new Texture(Gdx.files.internal("tilesprocessed.png"));
 		this.map = map;
-		buffers = new FrameBuffer[(map.width / MapRenderSystem.RENDER_SIZE) * (map.height / MapRenderSystem.RENDER_SIZE)];
+		buffers = new Mesh[(map.width / MapRenderSystem.RENDER_SIZE) * (map.height / MapRenderSystem.RENDER_SIZE)];
+		totalVerts = new int[(map.width / MapRenderSystem.RENDER_SIZE) * (map.height / MapRenderSystem.RENDER_SIZE)];
+
 		cacheShader = createDefaultShader();
 		//indexBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 128, INDEX_BUFFER_HEIGHT, false);
 		//indexBuffer.getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-		coefficientsShader = coeffsS;
-		positionShader = posShader;
 		u_index_texture = shader.getUniformLocation("u_index_texture");
 		u_texture = shader.getUniformLocation("u_texture");
+		meshIndices = new short[MapRenderSystem.RENDER_SIZE * MapRenderSystem.RENDER_SIZE * NUM_INDICES];
+		for (int i = 0; i < meshIndices.length/NUM_INDICES; i++){
+			int c = i * NUM_INDICES;
+			int d = i * 4;
+			meshIndices[c] = (short) (d + 0);
+			meshIndices[c+1] = (short) (d + 1);
+			meshIndices[c+2] = (short) (d + 2);
+			meshIndices[c+3] = (short) (d + 2);
+			meshIndices[c+4] = (short) (d + 3);
+			meshIndices[c+5] = (short) (d + 0);
+		}
 	}
 	/** Returns a new instance of the default shader used by SpriteBatch for GL2 when no shader is specified. */
 	static public ShaderProgram createDefaultShader () {
@@ -121,18 +132,18 @@ public class SpriteCacheNiz {
 		if (shader.isCompiled() == false) throw new IllegalArgumentException("Error compiling shader: " + shader.getLog());
 		return shader;
 	}
-
-	public void beginDrawBack(LightUpdateSystem lights){
+	
+	public void beginDrawBack(LightRenderSystem lights){
 	}
 
-	public void beginDraw(boolean skipDraw, SpriteBatchN batch, LightUpdateSystem lights) {
+	public void beginDraw(boolean skipDraw, SpriteBatchN batch, LightRenderSystem lights) {
 		drawnBits.clear();
 		cachedTotal = 0;
+		Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		/*batch.getProjectionMatrix().setToOrtho2D(0, 0, indexBuffer.getWidth(), indexBuffer.getHeight());
 		indexBuffer.begin();
-		Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.setShader(null);
 		batch.begin();
 		batch.draw(indexTexture, 0, 0);
@@ -158,7 +169,7 @@ public class SpriteCacheNiz {
 		indexBuffer.end();*/
 	}
 
-	public void draw(Map map, int x, int y, int[] tiles, int[] backTiles, OrthographicCamera camera, LightUpdateSystem lights, BufferStartSystem buffer, boolean setAllDirty, ShaderProgram shader, int xOffset, SpriteBatchN batch, FrameBuffer indexBuffer, Texture atlasTexture) {
+	public void draw(Map map, int x, int y, int[] tiles, int[] backTiles, OrthographicCamera camera, LightRenderSystem lights, BufferStartSystem buffer, boolean setAllDirty, ShaderProgram shader, int xOffset, SpriteBatchN batch, FrameBuffer indexBuffer, Texture atlasTexture) {
 		x -= map.offset.x/MapRenderSystem.RENDER_SIZE;
 		y -= map.offset.y/MapRenderSystem.RENDER_SIZE;
 		int wy =  y;//(int) (y -( map.offset.y/MapRenderSystem.RENDER_SIZE));
@@ -170,9 +181,9 @@ public class SpriteCacheNiz {
 			//Gdx.app.log(TAG, "draw " + x + " wx:" + wx + " y:" + y);
 		}
 		if (wx < 0 || wy < 0 || wx >= map.width/MapRenderSystem.RENDER_SIZE || wy >= map.height/MapRenderSystem.RENDER_SIZE){
-			return;
-
-			//}
+				return;
+				
+			//}  
 		}
 		//setAllDirty = true;
 		int index = wy + wx*(map.width/MapRenderSystem.RENDER_SIZE);
@@ -182,7 +193,9 @@ public class SpriteCacheNiz {
 		map.renderMatrix.set(mat);
 
 		populateCurrentBatches(index);
+		
 
+		
 		//Gdx.gl.glDisable(GL20.GL_BLEND);
 		drawnBits.set(index);
 
@@ -191,21 +204,27 @@ public class SpriteCacheNiz {
 		//batch.enableBlending();
 		//batch.setShader(shader);
 		//batch.setShader(null);
-		batch.begin();
+//		batch.begin();
 		//lights.setUniforms(Light.MAP_FRONT_LAYER, shader);
-		indexBuffer.getColorBufferTexture().bind(1);
 		//indexTexture.bind(1);
-		shader.setUniformi(u_index_texture, 1); //passing first texture!!!
-		atlasTexture.bind(0);
-		shader.setUniformi(u_texture, 0);
 
 		//lights.setUniforms(Light.MAP_BACK_LAYER, shader);
-		Texture tex = buffers[index].getColorBufferTexture();
+		//Texture tex = buffers[index].getColorBufferTexture();
+		shader.begin();
+		shader.setUniformMatrix("u_projTrans", mat);
+		indexBuffer.getColorBufferTexture().bind(1);
+		shader.setUniformi(u_index_texture, 1); //passing first texture!!!
+		SpriteCacheVBO.atlasTexture.bind(0);
+		shader.setUniformi(u_texture, 0);
 
-		batch.draw(tex, 0, tex.getHeight(), tex.getWidth(), -tex.getHeight());
+
+		buffers[index].render(shader, GL20.GL_TRIANGLES, 0, totalVerts[index] * NUM_INDICES);
+		shader.end();
+
+//		batch.draw(tex, 0, tex.getHeight(), tex.getWidth(), -tex.getHeight());
 
 		//batch.render();
-		batch.end();
+//		batch.end();
 		//v3.set(0, 0, 0);
 		//mat.getTranslation(v3);
 
@@ -213,7 +232,7 @@ public class SpriteCacheNiz {
 
 	}
 
-	public void cache(Map map, int x, int y, int[] tiles, int[] backTiles, OrthographicCamera camera, LightUpdateSystem lights, BufferStartSystem buffer, boolean setAllDirty, ShaderProgram shader, int xOffset, SpriteBatchN batch, FrameBuffer indexBuffer, Texture atlasTexture) {
+	public void cache(Map map, int x, int y, int[] tiles, int[] backTiles, OrthographicCamera camera, LightRenderSystem lights, BufferStartSystem buffer, boolean setAllDirty, ShaderProgram shader, int xOffset, SpriteBatchN batch, FrameBuffer indexBuffer, Texture atlasTexture) {
 		x -= map.offset.x/MapRenderSystem.RENDER_SIZE;
 		y -= map.offset.y/MapRenderSystem.RENDER_SIZE;
 		int wy =  y;//(int) (y -( map.offset.y/MapRenderSystem.RENDER_SIZE));
@@ -248,18 +267,28 @@ public class SpriteCacheNiz {
 
 		//Gdx.gl.glDisable(GL20.GL_BLEND);
 
+
 	}
 	Vector3 v3 = new Vector3();
 	Matrix4 zeroMatrix = new Matrix4();
 	private void populateCurrentBatches(int index) {
 		if (buffers[index] != null) return;
-		buffers[index] = new FrameBuffer(RGBA8888
-				, MapRenderSystem.RENDER_SIZE * Main.PPM, MapRenderSystem.RENDER_SIZE * Main.PPM, false);
-		buffers[index].getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+		//buffers[index] = new FrameBuffer(RGBA8888
+		//		, MapRenderSystem.RENDER_SIZE * Main.PPM, MapRenderSystem.RENDER_SIZE * Main.PPM, false);
+		buffers[index] = new Mesh(false
+				, MapRenderSystem.RENDER_SIZE * MapRenderSystem.RENDER_SIZE * NUM_VERTS * 4
+				, MapRenderSystem.RENDER_SIZE * MapRenderSystem.RENDER_SIZE * NUM_INDICES
 
+				, VertexAttribute.Position()
+				, VertexAttribute.ColorPacked()
+				, VertexAttribute.TexCoords(0)
+		);
+		buffers[index].setIndices(meshIndices);
+		//buffers[index].getColorBufferTexture().setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+		
 
 		batchBits.set(index);
-
+		
 		map.dirty[index] = true;
 	}
 
@@ -268,62 +297,98 @@ public class SpriteCacheNiz {
 	 * @return true if successful(found a batch)
 	 */
 	public boolean beginCache(int index) {
-
+		totalV = 0;
+		totalVerts[index] = 0;
 		return true;
 	}
 
-	public void endCache() {
+	public void endCache(int index) {
+		totalVerts[index] = totalV;
+		buffers[index].setVertices(verts, 0, totalV * NUM_VERTS);
+	}
+
+	private void addSprite(Sprite s){
+		int t = totalV++ * NUM_VERTS;
+		int c = 0;
+		float[] v = s.getVertices();
+
+		verts[t + 0 ] = v[c + 0];
+		verts[t + 1 ] = v[c + 1];
+		verts[t + 2 ] = 0f;
+		verts[t + 3 ] = v[c + 2];
+		verts[t + 4 ] = v[c + 3];
+		verts[t + 5 ] = v[c + 4];
+		c = 1 * 5;
+		t = totalV++ * NUM_VERTS;
+		verts[t + 0 ] = v[c + 0];
+		verts[t + 1 ] = v[c + 1];
+		verts[t + 2 ] = 0f;
+		verts[t + 3 ] = v[c + 2];
+		verts[t + 4 ] = v[c + 3];
+		verts[t + 5 ] = v[c + 4];
+		c = 2 * 5;
+		t = totalV++ * NUM_VERTS;
+		verts[t + 0 ] = v[c + 0];
+		verts[t + 1 ] = v[c + 1];
+		verts[t + 2 ] = 0f;
+		verts[t + 3 ] = v[c + 2];
+		verts[t + 4 ] = v[c + 3];
+		verts[t + 5 ] = v[c + 4];
+		c = 3 * 5;
+		t = totalV++ * NUM_VERTS;
+		//Gdx.app.log(TAG, " " + c + "  " + t);
+		verts[t + 0 ] = v[c + 0];
+		verts[t + 1 ] = v[c + 1];
+		verts[t + 2 ] = 0f;
+		verts[t + 3 ] = v[c + 2];
+		verts[t + 4 ] = v[c + 3];
+		verts[t + 5 ] = v[c + 4];
+
+
+
 
 
 	}
 
 	public void add(Sprite s, SpriteBatchN batch) {
-		s.setColor(Color.BLACK);
-		s.setColor(Color.WHITE);
-		//Gdx.app.log(TAG, "REGULAR" + s.getX()/16f + ", " + s.getY()/16f);
 		s.setColor(SpriteAnimationSystem.LAYER_COLORS[Light.MAP_FRONT_LAYER]);
-		s.draw(batch);
+		addSprite(s);//s.draw(batch);
+
 	}
 	public void addB(Sprite s, SpriteBatchN batch) {
+
 		//Gdx.app.log(TAG, "BACK");
-		//batch.end();
-		s.setColor(Color.BLACK);
-		//s.setColor(Color.WHITE);
-		//batch.begin();
 		s.setColor(SpriteAnimationSystem.LAYER_COLORS[Light.MAP_BACK_LAYER]);
-		s.draw(batch);
+		addSprite(s);//s.draw(batch);
 		//batch.setColor(Color.WHITE);
 	}
 	public void addFG(Sprite s, SpriteBatchN batch) {
 
-		s.setColor(Color.BLACK);
-		//s.setColor(Color.WHITE);
 		s.setColor(SpriteAnimationSystem.LAYER_COLORS[Light.MAP_FOREGROUND_LAYER]);
-		s.draw(batch);
+		addSprite(s);//s.draw(batch);
 	}
 	public void addLit(Sprite s, SpriteBatchN batch){
-		s.setColor(Color.BLACK);
+
 		s.setColor(SpriteAnimationSystem.LAYER_COLORS[Light.MAP_LIT_LAYER]);
-		s.draw(batch);
+		addSprite(s);//s.draw(batch);
 	}
 
 	private boolean cacheChunk(Map map, int index, int[] tiles, int[] backTiles, SpriteBatchN batch) {
-
+		
 		Sprite s = null;
 		int w = MapRenderSystem.RENDER_SIZE * Main.PPM;
 		int h = MapRenderSystem.RENDER_SIZE * Main.PPM;
-		buffers[index].begin();
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		//Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		//batch.setShader(cacheShader);
 		//batch.enableBlending();
 		//batch.setShader(cacheShader);
 		//batch.setColor(Color.BLACK);
-		batch.setColor(Color.WHITE);
-		batch.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
-		batch.begin();
+		//batch.setColor(Color.WHITE);
+		//batch.getProjectionMatrix().setToOrtho2D(0, 0, w, h);
+		//batch.begin();
 
 		int x = index / (map.width / MapRenderSystem.RENDER_SIZE);
-		int y = index % (map.height / MapRenderSystem.RENDER_SIZE);
+		int y = index % (map.height / MapRenderSystem.RENDER_SIZE);//TODO width?
 		x *= MapRenderSystem.RENDER_SIZE;
 		y *= MapRenderSystem.RENDER_SIZE;
 		if (!beginCache(index)) return true;
@@ -350,7 +415,7 @@ public class SpriteCacheNiz {
 							addB(s2, batch);
 						}
 						addFG(s, batch);
-						//Gdx.app.log(TAG, "addingB "+s.getX());
+							//Gdx.app.log(TAG, "addingB "+s.getX());
 					}
 					else if (def.isLit)addLit(s, batch);
 					else add(s, batch);
@@ -363,15 +428,15 @@ public class SpriteCacheNiz {
 						s.setPosition( Main.PPM*(tx-.5f) ,  Main.PPM*(ty-.5f));
 						//Gdx.app.log(TAG, "addingB "+tile + "  " + tx);
 						addB(s, batch);
-
+						
 					}
 				}
 			}
-		}
-		batch.end();
-		buffers[index].end();
-		endCache();
-		batch.setColor(Color.WHITE);
+		}		
+		//batch.end();
+
+		endCache(index);
+		//batch.setColor(Color.WHITE);
 		//Gdx.app.log(TAG,  "done cache chunk  "+index);
 		return true;
 	}
@@ -393,13 +458,13 @@ public class SpriteCacheNiz {
 
 	Bits drawnBits = new Bits(), batchBits = new Bits(), bits = new Bits()
 			;
-
+	
 	public void endDraw() {
 		bits.clear();
 		bits.or(batchBits);
-
+		
 		bits.andNot(drawnBits);
-
+		
 		while (true){
 			int index = bits.nextSetBit(0);
 			if (index == -1) break;
@@ -411,7 +476,7 @@ public class SpriteCacheNiz {
 			buffers[index] = null;
 			batchBits.clear(index);
 			bits.clear(index);
-
+			
 		}
 
 	}

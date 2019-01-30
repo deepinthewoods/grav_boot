@@ -25,18 +25,20 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 	//public static int BUFFER_SIZE = 256;
 	private static final String TAG = "buffer start system";
 	private FrameBuffer buffer;
-	public FrameBuffer currentBuffer, mapBuffer;
+	public FrameBuffer currentBuffer, mapBuffer, lightDistanceBuffer;
 
 	private ImmutableArray<Entity> lights;
 	public boolean disabled = false;
 	public boolean hasStarted;
 	private float viewportHeight;
+	private VectorInput tmpVecInput = new VectorInput();
 
 	public BufferStartSystem() {
-		
+		tmpVecInput.v.set(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		float ar = Gdx.graphics.getWidth()/Gdx.graphics.getHeight();
 		//Gdx.app.log(TAG, "buffer "+ar);
-		buffer = new FrameBuffer(Format.RGBA4444, 128, (int) (128), false);
+		//buffer = new FrameBuffer(Format.RGBA4444, 128, (int) (128), false);
+		onNotify(null, Event.RESIZE, tmpVecInput);
 		mapBuffer = new FrameBuffer(Format.RGBA4444, OverworldSystem.SCROLLING_MAP_WIDTH, OverworldSystem.SCROLLING_MAP_HEIGHT, false);
 		Texture tex =  buffer.getColorBufferTexture();
 		tex.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
@@ -98,7 +100,13 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 			//Gdx.app.log(TAG, "buffer start");
 //		}
 		currentBuffer.end();
-		
+		lightDistanceBuffer.begin();
+//		if (!camSys.zoomedOut){
+		Gdx.gl.glClearColor(0f, 0f, 0f, 0f);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		//Gdx.app.log(TAG, "buffer start");
+//		}
+		lightDistanceBuffer.end();
 		
 	}
 	@Override
@@ -111,14 +119,21 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 				buffer.dispose();
 			}
 			buffer = new FrameBuffer(Format.RGBA8888, (int) viewportWidth, (int) (viewportHeight), false){
-
 				@Override
 				protected Texture createColorTexture() {
 					Texture tex = super.createColorTexture();
 					tex.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 					return tex;
 				}
-				
+			};
+
+			lightDistanceBuffer = new FrameBuffer(Format.RGBA8888, (int) viewportWidth, (int) (viewportHeight), false){
+				@Override
+				protected Texture createColorTexture() {
+					Texture tex = super.createColorTexture();
+					tex.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+					return tex;
+				}
 			};
 			//Gdx.app.log(TAG,  "new framebuffer");
 			Texture tex =  buffer.getColorBufferTexture();

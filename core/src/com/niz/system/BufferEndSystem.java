@@ -77,7 +77,6 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 	public void update(float deltaTime) {
 		if (!startBuffer.hasStarted){
 			Gdx.app.log(TAG , "no buffer " +zoom);
-
 			return;
 		}
 		batch.setShader(null);
@@ -109,9 +108,15 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 			h /= zoom;
 			w = (int)w;
 			h = (int)h;
-			batch.draw(startBuffer.currentBuffer.getColorBufferTexture(), -w/2, h/2, w, -h);
+
+			//batch.draw(startBuffer.currentBuffer.getColorBufferTexture(), -w/2, h/2, w, -h);
+
 			batch.end();
+
 			batch.enableBlending();
+			batch.begin();
+			batch.draw(startBuffer.lightDistanceBuffer.getColorBufferTexture(), -w/2, h/2, w, -h);
+			batch.end();
 		}
 		
 	}

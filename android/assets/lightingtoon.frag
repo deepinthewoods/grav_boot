@@ -76,6 +76,7 @@ void main() {
 
 		//Determine distance (used for attenuation) BEFORE we normalize our LightDir
 		float D = length(LightDir) * Zoom ;
+		float Attenuation = 1.0 / ( Falloff.x + (Falloff.y*D) + (Falloff.z*D*D) );
 		
 		//normalize our vectors
 		vec3 N = normalize(NormalMap * 2.0 - 1.0);
@@ -89,7 +90,7 @@ void main() {
 		//vec3 Ambient = AmbientColor.rgb * AmbientColor.a;
 		
 		//calculate attenuation
-		float Attenuation = 1.0 / ( Falloff.x + (Falloff.y*D) + (Falloff.z*D*D) );
+		
 		Attenuation = Attenuation *  max(dot(N, L), 0.0);
 		
 		

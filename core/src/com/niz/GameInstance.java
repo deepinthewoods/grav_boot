@@ -105,14 +105,15 @@ public class GameInstance implements Screen, Observer {
 	private SpriteBatchN leftBatch;
 	private SpriteBatchN rightBatch;
 	private OrthographicCamera defaultCam;
-	private LightRenderSystem lights;
+	private LightUpdateSystem lights;
 	private Texture logo;
 	private ImmutableArray<Entity> playerEntities;
 	private InputSystem inputSys;
 	private static Vector3 tmpV = new Vector3();
 	private ShaderSystem shaderSys;
+    private LightRenderSystem lightRender = null;
 
-	public void create (boolean headless, boolean newGame) {
+    public void create (boolean headless, boolean newGame) {
 
 		//Log.DEBUG();
 //		GLProfiler.enable();
@@ -166,7 +167,7 @@ public class GameInstance implements Screen, Observer {
 					font.getData().setScale(2f);
 					viewport = new ScreenViewport(uiCamera);
 					stage = new Stage(viewport, batch);
-					mapBatch = new SpriteBatchN(10);
+					mapBatch = new SpriteBatchN(1000);
 					rightBatch = new SpriteBatchN(5460);
 					//gameCamera = new OrthographicCamera(10, 10);//Main.PPM*Main.VIEWPORT_SIZE, (int)(Main.PPM*Main.VIEWPORT_SIZE/Main.ar));
 					if (uiAtlas.createSprite("button") == null) throw new GdxRuntimeException("kjl");
@@ -241,6 +242,10 @@ public class GameInstance implements Screen, Observer {
 					shaderSys = new ShaderSystem();
 					engine.addSystem(shaderSys);
 
+
+					lightRender = new LightRenderSystem(batch);
+					lights = new LightUpdateSystem(batch, lightRender);
+
 					engine.addSystem(new RoomSystem());
 					engine.addSystem(new RoomCatalogSystem());
 					engine.addSystem(new DragControllerSystem());
@@ -280,21 +285,25 @@ public class GameInstance implements Screen, Observer {
 					engine.addSystem(new BufferStartSystem());
 					break;case 13:
 					break;case 14:
-					lights = new LightRenderSystem();
-					engine.addSystem(lights);		
+					engine.addSystem(lights);
+					engine.addSystem(lightRender);
 					break;case 15:
 					shapeR = new ShapeRenderer();			
 					engine.addSystem(new ShapeRenderingSystem());
 					//engine.addSystem(new ParallaxBackgroundSystem());
 					break;case 16:
-					engine.addSystem(new MapRenderSystem(mapBatch, atlas));
+					engine.addSystem(new MapRenderSystem(mapBatch, atlas, lights));
 
 					break;case 17:
 					engine.addSystem(new RaceSystem());
 					engine.addSystem(new WeaponSensorSystem());
 					break;case 18:
 					engine.addSystem(new SpriteAnimationSystem(rightBatch, lights));
-					engine.addSystem(new BufferEndSystem(batch, blankNormalTexture));
+
+
+
+
+                    engine.addSystem(new BufferEndSystem(batch, blankNormalTexture));
 					engine.addSystem(new LineBatchSystem(lights));
 					break;case 19:
 					engine.addSystem(new LineBatchPostSystem());

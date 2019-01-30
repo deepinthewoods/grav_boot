@@ -41,6 +41,7 @@ import com.niz.component.SpriteIsMapTexture;
 import com.niz.component.SpriteStatic;
 import com.niz.item.Item;
 import com.niz.system.LightRenderSystem;
+import com.niz.system.LightUpdateSystem;
 import com.niz.system.MapRenderSystem;
 import com.niz.system.MapSystem;
 
@@ -54,7 +55,7 @@ public class AutoGibSystem extends EntitySystem {
 	public ComponentMapper<SpriteStatic> spriteStaticM = ComponentMapper.getFor(SpriteStatic.class);
 	protected ComponentMapper<Body> bodyM = ComponentMapper.getFor(Body.class);
 	
-	public AutoGibSystem(SpriteBatchN batch, SpriteBatchN leftBatch, LightRenderSystem lights) {
+	public AutoGibSystem(SpriteBatchN batch, SpriteBatchN leftBatch, LightUpdateSystem lights) {
 
 		makeTables();
 		this.batch = batch;

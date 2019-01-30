@@ -69,7 +69,7 @@ private ShaderProgram shader, lShader;
 //private Texture uvTexture;
 //private Texture diffTexture;
 
-private LightRenderSystem lights;
+private LightUpdateSystem lights;
 
 protected ImmutableArray<Entity> physicsEntities;
 
@@ -110,7 +110,7 @@ private Sprite square;
 	private int u_texture;
 	private int u_index_texture;
 
-	public SpriteAnimationSystem(SpriteBatchN batch, LightRenderSystem lights) {
+	public SpriteAnimationSystem(SpriteBatchN batch, LightUpdateSystem lights) {
 	this.lights = lights;
 	this.batch = batch;
 	this.leftBatch = batch;

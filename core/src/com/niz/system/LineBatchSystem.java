@@ -58,7 +58,7 @@ public ComponentMapper<SpriteStatic> spriteStaticM = ComponentMapper.getFor(Spri
 protected ComponentMapper<Body> bodyM = ComponentMapper.getFor(Body.class);
 protected ComponentMapper<BlockLine> blockLineM = ComponentMapper.getFor(BlockLine.class);
 
-private LightRenderSystem lights;
+private LightUpdateSystem lights;
 private ShaderProgram shader;
 private ImmutableArray<Entity> lineBodyEntities;
 private ImmutableArray<Entity> pickUpEntities;
@@ -139,7 +139,7 @@ private ImmutableArray<Entity> playerEntities;
 		new Color(iif, iif, iif, 1f)
  */
 
-public LineBatchSystem(LightRenderSystem lights) {
+public LineBatchSystem(LightUpdateSystem lights) {
 	this.lights = lights;
 }
 
