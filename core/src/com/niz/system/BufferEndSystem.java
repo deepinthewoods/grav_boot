@@ -109,13 +109,13 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 			w = (int)w;
 			h = (int)h;
 
-			//batch.draw(startBuffer.currentBuffer.getColorBufferTexture(), -w/2, h/2, w, -h);
+			batch.draw(startBuffer.currentBuffer.getColorBufferTexture(), -w/2, h/2, w, -h);
 
 			batch.end();
 
 			batch.enableBlending();
 			batch.begin();
-			batch.draw(startBuffer.lightDistanceBuffer.getColorBufferTexture(), -w/2, h/2, w, -h);
+			//batch.draw(startBuffer.lightDistanceBuffer.getColorBufferTexture(), -w/2, h/2, w, -h);
 			batch.end();
 		}
 		

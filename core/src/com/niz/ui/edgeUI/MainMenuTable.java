@@ -94,7 +94,7 @@ public class MainMenuTable extends UIElement {
 							if (butt.folder == null) throw new GdxRuntimeException("exc "+butt);
 							
 							FileHandle worldFile = butt.folder.child(Data.WORLD_MAIN_FILE_NAME);
-							Gdx.app.log(TAG, "world file " + worldFile.path() + worldFile.exists());
+							//Gdx.app.log(TAG, "world file " + worldFile.path() + worldFile.exists());
 							
 							WorldDefinition worldDef = Data.json.fromJson(WorldDefinition.class, worldFile);
 							//WorldDefinition worldDef = new WorldDefinition();//Data.json.fromJson(WorldDefinition.class, worldFile);
@@ -123,7 +123,7 @@ public class MainMenuTable extends UIElement {
 					@Override
 					public void changed(ChangeEvent event, Actor actor) {
 						//load game here
-						Gdx.app.log(TAG, "changed");
+						//Gdx.app.log(TAG, "changed");
 						worldSelectTable.clear();
 						worldSelectTable.add(startButton);
 						//worldSelectTable.add(editorButton);
@@ -320,7 +320,7 @@ public class MainMenuTable extends UIElement {
 		FileHandle[] worldFolders = folder.list();
 		for (int i = 0; i < worldFolders.length; i++){
 			FileHandle worldFolder = worldFolders[i];
-			Gdx.app.log(TAG, "add "+worldFolder.file().getAbsolutePath());
+			//Gdx.app.log(TAG, "add "+worldFolder.file().getAbsolutePath());
 
 			if (!worldFolder.isDirectory() || worldFolder.nameWithoutExtension().charAt(0) == '_') continue;
 			worldFolder.list();
@@ -341,7 +341,7 @@ public class MainMenuTable extends UIElement {
 			}
 		}
 		if (worldTable.getChildren().size == 0){
-			Gdx.app.log(TAG,  "no games, making new game");
+			//Gdx.app.log(TAG,  "no games, making new game");
 			createNewGame();
 			//refreshGameList();
 		}

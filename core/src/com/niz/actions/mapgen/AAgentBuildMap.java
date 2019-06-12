@@ -175,7 +175,7 @@ public class AAgentBuildMap extends ProgressAction {
 				break;
 
 			case 5://end room
-				Gdx.app.log(TAG, "end room try");
+				//Gdx.app.log(TAG, "end room try");
 				for (int x = 0; x < map.width; x++)
 					for (int y = 0; y < map.height; y++)
 						map.setLocal(x, y, 0);
@@ -191,7 +191,7 @@ public class AAgentBuildMap extends ProgressAction {
 				if (done){
 					progress++;
 					RoomEntry end = main.peek();
-					Gdx.app.log(TAG, "end room done "+ end.room.blocks.length);
+					//Gdx.app.log(TAG, "end room done "+ end.room.blocks.length);
 					main.peek().markAllExitsUsed();
 					endRoom = main.peek();
 				}
@@ -226,11 +226,11 @@ public class AAgentBuildMap extends ProgressAction {
 
 				if (baseStartRoom == null) {
 					progress = 55;
-					Gdx.app.log(TAG, "done with secondary rooms");
+					//Gdx.app.log(TAG, "done with secondary rooms");
 					break;
 				}
 				if (baseStartRoom != oldBaseStartRoom){
-					Gdx.app.log(TAG, "change start room" + baseStartRoom.stepsFromMainPath);
+					//Gdx.app.log(TAG, "change start room" + baseStartRoom.stepsFromMainPath);
 					oldBaseStartRoom = baseStartRoom;
 				}
 				//Gdx.app.log(TAG, "start room = " + baseStartRoom.offset + " end room +" + endRoom.offset);
@@ -280,7 +280,7 @@ public class AAgentBuildMap extends ProgressAction {
 					int currentDistance = roomDistance(endRoom, main.peek());
 
 					progress = 10;
-					Gdx.app.log(TAG, "side path done" + currentDistance + "  " + main.size);
+					//Gdx.app.log(TAG, "side path done" + currentDistance + "  " + main.size);
 					if (shortestDistance != currentDistance) throw new GdxRuntimeException("reproduce with seed error" + (shortestDistance - currentDistance));
 					break;
 				}
@@ -358,7 +358,7 @@ public class AAgentBuildMap extends ProgressAction {
 				PooledEntity en = parent.engine.createEntity();
 				Position ePos = parent.engine.createComponent(Position.class);
 				ePos.pos.set(map.width/2+.5f, map.height/2+1.5f);
-				Gdx.app.log(TAG, "DONEFIFFNIFNI" + ePos.pos + "  total iterations" + totalIterations);
+				//Gdx.app.log(TAG, "DONEFIFFNIFNI" + ePos.pos + "  total iterations" + totalIterations);
 				LevelEntrance entrance = parent.engine.createComponent(LevelEntrance.class);
 				en.add(ePos).add(entrance);
 				parent.engine.addEntity(en);;
@@ -766,7 +766,7 @@ public class AAgentBuildMap extends ProgressAction {
 			Position pos = parent.engine.createComponent(Position.class);
 			pos.pos.set(entry.offset.x + exit.x + dx + .5f, entry.offset.y + exit.y + dy+1);
 			e.add(pos);
-			Gdx.app.log(TAG, "door " + pos);
+			//Gdx.app.log(TAG, "door " + pos);
 			SpriteStatic sprite = parent.engine.createComponent(SpriteStatic.class);
 			sprite.s = Animations.doors[0];
 			e.add(sprite);
@@ -784,7 +784,7 @@ public class AAgentBuildMap extends ProgressAction {
 		{
 			Entity e = parent.engine.createEntity();
 			Position pos = parent.engine.createComponent(Position.class);
-			Gdx.app.log(TAG, "door " + exitIndex);
+			//Gdx.app.log(TAG, "door " + exitIndex);
 			//exit = entry.next[exitIndex].room.exit.get(exitIndex);
 			pos.pos.set(entrance.x+.5f, entrance.y+1);
 			e.add(pos);
@@ -839,7 +839,7 @@ public class AAgentBuildMap extends ProgressAction {
 
 		map = null;
 		addAfterMe(after);
-		Gdx.app.log(TAG, " time to gen = " + (System.currentTimeMillis() - startTime)/1000f + "  " + endRooms.size);
+		//Gdx.app.log(TAG, " time to gen = " + (System.currentTimeMillis() - startTime)/1000f + "  " + endRooms.size);
 	}
 
 

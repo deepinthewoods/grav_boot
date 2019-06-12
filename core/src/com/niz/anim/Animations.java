@@ -165,7 +165,7 @@ public class Animations {
 					//col.set(Color.WHITE);
 					pix.setColor(col);
 					pix.drawPixel(i, j);
-					Gdx.app.log(TAG, "light pixel dist: " + D + "  att:" + attenuation);
+					//Gdx.app.log(TAG, "light pixel dist: " + D + "  att:" + attenuation);
 				}
 
 				lightFalloffSprites[falloffIndex][heightIndex] = new Sprite(new Texture(pix));
@@ -348,11 +348,11 @@ public class Animations {
 
 		int half = rpgSprites.length / 2;
 		for (int i = 0; i < half; i+=1) {
-			Gdx.app.log(TAG, "make sprite group  " + rpgSprites.length + "  splits " + rpgSplits.length );
+			//Gdx.app.log(TAG, "make sprite group  " + rpgSprites.length + "  splits " + rpgSplits.length );
 
 			for (int j = 0; j < 12; j++) {
 				TextureRegion split;
-				Gdx.app.log(TAG, "make sprite " + i*3 + " " + j);
+				//Gdx.app.log(TAG, "make sprite " + i*3 + " " + j);
 				int y = i * 3;
 				split = rpgSplits[y][j];
 				rpgSprites[i][j + 12] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));

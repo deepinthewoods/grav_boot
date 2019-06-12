@@ -69,7 +69,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 				Race r = raceM.get(e);
 				SpriteAnimation anim = animM.get(e);
 				Inventory inv = invM.get(e);
-				Gdx.app.log(TAG, "EQUIP ITEM NOTIFICATION");
+				//Gdx.app.log(TAG, "EQUIP ITEM NOTIFICATION");
 
 				for (int i = 0; i < anim.itemLayersByLimbIndex.length; i++){
 					if (r.limbTotals[i] == 0 ){

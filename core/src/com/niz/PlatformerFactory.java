@@ -73,14 +73,14 @@ public class PlatformerFactory extends Factory {
 		charSelectRaces[1].raceID[Race.TAIL] = Race.RED_DRAGON;*/
 
 
-		charSelectRaces[0].raceID[Race.FRONT_ARM] = Race.RPG;
-		charSelectRaces[0].raceID[Race.BACK_ARM] = Race.RPG;
-		charSelectRaces[0].raceID[Race.BACK_LEG] = Race.RPG;
-		charSelectRaces[0].raceID[Race.FRONT_LEG] = Race.RPG;
-		charSelectRaces[0].raceID[Race.NECK] = Race.RPG;
-		charSelectRaces[0].raceID[Race.HEAD] = Race.RPG;
-		charSelectRaces[0].raceID[Race.TAIL] = Race.RPG;//*/
-		charSelectRaces[0].raceID[Race.TORSO] = Race.RPG;
+		charSelectRaces[3].raceID[Race.FRONT_ARM] = Race.RPG;
+		charSelectRaces[3].raceID[Race.BACK_ARM] = Race.RPG;
+		charSelectRaces[3].raceID[Race.BACK_LEG] = Race.RPG;
+		charSelectRaces[3].raceID[Race.FRONT_LEG] = Race.RPG;
+		charSelectRaces[3].raceID[Race.NECK] = Race.RPG;
+		charSelectRaces[3].raceID[Race.HEAD] = Race.RPG;
+		charSelectRaces[3].raceID[Race.TAIL] = Race.RPG;//*/
+		charSelectRaces[3].raceID[Race.TORSO] = Race.RPG;
 
 
 
@@ -341,7 +341,7 @@ public class PlatformerFactory extends Factory {
 	}
 	
 	public void createMapGenerationAgent(PooledEntity e, EngineNiz engine, Map map, int bit, int z) {
-		Gdx.app.log(TAG,  "create gen agent " + bit);
+		//Gdx.app.log(TAG,  "create gen agent " + bit);
 		Position pos = engine.createComponent(Position.class);
 		e.add(pos);
 		pos.pos.set(0,0);

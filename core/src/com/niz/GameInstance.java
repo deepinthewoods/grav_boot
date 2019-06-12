@@ -223,7 +223,7 @@ public class GameInstance implements Screen, Observer {
 						public boolean scrolled(int amount) {
 							if (amount > 0) zoomInput.zoom = 1.2f;
 							else zoomInput.zoom = 1f/1.2f;
-							Gdx.app.log("zoom", " " + zoomInput.zoom);
+							//Gdx.app.log("zoom", " " + zoomInput.zoom);
 							zoomSubject.notify(null, null, zoomInput);
 							return false;				}
 

@@ -176,7 +176,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 	private void updateLoad(ImmutableArray<Entity> entityList) {
 		shouldLoad.clear();
 		if (entityList.size() == 0){
-			Gdx.app.log(TAG,  "not update");
+			//Gdx.app.log(TAG,  "not update");
 			if (!loaded.get(0) && !loading.get(0)  )startMap(0, engine);	
 			return;
 		}
@@ -219,7 +219,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		
 		//Gdx.app.log(TAG,  "update");
 		while (shouldLoad.nextSetBit(0) != -1){
-			Gdx.app.log(TAG,  "start to load ");
+			//Gdx.app.log(TAG,  "start to load ");
 			int bit = shouldLoad.nextSetBit(0);
 			shouldLoad.clear(bit);
 			startMap(bit, engine);
@@ -483,11 +483,11 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		
 		if (bit == 0){
 			map.duplicateRenderR = !true;
-			Gdx.app.log(TAG, "DUPER");
+			//Gdx.app.log(TAG, "DUPER");
 		} 
 		if (bit == SCROLLING_MAP_TOTAL_SIZE-1){
 			map.duplicateRenderL = !true;
-			Gdx.app.log(TAG, "DUPEL");
+			//Gdx.app.log(TAG, "DUPEL");
 		}
 		loading.clear(bit);
 		loaded.set(bit);
@@ -582,7 +582,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		
 	}
 	public void stopNewGameScreen(){
-		Gdx.app.log(TAG, "stop new game screen");
+		//Gdx.app.log(TAG, "stop new game screen");
 		newGameScreen = false;
 		int bit = 0;
 		Map map = scrollingMaps[bit];
@@ -606,7 +606,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 			//	e.remove(Control.class);
 			//}
 			//e.remove(Position.class);
-			Gdx.app.log(TAG, "startpoint" + e.getId());
+			//Gdx.app.log(TAG, "startpoint" + e.getId());
 
 			//engine.removeEntityNoPool((PooledEntity) e);
 			//arr.add((PooledEntity) e);

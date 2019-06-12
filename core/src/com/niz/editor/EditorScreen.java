@@ -678,13 +678,13 @@ public class EditorScreen extends EdgeUI implements Observer{
 				}
 			    
 			} else if (type.isAssignableFrom(String.class)){
-				Gdx.app.log(TAG, "string Button");
+				//Gdx.app.log(TAG, "string Button");
 				makeStringButton(table, f.getName().replace("_", " "), f, o, skin);
 			}
 			else {
 				
 				try {
-					Gdx.app.log(TAG, "object Button "+f.get(o).getClass());
+					//Gdx.app.log(TAG, "object Button "+f.get(o).getClass());
 					makeObjectButton(f.getName().replace("_", " "), f.get(o), table, o, depth++);
 					table.row();
 				} catch (ReflectionException e) {

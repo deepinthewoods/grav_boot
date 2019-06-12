@@ -405,7 +405,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 						lab.set(def, adjustedIndex, e, input.left, input.butt);
 						
 						adjustedIndex++;
-						Gdx.app.log(TAG, "done t " + toastSelectedIndex+" "+input.value + "  "+ totalDoings);
+						//Gdx.app.log(TAG, "done t " + toastSelectedIndex+" "+input.value + "  "+ totalDoings);
 					}
 					totalDoings = adjustedIndex+1;
 					if (showInv){

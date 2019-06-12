@@ -66,7 +66,7 @@ public class RoomCatalogSystem extends EntitySystem {
 		}*/
 		//child.child("TESTTEST.TEST").writeString("test!", false);
 		//try {
-			Gdx.app.log(TAG, "READ ROOMS" + child.file().getAbsolutePath() + " " + child.list().length);
+			//Gdx.app.log(TAG, "READ ROOMS" + child.file().getAbsolutePath() + " " + child.list().length);
 		//} catch (IOException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
@@ -99,11 +99,11 @@ public class RoomCatalogSystem extends EntitySystem {
 		for (String name : names){
 			FileHandle f = Gdx.files.internal(name);
 			if (!f.extension().contains("json")){
-				Gdx.app.log(TAG, "skipping " + f.name() + "  extension " + f.extension());
+				//Gdx.app.log(TAG, "skipping " + f.name() + "  extension " + f.extension());
 				continue;
 			}
 			if (!f.exists()){
-				Gdx.app.log(TAG, "skipping  doesn't exist " + f);
+				//Gdx.app.log(TAG, "skipping  doesn't exist " + f);
 				continue;
 			}
 			Room r = json.fromJson(Room.class, f);

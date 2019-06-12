@@ -180,7 +180,7 @@ public class AnimationCommand {
 				//
 				AtlasSprite[] frames = layers[y];
 				if (frames == null){
-					Gdx.app.log(TAG, "null frames " + spritePrefix + layers[y] + "  " + layerNames[y]);
+					//Gdx.app.log(TAG, "null frames " + spritePrefix + layers[y] + "  " + layerNames[y]);
 					continue;
 				}
 				Vector2[] offsets = offsetArray[y];
@@ -213,7 +213,7 @@ public class AnimationCommand {
 			boolean hasTip = tip != null;
 			if (main == null){
 				//throw new GdxRuntimeException("jskld! "+fileName +"   "+"  "+y +"  "+c.length );
-				Gdx.app.log(TAG, "null guide, replacing with empty "+fileName +"   "+"  "+y +"  "+c.length );
+				//Gdx.app.log(TAG, "null guide, replacing with empty "+fileName +"   "+"  "+y +"  "+c.length );
 				for (int i = 0; i < c.length / (1+c.skipFrames); i++){
 					offsets[i] = new Vector2(0, 0);
 

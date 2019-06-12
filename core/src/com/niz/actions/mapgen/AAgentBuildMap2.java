@@ -16,7 +16,7 @@ public class AAgentBuildMap2 extends Action {
 	private OverworldSystem overworld;
 	public int bit;
 	public final static int ITERATIONS = 128;
-	private static final String TAG = "build map action";
+	private static final String TAG = "build map actio2n";
 	@Override
 	public void update(float dt) {
 		int x = progress / map.width;
