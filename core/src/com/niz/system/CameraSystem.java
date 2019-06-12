@@ -130,15 +130,15 @@ Vector2 tmpV = new Vector2();
 			onePixel /= Main.PPM;
 			camera.position.set((pos2.x*Main.PPM), (camHeight + 2) * Main.PPM, 0);//*/
 			camera.update();
+			mapDrawCamera.zoom = camera.zoom;
+			mapDrawCamera.position.set((pos2.x*Main.PPM), (camHeight + 2) * Main.PPM, 0);
+			mapDrawCamera.update();
 			//Gdx.app.log(TAG, "drag controller" + camera.zoom);
 			return;
 		}
 		playerPos = posM.get(playerEntities.get(0)).pos;
 		pos.set(playerPos);
-//		if (zoomedOut){
-//			//pos.set(OverworldSystem.SCROLLING_MAP_WIDTH / 2, OverworldSystem.SCROLLING_MAP_HEIGHT / 2);
-//			//
-//		}
+
 		//Gdx.app.log(TAG , "zoomed " +zoom + "  " + camera.position);
 		camera.position.set((int)(pos.x*Main.PPM), (int)(pos.y*Main.PPM), 0);//*/
 		camera.zoom = zoom;
@@ -149,7 +149,9 @@ Vector2 tmpV = new Vector2();
 			mapDrawCamera.zoom = 1f;
 		mapDrawCamera.position.set((int)(pos.x*Main.PPM), (int)(pos.y*Main.PPM), 0);
 		mapDrawCamera.update();
-		
+
+
+
 	}
 
 	@Override
