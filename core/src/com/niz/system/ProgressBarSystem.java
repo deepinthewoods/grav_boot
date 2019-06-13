@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.EngineNiz;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.RenderSystem;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -25,6 +26,8 @@ public class ProgressBarSystem extends RenderSystem implements Observer {
 	private Sprite s;
 	private float width, progressBarsTotal;
 	private float y;
+	private float height;
+
 	public ProgressBarSystem(OrthographicCamera uiCamera, SpriteBatchN batch) {
 		camera = uiCamera;
 		this.batch = batch;
@@ -76,11 +79,36 @@ public class ProgressBarSystem extends RenderSystem implements Observer {
 		float w = width * alpha;
 		s.setPosition(0, y);
 		s.setSize(w, 10);
-		//Gdx.app.log(TAG, "draw"+w + "  " + alpha);
+		s.setColor(Color.WHITE);
+		//Gdx.app.log(TAG, "draw "+w + "  " + alpha);
+
+		batch.setColor(Color.WHITE);
 		batch.setProjectionMatrix(camera.combined);
+		batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
+
+		batch.setShader(null);
+		batch.disableBlending();
+		s.getTexture().bind(0);
 		batch.begin();
 		s.draw(batch);
 		batch.end();
+
+		{
+			//drawNew(batch, s);
+		}
+
+	}
+
+	public void drawNew(SpriteBatchN batch) {
+		if (progressBars.size == 0) return;
+		float h = Gdx.graphics.getWidth()/20, ww = h*3,  x = Gdx.graphics.getWidth()/2 - ww/2, y = Gdx.graphics.getHeight()/2 - h/2;
+		float alpha =  progressBarsTotal / (float)progressBars.size;
+		alpha %= 1f;
+		batch.getProjectionMatrix().setToOrtho2D(0,  0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		batch.begin();
+		batch.draw(s, 0, 0, Gdx.graphics.getWidth() * alpha , h);
+		batch.end();
+		//Gdx.app.log(TAG, "render " + alpha);
 	}
 
 	@Override
@@ -89,6 +117,7 @@ public class ProgressBarSystem extends RenderSystem implements Observer {
 			VectorInput in = (VectorInput) c;
 			width = in.v.x;
 			y = -in.v.y /2f;
+			height = in.v.y;
 		}
 	}
 	

@@ -112,8 +112,9 @@ public class GameInstance implements Screen, Observer {
 	private static Vector3 tmpV = new Vector3();
 	private ShaderSystem shaderSys;
     private LightRenderSystem lightRender = null;
+	private ProgressBarSystem progBar;
 
-    public void create (boolean headless, boolean newGame) {
+	public void create (boolean headless, boolean newGame) {
 
 		//Log.DEBUG();
 //		GLProfiler.enable();
@@ -125,8 +126,8 @@ public class GameInstance implements Screen, Observer {
 		logo = new Texture(Gdx.files.internal("logo.png"));
 		final WorkerSystem workSys = new WorkerSystem();
 		engine.addSystem(workSys);
-		ProgressBarSystem progBar = new ProgressBarSystem(uiCamera, batch);
-		progBar.priority = 1000000;
+		progBar = new ProgressBarSystem(uiCamera, batch);
+		progBar.priority = 100000;
 		engine.addSystem(progBar);
 		engine.getSubject("worlddef").add(this);
 		playerEntities = engine.getEntitiesFor(Family.all(Player.class, Position.class).get());
@@ -486,6 +487,7 @@ public class GameInstance implements Screen, Observer {
 	@Override
 	public void render(float delta) {
 		if (headless) delta *= 8f;
+		//Gdx.app.log(TAG, "render");
 		//delta *= .1f;
 		//if (isClient){Gdx.app.log(TAG,  "render cl"+accum);} else Gdx.app.log(TAG,  "render serv"+accum);
 		{
@@ -530,8 +532,8 @@ public class GameInstance implements Screen, Observer {
 					//accum += timeStep;	
 			}
 		}
-		
-		engine.render(deltaTime);
+
+        engine.render(deltaTime);
 		if (!engine.getSystem(WorkerSystem.class).allPaused){
 			if (showingLogo ){
 				float h = Gdx.graphics.getWidth()/20, w = h*3,  x = Gdx.graphics.getWidth()/2 - w/2, y = Gdx.graphics.getHeight()/2 - h/2;
@@ -539,10 +541,12 @@ public class GameInstance implements Screen, Observer {
 				batch.begin();
 				batch.draw(logo, x, y, w, h);
 				batch.end();
-				//Gdx.app.log(TAG,  "render");
+				//Gdx.app.log(TAG,  "logo");
+				progBar.drawNew(batch);
 				return;
 			}
 		} else showingLogo = false;//*/
+
 		//if (isClient)Gdx.app.log(TAG,  "stepped"); else Gdx.app.log(TAG,  "stepped server");
 		if (camera != null){
 			batch.setProjectionMatrix(camera.combined);
@@ -622,7 +626,9 @@ public class GameInstance implements Screen, Observer {
 				invScreen.update(delta);
 				invScreen.draw(shapeR, bat, Styles.inventoryFont);
 			}
+            progBar.drawNew(batch);
 		}
+
 	}
 
 	@Override
