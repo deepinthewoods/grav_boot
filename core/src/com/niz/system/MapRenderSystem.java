@@ -191,6 +191,7 @@ public class MapRenderSystem extends RenderSystem implements EntityListener, IDi
 
 	@Override
 	public void update(float deltaTime) {
+		//Gdx.app.log(TAG, "render");
 //		if (true) return;
 		//if (lights == null) return;
 		//if (zoom > 1f) return;

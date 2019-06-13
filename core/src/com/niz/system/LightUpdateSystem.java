@@ -247,7 +247,7 @@ public class LightUpdateSystem extends RenderSystem implements Observer{
 				falloff[layer * NUM_LIGHTS * 3 + index*3+2] = 50f;
 				pos[layer * NUM_LIGHTS * 3 + index*3+2] = 11111;
 				pos[layer * NUM_LIGHTS * 3 + index*3] = 111110;
-
+				pos[layer * NUM_LIGHTS * 3 + index*3+1] = 111110;
 			}
 		}
 
