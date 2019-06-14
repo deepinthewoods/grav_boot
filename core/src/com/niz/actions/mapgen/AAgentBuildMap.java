@@ -53,7 +53,7 @@ public class AAgentBuildMap extends ProgressAction {
 
 	public Map map;
 	private OverworldSystem overworld;
-	public int bit;
+	public int bit;//overworld chunk bit
 	public final static int ITERATIONS = 64;
 	private static final String TAG = "build map action";
 
@@ -73,7 +73,7 @@ public class AAgentBuildMap extends ProgressAction {
 	public void update(float dt) {
 		//int x = progress / map.width;
 		//x += map.offset.x;
-		//Gdx.app.log(TAG, "tick "+progress);
+		//if (progress == 5) Gdx.app.log(TAG, "tick "+progress + " " + main.get(0).room.flipped);
 
 		//float height = overworld.getHeight(x, z, 1f);
 		//for (int x = 0; x < map.width; x++)
@@ -192,6 +192,7 @@ public class AAgentBuildMap extends ProgressAction {
 					progress++;
 					RoomEntry end = main.peek();
 					//Gdx.app.log(TAG, "end room done "+ end.room.blocks.length);
+
 					main.peek().markAllExitsUsed();
 					endRoom = main.peek();
 				}
@@ -201,7 +202,7 @@ public class AAgentBuildMap extends ProgressAction {
 					if (baseStartRoom == null) throw new GdxRuntimeException("ar null ");
 					main.add(baseStartRoom);
 					main.peek().teleportOut[main.peek().getNextUnusedUnFilteredExitIndex()] = true;//*/
-					//Gdx.app.log(TAG, "RETRY" + main.size + "  " + mainPathIndex + "  " + retries);
+					//Gdx.app.log(TAG, "RETRY" + this.base.size + "  " + mainPathIndex + "  " + retries);
 				}
 
 
@@ -307,7 +308,7 @@ public class AAgentBuildMap extends ProgressAction {
 						baseStartRoom.exitsUsed[baseStartExitIndex] = true;
 						baseStartRoom.next[baseStartExitIndex] = endRoom;
 						baseStartRoom.teleportOut[baseStartExitIndex] = true;
-						Gdx.app.log(TAG, "FINISH SECONDARY PATH" + currentDistance + baseStartRoom.offset + (mainPathIndex == -1?" CUT SHORT":""));
+						//Gdx.app.log(TAG, "FINISH SECONDARY PATH" + currentDistance + baseStartRoom.offset + (mainPathIndex == -1?" CUT SHORT":""));
 						main.clear();
 						main.add(baseStartRoom);
 						progress = 10;
@@ -345,7 +346,7 @@ public class AAgentBuildMap extends ProgressAction {
 						map.setBGLocal(x, y, Blocks.STONE+r.nextInt(64));
 					}
 				for (int x = 0; x < map.width; x++){
-					//Gdx.app.log(TAG, "DFJHSKAFJDSKLFJASDKFJDSDLSKJSFDLKJFDSKLJFSDDKLF " + (int) overworld.getHeight((int) (x + map.offset.x)));
+					//Gdx.app.log(TAG, "finalise " + (int) overworld.getHeight((int) (x + map.offset.x)));
 					for (int y = (int) overworld.getHeight((int) (x + map.offset.x) )+1; y < map.height; y++){
 						map.setLocal(x, y, 0);
 						map.setBGLocal(x, y, 0);
@@ -353,7 +354,11 @@ public class AAgentBuildMap extends ProgressAction {
 				}
 				progress++;
 				break;
-			case 56://end
+			case 56://place exit door
+                //makeLevelExit(main.peek());
+				progress++;
+				break;
+			case 57://end
 				isFinished = true;
 				PooledEntity en = parent.engine.createEntity();
 				Position ePos = parent.engine.createComponent(Position.class);
@@ -367,6 +372,34 @@ public class AAgentBuildMap extends ProgressAction {
 		totalIterations++;
 		float progressDelta = (float)base.size / (float)TOTAL_ROOMS_TARGET;
 		progressSys.setProgressBar(progressBarIndex, progressDelta);
+	}
+
+	private void makeLevelExit(RoomEntry entry) {
+		if (true) return;
+        int exitIndex = entry.getNextUnusedUnFilteredExitIndex();
+        GridPoint2 exit = entry.room.exit.get(exitIndex);
+
+        {
+            Entity e = parent.engine.createEntity();
+            Position pos = parent.engine.createComponent(Position.class);
+            pos.pos.set(entry.offset.x + exit.x + .5f, entry.offset.y + exit.y + 1);
+            e.add(pos);
+            //Gdx.app.log(TAG, "door " + pos);
+            SpriteStatic sprite = parent.engine.createComponent(SpriteStatic.class);
+            sprite.s = Animations.doors[0];
+            e.add(sprite);
+            Body body = parent.engine.createComponent(Body.class);
+            body.width = .5f;
+            body.height = 1f;
+            e.add(body);
+            e.add(parent.engine.createComponent(SpriteIsMapTexture.class));
+            Door door = parent.engine.createComponent(Door.class);
+            door.nextZLevel = z + 1;
+            //RoomEntry next = entry.next[exitIndex];
+            //door.endPoint.set(entrance);
+            e.add(door);
+            parent.engine.addEntity(e);
+        }
 	}
 
 	private int roomDistance(RoomEntry r1, RoomEntry r2) {
@@ -454,7 +487,7 @@ public class AAgentBuildMap extends ProgressAction {
 		int triesWithoutSuccess = 0;
 		while (!done && count < tries && iterationsCount < 500) {
 
-
+			count++;
 			RoomEntry re = Pools.obtain(RoomEntry.class);
 			RoomEntry pre = null;
 			pre = main.peek();
@@ -512,7 +545,7 @@ public class AAgentBuildMap extends ProgressAction {
 			int entranceIndex = 0;
 			int w = re.room.blocks[0].length;
 			int h = re.room.blocks.length;
-			while (!found && re.room.entrance.size > entranceIndex){
+			while (!found && entranceIndex < re.room.entrance.size){
 
 				re.offset.set(pre.offset);
 				re.offset.x += exit.x;
@@ -520,7 +553,7 @@ public class AAgentBuildMap extends ProgressAction {
 				re.offset.x -= re.room.entrance.get(entranceIndex).x;
 				re.offset.y -= re.room.entrance.get(entranceIndex).y;
 				//Gdx.app.log(TAG, "entrance " + re.room.entrance.get(re.entranceIndex) + exit);
-				count++;
+
 				if ((exDir & Room.LEFT) != 0) {
 					re.offset.x -= expand ? 2 : 1;
 					//w++;
@@ -545,9 +578,11 @@ public class AAgentBuildMap extends ProgressAction {
 					teleportDiameter = Math.min(OverworldSystem.SCROLLING_MAP_WIDTH, teleportDiameter + 1);
 				found = mapIsClear(re.offset.x, re.offset.y, w, h);
 				teleported = true;
+				//Gdx.app.log(TAG, "tried to teleport");
 			}
 			if (found) {
 				triesWithoutSuccess = 0;
+				//Gdx.app.log(TAG, "success");
 				//if (finalPass && teleported) Gdx.app.log(TAG, "teleported");
 
 				writeToMap(re, 1024);
@@ -574,7 +609,7 @@ public class AAgentBuildMap extends ProgressAction {
 
 				} else {
 					pre.teleportOut[exitIndex] = teleported;
-					//if (teleported) Gdx.app.log(TAG, "TELE");
+					//Gdx.app.log(TAG, "TELE" +teleported);
 					pre.next[exitIndex] = re;
 				}
 
@@ -593,6 +628,7 @@ public class AAgentBuildMap extends ProgressAction {
 			}
 
 		}
+		//Gdx.app.log(TAG, "made rooms " + iterationsCount + " " + triesWithoutSuccess + "  " + roomCount);
 		return done;
 	}
 
