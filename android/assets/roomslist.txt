@@ -1,4 +1,8 @@
 rooms\endroom.json
+rooms\med5x5.json
+rooms\med64x16.json
+rooms\medbig15x15.json
+rooms\medstart.json
 rooms\room15x15med.json
 rooms\room15x3.json
 rooms\room15x6.json

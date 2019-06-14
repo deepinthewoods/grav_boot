@@ -52,6 +52,10 @@ public class DoorSystem extends EntitySystem {
 			Entity player = e;
 			Position pPos = player.getComponent(Position.class);
 			Door doorC = door.getComponent(Door.class);
+			if (doorC.nextZLevel != -1){
+				engine.getSystem(OverworldSystem.class).changeLevel(doorC.nextZLevel);;
+				continue;
+			}
 			GridPoint2 dPos = doorC.endPoint;
 			Body body = player.getComponent(Body.class);
 			Body dBody = door.getComponent(Body.class);

@@ -56,7 +56,6 @@ public class RunnerFactory extends Factory {
 	
 	public Race[] charSelectRaces, pathfindingRaces;
 	public Inventory[] charSelectInventories, pathfindingInventories;
-	//private Map map;
 	public static final int CHAR_SELECT_CHARACTERS = 8, PATHFINDING_COUNT = 32;
 	public RunnerFactory(){
 		charSelectRaces = new Race[CHAR_SELECT_CHARACTERS];
@@ -81,23 +80,9 @@ public class RunnerFactory extends Factory {
 			Inventory inv = new Inventory();
 			charSelectInventories[i] = inv;
 			inv.addItem(16, 6);
-			
-//			inv.addItem(Inventory.defs.get(14), 232);
-//			inv.addItem(Inventory.defs.get(15), 232);
-//			inv.addItem(Inventory.defs.get(16), 232);
-//			inv.addItem(Inventory.defs.get(17), 23);
-//			inv.addItem(Inventory.defs.get(18), 23);
-//			inv.addItem(Inventory.defs.get(19), 23);
-//			inv.addItem(Inventory.defs.get(20), 32);
-//			inv.addItem(Inventory.defs.get(25), 23);
-//			inv.addItem(Inventory.defs.get(22), 23);
-//			
-//			inv.addItem(Inventory.defs.get(32), 100);
-//			inv.addItem(Inventory.defs.get(33), 192);
-//			inv.addItem(Inventory.defs.get(34), 197);
+
 		}
 		
-		//Inventory inv = charSelectInventories[0];
 		pathfindingRaces = new Race[PATHFINDING_COUNT];
 		pathfindingInventories = new Inventory[PATHFINDING_COUNT];
 		for (int i = 0; i < pathfindingInventories.length; i++){
@@ -110,31 +95,9 @@ public class RunnerFactory extends Factory {
 			pathfindingRaces[i].physicsID = Race.PHYSICS_RUNNER;
 
 		}
-		//pathfindingRaces[2].raceID[Race.BACK_ARM] = Race.RED_DRAGON;
-		//pathfindingRaces[2].raceID[Race.FRONT_ARM] = Race.RED_DRAGON;
 		
 	}
-	@Override
-	public void createPlayer(EngineNiz engine, Array<PooledEntity> arr, WorldDefinition def) {
-		//Gdx.app.log(TAG, "create player");
-		arr.clear();
-		
-		
-		
-		//agent
-		//PooledEntity e = engine.createEntity();
-		//ActionList act = engine.createComponent(ActionList.class);
-		//AMapPlanner mapPlanner = Pools.obtain(AMapPlanner.class);
-		//mapPlanner.factory = this;
-		//act.addToStart(mapPlanner);
-		
-		//arr.add(e);
-		
-		
-		
-		
-		
-	}
+
 
 	public PooledEntity makePlayer(EngineNiz engine) {
 		PooledEntity e = engine.createEntity();
@@ -148,8 +111,7 @@ public class RunnerFactory extends Factory {
 		e.add(phys);
 		e.add(engine.createComponent(SpriteAnimation.class).set(Animations.PLAYER));
 		ActionList act = Pools.obtain(ActionList.class);
-		//act.addToStart(new AAutoBuild());
-		//act.addToStart(new ARandomRun());;
+
 		act.addToStart(new AUseInventory());
 		act.addToStart(new AHold());
 		act.addToStart(new ANotRun());
@@ -180,9 +142,7 @@ public class RunnerFactory extends Factory {
 		OnMap onMap = new OnMap();
 		onMap.map = null;
 		e.add(onMap);
-		
-		//e.getComponent(Inventory.class).addItem(Inventory.defs.get(3), 1);;
-		
+
 		
 		pos.pos.set(250, 4);
 		return e;
@@ -202,27 +162,7 @@ public class RunnerFactory extends Factory {
 		return cam;
 	}
 
-	@Override
-	public void startMap(EngineNiz engine) {
-		
-		
-		
-		
-		//if(true) return;
 
-		//Entity e = engine.createEntity();
-		//createStandardAgent(e, engine);
-		//engine.addEntity(e);
-		
-		//engine.getSystem(MapSystem.class).worldDef = def;
-	}
-
-	
-	
-	@Override
-	public void startPlayer(EngineNiz engine, Entity e) {
-
-	}
 
 	@Override
 	public void makeLevelSelection(EngineNiz engine, WorldDefinition worldDef) {
@@ -276,48 +216,9 @@ public class RunnerFactory extends Factory {
 			engine.addEntity(selLight);
 		}
 		
-		///////pathfinding stuff
 
-		for (int i = 0; i < 4; i++){
-			//makePathfinder(engine, i, APathfindingJumpAndHold.NORMAL_JUMP);
-			//makePathfinder(engine, i, APathfindingJumpAndHold.STANDING_JUMP);
-			
-		}
-		for (int i = 0; i < 4; i++){
-			//makePathfinder(engine, i, APathfindingJumpAndHold.STANDING_DELAYED_RUN_JUMP);
-			//makePathfinder(engine, i, APathfindingJumpAndHold.DELAYED_REVERSE_JUMP);
-			//makePathfinder(engine, i, APathfindingJumpAndHold.WALLJUMP);
-		}
-		
-		
 	}
-	private void makePathfinder(EngineNiz engine, int i, int type) {
-		PooledEntity e = makePlayer(engine);
-		Race race = engine.createComponent(Race.class);
-		for (int r = 0; r < race.raceID.length; r++){
-			race.raceID[r] = pathfindingRaces[i % pathfindingRaces.length].raceID[r];
-		}
-		e.add(race);
-		race.dirtyLayers = true;
-		e.getComponent(Position.class).pos.set(1.5f, AStar.PATHFINDING_INITIAL_Y_OFFSET+2);
-		ActionList act = e.getComponent(ActionList.class);
-		
-		APathfindingPreRun preRun = Pools.obtain(APathfindingPreRun.class);
-		preRun.index = i | type;
-		act.addToStart(preRun);
-		Inventory inv = engine.createComponent(Inventory.class);
-		inv.copyFrom(pathfindingInventories[i % pathfindingInventories.length]);
-		e.add(inv);
-		e.add(PathfinderPreLog.class);
-		Light light = engine.createComponent(Light.class);
-		//if (MathUtils.random(4) == 0)
-			e.add(light);
-		engine.addEntity(e);
-		Body body = e.getComponent(Body.class);
-		body.height = .01f;
-	}
-	
-	
+
 	
 	
 	@Override

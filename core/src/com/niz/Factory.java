@@ -24,13 +24,12 @@ public abstract class Factory {
 	public int level;
 	public int sideLevel = 0;
 	public WorldDefinition def;
-	public abstract void createPlayer(EngineNiz engine, Array<PooledEntity> playerArr, WorldDefinition def);
+
 	
 	
+
 	
-	public abstract void startMap(EngineNiz engine);
-	
-	public abstract void startPlayer(EngineNiz engine, Entity e);
+
 
 	
 

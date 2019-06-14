@@ -1,0 +1,61 @@
+{
+blocks: [
+	[ 0, 0, 0, 0, 0 ]
+	[ 0, 0, 0, 0, 0 ]
+	[ 0, 0, 0, 0, 0 ]
+	[ 0, 0, 0, 0, 0 ]
+	[ 8, 0, 0, 0, 9 ]
+]
+distributions: {
+	0: {
+		class: com.niz.room.BlockDistributionArray
+		val: [
+			{
+				value: EMPTY
+			}
+		]
+	}
+	1: {
+		class: com.niz.room.BlockDistributionArray
+		val: [
+			{
+				value: BLOCKA
+			}
+		]
+	}
+	2: {
+		class: com.niz.room.BlockDistributionArray
+		val: [
+			{
+				value: BLOCKB
+			}
+		]
+	}
+	8: {
+		class: com.niz.room.BlockDistributionArray
+		val: [
+			{
+				value: ENTRANCE
+			}
+			{
+				value: EMPTY
+			}
+		]
+	}
+	9: {
+		class: com.niz.room.BlockDistributionArray
+		val: [
+			{
+				value: EXIT
+			}
+			{
+				value: EMPTY
+			}
+		]
+	}
+}
+tags: [
+	med
+]
+}
+

@@ -123,7 +123,6 @@ public class WorkerSystem extends RenderSystem {
 
 					Array<PooledEntity> arr = entityAddQueue.pop();
 					for (PooledEntity e : arr){
-						//Gdx.app.log(TAG, "add ENT"+e.getId() + waitToAddEntities);
 
 						engine.addEntityNoID(e);
 						String s = "";

@@ -633,8 +633,7 @@ public class GameInstance implements Screen, Observer {
 
 	@Override
 	public void pause() {
-		//factory.save(engine, invScreen.belt);
-		
+
 	}
 
 	@Override
@@ -652,12 +651,7 @@ public class GameInstance implements Screen, Observer {
 		
 	}
 
-	public void switchToCharacterGenScreen(WorldDefinition worldDef) {
-		stage.clear();
-		charScreen.startGameButton.setFor(this, worldDef, charScreen, new Race());
-		charScreen.addTo(stage);
-		
-	}
+
 	
 	public void startNewGame(WorldDefinition def){
 		stage.clear();
@@ -679,9 +673,8 @@ public class GameInstance implements Screen, Observer {
 		overworld.worldDef = def;
 		ParallaxBackgroundSystem parall = engine.getSystem(ParallaxBackgroundSystem.class);
 		if (parall != null) parall.setProcessing(true);
-		factory.startMap(engine);
 		playerArr = Data.entityArrayPool.obtain();
-		factory.createPlayer(engine, playerArr, def);
+
 		overworld.startLoadingChunksFor(playerArr);
 		playerArr = null;
 		engine.getSystem(PathfindingUpdateSystem.class).setJumpPaths();
@@ -700,7 +693,6 @@ public class GameInstance implements Screen, Observer {
 		if (playerFile.exists()){
 			//loadGame(def, playerFile);//TODO
 		} else {
-			//switchToCharacterGenScreen(def);
 			DragControllerSystem drag = engine.getSystem(DragControllerSystem.class);
 			Entity player = drag.getSelectedPlayerEntity();
 			SelectedPlayer sel = new SelectedPlayer();

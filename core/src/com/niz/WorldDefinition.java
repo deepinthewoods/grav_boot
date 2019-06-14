@@ -3,7 +3,9 @@ package com.niz;
 import java.util.Random;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.niz.room.Room;
 import com.niz.system.ParallaxBackgroundSystem;
 
 public class WorldDefinition {
@@ -17,6 +19,13 @@ public class WorldDefinition {
 
 	transient Random r = new Random();
 	public boolean isRoomEditor = false;
+
+	public int totalLevels = 3;
+	public String[] bigRooms = {"easybig", "medbig", "hardbig"}
+	, smallRooms = {"easy", "med", "hard"}
+	, startRooms = {"easystart", "medstart", "hardstart"}
+	, endRooms = {"easyend", "medend", "hardend"};
+
 	public WorldDefinition(){
 		unlockedStartingCharacters[0] = true;
 	}

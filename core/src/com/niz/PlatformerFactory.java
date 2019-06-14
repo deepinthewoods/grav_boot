@@ -120,27 +120,7 @@ public class PlatformerFactory extends Factory {
 		//pathfindingRaces[2].raceID[Race.FRONT_ARM] = Race.RED_DRAGON;
 		
 	}
-	@Override
-	public void createPlayer(EngineNiz engine, Array<PooledEntity> arr, WorldDefinition def) {
-		//Gdx.app.log(TAG, "create player");
-		arr.clear();
-		
-		
-		
-		//agent
-		//PooledEntity e = engine.createEntity();
-		//ActionList act = engine.createComponent(ActionList.class);
-		//AMapPlanner mapPlanner = Pools.obtain(AMapPlanner.class);
-		//mapPlanner.factory = this;
-		//act.addToStart(mapPlanner);
-		
-		//arr.add(e);
-		
-		
-		
-		
-		
-	}
+
 
 	public PooledEntity makePlayer(EngineNiz engine) {
 		PooledEntity e = engine.createEntity();
@@ -207,27 +187,10 @@ public class PlatformerFactory extends Factory {
 		return cam;
 	}
 
-	@Override
-	public void startMap(EngineNiz engine) {
-		
-		
-		
-		
-		//if(true) return;
-
-		//Entity e = engine.createEntity();
-		//createStandardAgent(e, engine);
-		//engine.addEntity(e);
-		
-		//engine.getSystem(MapSystem.class).worldDef = def;
-	}
 
 	
 	
-	@Override
-	public void startPlayer(EngineNiz engine, Entity e) {
 
-	}
 
 	@Override
 	public void makeLevelSelection(EngineNiz engine, WorldDefinition worldDef) {
@@ -265,8 +228,6 @@ public class PlatformerFactory extends Factory {
 			engine.addEntity(e);
 		}
 		
-		
-		
 		{
 			
 			PooledEntity selLight = engine.createEntity();
@@ -280,7 +241,6 @@ public class PlatformerFactory extends Factory {
 			engine.addEntity(selLight);
 		}
 		
-		///////pathfinding stuff
 
 		for (int i = 0; i < 4; i++){
 			//makePathfinder(engine, i, APathfindingJumpAndHold.NORMAL_JUMP);
