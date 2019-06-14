@@ -72,7 +72,6 @@ public class PlatformerFactory extends Factory {
 		charSelectRaces[1].raceID[Race.HEAD] = Race.RED_DRAGON;
 		charSelectRaces[1].raceID[Race.TAIL] = Race.RED_DRAGON;*/
 
-
 		charSelectRaces[3].raceID[Race.FRONT_ARM] = Race.RPG;
 		charSelectRaces[3].raceID[Race.BACK_ARM] = Race.RPG;
 		charSelectRaces[3].raceID[Race.BACK_LEG] = Race.RPG;
@@ -81,8 +80,6 @@ public class PlatformerFactory extends Factory {
 		charSelectRaces[3].raceID[Race.HEAD] = Race.RPG;
 		charSelectRaces[3].raceID[Race.TAIL] = Race.RPG;//*/
 		charSelectRaces[3].raceID[Race.TORSO] = Race.RPG;
-
-
 
 		charSelectInventories = new Inventory[CHAR_SELECT_CHARACTERS];
 		for (int i = 0; i < charSelectInventories.length; i++){
@@ -139,8 +136,6 @@ public class PlatformerFactory extends Factory {
 		act.addToStart(new AHold());
 		act.addToStart(new ANotRun());
 		act.addToStart(new ATailControl());
-		
-		
 		//act.addToStart(new AAutoRun());
 		e.add(act);
 		e.add(new Control());
@@ -187,11 +182,6 @@ public class PlatformerFactory extends Factory {
 		return cam;
 	}
 
-
-	
-	
-
-
 	@Override
 	public void makeLevelSelection(EngineNiz engine, WorldDefinition worldDef) {
 		WorkerSystem workSys = engine.getSystem(WorkerSystem.class);
@@ -216,20 +206,15 @@ public class PlatformerFactory extends Factory {
 				drag.disabled = false;
 			}
 			e.add(drag);
-			//if (worldDef.unlockedStartingCharacters[i])
 			
 			Inventory inv = engine.createComponent(Inventory.class);
 			inv.copyFrom(charSelectInventories[i]);
 			e.add(inv);
-				//engine.freeEntity(e);
-			
-			//e.add(new Light());
 			
 			engine.addEntity(e);
 		}
 		
 		{
-			
 			PooledEntity selLight = engine.createEntity();
 			Light light = engine.createComponent(Light.class);
 			selLight.add(light);
@@ -253,7 +238,6 @@ public class PlatformerFactory extends Factory {
 			makePathfinder(engine, i, APathfindingJumpAndHold.WALLJUMP);
 		}
 		//*/
-		
 	}
 	private void makePathfinder(EngineNiz engine, int i, int type) {
 		PooledEntity e = makePlayer(engine);
@@ -281,7 +265,6 @@ public class PlatformerFactory extends Factory {
 		body.height = .01f;
 	}
 	
-	
 	@Override
 	public void selected(EngineNiz engine, SelectedPlayer sel, Entity e) {
 		if (sel.def.isRoomEditor){
@@ -290,7 +273,6 @@ public class PlatformerFactory extends Factory {
 			while (ie.hasNext){
 				ItemDef item = ie.next();
 				inv.addItem(item, 1000000);
-				
 			}
 			engine.getSystem(OverworldSystem.class).stopNewGameScreen();
 			engine.getSystem(OverworldSystem.class).changeToRoomEditor(sel.def);;
@@ -305,10 +287,8 @@ public class PlatformerFactory extends Factory {
 		Position pos = engine.createComponent(Position.class);
 		e.add(pos);
 		pos.pos.set(0,0);
-		
 		//e.add(engine.createComponent(SpriteAnimation.class).set(Animations.PLAYER));
 		ActionList act = Pools.obtain(ActionList.class);
-		
 		AAgentBuildMap abuild = new AAgentBuildMap();
 		abuild.bit = bit;
 		abuild.map = map;
@@ -316,12 +296,8 @@ public class PlatformerFactory extends Factory {
 		abuild.after = createEntityGenerationAgent(map, (int)map.offset.x, (int)map.offset.y, map.width, map.height, def);
 		//map.e = e;
 		act.addToStart(abuild);
-		
 		e.add(act);
-	
 	}
-
-
 
 	public Action createEntityGenerationAgent(
 			 Map map, int x, int y, int w, int h, WorldDefinition worldDef) {

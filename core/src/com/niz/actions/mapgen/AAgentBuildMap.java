@@ -664,7 +664,6 @@ public class AAgentBuildMap extends ProgressAction {
 		}
 
 		if (finalPass){
-
 			for (int x = 0; x < entry.room.exit.size; x++){//exit doors
 				if (expand){
 					int dx = 0, dy = 0;
@@ -702,7 +701,6 @@ public class AAgentBuildMap extends ProgressAction {
 
 			}
 
-
 			//write actual room blocks
 			for (int x = 0; x < entry.room.blocks[0].length; x++)
 				for (int y = 0; y < entry.room.blocks.length; y++){
@@ -736,8 +734,6 @@ public class AAgentBuildMap extends ProgressAction {
 
 					}
 
-
-
 					map.setLocal(x+entry.offset.x, y + entry.offset.y, blockID);
 					//map.setLocal(x+entry.offset.x, y + entry.offset.y, i);
 					for (BlockDistribution dd : srcDist.val){
@@ -754,13 +750,8 @@ public class AAgentBuildMap extends ProgressAction {
 						}
 					}
 					//special blocks
-
-
 				}
-
 		}
-
-
 	}
 
 	private void makeSpawnMarker(int x, int y, int type) {
@@ -770,8 +761,6 @@ public class AAgentBuildMap extends ProgressAction {
 		e.add(pos);
 		MonsterSpawn spawn = parent.engine.createComponent(MonsterSpawn.class);
 		spawn.type = type;
-
-
 		parent.engine.addEntity(e);
 	}
 
@@ -942,16 +931,5 @@ public class AAgentBuildMap extends ProgressAction {
 			return c1 - c2;
 		}
 	}
-
-	/*private int generateBlock(int bx, int by) {
-		float x = bx;
-		float y = by;
-		float factor = .1f;
-		x *= factor;
-		y *= factor;
-		float noise = SimplexNoise.noise(x, y);
-		if (noise > 0) return Blocks.STONE;
-		return 0;
-	}*/
 
 }
