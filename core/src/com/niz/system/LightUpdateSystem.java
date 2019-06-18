@@ -30,7 +30,8 @@ public class LightUpdateSystem extends RenderSystem implements Observer{
 	public static final int BUFFER_SIZE = 512;
 
 	private static final String TAG = "light render system";
-	private final SpriteBatchN batch;
+    private static final float LIGHT_DIAMETER_MAX_PIXELS = 400;
+    private final SpriteBatchN batch;
 	private final LightRenderSystem lightRender;
 
 	ComponentMapper<Light> lightM = ComponentMapper.getFor(Light.class);
@@ -56,6 +57,8 @@ public class LightUpdateSystem extends RenderSystem implements Observer{
 	private int resolutionLoc;
 	private int zoomLoc;
 	private MapRenderSystem mapR;
+
+	public float resolutionFactor;
 
 
 	public LightUpdateSystem(SpriteBatchN batch, LightRenderSystem lightRender) {
@@ -100,20 +103,18 @@ public class LightUpdateSystem extends RenderSystem implements Observer{
 		((EngineNiz) engine).getSubject("zoom").add(new Observer(){
 
 
-
 			@Override
 			public void onNotify(Entity e, Event event, Object c) {
 				ZoomInput z = (ZoomInput) c;
-				zoom = z.zoom;
-				zoom = 1f;
+				zoom = resolutionFactor;
+				Gdx.app.log(TAG, "resolutionFactor: "+resolutionFactor + " Z:" + zoom);
+				//zoom = 1f;
 				//zoom = (float) Math.sqrt(zoom);
-
-
 
 				//zoom = z.zoom;
 			}
 			
-		});;
+		});
 
 		mapR = engine.getSystem(MapRenderSystem.class);
 		//mapR.lights = this;
@@ -191,7 +192,7 @@ public class LightUpdateSystem extends RenderSystem implements Observer{
 	public void setUniforms(int layer, ShaderProgram shader) {
 		setUniforms(layer, shader, false);
 	}
-	float[] resolutionArr = {0,0}, ambient = new float[N_LAYERS];
+	float[]  ambient = new float[N_LAYERS];
 	public void setUniforms(int layer, ShaderProgram shader, boolean zoomOut) {
 
 	}
@@ -259,8 +260,7 @@ public class LightUpdateSystem extends RenderSystem implements Observer{
 //		posShader.setUniform3fv(posLoc, pos, 0, pos.length);
 //		posShader.end();
 
-		resolutionArr[0] = viewportSize;
-		resolutionArr[1] = viewportSize;
+
 		if (writeUniforms || true){
     		lightShader.begin();
 		    lightShader.setUniformf(resolutionLoc, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -274,8 +274,8 @@ public class LightUpdateSystem extends RenderSystem implements Observer{
 	@Override
 	public void onNotify(Entity e, Event event, Object c) {
 		VectorInput in = (VectorInput) c;
-		viewportSize = in.v.x;// * .25f;		
-		
+		viewportSize = Math.min(in.v.x, in.v.y);// * .25f;
+		resolutionFactor = viewportSize / LIGHT_DIAMETER_MAX_PIXELS;
 	}
 
 	public void setUniformsNew(ShaderProgram shader, ShaderProgram lightShader, ShaderProgram posShader) {
