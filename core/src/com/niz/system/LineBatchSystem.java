@@ -182,18 +182,17 @@ private Vector2 tmpV = new Vector2(), tmpV2 = new Vector2(), tmpV3 = new Vector2
 
 public void drawLast(float deltaTime) {
 	//if (true) return;
-	batch.setColor(Color.WHITE);
+	//batch.setColor(Color.CYAN);
 	batch.setProjectionMatrix(camSys.camera.combined);
 	//batch.clearCache();
 	//batch.setShader(null);
 	batch.begin();
 	phase += deltaTime;
+	//Gdx.app.log(TAG, "phase"+phase);
 //	normal.bind(1);
 //	diffuse.bind(0);
-	Gdx.gl.glEnable(GL20.GL_BLEND);
+	//Gdx.gl.glEnable(GL20.GL_BLEND);
 	Gdx.gl.glLineWidth(1f);
-	
-
 	
 	for (int i = 0; i < pickUpEntities.size(); i++){
 		Entity e = pickUpEntities.get(i);
@@ -219,7 +218,11 @@ public void drawLast(float deltaTime) {
 		
 		long id = e.getId();
 		float speed = 4f;
+		//batch.end();
 		batch.setColor(fadeColor[(int)((phase * speed +id + 0)% fadeColor.length)]);
+		//Gdx.app.log(TAG, "sjfdl;k " + ((int)((phase * speed +id + 0)% fadeColor.length)));
+		//batch.setColor(Color.CYAN);
+		//batch.begin();
 		//x-w, y+h, x-w+s, y+htl
 		batch.drawLine((int)x- w +Main.PX/2f , (int)y+ h +Main.PX/2f, (int)x- w +Main.PX/2f + sw, (int)y+ h +Main.PX/2f);
 		//x-w, y+h, x-w, y+h-s tl
@@ -311,13 +314,7 @@ public void drawLast(float deltaTime) {
 			batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
 			batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 			batch.drawLine( (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
-			//Gdx.app.log(TAG,  "render block outline "+x);
-			/*if (batch.isFull()){
-				batch.end();
-				batch.beginDraw();
-				lights.setUniforms(Light.CHARACTER_SPRITES_LAYER_LEFT, shader);
-				batch.render();
-			}*/
+
 		
 //		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 //		batch.drawLine(region, (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
@@ -353,13 +350,14 @@ public void drawLast(float deltaTime) {
 @Override
 public void update(float deltaTime) {
 	//if (true) return;
+
 	batch.setProjectionMatrix(camSys.camera.combined);
 	//batch.clearCache();
 	batch.begin();
-	phase += deltaTime;
+	//phase += deltaTime;
 	//normal.bind(1);
 	//diffuse.bind(0);
-	Gdx.gl.glEnable(GL20.GL_BLEND);
+	//Gdx.gl.glEnable(GL20.GL_BLEND);
 	Gdx.gl.glLineWidth(1f);
 	
 	if (false)for (int i = 0; i < allBodyEntities.size(); i++){
@@ -577,7 +575,7 @@ public void update(float deltaTime) {
 	
 	
 	
-	batch.setColor(Data.colorFloats[Data.CYAN_INDEX]);
+	batch.setColor(Data.colors[Data.CYAN_INDEX]);
 	for (int i = 0; i < dragBlockEntities.size(); i++){
 		Entity e = dragBlockEntities.get(i);
 		//Body body = bodyM.get(e);
@@ -604,7 +602,7 @@ public void update(float deltaTime) {
 		
 	}
 	
-	batch.setColor(Data.colorFloats[Data.BRIGHT_GREEN_INDEX]);
+	batch.setColor(Data.colors[Data.BRIGHT_GREEN_INDEX]);
 	for (int i = 0; i < roomDefEntities.size(); i++){
 		Entity e = roomDefEntities.get(i);
 		RoomDefinition room = e.getComponent(RoomDefinition.class);
@@ -628,7 +626,7 @@ public void update(float deltaTime) {
 		
 	}
 	
-	batch.setColor(Data.colorFloats[Data.BLUE_INDEX]);
+	batch.setColor(Data.colors[Data.BLUE_INDEX]);
 	for (int i = 0; i < roomDefEntities.size(); i++){
 		Entity e = roomDefEntities.get(i);
 		RoomDefinition room = e.getComponent(RoomDefinition.class);
