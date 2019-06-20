@@ -28,7 +28,6 @@ public class WorkerSystem extends RenderSystem {
 	private EngineNiz engine;
 	private boolean threaded = true;
 	private boolean waitToAddEntities = true;
-	boolean queueBeltRefresh = false;
 	@Override
 	public void addedToEngine(Engine engine) {
 		if (Gdx.app.getType() == ApplicationType.WebGL){

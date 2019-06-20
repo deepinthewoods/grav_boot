@@ -12,9 +12,9 @@ import com.niz.system.OverworldSystem;
 import com.niz.system.ProgressBarSystem;
 
 public class ASaveMap extends ProgressAction {
-	protected static final int BLOCKS_PER_RUN = 128;
+	protected static final int BLOCKS_PER_RUN = 8*4096;
 
-	private static final String TAG = "Savfe Map Action";
+	private static final String TAG = "Save Map Action";
 
 	public Map map = null;
 	int progress = 0, progressCoarse = 0;;

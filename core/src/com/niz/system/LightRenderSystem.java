@@ -116,7 +116,7 @@ public class LightRenderSystem extends RenderSystem implements Observer{
 
 
 		   //TODO render lights
-		startBuffer.lightDistanceBuffer.begin();
+		/*startBuffer.lightDistanceBuffer.begin();
 		camSys.mapDrawCamera.update();
 		batch.setShader(null);
 		batch.setProjectionMatrix(camSys.mapDrawCamera.combined);

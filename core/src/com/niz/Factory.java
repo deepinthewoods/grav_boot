@@ -21,8 +21,7 @@ import com.niz.system.WorkerSystem;
 import com.niz.ui.elements.BeltTable;
 
 public abstract class Factory {
-	public int level;
-	public int sideLevel = 0;
+
 	public WorldDefinition def;
 
 	
@@ -55,11 +54,6 @@ public abstract class Factory {
 
 
 	public abstract void selected(EngineNiz engine, SelectedPlayer sel, Entity e);
-
-
-
-	public void createMapGenerationAgent() {}
-
 
 
 	public abstract void createMapGenerationAgent(PooledEntity e, EngineNiz engine, Map map, int bit, int z) ;
