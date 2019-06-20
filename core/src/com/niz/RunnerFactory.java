@@ -7,7 +7,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EngineNiz.PooledEntity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.indexed.AStar;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntMap.Values;
 import com.badlogic.gdx.utils.Pools;
@@ -18,8 +17,6 @@ import com.niz.actions.AHold;
 import com.niz.actions.AJumpCharSelect;
 import com.niz.actions.ALoopAroundMap;
 import com.niz.actions.ANotRun;
-import com.niz.actions.APathfindingJumpAndHold;
-import com.niz.actions.APathfindingPreRun;
 import com.niz.actions.ATailControl;
 import com.niz.actions.AUseInventory;
 import com.niz.actions.mapgen.AAgentBuildMapRunner;
@@ -235,7 +232,7 @@ public class RunnerFactory extends Factory {
 			engine.getSystem(OverworldSystem.class).changeToRoomEditor(sel.def);;
 		} else {
 			engine.getSystem(OverworldSystem.class).stopNewGameScreen();
-			engine.getSystem(OverworldSystem.class).changeLevel(1);;
+			engine.getSystem(OverworldSystem.class).changeZLevel(1);;
 			
 		}
 		ActionList act = e.getComponent(ActionList.class);
@@ -244,7 +241,7 @@ public class RunnerFactory extends Factory {
 	}
 	
 	public void createMapGenerationAgent(PooledEntity e, EngineNiz engine, Map map, int bit, int z) {
-		Gdx.app.log(TAG,  "create gen agent " + bit);
+		//Gdx.app.log(TAG,  "create gen agent " + bit);
 		Position pos = engine.createComponent(Position.class);
 		e.add(pos);
 		pos.pos.set(0,0);
@@ -255,6 +252,7 @@ public class RunnerFactory extends Factory {
 		AAgentBuildMapRunner abuild = new AAgentBuildMapRunner();
 		abuild.bit = bit;
 		abuild.map = map;
+
 		if (map == null) throw new GdxRuntimeException("null map");
 		//abuild.z = z;
 		//abuild.after = createEntityGenerationAgent(map, (int)map.offset.x, (int)map.offset.y, map.width, map.height, def);

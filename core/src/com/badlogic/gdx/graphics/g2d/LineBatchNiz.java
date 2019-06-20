@@ -50,6 +50,7 @@ public class LineBatchNiz{
 
     public void setColor(Color color) {
         this.color = color;
+        r.setColor(color);
     }
 
     public Color getColor() {
@@ -74,8 +75,6 @@ public class LineBatchNiz{
         r.line(x, y, x2, y2);
     }
     Color c = new Color();
-    public void setColor(float colorFloat) {
-        //r.setColor(color.toFloatBits());
 
-    }
+
 }

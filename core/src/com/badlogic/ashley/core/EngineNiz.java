@@ -38,6 +38,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.badlogic.gdx.utils.ReflectionPool;
 import com.badlogic.gdx.utils.SnapshotArray;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.niz.Data;
 import com.niz.component.PathfinderPreLog;
 import com.niz.observer.Subject;
@@ -803,5 +804,15 @@ public class EngineNiz extends Engine{
 		return componentPools.pools.get(cl);
 	}
 
+	@Override
+	public String toString(){
+    	String s = "Entities List: \n";
+    	for (Entity e : entities){
+    		s += e.getId() + ":\n";
+    		for (Component c : e.getComponents())
+    			s += ClassReflection.getSimpleName(c.getClass()) + ",\n";
+		}
+    	return s + "\n\n\n\n";
+	}
 	
 }

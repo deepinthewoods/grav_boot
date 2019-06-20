@@ -83,11 +83,12 @@ public class ASaveEntities extends ProgressAction {
 		Pools.free(entities);
 		entities = null;
 		progressSys.deregisterProgressBar(progressBarIndex);
+		//Gdx.app.log(TAG, "done writing entities");
 	}
 	
 	@Override
 	public void onStart() {
-		
+		//Gdx.app.log(TAG, "start writing entities");
 		progress = 0;
 		file = def.folder.child("entities"+bit);
 		kryo = Data.kryoPool.borrow();

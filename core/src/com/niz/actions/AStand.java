@@ -13,6 +13,7 @@ import com.niz.component.AutoGib;
 import com.niz.component.Body;
 import com.niz.component.Control;
 import com.niz.component.Inventory;
+import com.niz.component.Map;
 import com.niz.component.MovementData;
 import com.niz.component.Physics;
 import com.niz.component.Position;
@@ -21,6 +22,7 @@ import com.niz.item.Item;
 import com.niz.item.ItemDef;
 import com.niz.observer.Subject.Event;
 import com.niz.system.MapSystem;
+import com.niz.system.OverworldSystem;
 
 public class AStand extends Action {
 	private static final String TAG = "stand action";
@@ -45,11 +47,25 @@ public class AStand extends Action {
 		//if (phys == null) return;
 		Control con = controlM.get(parent.e);
 		if (Gdx.input.isKeyJustPressed(Keys.G)){
-			AutoGib c = parent.engine.createComponent(AutoGib.class);
-			parent.e.add(c);
+			//AutoGib c = parent.engine.createComponent(AutoGib.class);
+			//parent.e.add(c);
 			Gdx.app.log(TAG, "jdsklkld");
+			Gdx.app.log(TAG, ""+parent.engine);
 		}
-		
+		if (Gdx.input.isKeyJustPressed(Keys.H)){
+			//posM.get(parent.e).pos.set(128, 228);
+			Gdx.app.log(TAG, "hhh " + posM.get(parent.e).pos);
+			Vector2 pos = posM.get(parent.e).pos;
+
+			for (int x = (int)pos.x - 3; x < pos.x + 3; x++){
+				for (int y = (int)pos.y - 3; x < pos.y + 3; y++){
+					OverworldSystem over = parent.engine.getSystem(OverworldSystem.class);
+					Map chunk = over.getMapFor(x, y);
+
+					chunk.set(x, y, 0);
+				}
+			}
+		}
 		if (Gdx.input.isKeyJustPressed(Keys.H)){
 			parent.e.getComponent(Position.class).pos.y = 255;;
 			//parent.e.getComponent(Inventory.class).addItem(Inventory.defs.get(1), 5);

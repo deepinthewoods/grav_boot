@@ -125,7 +125,9 @@ public class AFall extends Action {
 			
 				
 		}
-			
+//		if (Gdx.input.isKeyJustPressed(Keys.H)){
+//			posM.get(parent.e).pos.set(128, 228);
+//		}
 		//Gdx.app.log(TAG, "active");
 	}
 

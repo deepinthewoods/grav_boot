@@ -5,9 +5,7 @@ package com.niz;
 import com.badlogic.ashley.core.EngineNiz;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EngineNiz.PooledEntity;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.indexed.AStar;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap.Values;
 import com.badlogic.gdx.utils.Pools;
 import com.niz.action.Action;
@@ -278,7 +276,7 @@ public class PlatformerFactory extends Factory {
 			engine.getSystem(OverworldSystem.class).changeToRoomEditor(sel.def);;
 		} else {
 			engine.getSystem(OverworldSystem.class).stopNewGameScreen();
-			engine.getSystem(OverworldSystem.class).changeLevel(1);;
+			engine.getSystem(OverworldSystem.class).changeZLevel(0);;
 		}
 	}
 	

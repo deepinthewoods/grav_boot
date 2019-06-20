@@ -29,7 +29,7 @@ public class LightUpdateSystem extends RenderSystem implements Observer{
 
 	public static final int BUFFER_SIZE = 512;
 
-	private static final String TAG = "light render system";
+	private static final String TAG = "light update system";
     private static final float LIGHT_DIAMETER_MAX_PIXELS = 400;
     private final SpriteBatchN batch;
 	private final LightRenderSystem lightRender;
@@ -99,21 +99,17 @@ public class LightUpdateSystem extends RenderSystem implements Observer{
 		playerEntities = engine.getEntitiesFor(Family.all(CameraControl.class, Position.class).get());
 		((EngineNiz) engine).getSubject("resize").add(this);;
 		camSys = engine.getSystem(CameraSystem.class);
-		
 		((EngineNiz) engine).getSubject("zoom").add(new Observer(){
-
 
 			@Override
 			public void onNotify(Entity e, Event event, Object c) {
 				ZoomInput z = (ZoomInput) c;
 				zoom = resolutionFactor;
-				Gdx.app.log(TAG, "resolutionFactor: "+resolutionFactor + " Z:" + zoom);
+				//Gdx.app.log(TAG, "resolutionFactor: "+resolutionFactor + " Z:" + zoom);
 				//zoom = 1f;
 				//zoom = (float) Math.sqrt(zoom);
-
 				//zoom = z.zoom;
 			}
-			
 		});
 
 		mapR = engine.getSystem(MapRenderSystem.class);
@@ -129,7 +125,6 @@ public class LightUpdateSystem extends RenderSystem implements Observer{
 	
 	@Override
 	public void update(float deltaTime){
-
 
 		if (shader == null) return;
 		//shader.begin();
@@ -259,7 +254,6 @@ public class LightUpdateSystem extends RenderSystem implements Observer{
 //		posShader.begin();
 //		posShader.setUniform3fv(posLoc, pos, 0, pos.length);
 //		posShader.end();
-
 
 		if (writeUniforms || true){
     		lightShader.begin();
