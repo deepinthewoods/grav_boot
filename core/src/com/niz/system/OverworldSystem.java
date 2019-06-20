@@ -13,7 +13,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.indexed.AStar;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -34,10 +33,14 @@ import com.niz.actions.mapgen.ASaveEntities;
 import com.niz.actions.mapgen.ASaveMap;
 import com.niz.component.Agent;
 import com.niz.component.Buckets;
+import com.niz.component.CameraControl;
 import com.niz.component.Map;
+import com.niz.component.OnDoor;
 import com.niz.component.PlaceAtStartPoint;
 import com.niz.component.Player;
 import com.niz.component.Position;
+import com.niz.observer.Observer;
+import com.niz.observer.Subject;
 
 public class OverworldSystem extends RenderSystem implements EntityListener {
 	public static final int SCROLLING_MAP_WIDTH = 256, SCROLLING_MAP_HEIGHT = 256;
@@ -56,7 +59,6 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 	private ComponentMapper<Map> mapM;
 	static ComponentMapper<Player>playerM = ComponentMapper.getFor(Player.class);
 
-	public int currentLevel = 0;
 
 
 	private Bits loaded = new Bits(SCROLLING_MAP_TOTAL_SIZE), shouldLoad = new Bits(SCROLLING_MAP_TOTAL_SIZE), tmpBits = new Bits(SCROLLING_MAP_TOTAL_SIZE), loading = new Bits(SCROLLING_MAP_TOTAL_SIZE), saving = new Bits(SCROLLING_MAP_TOTAL_SIZE);
@@ -111,12 +113,13 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 
 	private Factory factory;;
 	private ShaderSystem shaderSys;
+	private Subject changeLevelNotifier;
 
 	public OverworldSystem(TextureAtlas atlas, Factory factory){
 		this.atlas = atlas;
 		this.factory = factory;
 	}
-	
+
 	public Map getMapFor(int x, int y) {
 		//x = ((x % SCROLLING_MAP_WIDTH) )
 		x = (((x % SCROLLING_MAP_WIDTH) + SCROLLING_MAP_WIDTH) % SCROLLING_MAP_WIDTH);
@@ -152,9 +155,9 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		//saveThread.resume();
 		//saveThread.onResume();
 		workSys = engine.getSystem(WorkerSystem.class);
-		positionEntities = engine.getEntitiesFor(Family.one(Position.class).get());
+		positionEntities = engine.getEntitiesFor(Family.one(Position.class).exclude(Player.class).exclude(CameraControl.class).get());
 		shaderSys = engine.getSystem(ShaderSystem.class);
-		
+		changeLevelNotifier = ((EngineNiz) engine).getSubject("h");
 	}
 
 	@Override
@@ -167,11 +170,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		//if (true) return;
 		//Gdx.app.log(TAG,  "update"+entities.size());
 		updateLoad(entities);
-		
-		
 	}
-	
-	
 
 	private void updateLoad(ImmutableArray<Entity> entityList) {
 		shouldLoad.clear();
@@ -533,11 +532,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		removeChunks(loaded);
 	}
 	public void startLoadingChunksFor(Array<PooledEntity> arr) {
-		//Entity player = arr.get(0);
-		//Player play = playerM.get(player);
-		//Vector2 pos = posM.get(player).pos;
-		//eArr.clear();
-		//eArr.add(player);
+
 		updateLoad(entityList);
 		workSys.setWaitToAddEntities(true);;
 		workSys.addEntities(arr);
@@ -592,12 +587,13 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		
 		engine.removeEntityNoPool((PooledEntity) map.mapEntity);
 		map.mapEntity = null;
-		//changeLevel(1);
+		//changeZLevel(1);
 	}
 	
-	public void changeLevel(int newLevel){
-		currentLevel = newLevel;
+	public void changeZLevel(int newZ){
+		//Gdx.app.log(TAG, "change Z level");
 		removeChunks(loaded);
+		currentZ = newZ;
 		//remove/queue re-placing of player
 		Array<PooledEntity> arr = new Array<PooledEntity>();
 		for (Entity e : playerEntities){
@@ -610,7 +606,9 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 
 			//engine.removeEntityNoPool((PooledEntity) e);
 			//arr.add((PooledEntity) e);
-			//e.remove(Position.class);
+			//Gdx.app.log(TAG, "stop new game screen");
+
+			//e.remove(OnDoor.class);
 			PlaceAtStartPoint placer = engine.createComponent(PlaceAtStartPoint.class);
 			e.add(placer);
 			e.remove(Buckets.class);
@@ -620,12 +618,12 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		
 		workSys.setWaitToAddEntities(true);
 		//workSys.addEntities(arr);;
+		changeLevelNotifier.notify(null, Subject.Event.CHANGE_LEVEL, null);
 	}
 
 	public void changeToRoomEditor(WorldDefinition def) {
 		if (def != worldDef) throw new GdxRuntimeException("fdjslk");
-		changeLevel(0);
-		
+		changeZLevel(0);
 		
 	}
 }

@@ -27,9 +27,8 @@ import com.niz.system.RoomCatalogSystem;
 
 public class AAgentBuildMap extends ProgressAction {
 
-	private static final int TOTAL_ROOMS_TARGET = 10;
+	private static final int TOTAL_ROOMS_TARGET = 4;
 	private static final int MAIN_PATH_COMPARES = 2;
-
 
 	public static final int SECONDARY_ROOM_SEGMENT_SIZE = 4;
 	public static final int SECONDARY_ROOM_TRIES = 10;
@@ -208,7 +207,6 @@ public class AAgentBuildMap extends ProgressAction {
 
 				break;
 			case 6://move current path to base
-
 				main.removeIndex(0);
 				base.addAll(main);
 				baseStartRoom.exitsUsed[baseStartExitIndex] = true;
@@ -264,7 +262,6 @@ public class AAgentBuildMap extends ProgressAction {
 				retries++;
 				break;
 			case 9://end of secondary room + dist heuristic
-
 				retries = 0;
 				progress = 7;
 				rooms = smallRooms;
@@ -273,13 +270,11 @@ public class AAgentBuildMap extends ProgressAction {
 				//Gdx.app.log(TAG, "made sec rooms " + baseStartRoom.offset + roomDistance(endRoom, main.peek()) + main.peek().offset);
 				boolean greater = false;
 				pathDistance [mainPathIndex] = dist;
-
 				sidePathIndices[mainPathIndex] = sidePathIndex;
 				//mainPathIndex++;
 				if (mainPathDone){
 					baseStartRoom.exitsUsed[baseStartExitIndex] = true;
 					int currentDistance = roomDistance(endRoom, main.peek());
-
 					progress = 10;
 					//Gdx.app.log(TAG, "side path done" + currentDistance + "  " + main.size);
 					if (shortestDistance != currentDistance) throw new GdxRuntimeException("reproduce with seed error" + (shortestDistance - currentDistance));
@@ -299,7 +294,6 @@ public class AAgentBuildMap extends ProgressAction {
 					mainPathIndex = shortestIndex;
 					sidePathIndex = shortestSidePathIndex;
 					mainPathDone = true;
-
 					int currentDistance = roomDistance(endRoom, baseStartRoom);
 					//Gdx.app.log(TAG, "shortest " + shortestDistance + " current " + currentDistance + " path ind " + mainPathIndex + " "+baseStartRoom.offset);
 					if ((shortestDistance >= currentDistance && baseStartRoom.stepsFromMainPath > TOTAL_ROOMS_TARGET) || mainPathIndex == -1){
@@ -315,7 +309,6 @@ public class AAgentBuildMap extends ProgressAction {
 						mainPathDone = false;
 					}
 				}
-
 				break;
 			case 10://move current path to base
 				main.removeIndex(0);
@@ -323,7 +316,6 @@ public class AAgentBuildMap extends ProgressAction {
 				//if (main.size > 0)	Gdx.app.log(TAG, "move path to base " + main.size + " end " + main.peek().offset);
 				//else Gdx.app.log(TAG, "move path to base " + main.size);
 			/*if (main.size == 0){
-
 				baseStartRoom.exitsUsed[baseStartExitIndex] = true;
 				baseStartRoom.next[baseStartExitIndex] = endRoom;
 				Gdx.app.log(TAG, "FINISH SECONDARY PATH 0 " + main.size + baseStartRoom.offset);
@@ -355,7 +347,7 @@ public class AAgentBuildMap extends ProgressAction {
 				progress++;
 				break;
 			case 56://place exit door
-                //makeLevelExit(main.peek());
+                if (z < overworld.worldDef.endRooms.length-1) makeLevelExit(endRoom);
 				progress++;
 				break;
 			case 57://end
@@ -375,10 +367,10 @@ public class AAgentBuildMap extends ProgressAction {
 	}
 
 	private void makeLevelExit(RoomEntry entry) {
-		if (true) return;
-        int exitIndex = entry.getNextUnusedUnFilteredExitIndex();
+		//if (true) return;
+        //int exitIndex = entry.room.exit.get(0);
+		int exitIndex = 0;
         GridPoint2 exit = entry.room.exit.get(exitIndex);
-
         {
             Entity e = parent.engine.createEntity();
             Position pos = parent.engine.createComponent(Position.class);
@@ -386,7 +378,7 @@ public class AAgentBuildMap extends ProgressAction {
             e.add(pos);
             //Gdx.app.log(TAG, "door " + pos);
             SpriteStatic sprite = parent.engine.createComponent(SpriteStatic.class);
-            sprite.s = Animations.doors[0];
+            sprite.s = Animations.doors[1];
             e.add(sprite);
             Body body = parent.engine.createComponent(Body.class);
             body.width = .5f;
@@ -395,6 +387,7 @@ public class AAgentBuildMap extends ProgressAction {
             e.add(parent.engine.createComponent(SpriteIsMapTexture.class));
             Door door = parent.engine.createComponent(Door.class);
             door.nextZLevel = z + 1;
+
             //RoomEntry next = entry.next[exitIndex];
             //door.endPoint.set(entrance);
             e.add(door);
@@ -865,20 +858,27 @@ public class AAgentBuildMap extends ProgressAction {
 		map = null;
 		addAfterMe(after);
 		//Gdx.app.log(TAG, " time to gen = " + (System.currentTimeMillis() - startTime)/1000f + "  " + endRooms.size);
+		smallRooms.clear();
+		bigRooms.clear();
+		endRooms.clear();
+		startRooms.clear();
+
 	}
 
 
 	@Override
 	public void onStart() {
+        //Gdx.app.log(TAG, "start generating map");
 		startTime = System.currentTimeMillis();
 		//Gdx.app.log(TAG, "start"+map.offset + bit);
 		progress = 0;
 		sidePathIndex = 0;
 		this.overworld = parent.engine.getSystem(OverworldSystem.class);
-		parent.engine.getSystem(RoomCatalogSystem.class).getRoomsForTags(smallRooms, "easy");
-		parent.engine.getSystem(RoomCatalogSystem.class).getRoomsForTags(bigRooms, "easybig");
-		parent.engine.getSystem(RoomCatalogSystem.class).getRoomsForTags(startRooms, "easystart");
-		parent.engine.getSystem(RoomCatalogSystem.class).getRoomsForTags(endRooms, "easyend");
+
+		parent.engine.getSystem(RoomCatalogSystem.class).getRoomsForTags(smallRooms, overworld.worldDef.smallRooms[z]);
+		parent.engine.getSystem(RoomCatalogSystem.class).getRoomsForTags(bigRooms, overworld.worldDef.bigRooms[z]);
+		parent.engine.getSystem(RoomCatalogSystem.class).getRoomsForTags(startRooms, overworld.worldDef.startRooms[z]);
+		parent.engine.getSystem(RoomCatalogSystem.class).getRoomsForTags(endRooms, overworld.worldDef.endRooms[z]);
 		r = Pools.obtain(Random.class);
 		r.setSeed(overworld.worldDef.seed);
 		seed = MathUtils.random(10000);
@@ -889,7 +889,6 @@ public class AAgentBuildMap extends ProgressAction {
 		RoomEntry re = Pools.obtain(RoomEntry.class);
 		int index = r.nextInt(startRooms.size);
 		re.room = startRooms.get(index);
-
 		totalIterations = 0;
 		re.offset.set(map.width/2, map.height/2);
 		base.add(re);

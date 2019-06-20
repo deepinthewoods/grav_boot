@@ -7,7 +7,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -49,11 +48,13 @@ public class DoorSystem extends EntitySystem {
 			if (currentDoor.doors.size > 1) continue;
 			long id = currentDoor.doors.get(0);
 			Entity door = engine.getEntity(id);
+			if (door == null) return;
 			Entity player = e;
 			Position pPos = player.getComponent(Position.class);
 			Door doorC = door.getComponent(Door.class);
 			if (doorC.nextZLevel != -1){
-				engine.getSystem(OverworldSystem.class).changeLevel(doorC.nextZLevel);;
+				e.remove(OnDoor.class);
+				engine.getSystem(OverworldSystem.class).changeZLevel(doorC.nextZLevel);
 				continue;
 			}
 			GridPoint2 dPos = doorC.endPoint;

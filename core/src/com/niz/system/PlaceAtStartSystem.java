@@ -10,6 +10,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.niz.component.LevelEntrance;
+import com.niz.component.OnDoor;
 import com.niz.component.Physics;
 import com.niz.component.PlaceAtStartPoint;
 import com.niz.component.Position;
@@ -65,18 +66,20 @@ public class PlaceAtStartSystem extends EntitySystem {
 				for (Entity entranceE : startEntities){
 					if (place.index == entM.get(entranceE).index){
 						startPos = posM.get(entranceE).pos;
+
 						break;
 					}
 				}
 				if (startPos == null){
-					//Gdx.app.log(TAG,  "didn't find start point, using index 0");
+					Gdx.app.log(TAG,  "didn't find start point, using index 0");
 					startPos = posM.get(startEntities.get(0)).pos;
 					//return;
 				}
 				e.remove(PlaceAtStartPoint.class);
+				e.remove(OnDoor.class);
 				//engine.removeEntity(e);
 				posM.get(e).pos.set(startPos.x, startPos.y);
-				//Gdx.app.log(TAG,  "SETSETSETSTSET " + posM.get(e).pos);
+				//Gdx.app.log(TAG,  "place " + posM.get(e).pos);
 				Physics phys = physM.get(e);
 				if (phys != null){
 					phys.vel.set(0,0);
