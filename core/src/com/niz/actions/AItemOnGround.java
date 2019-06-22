@@ -47,7 +47,7 @@ public class AItemOnGround extends Action {
 	boolean first;
 	int count;
 	private int limit;
-	private OverworldSystem map;
+	private transient OverworldSystem map;
 	@Override
 	public void update(float dt) {
 		
