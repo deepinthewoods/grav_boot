@@ -83,7 +83,7 @@ public class DoorSystem extends EntitySystem {
 				for (int j = 0; j < ar.size; j++){
 					id = ar.get(j);
 					ce = engine.getEntity(id);
-					if (ce == null || !doorCollisionFamily.matches(ce)) return;
+					if (ce == null || !doorCollisionFamily.matches(ce)) continue;
 					colPos = posM.get(ce).pos;
 					colBody = bodyM.get(ce);
 					if (Math.abs(colPos.x - pos.x) < colBody.width //+ body.width
