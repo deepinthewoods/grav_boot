@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.IntIntMap;
 import com.badlogic.gdx.utils.IntMap;
 import com.niz.Data;
 
@@ -40,7 +41,7 @@ public class AnimSet {
 		anim.isVelocityDependant = c.velocityDependant;
 		anim.deltaMultiplier = c.deltaMultiplier;
 		container.addLayer(Data.hash(string), anim);
-		
+		//Gdx.app.log(TAG, "add layer " + string + " fr" + frames[0].getV());
 	}
 	public void add(String string, AnimationContainer niz){
 		int hash = Data.hash(string);
@@ -63,7 +64,22 @@ public class AnimSet {
 		Guide guide = new Guide(offsets, angles);
 		container.addGuide(Data.hash(string), guide );
 	}
-	
+	@Override
+	public String toString(){
+		String s = "Animation Set contents: \n";
+		for (IntMap.Entry<Array<AnimationContainer>> ent : this.anims.entries()){
+
+			s += Data.getString(ent.key) + " ";
+			for (AnimationContainer a : ent.value){
+
+				//s += Data.getString(a) + "\n";
+				s += a;
+
+			}
+		}
+
+		return s;
+	}
 	
 	
 	

@@ -2,10 +2,12 @@ package com.niz.anim;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasSprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntIntMap;
+import com.badlogic.gdx.utils.IntMap;
 import com.niz.Data;
 
 public class AnimationContainer {
@@ -42,9 +44,18 @@ public class AnimationContainer {
 		//Gdx.app.log("container ","DDDDDDDDDDDD "+other.directions + "  \n");
 		for (int i = 0; i < layerIDs.size; i++){
 			int id = layerIDs.get(i);
-			addLayer(id, other.getLayer(id));
+			AnimationLayer layer = other.getLayer(id);
+			addLayer(id, layer);
+			//if (layer != null){
+				//TextureRegion kf = layer.getKeyFrame(0, true);
+				//if (kf != null)
+					//Gdx.app.log("container ", "add layer " + kf.getRegionY()+ Data.getString(id));
+				//else
+					//Gdx.app.log("container ", "null blah " + Data.getString(id));
+			//}
+			//else Gdx.app.log("container ", "null blah " + Data.getString(id));
 
-			
+
 		}
 		for (int i = 0; i < guideIDs.size; i++){
 			Guide otherGuide = other.getGuide(guideIDs.get(i));
@@ -77,8 +88,9 @@ public class AnimationContainer {
 		/*if (layer == null && !Data.getString(key).contains("item")){
 			Gdx.app.log(TAG, "null guide added" + key + " " + Data.getString(key));
 			throw new GdxRuntimeException("null layer");
-		}*/
+		}//*/
 		//if (layer == null) return -1;
+//		if (keyToIndex.containsKey(key)) throw new GdxRuntimeException("already contains" + Data.getString(key));
 		keyToIndex.put(key, totalLayers++);
 		layers.add(layer);
 		
@@ -133,7 +145,15 @@ public class AnimationContainer {
 		guideKeyToIndex.clear();
 	}
 	
-	
+	@Override
+	public String toString(){
+		String s = "Animation Container contents: \n";
+		for (IntIntMap.Entry ent : this.keyToIndex.entries()){
+			s += Data.getString(ent.key) + "\n";
+		}
+
+		return s;
+	}
 	
 
 }

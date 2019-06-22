@@ -334,44 +334,59 @@ public class Animations {
 		TextureRegion[][] rpgSplits = rpgSprite.split(18, 20);
 
 		final AtlasSprite[][] rpgSprites = new AtlasSprite[26 * 2][12 * 3];
+		//rpgLayers = new String[]{"torso"};
 		rpgLayers = new String[26 * 2];
-		//rpgGuideLayers = new String[26 * 2];
 		rpgBaseGuideLayers = new String[26 * 2];
+		//rpgBaseGuideLayers = new String[]{"legsguide"};
 		rpgs = new String[26*2];
 		for (int i = 0; i < rpgLayers.length; i++){
 			rpgLayers[i] = "torso";
-			//rpgGuideLayers[i] = "torsoguide";
 			rpgBaseGuideLayers[i] = "legsguide";
-			rpgs[i] = "rpg" +i;
+			rpgs[i] = "rpg" +i+ "n";
+			//rpgs[i] = "rpg8n";
 		}
 		//Gdx.app.log(TAG, "make sprite group  " + rpgSplits.length + "  w " + rpgSplits[0].length );
 
 		int half = rpgSprites.length / 2;
-		for (int i = 0; i < half; i+=1) {
+		for (int i = half-1; i >= 0; i-=1) {
 			//Gdx.app.log(TAG, "make sprite group  " + rpgSprites.length + "  splits " + rpgSplits.length );
 
 			for (int j = 0; j < 12; j++) {
 				TextureRegion split;
 				//Gdx.app.log(TAG, "make sprite " + i*3 + " " + j);
+				String s = "\n";//+ rpgSprite.getRegionWidth() + "," + rpgSprite.getRegionHeight() + "\n";
 				int y = i * 3;
-				split = rpgSplits[y][j];
-				rpgSprites[i][j + 12] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
-
 				split = rpgSplits[y+1][j];
 				rpgSprites[i][j] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
+				s += split.getRegionY();
+
+				split = rpgSplits[y][j];
+				rpgSprites[i][j + 12] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
 
 				split = rpgSplits[y+2][j];
 				rpgSprites[i][j + 24] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
 
 
-				split = rpgSplits[y][j];
+				split = rpgSplits[y][j+12];
 				rpgSprites[i+half][j + 12] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
 
-				split = rpgSplits[y+1][j];
+				split = rpgSplits[y+1][j+12];
 				rpgSprites[i+half][j] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
+				//Gdx.app.log(TAG, ""+(y+1) + ", " + (j+12));
 
-				split = rpgSplits[y+2][j];
+				split = rpgSplits[y+2][j+12];
 				rpgSprites[i+half][j + 24] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
+
+				//Gdx.app.log(TAG, "" + s);
+
+//*/
+//				split = rpgSplits[10][0];
+//				rpgSprites[i][j + 12] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
+//				rpgSprites[i][j] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
+//				rpgSprites[i][j + 24] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
+//				rpgSprites[i+half][j + 12] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
+//				rpgSprites[i+half][j] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
+//				rpgSprites[i+half][j + 24] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
 			}
 		}
 		
@@ -1028,12 +1043,12 @@ public class Animations {
 				//for (String pre : dragons)
 				directions.put(Data.hash(dragon+"tailtipguide"), new IntArray(dragonTailDirections));
 				isFinished = true;
+				//Gdx.app.log(TAG, "last anim" + animSet);
 			}
 
 			@Override
 			public void onEnd() {
 				parent.engine.getSystem(ProgressBarSystem.class).deregisterProgressBar(progressBarIndex);
-
 			}
 
 			@Override

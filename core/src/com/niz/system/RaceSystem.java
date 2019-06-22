@@ -186,15 +186,15 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		//race.raceID[Race.FRONT_ARM] = Race.RED_DRAGON;
 		//race.raceID[Race.FRONT_LEG] = Race.RED_DRAGON;
 		//race.raceID[Race.HEAD] = Race.RED_DRAGON;
-		//race.raceID[Race.TORSO] = Race.RED_DRAGON;
+		//race.raceID[Race.TORSO] = Race.RPG_1;
 		//race.raceID[Race.NECK] = Race.RED_DRAGON;
 		
 		
 		
 		//int LEGS_G = 0, TORSO_G = 0, NECK_G = 0, HEAD_G = 0, 
 						//ARMS_G = 0, HAND_BACK_G = 0, HAND_FRONT_G = 0, TAIL_G = 0;
-		String[] racePrefixes = {"player", "reddragon", "greeddragon", "whitedragon", "rpg1", "none"};
-		String[] guidePrefixes = {"player", "dragon", "dragon", "dragon", "rpg", "none"};
+		String[] racePrefixes = {"player", "reddragon", "greeddragon", "whitedragon", "rpg8n", "none", "rpg12n", "rpg1n", "rpg3n"};
+		String[] guidePrefixes = {"player", "dragon", "dragon", "dragon", "rpg", "none", "rpg", "rpg", "rpg", "rpg", "rpg", "rpg", "rpg", "rpg", "rpg"};
 		int[] armBack = new int[racePrefixes.length], armFront = new int[racePrefixes.length], legBack = new int[racePrefixes.length], legFront = new int[racePrefixes.length],
 				torso = new int[racePrefixes.length], head = new int[racePrefixes.length], tail = new int[racePrefixes.length], neck = new int[racePrefixes.length]
 						
@@ -207,6 +207,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 
 
         for (int i = 0; i < racePrefixes.length; i++){
+        	//if (racePrefixes[i].contains("rpg")) Gdx.app.log(TAG, "race " + Data.hash(racePrefixes[i] + "torso") + racePrefixes[i]);
 			armBack[i] = Data.hash(racePrefixes[i] + "armback");
 			armFront[i] = Data.hash(racePrefixes[i] + "armfront");
 			legFront[i] = Data.hash(racePrefixes[i] + "legfront");
@@ -249,7 +250,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		
 			anim.layerIDs.add(torso[race.raceID[Race.TORSO]]);
 			anim.torso = i;
-			
+			//Gdx.app.log(TAG, "raceid " + race.raceID[Race.TORSO]);
 		
 		i++;
 		
@@ -272,8 +273,9 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		i++;
 		switch (race.raceID[Race.TAIL]){
 			case Race.NONE:
-		case Race.HUMAN:i--;
-		anim.itemLayersByLimbIndex[Race.LIMB_TAIL] = -1;
+			default:
+			case Race.HUMAN:i--;
+				anim.itemLayersByLimbIndex[Race.LIMB_TAIL] = -1;
 
 		break;
 		case Race.RED_DRAGON:
@@ -309,6 +311,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		i = 0;
 		switch (race.raceID[Race.BACK_LEG]){
 			case Race.NONE:
+			//default:
 		case Race.HUMAN:
 		case Race.RED_DRAGON:
 			anim.guideIDs.add(legG[race.raceID[Race.BACK_LEG]]);//
@@ -322,6 +325,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		i++;
 		switch (race.raceID[Race.BACK_LEG]){
 			case Race.NONE:
+			//default:
 		case Race.HUMAN:
 			hash = torsoG[race.raceID[Race.BACK_LEG]];
 			anim.guideIDs.add(hash);
@@ -343,6 +347,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		i++;
 		switch (race.raceID[Race.TORSO]){
 			case Race.RPG:
+			default:
 			case Race.NONE:
 		case Race.HUMAN:
 			anim.guideIDs.add(neckG[race.raceID[Race.TORSO]]);
@@ -361,6 +366,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		i++;
 		switch (race.raceID[Race.NECK]){
 			case Race.NONE:
+			default:
 		case Race.HUMAN:
 		case Race.RED_DRAGON:
 			anim.guideIDs.add(headG[race.raceID[Race.NECK]]);
@@ -374,6 +380,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		i++;
 		switch (race.raceID[Race.TORSO]){
 			case Race.RPG:
+			default:
 			case Race.NONE:
 		case Race.HUMAN:
 		case Race.RED_DRAGON:			
@@ -388,6 +395,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		i++;
 		switch (race.raceID[Race.BACK_ARM]){
 			case Race.NONE:
+			default:
 		case Race.HUMAN:
 		case Race.RED_DRAGON:
 			anim.guideIDs.add(handBackG[race.raceID[Race.BACK_ARM]]);
@@ -402,6 +410,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		i++;
 		switch (race.raceID[Race.TORSO]){
 			case Race.RPG:
+			default:
 			case Race.NONE:
 		case Race.HUMAN:
 		case Race.RED_DRAGON:
@@ -416,6 +425,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		i++;
 		switch (race.raceID[Race.TAIL]){
 			case Race.NONE:
+			default:
 		case Race.HUMAN:
 			i--;
 			
@@ -431,15 +441,16 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		i++;
 		switch (race.raceID[Race.FRONT_ARM]){
 			case Race.NONE:
-		case Race.HUMAN:
-		case Race.RED_DRAGON:
-			anim.guideIDs.add(handFrontG[race.raceID[Race.FRONT_ARM]]);
-			//Gdx.app.log(TAG, "playerhandfrontguide");
-			anim.hand_front_g = i;
-			guideFrameSources.add(anim.front_arm);
-			anim.guideLayersByLimbIndex[Race.LIMB_FRONT_HAND] = i;
-			guideSources.add(anim.arms_g);
-			break;
+			default:
+			case Race.HUMAN:
+			case Race.RED_DRAGON:
+				anim.guideIDs.add(handFrontG[race.raceID[Race.FRONT_ARM]]);
+				//Gdx.app.log(TAG, "playerhandfrontguide");
+				anim.hand_front_g = i;
+				guideFrameSources.add(anim.front_arm);
+				anim.guideLayersByLimbIndex[Race.LIMB_FRONT_HAND] = i;
+				guideSources.add(anim.arms_g);
+				break;
 			
 		}
 		i++;
@@ -448,81 +459,89 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		i = 0;
 		switch (race.raceID[Race.BACK_ARM]){
 			case Race.NONE:
-		case Race.HUMAN:
-		case Race.RED_DRAGON:
-			
-			anim.layerSources[i] = anim.arms_g;
-			i++;
-			anim.layerSources[i] = anim.hand_back_g;
-			break;
+			default:
+			case Race.HUMAN:
+			case Race.RED_DRAGON:
+
+				anim.layerSources[i] = anim.arms_g;
+				i++;
+				anim.layerSources[i] = anim.hand_back_g;
+				break;
 			
 		}
 		i++;
 		switch (race.raceID[Race.BACK_LEG]){
 			case Race.NONE:
-		case Race.HUMAN:
-		case Race.RED_DRAGON:
-			anim.layerSources[i] = anim.legs_g;
-			break;
+			default:
+			case Race.HUMAN:
+			case Race.RED_DRAGON:
+				anim.layerSources[i] = anim.legs_g;
+				break;
 		}
 		i++;
 		switch (race.raceID[Race.TORSO]){
 			case Race.RPG:
+			default:
 			case Race.NONE:
-		case Race.HUMAN:
-		case Race.RED_DRAGON:
-			anim.layerSources[i] = anim.torso_g;
-			break;
+			case Race.HUMAN:
+			case Race.RED_DRAGON:
+				anim.layerSources[i] = anim.torso_g;
+				break;
 		}
 		i++;
 		switch (race.raceID[Race.NECK]){
 			case Race.NONE:
-		case Race.HUMAN://i--;
-		case Race.RED_DRAGON:
-			anim.layerSources[i] = anim.neck_g;
-			break;
+			default:
+			case Race.HUMAN://i--;
+			case Race.RED_DRAGON:
+				anim.layerSources[i] = anim.neck_g;
+				break;
 		}
 		i++;
 		switch (race.raceID[Race.FRONT_LEG]){
 			case Race.NONE:
-		case Race.HUMAN:
-		case Race.RED_DRAGON:
-			anim.layerSources[i] = anim.legs_g;
-			break;
+			default:
+			case Race.HUMAN:
+			case Race.RED_DRAGON:
+				anim.layerSources[i] = anim.legs_g;
+				break;
 		}
 		i++;
 		switch (race.raceID[Race.HEAD]){
 			case Race.NONE:
-		case Race.HUMAN:
-		case Race.RED_DRAGON:
-			anim.layerSources[i] = anim.head_g;
-			i++;
-			anim.layerSources[i] = anim.head_g;
-			break;
+			default:
+			case Race.HUMAN:
+			case Race.RED_DRAGON:
+				anim.layerSources[i] = anim.head_g;
+				i++;
+				anim.layerSources[i] = anim.head_g;
+				break;
 		}
 		i++;
 		switch (race.raceID[Race.TAIL]){
 
 			case Race.NONE:
-		case Race.HUMAN:i--;
-		break;
-		case Race.RED_DRAGON:
-			
-			anim.layerSources[i] = anim.tail_g;
-			i++;
-			anim.layerSources[i] = anim.tail_tip_g;
+			default:
+			case Race.HUMAN:i--;
 			break;
+			case Race.RED_DRAGON:
+
+				anim.layerSources[i] = anim.tail_g;
+				i++;
+				anim.layerSources[i] = anim.tail_tip_g;
+				break;
 		}
 		i++;
 		switch (race.raceID[Race.FRONT_ARM]){
 			case Race.NONE:
-		case Race.HUMAN:
-		case Race.RED_DRAGON:
-			
-			anim.layerSources[i] = anim.arms_g;
-			i++;
-			anim.layerSources[i] = anim.hand_front_g;
-			break;
+			default:
+			case Race.HUMAN:
+			case Race.RED_DRAGON:
+
+				anim.layerSources[i] = anim.arms_g;
+				i++;
+				anim.layerSources[i] = anim.hand_front_g;
+				break;
 		}
 		i++;
 		

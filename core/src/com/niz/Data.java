@@ -63,6 +63,15 @@ public class Data {
 		strings.put(key, s);
 		return key;
 	}
+
+	public static String getStringHashes(){
+		String s = "All Data Hashes:\n";
+		for (IntMap.Entry<String> ent : strings.entries()){
+			s += ent.key + ": ";
+			s += ent.value + "\n";
+		}
+		return s;
+	}
 	
 	public static String getString(int hash){
 		return strings.get(hash, "[none]");

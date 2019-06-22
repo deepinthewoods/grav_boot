@@ -5,7 +5,6 @@ package com.niz;
 import com.badlogic.ashley.core.EngineNiz;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EngineNiz.PooledEntity;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.indexed.AStar;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntMap.Values;
@@ -264,6 +263,10 @@ public class RunnerFactory extends Factory {
 	
 	}
 
+	@Override
+	public Entity generateMob(int z, PlatformerFactory.MobSpawnType type, EngineNiz engine) {
+        return null;
+	}
 
 
 	public Action createEntityGenerationAgent(

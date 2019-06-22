@@ -58,22 +58,30 @@ public class AnimationCommand {
 			makeActual(c, animSet, layersArr, offsetArr, container, prefix, sprPrefix, layers);
 		}
 	}
+
+	///
 	static void make(AnimationCommand c, TextureAtlas atlas, AnimSet animSet, String[] layers, AtlasSprite[][] layersArr, String[] baseLayers, AnimationContainer container, String prefix, String[] spritePrefixes){
-		for (String sprPrefix : spritePrefixes){
+        Vector2[][] offsetArr = new Vector2[layers.length][];
+        makeArrays(
+                c, atlas, null, baseLayers, prefix, ""
+                , layersArr, offsetArr
+        );
+
+		for (int i = 0; i < layers.length; i++){
+			String sprPrefix = spritePrefixes[i];
 			//AtlasSprite[][] layersArr = new AtlasSprite[layers.length][];
-			Vector2[][] offsetArr = new Vector2[layers.length][];
-			makeArrays(
-					c, atlas, null, baseLayers, prefix, sprPrefix
-					, layersArr, offsetArr
-			);
-			layersArr = trimArray(c, layersArr, layers);
-			makeActual(c, animSet, layersArr, offsetArr, container, prefix, sprPrefix, layers);
+			AtlasSprite[][] layersArrTrimmed = trimArray(c, layersArr, layers, i);
+
+			makeActual(c, animSet, layersArrTrimmed, offsetArr, container, prefix, sprPrefix, layers);
 		}
 	}
 
-	private static AtlasSprite[][] trimArray(AnimationCommand c, AtlasSprite[][] layersArr, String[] layers) {
+	private static AtlasSprite[][] trimArray(AnimationCommand c, AtlasSprite[][] layersArr, String[] layers, int index) {
 		AtlasSprite[][] arr = new AtlasSprite[layers.length][];
-		for (int y = 0; y < layers.length; y++){
+//		Gdx.app.log(TAG, "Trim Array " + layers.length + "  " + layersArr.length);
+		//for (int y = 0; y < layers.length; y++)
+		int y = index;
+		{
 			int frameIndex = c.offset;
 
 			AtlasSprite[] frames = new AtlasSprite[c.length / (c.skipFrames+1)];
@@ -82,12 +90,14 @@ public class AnimationCommand {
 
 				//frames[i] = (AtlasSprite) atlas.createSprite(fileNamePrefix  , (frameIndex ));
 				frames[i] = new AtlasSprite(layersArr[y][frameIndex]);
+				//Gdx.app.log(TAG, "Trim Array " + frames[i].getRegionY());
 
 				frameIndex++;
 				frameIndex += c.skipFrames;
 				//i += c.skipFrames;
 			}
-			arr[y] = frames;
+			//arr[y] = frames;
+			arr[0] = frames;
 		}
 
 		return arr;
@@ -185,11 +195,13 @@ public class AnimationCommand {
 				}
 				Vector2[] offsets = offsetArray[y];
 				AnimSet.addLayerToContainer(c.delta * (1 + c.skipFrames), c, frames, c.bitmask, spritePrefix + layerNames[y], container, offsets);
+				Gdx.app.log(TAG, "make layer array " + spritePrefix + " " + frames[0].getRegionY());
 			}
 			//container.isVelocityDependant = c.velocityDependant;
 			container.randomStart = c.randomStart;
 			container.bitmask = c.bitmask;
 			animSet.add(c.animName, container);
+            //Gdx.app.log(TAG, "make container array " + spritePrefix + " ");
 		return container;
 	}
 

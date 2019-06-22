@@ -1,6 +1,8 @@
 package com.niz.actions;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.EngineNiz;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector2;
@@ -16,7 +18,9 @@ import com.niz.component.Inventory;
 import com.niz.component.Map;
 import com.niz.component.MovementData;
 import com.niz.component.Physics;
+import com.niz.component.Player;
 import com.niz.component.Position;
+import com.niz.component.Race;
 import com.niz.component.SpriteAnimation;
 import com.niz.item.Item;
 import com.niz.item.ItemDef;
@@ -40,17 +44,23 @@ public class AStand extends Action {
 	private transient MapSystem map;
 	public boolean earlyJump;
 	public boolean pathJump;
+	private long debugTick;
 	@Override
 	public void update(float dt) {
 		//Gdx.app.log(TAG, "update"+earlyJump);
 		Physics phys = physM.get(parent.e);
 		//if (phys == null) return;
 		Control con = controlM.get(parent.e);
-		if (Gdx.input.isKeyJustPressed(Keys.G)){
+		if (Gdx.input.isKeyJustPressed(Keys.G) && parent.e.getComponent(Player.class) != null){
 			//AutoGib c = parent.engine.createComponent(AutoGib.class);
 			//parent.e.add(c);
-			Gdx.app.log(TAG, "jdsklkld");
-			Gdx.app.log(TAG, ""+parent.engine);
+			if (parent.engine.tick - debugTick > 5000) {
+				debugTick = parent.engine.tick;
+				//Gdx.app.log(TAG, "jdsklkld");
+				//Gdx.app.log(TAG, "" + parent.engine);
+				//Gdx.app.log(TAG, "" + Data.getStringHashes());
+				makeTestEntity(parent.engine);
+			}
 		}
 		if (Gdx.input.isKeyJustPressed(Keys.H)){
 			//posM.get(parent.e).pos.set(128, 228);
@@ -129,8 +139,20 @@ public class AStand extends Action {
 		//Gdx.app.log(TAG, "active"+phys.onGround);
 		
 	}
-	
-	
+
+	private void makeTestEntity(EngineNiz engine) {
+		Gdx.app.log(TAG, "make test e");
+		Entity e = engine.createEntity();
+		Position pos = engine.createComponent(Position.class);
+		e.add(pos);
+		pos.pos.set(parent.e.getComponent(Position.class).pos);
+		SpriteAnimation spr = engine.createComponent(SpriteAnimation.class);
+		e.add(spr);
+		Race race = engine.createComponent(Race.class);
+		race.raceID[Race.TORSO] = Race.RPG_1;
+		e.add(race);
+		engine.addEntity(e);
+	}
 
 	@Override
 	public void updateRender(float dt) {

@@ -27,8 +27,8 @@ import com.niz.system.RoomCatalogSystem;
 
 public class AAgentBuildMap extends ProgressAction {
 
-	private static final int TOTAL_ROOMS_TARGET = 4;
-	private static final int MAIN_PATH_COMPARES = 2;
+	private static final int TOTAL_ROOMS_TARGET = 20;
+	private static final int MAIN_PATH_COMPARES = 3;
 
 	public static final int SECONDARY_ROOM_SEGMENT_SIZE = 4;
 	public static final int SECONDARY_ROOM_TRIES = 10;
@@ -56,7 +56,7 @@ public class AAgentBuildMap extends ProgressAction {
 	public final static int ITERATIONS = 64;
 	private static final String TAG = "build map action";
 
-	private static final int TOP_FREE_SPACE = 40;
+	public static final int TOP_FREE_SPACE = 40;
 	private int teleportDiameter = 50;
 	private Array<RoomEntry> main = new Array<RoomEntry>(true, 16), branch = new Array<RoomEntry>(true, 16)
 			, base = new Array<RoomEntry>(true, 16);

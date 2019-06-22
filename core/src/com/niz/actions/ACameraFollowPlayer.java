@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -16,6 +17,8 @@ import com.niz.component.DragBlock;
 import com.niz.component.Physics;
 import com.niz.component.Player;
 import com.niz.component.Position;
+import com.niz.component.Race;
+import com.niz.component.SpriteAnimation;
 import com.niz.observer.Observer;
 import com.niz.observer.Subject.Event;
 import com.niz.system.CameraSystem;
@@ -120,8 +123,12 @@ public class ACameraFollowPlayer extends Action {
 		}
 		//pos.set(playerPos);
 		//playerPos = posM.get(player).pos;
+
+
 		
 	}
+
+
 
 
 	@Override
