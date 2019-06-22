@@ -9,7 +9,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.RenderSystem;
 import com.badlogic.ashley.core.EngineNiz.PooledEntity;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.pfa.indexed.AStar;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -23,6 +22,7 @@ import com.badlogic.gdx.utils.Pools;
 import com.niz.Blocks;
 import com.niz.Factory;
 import com.niz.LayerData;
+import com.niz.PlatformerFactory;
 import com.niz.SimplexNoise;
 import com.niz.WorldDefinition;
 import com.niz.action.Action;
@@ -35,11 +35,9 @@ import com.niz.component.Agent;
 import com.niz.component.Buckets;
 import com.niz.component.CameraControl;
 import com.niz.component.Map;
-import com.niz.component.OnDoor;
 import com.niz.component.PlaceAtStartPoint;
 import com.niz.component.Player;
 import com.niz.component.Position;
-import com.niz.observer.Observer;
 import com.niz.observer.Subject;
 
 public class OverworldSystem extends RenderSystem implements EntityListener {
@@ -625,5 +623,10 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		if (def != worldDef) throw new GdxRuntimeException("fdjslk");
 		changeZLevel(0);
 		
+	}
+
+	public Entity generateMob(int z, PlatformerFactory.MobSpawnType type, EngineNiz engine) {
+
+		return factory.generateMob(z, type, engine);
 	}
 }

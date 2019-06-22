@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Pools;
 import com.niz.action.Action;
 import com.niz.action.ActionList;
 import com.niz.actions.ACameraFollowPlayer;
+import com.niz.actions.AEnemy;
 import com.niz.actions.AHold;
 import com.niz.actions.AJumpCharSelect;
 import com.niz.actions.ANotRun;
@@ -78,6 +79,26 @@ public class PlatformerFactory extends Factory {
 		charSelectRaces[3].raceID[Race.HEAD] = Race.RPG;
 		charSelectRaces[3].raceID[Race.TAIL] = Race.RPG;//*/
 		charSelectRaces[3].raceID[Race.TORSO] = Race.RPG;
+
+		charSelectRaces[4].raceID[Race.FRONT_ARM] = Race.RPG_0;
+		charSelectRaces[4].raceID[Race.BACK_ARM] = Race.RPG_0;
+		charSelectRaces[4].raceID[Race.BACK_LEG] = Race.RPG_0;
+		charSelectRaces[4].raceID[Race.FRONT_LEG] = Race.RPG_0;
+		charSelectRaces[4].raceID[Race.NECK] = Race.RPG_0;
+		charSelectRaces[4].raceID[Race.HEAD] = Race.RPG_0;
+		charSelectRaces[4].raceID[Race.TAIL] = Race.RPG_0;//*/
+		charSelectRaces[4].raceID[Race.TORSO] = Race.RPG_0;
+
+		charSelectRaces[5].raceID[Race.FRONT_ARM] = Race.RPG_1;
+		charSelectRaces[5].raceID[Race.BACK_ARM] = Race.RPG_1;
+		charSelectRaces[5].raceID[Race.BACK_LEG] = Race.RPG_1;
+		charSelectRaces[5].raceID[Race.FRONT_LEG] = Race.RPG_1;
+		charSelectRaces[5].raceID[Race.NECK] = Race.RPG_1;
+		charSelectRaces[5].raceID[Race.HEAD] = Race.RPG_1;
+		charSelectRaces[5].raceID[Race.TAIL] = Race.RPG_1;//*/
+		charSelectRaces[5].raceID[Race.TORSO] = Race.RPG_1;
+
+
 
 		charSelectInventories = new Inventory[CHAR_SELECT_CHARACTERS];
 		for (int i = 0; i < charSelectInventories.length; i++){
@@ -291,22 +312,34 @@ public class PlatformerFactory extends Factory {
 		abuild.bit = bit;
 		abuild.map = map;
 		abuild.z = z;
-		abuild.after = createEntityGenerationAgent(map, (int)map.offset.x, (int)map.offset.y, map.width, map.height, def);
+		abuild.after = createEntityGenerationAgent(map, def, z);
 		//map.e = e;
 		act.addToStart(abuild);
 		e.add(act);
 	}
 
+	@Override
+	public Entity generateMob(int z, MobSpawnType type, EngineNiz engine) {
+		Entity e = makePlayer(engine);
+		ActionList action = e.getComponent(ActionList.class);
+		action.addToStart(AEnemy.class);
+		Race race = engine.createComponent(Race.class);
+		for (int r = 0; r < race.raceID.length; r++){
+			race.raceID[r] = Race.RPG_1;
+		}
+		e.add(race);
+		return e;
+	}
+
 	public Action createEntityGenerationAgent(
-			 Map map, int x, int y, int w, int h, WorldDefinition worldDef) {
+			Map map, WorldDefinition worldDef, int z) {
 		AGenerateEntities abuild = new AGenerateEntities();
-		abuild.x = x;
-		abuild.y = y;
-		abuild.w = w;
-		abuild.h = h;
+		abuild.z = z;
 		abuild.map = map;
 		abuild.def = worldDef;
 		return abuild;
 	}
 
+	public enum
+	MobSpawnType {REGULAR, MINOR_BOSS, BOSS, SIDE_BOSS}
 }
