@@ -17,6 +17,7 @@ public class Room {
 	public int[][] blocks;
 	public IntMap<BlockDistributionArray> distributions = new IntMap<BlockDistributionArray>();
 	public Array<String> tags = new Array<String>();
+	public boolean preserveWalls = false;
 	public transient Array<GridPoint2> entrance = new Array<GridPoint2>(), exit = new Array<GridPoint2>();
 	public transient Array<IntMap<Dist>> exitFilters = new Array(), entranceFilters = new Array();
 	public transient boolean flipped = false;
@@ -35,7 +36,7 @@ public class Room {
 	public Room(){
 		
 	}
-    IntMap<Dist> filtersTmp = new IntMap();
+    transient IntMap<Dist> filtersTmp = new IntMap();
 	public boolean calculatePoints(){
 		while (entrance.size > 0)Pools.free(entrance.pop());
 		while (exit.size > 0)Pools.free(exit.pop());

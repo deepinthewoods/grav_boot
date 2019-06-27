@@ -60,4 +60,12 @@ public class RoomEntry implements Poolable{
 	}
 
 
+	public boolean overlaps(int rx, int ry, int rw, int rh) {
+		rx -= 1;
+		ry -= 1;
+		rw += 2;
+		rh += 2;
+		return offset.x < rx + rw && offset.x + room.blocks[0].length > rx && offset.y < ry + rh && offset.y + room.blocks.length > ry;
+
+	}
 }

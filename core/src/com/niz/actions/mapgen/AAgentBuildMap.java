@@ -70,6 +70,12 @@ public class AAgentBuildMap extends ProgressAction {
 	private int retries;
 	@Override
 	public void update(float dt) {
+		int count = 0;
+		while (count++ < 12 && !isFinished){
+			update();
+		}
+	}
+	public void update() {
 		//int x = progress / map.width;
 		//x += map.offset.x;
 		//if (progress == 5) Gdx.app.log(TAG, "tick "+progress + " " + main.get(0).room.flipped);
@@ -81,9 +87,7 @@ public class AAgentBuildMap extends ProgressAction {
 		switch (progress){
 			case 0:
 				retries++;
-				for (int x = 0; x < map.width; x++)
-					for (int y = 0; y < map.height; y++)
-						map.setLocal(x, y, 0);
+				clear();
 				progress++;
 				//rooms = smallRooms;
 				if (skipResetSeed){
@@ -93,7 +97,7 @@ public class AAgentBuildMap extends ProgressAction {
 					teleportDiameter = 10;
 				}
 				break;
-			case 1://write previously finalized
+			case 1:
 				writeToMap(base, 1024);
 				main.clear();
 				baseStartRoom = getNextAvailableBaseRoom();
@@ -175,9 +179,7 @@ public class AAgentBuildMap extends ProgressAction {
 
 			case 5://end room
 				//Gdx.app.log(TAG, "end room try");
-				for (int x = 0; x < map.width; x++)
-					for (int y = 0; y < map.height; y++)
-						map.setLocal(x, y, 0);
+				clear();
 				writeToMap(base, 1024);
 				main.clear();
 				baseStartRoom = getNextAvailableBaseRoom();
@@ -216,9 +218,7 @@ public class AAgentBuildMap extends ProgressAction {
 				sidePathIndex = 0;
 				break;
 			case 7://secondary/filtered rooms start
-				for (int x = 0; x < map.width; x++)
-					for (int y = 0; y < map.height; y++)
-						map.setLocal(x, y, 0);
+				clear();
 				writeToMap(base, 1024);
 				main.clear();
 				baseStartRoom = getNextAvailableRoom();
@@ -364,6 +364,12 @@ public class AAgentBuildMap extends ProgressAction {
 		totalIterations++;
 		float progressDelta = (float)base.size / (float)TOTAL_ROOMS_TARGET;
 		progressSys.setProgressBar(progressBarIndex, progressDelta);
+	}
+
+	private void clear() {
+		for (int x = 0; x < map.width; x++)
+			for (int y = 0; y < map.height; y++)
+				map.setLocal(x, y, 0);
 	}
 
 	private void makeLevelExit(RoomEntry entry) {
@@ -629,14 +635,19 @@ public class AAgentBuildMap extends ProgressAction {
 		//Gdx.app.log(TAG, "clear " + w + " " + h + "  x " + ax + " , " + ay);
 		//if (ax < 1 || ay < 1 || ax + w >= map.width-1 || ay + h >= map.height-1) return false;
 		if (ax < 1 || ay < 1 || ax + w >= map.width-2 || ay + h >= map.height-TOP_FREE_SPACE-1) return false;
-		for (int x = 0; x < w+2; x++)
-			for (int y = 0; y < h+2; y++){
-				if (map.get(x + ax - 1, y + ay - 1) != 0) return false;
-			}
-//		for (int x = 0; x < w; x++)
-//			for (int y = 0; y < h; y++){
-//				if (map.get(x + ax , y + ay ) != 0) return false;
+//		for (int x = 0; x < w+2; x++)
+//			for (int y = 0; y < h+2; y++){
+//				if (map.get(x + ax - 1, y + ay - 1) != 0) return false;
 //			}
+		for (RoomEntry r : main){
+			if (r.overlaps(ax, ay, w, h))
+				return false;
+		}
+		for (RoomEntry r : base){
+			if (r.overlaps(ax, ay, w, h))
+				return false;
+		}
+
 		return true;
 	}
 	private void writeToMap(RoomEntry entry, int i) {
@@ -645,18 +656,24 @@ public class AAgentBuildMap extends ProgressAction {
 	private void writeToMap(RoomEntry entry, int i, boolean finalPass) {
 
 		//Gdx.app.log(TAG, "write " + entry.offset + " " + entry.room.blocks[0].length + " , " + entry.room.blocks.length);
+
+		if (!finalPass){
+
+			return;
+		}
 		for (int x = 0; x < entry.room.blocks[0].length; x++)
 			for (int y = 0; y < entry.room.blocks.length; y++){
 				map.setLocal(x+entry.offset.x, y + entry.offset.y, i);
 			}
-		if (finalPass){
+
+
 			for (int x = 0; x < entry.room.blocks[0].length; x++)
 				for (int y = 0; y < entry.room.blocks.length; y++){
 					//map.setBGLocal(x+entry.offset.x, y + entry.offset.y, i);
 				}
-		}
 
-		if (finalPass){
+
+
 			for (int x = 0; x < entry.room.exit.size; x++){//exit doors
 				if (expand){
 					int dx = 0, dy = 0;
@@ -688,6 +705,11 @@ public class AAgentBuildMap extends ProgressAction {
 					} else {
 						map.setLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, 0);
 						map.setLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, 0);
+						if (!entry.room.preserveWalls){
+						    for (int sy = entry.offset.y + exit.y + dy + 1; sy < entry.offset.y + exit.y + dy + entry.room.blocks.length; sy++){
+                                map.setLocal(entry.offset.x + exit.x + dx, sy, 0);
+                            }
+                        }
 					}
 
 				}
@@ -744,7 +766,7 @@ public class AAgentBuildMap extends ProgressAction {
 					}
 					//special blocks
 				}
-		}
+
 	}
 
 	private void makeSpawnMarker(int x, int y, int type) {

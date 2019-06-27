@@ -7,6 +7,8 @@ rooms\room15x15med.json
 rooms\room15x3.json
 rooms\room15x6.json
 rooms\room5x5.json
+rooms\room5x5down.json
+rooms\room5x5up.json
 rooms\room64x16.json
 rooms\room8x5.json
 rooms\room8x8defork.json.no
