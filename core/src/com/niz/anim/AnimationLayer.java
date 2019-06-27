@@ -20,7 +20,7 @@ public class AnimationLayer extends Animation {
 	}
 	
 	public AnimationLayer doFlip(){
-		TextureRegion[] keyFrames = this.getKeyFrames();
+		TextureRegion[] keyFrames = (TextureRegion[])this.getKeyFrames();
 		TextureRegion[] keyframesFlipped = new TextureRegion[keyFrames.length];
 		for (int i = 0; i < keyFrames.length; i++){
 			AtlasSprite s = new AtlasSprite(new AtlasRegion(((AtlasSprite) keyFrames[i]).getAtlasRegion()));
@@ -34,10 +34,10 @@ public class AnimationLayer extends Animation {
 
 	
 	public TextureRegion getKeyFrame(int index, boolean left) {
-		if (left) return flipped.getKeyFrames()[index];
+		if (left) return ((TextureRegion[])flipped.getKeyFrames())[index];
 		//Gdx.app.log("flipped", "");
 		
-		return getKeyFrames()[index];
+		return ((TextureRegion[])getKeyFrames())[index];
 	}
 
 	public int getNumberOfFrames() {

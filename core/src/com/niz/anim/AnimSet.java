@@ -59,8 +59,9 @@ public class AnimSet {
 			boolean randomStart, boolean velocityDependant, float delta,
 			int bitmask, String string, AnimationContainer container,
 			Vector2[] offsets, float[] angles) {
-		
-		
+
+		Gdx.app.log("animset ", "guide  add "+string);
+
 		Guide guide = new Guide(offsets, angles);
 		container.addGuide(Data.hash(string), guide );
 	}

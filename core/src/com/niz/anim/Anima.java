@@ -20,7 +20,7 @@ public class Anima extends Animation {
 
 	
 	public Anima doFlip(){
-		TextureRegion[] keyFrames = this.getKeyFrames();
+		TextureRegion[] keyFrames = (TextureRegion[])this.getKeyFrames();
 		TextureRegion[] keyframesFlipped = new TextureRegion[keyFrames.length];
 		for (int i = 0; i < keyFrames.length; i++){
 			AtlasSprite s = new AtlasSprite((AtlasSprite) keyFrames[i]);
@@ -32,9 +32,9 @@ public class Anima extends Animation {
 
 	@Override
 	public TextureRegion getKeyFrame(float stateTime, boolean left) {
-		if (left) return flipped.getKeyFrame(stateTime);
+		if (left) return (TextureRegion)flipped.getKeyFrame(stateTime);
 		//Gdx.app.log("flipped", "");
-		return super.getKeyFrame(stateTime);
+		return (TextureRegion)super.getKeyFrame(stateTime);
 	}
 
 }

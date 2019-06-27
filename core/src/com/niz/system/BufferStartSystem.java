@@ -119,21 +119,11 @@ public class BufferStartSystem extends RenderSystem implements Observer, IDispos
 				buffer.dispose();
 			}
 			buffer = new FrameBuffer(Format.RGBA8888, (int) viewportWidth, (int) (viewportHeight), false){
-				@Override
-				protected Texture createColorTexture() {
-					Texture tex = super.createColorTexture();
-					tex.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
-					return tex;
-				}
+
 			};
 
 			lightDistanceBuffer = new FrameBuffer(Format.RGBA8888, (int) viewportWidth, (int) (viewportHeight), false){
-				@Override
-				protected Texture createColorTexture() {
-					Texture tex = super.createColorTexture();
-					tex.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
-					return tex;
-				}
+
 			};
 			//Gdx.app.log(TAG,  "new framebuffer");
 			Texture tex =  buffer.getColorBufferTexture();

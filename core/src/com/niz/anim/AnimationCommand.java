@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasSprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ShortArray;
@@ -61,7 +62,11 @@ public class AnimationCommand {
 
 	///
 	static void make(AnimationCommand c, TextureAtlas atlas, AnimSet animSet, String[] layers, AtlasSprite[][] layersArr, String[] baseLayers, AnimationContainer container, String prefix, String[] spritePrefixes){
-        Vector2[][] offsetArr = new Vector2[layers.length][];
+		make(c, atlas, animSet, layers, layersArr, baseLayers, container ,prefix, spritePrefixes, new Vector2[layers.length][]);
+	}
+
+
+		static void make(AnimationCommand c, TextureAtlas atlas, AnimSet animSet, String[] layers, AtlasSprite[][] layersArr, String[] baseLayers, AnimationContainer container, String prefix, String[] spritePrefixes, Vector2[][] offsetArr){
         makeArrays(
                 c, atlas, null, baseLayers, prefix, ""
                 , layersArr, offsetArr
@@ -120,11 +125,16 @@ public class AnimationCommand {
 					}
 				}
 				for (int i = 0; i < frames.length; i++){
-					//Gdx.app.log(TAG, "layer "+i+ " / "+c.length + " + " + c.offset + baseFileName);
+					//Gdx.app.log(TAG, "layer "+i+ " / "+c.length + " + " + c.offset + spritePrefix+layers[y]);
 
 					frames[i] = (AtlasSprite) atlas.createSprite(fileNamePrefix  , (frameIndex ));
+					/*if (frames[i] == null){
+						frames[i] = new AtlasSprite(new TextureAtlas.AtlasRegion(atlas.getTextures().first(), 0, 0, 0, 0));
+						Gdx.app.log(TAG, "make blank frame" + fileNamePrefix);
+					}
+						else//*/
+					if (frames[i] == null) throw new GdxRuntimeException("null frame! "+fileNamePrefix +"   "+i+"  "+c.length +"  "+c.offset +"  "+c.animName + "  " + fileNamePrefix);
 					frames[i] = new AtlasSprite(frames[i]);
-					if (frames[i] == null) throw new GdxRuntimeException("null frame! "+fileNamePrefix +"   "+i+"  "+c.length +"  "+c.offset +"  "+c.animName + "  " + frameIndex);
 
 					//AtlasRegion baseF =  atlas.findRegion(baseFileName  , ( i+c.offset));
 
@@ -137,8 +147,8 @@ public class AnimationCommand {
 					layersArr[y] = frames;
 
 			}
-	if (offsetArr != null)
-		for (int y = 0; y < offsetArr.length; y++){
+	if (baseLayers != null)
+		for (int y = 0; y < baseLayers.length; y++){
 			//AtlasSprite[] frames = new AtlasSprite[c.length / (c.skipFrames+1)];
 			Vector2[] offsets = new Vector2[c.length / (c.skipFrames+1)];
 			int frameIndex = c.offset;
@@ -195,7 +205,7 @@ public class AnimationCommand {
 				}
 				Vector2[] offsets = offsetArray[y];
 				AnimSet.addLayerToContainer(c.delta * (1 + c.skipFrames), c, frames, c.bitmask, spritePrefix + layerNames[y], container, offsets);
-				Gdx.app.log(TAG, "make layer array " + spritePrefix + " " + frames[0].getRegionY());
+				//Gdx.app.log(TAG, "make layer array " + spritePrefix + " " + frames[0].getRegionY());
 			}
 			//container.isVelocityDependant = c.velocityDependant;
 			container.randomStart = c.randomStart;
@@ -225,7 +235,7 @@ public class AnimationCommand {
 			boolean hasTip = tip != null;
 			if (main == null){
 				//throw new GdxRuntimeException("jskld! "+fileName +"   "+"  "+y +"  "+c.length );
-				//Gdx.app.log(TAG, "null guide, replacing with empty "+fileName +"   "+"  "+y +"  "+c.length );
+				Gdx.app.log(TAG, "null guide, replacing with empty "+fileName +"   "+"  "+y +"  "+c.length );
 				for (int i = 0; i < c.length / (1+c.skipFrames); i++){
 					offsets[i] = new Vector2(0, 0);
 

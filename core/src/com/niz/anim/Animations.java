@@ -10,12 +10,12 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasSprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -23,7 +23,6 @@ import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.ShortArray;
 import com.niz.Data;
-import com.niz.Main;
 import com.niz.action.ProgressAction;
 import com.niz.component.Race;
 import com.niz.item.Doing;
@@ -81,6 +80,7 @@ public class Animations {
 		createGuideSprites("rpg");
 		createGuideSprites("none");
 		guides.put(Data.hash("centreblockguide"), new ShortArray(new short[]{16, 16}));
+		createRpgThrowGuides();
 		//1-40 walk
 		createPlayerSprites("player", atlas, engine);
 		
@@ -141,7 +141,54 @@ public class Animations {
 		createLightSprites();
 	}
 
-	static Color col = new Color();
+	private static Vector2 va = new Vector2(), vb = new Vector2(), vc = new Vector2();
+    private static void createRpgThrowGuides() {
+		ShortArray handGuides = new ShortArray();
+		ShortArray handTipGuides = new ShortArray();
+		for (float r = 0; r < 360; r+= 20){
+			for (int i = 0; i < 13; i++){
+				float alpha = i / 12f;
+				va.set(0, -16).rotate(r);
+				vb.set(0, 16).rotate(r);
+				vc.set(va).lerp(vb, alpha);
+				handGuides.add((short) vc.x);
+				handGuides.add((short) vc.y);
+
+				va.set(16, -16).rotate(r);
+				vb.set(-16, 16).rotate(r);
+				vc.set(va).lerp(vb, alpha);
+				handTipGuides.add((short) vc.x);
+				handTipGuides.add((short) vc.y);
+			}
+			guides.put(Data.hash("rpghandguide"), handGuides);
+			guides.put(Data.hash("rpghandguidetip"), handTipGuides);
+
+			handGuides = new ShortArray();
+			handTipGuides = new ShortArray();
+			for (int i = 0; i < 7; i++){
+				float alpha = i / 6f;
+				va.set(0, -16).rotate(r);
+				vb.set(0, 16).rotate(r);
+				vc.set(va).lerp(vb, alpha);
+				handGuides.add((short) vc.x);
+				handGuides.add((short) vc.y);
+
+				va.set(16, -16).rotate(r);
+				vb.set(-16, 16).rotate(r);
+				vc.set(va).lerp(vb, alpha);
+				handTipGuides.add((short) vc.x);
+				handTipGuides.add((short) vc.y);
+			}
+			guides.put(Data.hash("rpghandguide"), handGuides);
+			guides.put(Data.hash("rpghandguidetip"), handTipGuides);
+		}
+
+
+
+
+    }
+
+    static Color col = new Color();
 	static Vector3 falloff = new Vector3(), vec = new Vector3();
 
 	private static void createLightSprites() {
@@ -784,7 +831,8 @@ public class Animations {
 		
 		ProgressAction throwAction = new ProgressAction(){
 
-			private AnimationCommand c;
+            public AnimationCommand cb;
+            private AnimationCommand c;
 			private int prog;
 
 			@Override
@@ -804,6 +852,7 @@ public class Animations {
 				//Gdx.app.log(TAG, "throw anim "+index);
 				AnimationCommand.make(c, atlas, animSet, armLayers, armBaseLayers, container, player, players);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, player);
+				makeRpgThrow(c, atlas, container, index);
 				//////////
 				container = new AnimationContainer();
 				c.offset += 13;
@@ -812,6 +861,7 @@ public class Animations {
 				//Gdx.app.log(TAG, "throw anim "+index);
 				AnimationCommand.make(c, atlas, animSet, armLayers, armBaseLayers, container, player, players);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, player);
+                makeRpgThrow(c, atlas, container, index);
 				c.offset -= 13;
 				///////////
 				if (index <= 9) {
@@ -829,6 +879,7 @@ public class Animations {
 				c.animName = "throw"+index;
 				AnimationCommand.make(c, atlas, animSet, armLayers, armBaseLayers, container, player, players);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, player);
+                makeRpgThrow(c, atlas, container, index);
 				//////////////////////
 				container = new AnimationContainer();
 				c.offset += 13;
@@ -836,35 +887,49 @@ public class Animations {
 				c.animName = "throwcooldown"+index;
 				AnimationCommand.make(c, atlas, animSet, armLayers, armBaseLayers, container, player, players);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, player);
+                makeRpgThrow(c, atlas, container, index);
 				c.offset -= 13;
-
 				c.offset += 21;
+
+
 				
 				if (prog >= 9) {
+					//c.delta = .25f;
 
-					c.offset = 0;
-					c.length = 3;
-					//c.skipFrames = 0;
-					AnimationCommand.make(c, atlas, animSet, rpgLayers, rpgSprites, rpgBaseGuideLayers, container, rpg, rpgs);
-					AnimationCommand.makeGuideFrames(c, atlas, animSet, legGuideLayers, legBaseGuideLayers, container, rpg);
-					AnimationCommand.makeGuideFrames(c, atlas, animSet, torsoGuideLayers, torsoBaseGuideLayers, container, rpg);
-					AnimationCommand.makeGuideFrames(c, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, rpg);
-					AnimationCommand.makeGuideFrames(c, atlas, animSet, neckGuideLayers, neckBaseGuideLayers, container, rpg);
-					AnimationCommand.makeGuideFrames(c, atlas, animSet, headGuideLayers, headBaseGuideLayers, container, rpg);
-					AnimationCommand.makeGuideFrames(c, atlas, animSet, tailGuideLayers, tailBaseGuideLayers, container, rpg);
-					c.length = 1;
+
+					/*c.length = 1;
 					AnimationCommand.makeGuideFrames(c, atlas, animSet, legGuideLayers, legBaseGuideLayers, container, none);
 					AnimationCommand.makeGuideFrames(c, atlas, animSet, torsoGuideLayers, torsoBaseGuideLayers, container, none);
 					AnimationCommand.makeGuideFrames(c, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, none);
 					AnimationCommand.makeGuideFrames(c, atlas, animSet, neckGuideLayers, neckBaseGuideLayers, container, none);
 					AnimationCommand.makeGuideFrames(c, atlas, animSet, headGuideLayers, headBaseGuideLayers, container, none);
-					AnimationCommand.makeGuideFrames(c, atlas, animSet, tailGuideLayers, tailBaseGuideLayers, container, none);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, tailGuideLayers, tailBaseGuideLayers, container, none);*/
 
 					isFinished = true;
 				}
 			}
+            /**
+             * 18 angles starting at north
+             **/
+            private void makeRpgThrow(AnimationCommand c, TextureAtlas atlas, AnimationContainer container, int index) {
+                {
+                	//if (true) return;
+                    cb.delta = c.delta;
+                    cb.deltaMultiplier = c.deltaMultiplier;
+                    cb.offset = 0;
+                    cb.length = c.length;
+                    cb.animName = c.animName;
+                    //c.skipFrames = 0;
+					Short[] offsets = new Short[cb.length * 2];
+                    AnimationCommand.make(cb, atlas, animSet, rpgLayers, rpgSprites, rpgBaseGuideLayers, container, rpg, rpgs);
+//                    AnimationCommand.make(cb, atlas, animSet, armLayers, armBaseLayers, container, rpg, rpgs);
 
-			@Override
+                    //AnimationCommand.makeGuideFrames(cb, atlas, animSet, torsoGuideLayers, torsoBaseGuideLayers, container, rpg);
+                    AnimationCommand.makeGuideFrames(cb, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, rpg);
+                }
+            }
+
+            @Override
 			public void onEnd() {
 				parent.engine.getSystem(ProgressBarSystem.class).deregisterProgressBar(progressBarIndex);
 
@@ -873,6 +938,7 @@ public class Animations {
 			@Override
 			public void onStart() {
 				c = new AnimationCommand();
+				cb = new AnimationCommand();
 				c.offset = 175;
 				c.length = 13;
 				c.animName = "throw0";

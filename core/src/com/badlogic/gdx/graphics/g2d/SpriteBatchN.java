@@ -55,6 +55,8 @@ public class SpriteBatchN implements Batch {
     private boolean blendingDisabled = false;
     private int blendSrcFunc = GL20.GL_SRC_ALPHA;
     private int blendDstFunc = GL20.GL_ONE_MINUS_SRC_ALPHA;
+    private int blendSrcFuncAlpha = GL20.GL_SRC_ALPHA;
+    private int blendDstFuncAlpha = GL20.GL_ONE_MINUS_SRC_ALPHA;
 
     private final ShaderProgram shader;
     private ShaderProgram customShader = null;
@@ -206,10 +208,7 @@ public class SpriteBatchN implements Batch {
         color = NumberUtils.intToFloatColor(intBits);
     }
 
-    @Override
-    public void setColor (float color) {
-        this.color = color;
-    }
+    
 
     @Override
     public Color getColor () {
@@ -220,6 +219,11 @@ public class SpriteBatchN implements Batch {
         color.b = ((intBits >>> 16) & 0xff) / 255f;
         color.a = ((intBits >>> 24) & 0xff) / 255f;
         return color;
+    }
+
+    @Override
+    public void setPackedColor(float packedColor) {
+        //TODO
     }
 
     @Override
@@ -1001,6 +1005,11 @@ public class SpriteBatchN implements Batch {
     }
 
     @Override
+    public void setBlendFunctionSeparate(int srcFuncColor, int dstFuncColor, int srcFuncAlpha, int dstFuncAlpha) {
+
+    }
+
+    @Override
     public int getBlendSrcFunc () {
         return blendSrcFunc;
     }
@@ -1008,6 +1017,16 @@ public class SpriteBatchN implements Batch {
     @Override
     public int getBlendDstFunc () {
         return blendDstFunc;
+    }
+
+    @Override
+    public int getBlendSrcFuncAlpha () {
+        return blendSrcFuncAlpha;
+    }
+
+    @Override
+    public int getBlendDstFuncAlpha () {
+        return blendDstFuncAlpha;
     }
 
     @Override

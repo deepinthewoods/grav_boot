@@ -352,7 +352,7 @@ public void update(float deltaTime) {
 			v3.add(0+(left?p.x-s.getAtlasRegion().originalWidth/(float)Main.PPM:-p.x), -p.y).add(pos.pos);
 			v3.scl(16f);
 			s.setPosition((int)v3.x, (int)v3.y);
-			s.setColor(Data.colorFloats[spr.colors[index]]);
+			s.setColor(Data.colors[spr.colors[index]]);
 			if (drag == null) throw new GdxRuntimeException("dsfa");
 			if (drag.disabled){
 				//Gdx.app.log(TAG, "disabled drago" + e.getId());
@@ -416,7 +416,7 @@ public void update(float deltaTime) {
 			v3.add(0+(left?p.x-s.getAtlasRegion().originalWidth/(float)Main.PPM:-p.x), -p.y).add(pos.pos);
 			v3.scl(16f);
 			s.setPosition((int)v3.x, (int)v3.y);
-			s.setColor(Data.colorFloats[spr.colors[index]]);
+			s.setColor(Data.colors[spr.colors[index]]);
 			SpriteBatchN theBatch = left?leftBatch:batch;
 			
 			draw(s, theBatch, left, e, layerI);

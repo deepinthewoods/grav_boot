@@ -86,14 +86,15 @@ public class RoomCatalogSystem extends EntitySystem {
 					s += "rooms\\"+f.name();
 					s += "\n";
 				}
-				FileHandle out = Gdx.files.internal("roomslist.txt");
+				FileHandle out = Gdx.files.internal("roomslist.t");
 				FileHandle outA = Gdx.files.absolute(out.file().getAbsolutePath());
 				outA.writeString(s, false);
 				//Gdx.app.log(TAG, "write list of rooms " + roomF.file().getAbsolutePath());
 		}
 		
 		Json json = Data.json;
-		String fileList = Gdx.files.internal("roomslist.txt").readString();
+		String fileList = Gdx.files.internal("roomslist.t").readString();
+		//String fileList = Gdx.files.internal("player.atlas").readString();
 		String[] names = fileList.split("\n");
 		//Gdx.app.log(TAG, "ttitititi " + names.length);
 		for (String name : names){
