@@ -22,6 +22,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.niz.Data;
+import com.niz.GameInstance;
 import com.niz.Main;
 import com.niz.action.ActionList;
 import com.niz.actions.path.AFollowPath;
@@ -31,6 +32,7 @@ import com.niz.component.BlockOutline;
 import com.niz.component.Body;
 import com.niz.component.DragBlock;
 import com.niz.component.DragOption;
+import com.niz.component.Health;
 import com.niz.component.Light;
 import com.niz.component.LineBody;
 import com.niz.component.PickUp;
@@ -54,6 +56,7 @@ Vector2 v = new Vector2(), v2 = new Vector2();
 
 public ComponentMapper<Position> posM = ComponentMapper.getFor(Position.class);
 public ComponentMapper<SpriteAnimation> spriteM = ComponentMapper.getFor(SpriteAnimation.class);
+public ComponentMapper<Health> healthM = ComponentMapper.getFor(Health.class);
 public ComponentMapper<SpriteStatic> spriteStaticM = ComponentMapper.getFor(SpriteStatic.class);
 protected ComponentMapper<Body> bodyM = ComponentMapper.getFor(Body.class);
 protected ComponentMapper<BlockLine> blockLineM = ComponentMapper.getFor(BlockLine.class);
@@ -125,6 +128,7 @@ private ImmutableArray<Entity> dragOptionEntities;
 private ImmutableArray<Entity> dragBlockEntities;
 private ImmutableArray<Entity> roomDefEntities;
 private ImmutableArray<Entity> playerEntities;
+	private ImmutableArray<Entity> healthEntities;
 
 /*
  * new Color(0f, 0f, 0f, 1f),
@@ -152,6 +156,7 @@ public void addedToEngine(Engine engine) {
 	super.addedToEngine(engine);
 	camSys = engine.getSystem(CameraSystem.class);
 	family = Family.all(Body.class, Position.class, PickUp.class).get();
+	healthEntities = engine.getEntitiesFor(Family.all(Health.class, Body.class, Position.class).exclude(DragOption.class).get());
 	pickUpEntities = engine.getEntitiesFor(family);
 	blockOutlineEntities = engine.getEntitiesFor(Family.all(Position.class, BlockOutline.class).get());
 	//spriteShader = shaderSys.spriteShader;
@@ -212,10 +217,13 @@ public void drawLast(float deltaTime) {
 		h += 1;
 		s = Math.min((int)w, s);
 		sw = Math.min(h, sw);
+		sw /= 3f;
+		s /= 3f;
+		//int sh = sw;
 		//s = Math.max(2, s);
 		//sw = Math.max(2, sw);
 		//w = Main.PPM * 16;
-		
+		float space = .25f;
 		long id = e.getId();
 		float speed = 4f;
 		//batch.end();
@@ -257,10 +265,49 @@ public void drawLast(float deltaTime) {
 		}*/
 		
 	}
-	
-	
-	
-	
+	batch.end();
+	if (GameInstance.paused){
+        Gdx.gl.glLineWidth(7f);
+        batch.begin();
+        batch.setColor(Data.colors[Data.DARK_GREYISH_BROWN_INDEX]);
+        for (Entity e : healthEntities){
+            Health health = healthM.get(e);
+            Vector2 pos = posM.get(e).pos;
+            Body body = bodyM.get(e);
+            float alpha = 1f;//health.health / (float)(health.maxHealth);
+            float w = 1f;
+            //Gdx.app.log(TAG, "draw" + pos.x + " " + alpha);
+            batch.drawLine(
+                    (int)((pos.x-w/2) * Main.PPM)
+                    , (int)((pos.y - body.height) * Main.PPM - 1)
+                    , (int)((pos.x -w/2 + w * alpha) * Main.PPM)
+                    , (int)((pos.y - body.height) * Main.PPM - 1)
+            );
+        }
+        batch.end();
+        Gdx.gl.glLineWidth(3f);
+        batch.begin();
+
+        batch.setColor(Data.colors[Data.RED_INDEX]);
+        for (Entity e : healthEntities){
+            Health health = healthM.get(e);
+            Vector2 pos = posM.get(e).pos;
+            Body body = bodyM.get(e);
+            float alpha = health.health / (float)(health.maxHealth);
+            float w = 1f;
+            //Gdx.app.log(TAG, "draw" + pos.x + " " + alpha);
+            batch.drawLine(
+                    (int)((pos.x-w/2) * Main.PPM)
+                    , (int)((pos.y - body.height) * Main.PPM - 1)
+                    , (int)((pos.x -w/2 + w * alpha) * Main.PPM)
+                    , (int)((pos.y - body.height) * Main.PPM - 1)
+            );
+        }
+        batch.end();
+    }
+	Gdx.gl.glLineWidth(3f);
+	batch.begin();
+	batch.setColor(Color.WHITE);
 	for (int i = 0; i < dragOptionEntities.size(); i++){
 		Entity e = dragOptionEntities.get(i);
 		DragOption drag = dragoM.get(e);
@@ -331,6 +378,9 @@ public void drawLast(float deltaTime) {
 	
 	
 	
+	//batch.end();
+	//batch.setProjectionMatrix(camSys.camera.combined);
+
 	batch.end();
 }
 
@@ -360,7 +410,8 @@ public void update(float deltaTime) {
 	//Gdx.gl.glEnable(GL20.GL_BLEND);
 	Gdx.gl.glLineWidth(1f);
 	
-	if (false)for (int i = 0; i < allBodyEntities.size(); i++){
+	if (false)
+	for (int i = 0; i < allBodyEntities.size(); i++){
 		Entity e = allBodyEntities.get(i);
 		Body body = bodyM.get(e);
 		Position pos = posM.get(e);
