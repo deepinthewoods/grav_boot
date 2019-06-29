@@ -41,6 +41,14 @@ distributions: {
 			}
 		]
 	}
+	3: {
+		class: com.niz.room.BlockDistributionArray
+		val: [
+			{
+				value: SLOPEA
+			}
+		]
+	}
 	8: {
 		class: com.niz.room.BlockDistributionArray
 		val: [
@@ -67,4 +75,5 @@ distributions: {
 tags: [
 	easybig
 ]
+preserveWalls : true
 }

@@ -67,4 +67,5 @@ distributions: {
 tags: [
 	medbig
 ]
+preserveWalls : true
 }

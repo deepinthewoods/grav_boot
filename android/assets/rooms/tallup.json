@@ -59,4 +59,5 @@ distributions: {
 tags: [
 	easy
 ]
+preserveWalls : true
 }
