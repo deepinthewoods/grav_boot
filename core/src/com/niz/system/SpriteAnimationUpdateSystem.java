@@ -123,6 +123,8 @@ public class SpriteAnimationUpdateSystem extends EntitySystem {
 				//if (s == null) continue;
 				int fr = layer.getKeyFrameIndex(spr.time[index], spr.guides.get(spr.layerSources[index]), container.guides.size);
 
+
+
 				//Gdx.app.log(TAG, "frame error " + spr.currentAnim.guides.size + "  " + fr);// Data.getString(spr.guideIDs.get(index)));
 
 
