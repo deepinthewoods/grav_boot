@@ -1,14 +1,22 @@
 package com.niz.ui.edgeUI;
 
+import com.badlogic.ashley.core.EngineNiz;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.niz.GameInstance;
+import com.niz.component.Inventory;
+import com.niz.observer.Observer;
+import com.niz.observer.Subject;
 import com.niz.ui.elements.BackgroundDrag;
+import com.niz.ui.elements.ItemDisplay;
 import com.niz.ui.elements.UIElement;
 
 /**
  * Created by niz on 27/05/2014.
  */
-public class MainMenu extends EdgeUI {
+public class MainMenu extends EdgeUI implements Observer {
+
+    private final ItemDisplay itemDisplay;
 
     public MainMenu(GameInstance game, Skin skin){
         sides[0] = new UITable();
@@ -18,8 +26,12 @@ public class MainMenu extends EdgeUI {
 
         sides[1] = new UITable();
         sides[1].min = new UIElement[1];
+        itemDisplay = new ItemDisplay(null, game.engine);
+
         //sides[1].max = new UIElement[1];
         table.row();
+
+        game.engine.getSubject("playerselect").add(this);
 
         sides[2] = new UITable();
         sides[2].min = new UIElement[1];
@@ -38,6 +50,7 @@ public class MainMenu extends EdgeUI {
         sides[4].min = new UIElement[1];
         //expandY[1] = true;
         //sides[4].min[0] = new ControllerPad();
+        sides[0].min[0] = itemDisplay;
         table.row();
 
         sides[5] = new UITable();
@@ -53,7 +66,7 @@ public class MainMenu extends EdgeUI {
 
         sides[7] = new UITable();
         sides[7].min = new UIElement[1];
-        sides[1].min[0] = new MainMenuTable(this, game, skin);
+        sides[3].min[0] = new MainMenuTable(this, game, skin);
        // sides[7].min[0] = new ControllerButton("T", 0);
         table.row();
 
@@ -77,9 +90,8 @@ public class MainMenu extends EdgeUI {
 
     }
 
-	public void showNewGameScreen() {
-		
-	}
-
-	
+    @Override
+    public void onNotify(Entity e, Subject.Event event, Object c) {
+        itemDisplay.setFor(e.getComponent(Inventory.class), e);
+    }
 }

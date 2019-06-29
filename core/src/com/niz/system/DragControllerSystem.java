@@ -17,6 +17,7 @@ import com.niz.component.DragOption;
 import com.niz.component.Position;
 import com.niz.component.VectorInput2;
 import com.niz.observer.Observer;
+import com.niz.observer.Subject;
 import com.niz.observer.Subject.Event;
 
 public class DragControllerSystem extends EntitySystem implements Observer {
@@ -35,12 +36,15 @@ public class DragControllerSystem extends EntitySystem implements Observer {
 	private Vector2 moveTarget = new Vector2();
 	private float zoomTarget = zoomOutTarget;
 	private boolean dragging;
+	private Subject changeNotifier;
+
 	@Override
 	public void addedToEngine(Engine engine) {
 		selectableEntities = engine.getEntitiesFor(Family.all(Position.class, DragOption.class).get());
 		entities = engine.getEntitiesFor(Family.all(Position.class, DragController.class).get());
 		EngineNiz en = (EngineNiz) engine;
 		en.getSubject("screen").add(this);
+		changeNotifier = en.getSubject("playerselect");
 		this.engine = en;
 	}
 
@@ -138,6 +142,7 @@ public class DragControllerSystem extends EntitySystem implements Observer {
 					//drag.multiDraw = false;
 				}
 				dragoM.get(closest).selected = true;
+				changeNotifier.notify(closest, Event.CHANGE_SELECTED_CHARACTER, null);
 				//Gdx.app.log(TAG,  "selected" + closest.getId());
 			}
 		}

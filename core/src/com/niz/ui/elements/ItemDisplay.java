@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntMap.Values;
 import com.badlogic.gdx.utils.Pool;
 import com.niz.Main;
@@ -65,6 +66,8 @@ public class ItemDisplay extends UIElement {
 
 	@Override
 	protected void onInit(Skin skin) {
+		//if (true) throw new GdxRuntimeException("");
+		Gdx.app.log(TAG, "INIT");
 		final Skin sk = skin;
 		
 		pool = new Pool<InventoryButton>(){

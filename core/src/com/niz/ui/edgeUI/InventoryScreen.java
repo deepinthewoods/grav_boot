@@ -51,6 +51,7 @@ import com.niz.anim.SpriteCacheNiz;
 import com.niz.component.Body;
 import com.niz.component.BooleanInput;
 import com.niz.component.Door;
+import com.niz.component.HealthChangeInfo;
 import com.niz.component.Inventory;
 import com.niz.component.ItemInput;
 import com.niz.component.OnDoor;
@@ -105,8 +106,21 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	private RoomEditorTable roomEditor;
 	private TextButton[] doorButtons;
 	private Table doorTable;
-	
+	private float playerHealth = 0f;
+
 	public InventoryScreen(final EngineNiz engine, Skin skin, CharacterScreen charScr, SettingsScreen setScr, ShaderProgram indexedShader){
+		Subject healthChangeNotifier = ((EngineNiz) engine).getSubject("health");
+		healthChangeNotifier.add(new Observer(){
+
+			@Override
+			public void onNotify(Entity e, Event event, Object c) {
+				HealthChangeInfo info = (HealthChangeInfo) c;
+				if (info.isPlayer){
+					playerHealth = info.health / (float)info.maxHealth;
+					Gdx.app.log(TAG, "FDSKJJFDKLSJFASDKJFSLKFJSD");
+				}
+			}
+		});
 		this.shader = indexedShader;
 		u_index_texture = shader.getUniformLocation("u_index_texture");
 		u_texture = shader.getUniformLocation("u_texture");
@@ -739,6 +753,13 @@ public class InventoryScreen extends EdgeUI implements Observer{
 			}
 		}
 		drawButton(belt.buttons[belt.group.getCheckedIndex()], batch, rend, true);
+		rend.end();
+		rend.setColor(Color.RED);
+		rend.begin(ShapeType.Filled);
+		tmpV.set(0, 0);
+		belt.buttons[0].localToScreenCoordinates(tmpV);
+		rend.rect(0, tmpV.y, Gdx.graphics.getWidth() * playerHealth, 30);
+
 		rend.end();
 		batch.end();
 		batch.begin();
