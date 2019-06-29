@@ -15,6 +15,7 @@ import com.niz.actions.AJumpCharSelect;
 import com.niz.actions.APlayer;
 import com.niz.component.Control;
 import com.niz.component.DragOption;
+import com.niz.component.Inventory;
 import com.niz.component.Light;
 import com.niz.component.Player;
 import com.niz.component.SelectedPlayer;
@@ -75,7 +76,8 @@ public class SelectedPlayerSystem extends EntitySystem {
 			SelectedPlayer sel = e.getComponent(SelectedPlayer.class);
 			factory.selected(engine, sel, e);
 			e.remove(SelectedPlayer.class);
-			
+			e.getComponent(Inventory.class).equipAll(e);
+
 			//start loading next level
 			
 			

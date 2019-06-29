@@ -66,7 +66,7 @@ public class MainMenu extends EdgeUI implements Observer {
 
         sides[7] = new UITable();
         sides[7].min = new UIElement[1];
-        sides[3].min[0] = new MainMenuTable(this, game, skin);
+        sides[5].min[0] = new MainMenuTable(this, game, skin);
        // sides[7].min[0] = new ControllerButton("T", 0);
         table.row();
 

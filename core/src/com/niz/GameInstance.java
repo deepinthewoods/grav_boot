@@ -50,6 +50,7 @@ import com.niz.component.Player;
 import com.niz.component.Position;
 import com.niz.component.Race;
 import com.niz.component.SelectedPlayer;
+import com.niz.component.SpriteAnimation;
 import com.niz.component.VectorInput;
 import com.niz.observer.Observer;
 import com.niz.observer.Subject;
@@ -262,6 +263,7 @@ public class GameInstance implements Screen, Observer {
 					engine.addSystem(new MapCollisionSystem());
 					engine.addSystem(new ActionSystem());
 					engine.addSystem(new SpriteAnimationUpdateSystem());
+
 					engine.addSystem(new Physics2dSystem());
 					engine.addSystem(new LineMapCollisionSystem());
 					break;case 5:

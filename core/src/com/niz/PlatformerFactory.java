@@ -2,6 +2,7 @@ package com.niz;
 
 
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.EngineNiz;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EngineNiz.PooledEntity;
@@ -29,6 +30,7 @@ import com.niz.component.CameraControl;
 import com.niz.component.CollidesWithMap;
 import com.niz.component.Control;
 import com.niz.component.DragOption;
+import com.niz.component.Health;
 import com.niz.component.Inventory;
 import com.niz.component.Light;
 import com.niz.component.Map;
@@ -42,6 +44,7 @@ import com.niz.component.SelectedPlayer;
 import com.niz.component.SpriteAnimation;
 import com.niz.component.TransientComponent;
 import com.niz.item.ItemDef;
+import com.niz.observer.Subject;
 import com.niz.system.OverworldSystem;
 import com.niz.system.WorkerSystem;
 
@@ -147,7 +150,9 @@ public class PlatformerFactory extends Factory {
 		Physics phys = engine.createComponent(Physics.class);
 		phys.bodyTypeID = 1;
 		e.add(phys);
-		e.add(engine.createComponent(SpriteAnimation.class).set(Animations.PLAYER));
+		SpriteAnimation sprite = engine.createComponent(SpriteAnimation.class);
+		//SpriteAnimation sprite = new SpriteAnimation();
+		e.add(sprite.set(Animations.PLAYER));
 		ActionList act = Pools.obtain(ActionList.class);
 		//act.addToStart(new AAutoBuild());
 		//act.addToStart(new ARandomRun());;
@@ -173,7 +178,10 @@ public class PlatformerFactory extends Factory {
 		BitmaskedCollisions bitm = new BitmaskedCollisions();
 		e.add(bitm);
 		bitm.startBit = 10;
-		
+
+		Health health = new Health();
+
+		e.add(health);
 		
 		e.add(new Inventory());
 		OnMap onMap = new OnMap();
@@ -229,7 +237,9 @@ public class PlatformerFactory extends Factory {
 			Inventory inv = engine.createComponent(Inventory.class);
 			inv.copyFrom(charSelectInventories[i]);
 			e.add(inv);
-			
+			inv.equipAll(e);
+			if (i == 0) engine.getSubject("playerselect").notify(e, Subject.Event.CHANGE_SELECTED_CHARACTER, null);
+
 			engine.addEntity(e);
 		}
 		
@@ -323,7 +333,8 @@ public class PlatformerFactory extends Factory {
 		Entity e = makePlayer(engine);
 		ActionList action = e.getComponent(ActionList.class);
 		action.addToStart(AEnemy.class);
-		Race race = engine.createComponent(Race.class);
+		//Race race = engine.createComponent(Race.class);
+		Race race = new Race();
 		for (int r = 0; r < race.raceID.length; r++){
 			race.raceID[r] = Race.RPG_1;
 		}

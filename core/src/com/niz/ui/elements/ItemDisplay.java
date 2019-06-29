@@ -126,6 +126,7 @@ public class ItemDisplay extends UIElement {
 
 						beltRefreshSubject.notify(e, Event.BELT_REFRESH, inv);
 						butt.setShaking();
+						act.setShaking();
 
 						inv.setActiveItem(butt.hash, butt.doingSlot);
 						inv.dirtyLimbs = true;

@@ -3,6 +3,7 @@ package com.niz.component;
 import java.util.Iterator;
 
 import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -22,7 +23,10 @@ import com.niz.item.Doing;
 import com.niz.item.Item;
 import com.niz.item.ItemDef;
 import com.niz.item.ItemModifier;
+import com.niz.observer.Subject;
 import com.niz.ui.edgeUI.InventoryScreen;
+
+import static com.niz.ui.edgeUI.InventoryScreen.BELT_SLOTS;
 
 public class Inventory implements Component, Poolable, KryoSerializable{
 	private static final String TAG = "inv";
@@ -36,6 +40,8 @@ public class Inventory implements Component, Poolable, KryoSerializable{
 	public boolean dirtyLimbs;
 	public static Item defaultItem;
 	public static int nextHash = 10;
+
+
 	@Override
 	public void write(Kryo kryo, Output output) {
 		output.writeInt(primaryItem.length);
@@ -86,7 +92,7 @@ public class Inventory implements Component, Poolable, KryoSerializable{
 	}
 	
 	public Inventory(){
-		for (int i = 0; i < InventoryScreen.BELT_SLOTS; i++){
+		for (int i = 0; i < BELT_SLOTS; i++){
 			//Item item = Pools.obtain(Item.class);
 			//item.id = 1;
 			//items.add(item);
@@ -369,7 +375,24 @@ public class Inventory implements Component, Poolable, KryoSerializable{
 		
 	}
 
-	
+	/**
+	 *
+	 */
+	public void equipAll(Entity e) {
+		Race race = e.getComponent(Race.class);
+		for (Entry<Item> ent : items.entries()){
+			for (int i = 0; i < ent.value.getDef().doings.size; i++){
+				Doing d = ent.value.getDef().doings.get(i);
+				if (getActiveItem(d.limbIndex) == defaultItem && race.enabledLimb[d.limbIndex]){
+					this.setActiveItem(ent.key, i);
+
+				}
+			}
+		}
+		dirtyLimbs = true;
+		//invNotifier.notify(e, Subject.Event.EQUIP_ITEM, null);
+	}
+
 
 }
 

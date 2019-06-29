@@ -57,8 +57,6 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 	private ComponentMapper<Map> mapM;
 	static ComponentMapper<Player>playerM = ComponentMapper.getFor(Player.class);
 
-
-
 	private Bits loaded = new Bits(SCROLLING_MAP_TOTAL_SIZE), shouldLoad = new Bits(SCROLLING_MAP_TOTAL_SIZE), tmpBits = new Bits(SCROLLING_MAP_TOTAL_SIZE), loading = new Bits(SCROLLING_MAP_TOTAL_SIZE), saving = new Bits(SCROLLING_MAP_TOTAL_SIZE);
 	Pool<Map> mapPool = new Pool<Map>(){
 
@@ -84,8 +82,6 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 			object.free = true;
 			super.free(object);
 		}
-		
-		
 		
 	};
 

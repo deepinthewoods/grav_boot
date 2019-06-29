@@ -13,7 +13,7 @@ public class Anima extends Animation {
 	public boolean drawOnMove = false;
 
     public Anima(float frameDuration, TextureRegion[] keyFrames) {
-		super(frameDuration, keyFrames);
+		super(frameDuration, (TextureRegion[])keyFrames);
 	}
 	
 	
