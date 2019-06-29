@@ -52,10 +52,10 @@ public transient IntArray layerIDs = new IntArray(), guideIDs = new IntArray();
 public int front_arm, back_arm, front_leg, back_leg, torso, neck, head, tail;
 public int back_item, front_item, tail_item, head_item;
 public float[] angles = new float[Animations.TOTAL_ANIMS];
-public int legs_g ,tail_g ,hand_front_g ,hand_back_g ,arms_g ,head_g ,neck_g ,torso_g;
+public int legs_g ,tail_g ,hand_front_g ,hand_back_g ,arms_g ,head_g ,neck_g ,torso_g, tail_tip_g;;
 public final int[] itemLayersByLimbIndex = new int[4], guideLayersByLimbIndex = new int[4];
 public boolean[] adjustedLeft = new boolean[Animations.TOTAL_ANIMS];
-public int tail_tip_g;
+
 public boolean alignWithBodyBottom = true;
 static IntArray tmpLayerIDs = new IntArray(), tmpGuideIDs = new IntArray();
 
@@ -196,7 +196,19 @@ public String toString(){
 		}
 		overriddenAnim.clear();
 		overriddenGuides.clear();
-		
+		guides.clear();
+
+		legs_g = 0;
+		tail_g = 0;
+		hand_front_g = 0;
+		hand_back_g = 0;
+		arms_g = 0;
+		head_g = 0;
+		neck_g = 0;
+		torso_g= 0;
+		tail_tip_g= 0;
+		;
+
 	}
 	
 	public void updateGuides(int smallest, boolean left) {
