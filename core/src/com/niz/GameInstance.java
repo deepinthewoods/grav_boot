@@ -35,14 +35,17 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.niz.action.ActionList;
 import com.niz.action.ProgressAction;
+import com.niz.actions.ADestroy;
 import com.niz.actions.ANotRun;
 import com.niz.actions.AStand;
+import com.niz.actions.AThrow;
 import com.niz.anim.Animations;
 import com.niz.anim.SpriteCacheNiz;
 import com.niz.component.BooleanInput;
 import com.niz.component.Control;
 import com.niz.component.DragController;
 import com.niz.component.Pathfind;
+import com.niz.component.Physics;
 import com.niz.component.Player;
 import com.niz.component.Position;
 import com.niz.component.Race;
@@ -113,6 +116,7 @@ public class GameInstance implements Screen, Observer {
 	private ShaderSystem shaderSys;
     private LightRenderSystem lightRender = null;
 	private ProgressBarSystem progBar;
+	public static boolean paused;
 
 	public void create (boolean headless, boolean newGame) {
 
@@ -264,6 +268,7 @@ public class GameInstance implements Screen, Observer {
 					engine.addSystem(new BitmaskedCollisionsSystem());
 					engine.addSystem(new BucketSystem());
 					engine.addSystem(new PickUpCollisionsSystem());
+					engine.addSystem(new HealthSystem());
 					engine.addSystem(new MapSystem());
 					OverworldSystem overworld = new OverworldSystem(atlas, factory);
 					overworld.setProcessing(false);
@@ -501,7 +506,7 @@ public class GameInstance implements Screen, Observer {
 		ActionSystem actionSys = engine.getSystem(ActionSystem.class);
 		if (actionSys != null && playerEntities.size() > 0){
 			actionSys.updateRender(delta);
-			boolean paused = false;
+			paused = false;
 			Entity player = playerEntities.get(0);
 			Control con = player.getComponent(Control.class);
 			ActionList act = player.getComponent(ActionList.class);
@@ -509,13 +514,17 @@ public class GameInstance implements Screen, Observer {
 					(act.containsAction(AStand.class) && act.containsAction(ANotRun.class))
 					&& 
 					(!con.pressed[Input.JUMP] && !con.pressed[Input.WALK_LEFT] && !con.pressed[Input.WALK_RIGHT])
-					
+					//&& (!act.containsAction(AThrow.class) && !act.containsAction(ADestroy.class) )
+
 					) paused = true;
+			Physics phys = player.getComponent(Physics.class);
+			if (!phys.onGround)
+				paused = false;
 			if (unPause){
 			    paused = false;
 			    unPause = false;
             }
-//			if (paused) deltaTime = 0f;
+			if (paused) deltaTime = 0f;
 		}
 		if (deltaTime > .1f) deltaTime = .1f;
 		

@@ -1,6 +1,7 @@
 package com.niz.actions;
 
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -17,6 +18,7 @@ import com.niz.component.Inventory;
 import com.niz.component.MovementData;
 import com.niz.component.OnMap;
 import com.niz.component.Physics;
+import com.niz.component.Player;
 import com.niz.component.Position;
 import com.niz.component.Race;
 import com.niz.component.SpriteAnimation;
@@ -33,6 +35,7 @@ public abstract class AThrow extends LimbAction {
 	private static  ComponentMapper<SpriteAnimation> animM = ComponentMapper.getFor(SpriteAnimation.class);
 	private static ComponentMapper<Inventory> invM = ComponentMapper.getFor(Inventory.class);
 	private static ComponentMapper<Race> raceM = ComponentMapper.getFor(Race.class);
+	Family playerFamily = Family.all(Player.class).get();
 
 	private static Vector2 tmp = new Vector2();
 	int angleIndex;
@@ -65,7 +68,7 @@ public abstract class AThrow extends LimbAction {
 			started = true;
 		}
 		if (started){
-			GameInstance.unPause = true;
+			if (playerFamily.matches(parent.e))GameInstance.unPause = true;
 			AnimationContainer layer = anim.overriddenAnimationLayers[limb_index];
 			if (layer == null || layer.layers.get(0).isAnimationFinished(anim.time[limb_index])){
 				if (cooldown)

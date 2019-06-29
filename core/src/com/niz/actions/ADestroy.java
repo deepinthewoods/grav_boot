@@ -3,6 +3,7 @@ package com.niz.actions;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EngineNiz.PooledEntity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Bresenham2;
 import com.badlogic.gdx.math.GridPoint2;
@@ -12,7 +13,9 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Pools;
 import com.niz.BlockDefinition;
 import com.niz.Data;
+import com.niz.GameInstance;
 import com.niz.Input;
+import com.niz.Main;
 import com.niz.RayCaster;
 import com.niz.action.LimbAction;
 import com.niz.anim.AnimationContainer;
@@ -27,6 +30,7 @@ import com.niz.component.Map;
 import com.niz.component.MovementData;
 import com.niz.component.OnMap;
 import com.niz.component.Physics;
+import com.niz.component.Player;
 import com.niz.component.Position;
 import com.niz.component.Race;
 import com.niz.component.SpriteAnimation;
@@ -35,6 +39,7 @@ import com.niz.system.MapSystem;
 
 public abstract class ADestroy extends LimbAction {
 	private static final String TAG = "place action";
+	private static final float EXTRA_COOLDOWN_TIME = .15f;
 	private static ComponentMapper<Physics> physM = ComponentMapper.getFor(Physics.class);
 	private static ComponentMapper<Control> controlM = ComponentMapper.getFor(Control.class);
 	private static ComponentMapper<MovementData> moveM = ComponentMapper.getFor(MovementData.class);
@@ -45,7 +50,7 @@ public abstract class ADestroy extends LimbAction {
 	private static ComponentMapper<Inventory> invM = ComponentMapper.getFor(Inventory.class);
 	private static ComponentMapper<Race> raceM = ComponentMapper.getFor(Race.class);
 	private static ComponentMapper<BlockLine> lineBodyM = ComponentMapper.getFor(BlockLine.class);
-
+	Family playerFamily = Family.all(Player.class).get();
 	private static Vector2 tmp = new Vector2(), p1 = new Vector2(), p2 = new Vector2(), p3 = new Vector2(), p4 = new Vector2();
 	int angleIndex;
 	private int limb_index;
@@ -65,6 +70,8 @@ public abstract class ADestroy extends LimbAction {
 	private int itemID;
 	private long showEntityID;
 	private long lineEntityID;
+	private long cooldownEndTick;
+
 	@Override
 	public void update(float dt) {
 		SpriteAnimation anim = animM .get(parent.e);
@@ -96,13 +103,17 @@ public abstract class ADestroy extends LimbAction {
 				}
 			}
 		}
-		if (started){		
+		if (started){
+			if (playerFamily.matches(parent.e))GameInstance.unPause = true;
 			AnimationContainer layer = anim.overriddenAnimationLayers[limb_index];
 			if (layer == null || layer.layers.get(0).isAnimationFinished(anim.time[limb_index])){
-				if (cooldown)
-					isFinished = true;
+				if (cooldown ) {
+					if (parent.engine.tick > cooldownEndTick)
+						isFinished = true;
+				}
 				else {
 					cooldown = true;
+					cooldownEndTick = (long)(parent.engine.tick + EXTRA_COOLDOWN_TIME / Main.timeStep);
 					Item item = invM.get(parent.e).getItem(itemID);
 					//item.durability -= durabilityDelta;
 					invM.get(parent.e).dirty = true;
@@ -126,25 +137,7 @@ public abstract class ADestroy extends LimbAction {
 			}
 			
 		} else {//!started
-			float angle = control.rotation.angle();
-			throwAngle = angle;
-			angle += 10;
-			if (angle > 360) angle -= 360;
-			int newIndex = (int)angle/20;
-			if (newIndex != angleIndex){
-				//Gdx.app.log(TAG, "klj  "+newIndex);
-				angleIndex = newIndex;
-				int animID = Data.hash("throw"+angleIndex);
-				AnimationLayer layer = anim.overrideAnimationForLayer(limb_index, animID).layers.get(0);
-				if (guide_layer != -1){
-					anim.overrideGuide(guide_layer, animID);
-				}
-				angle -= 10;
-				if (angle < 0) angle += 360;
-				anim.angles[limb_index] = angle;
-				if (item_layer_index != -1)anim.angles[item_layer_index] = angle;
-
-			}
+			updateAim(control, anim);
 			OnMap onMap = onMapM.get(parent.e);
 			
 			start.set((int)pos.pos.x, (int)pos.pos.y);
@@ -232,6 +225,39 @@ public abstract class ADestroy extends LimbAction {
 	static Bresenham2 ray = new Bresenham2();
 	static GridPoint2 start = new GridPoint2(), end = new GridPoint2();
 	static Vector2 tmpV = new Vector2(), tmpV2 = new Vector2(), tmpV3 = new Vector2(), len = new Vector2(), len2 = new Vector2();;
+	private void updateAim(Control control, SpriteAnimation anim) {
+		float angle = control.rotation.angle();
+		throwAngle = angle;
+		angle += 10;
+		if (angle > 360) angle -= 360;
+		int newIndex = (int)angle/20;
+
+		if (newIndex != angleIndex){
+			Gdx.app.log(TAG, "update aim " + newIndex);
+			//Gdx.app.log(TAG, "klj  "+newIndex);
+			angleIndex = newIndex;
+			int animID = Data.hash("throw"+angleIndex);
+			AnimationLayer layer = anim.overrideAnimationForLayer(limb_index, animID).layers.get(0);
+			anim.time[item_layer_index] = 0f;
+			anim.frameIndices[item_layer_index] = 0;
+			anim.time[limb_index] = 0f;
+			anim.frameIndices[limb_index] = 0;
+			if (guide_layer != -1){
+				anim.overrideGuide(guide_layer, animID);
+			}
+			angle -= 10;
+			if (angle < 0) angle += 360;
+			anim.angles[limb_index] = angle;
+			//anim.angles[item_layer_index] = angle;
+			if (item_layer_index != -1)anim.angles[item_layer_index] = angle;
+			anim.updateGuides(1, anim.left);
+		}
+	}
+	@Override
+	public void updateRender(float dt) {
+		update(0f);
+	}
+
 	@Override
 	public void onEnd() {
 		SpriteAnimation anim = animM .get(parent.e);
@@ -251,7 +277,7 @@ public abstract class ADestroy extends LimbAction {
 	@Override
 	public void onStart() {
 		valid = false;
-		
+
 		cooldown = false;
 		SpriteAnimation anim = animM .get(parent.e);
 		limb_index = getLimbIndex(anim);
