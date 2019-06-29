@@ -68,4 +68,13 @@ public class RoomEntry implements Poolable{
 		return offset.x < rx + rw && offset.x + room.blocks[0].length > rx && offset.y < ry + rh && offset.y + room.blocks.length > ry;
 
 	}
+
+	public boolean overlaps(RoomEntry entry) {//used for inheriting preserveWalls
+		int rx = entry.offset.x - 3;
+		int ry = entry.offset.y - 3;
+		int rw = entry.room.blocks[0].length+6;
+		int rh = entry.room.blocks.length+6;
+		return offset.x < rx + rw && offset.x + room.blocks[0].length > rx && offset.y < ry + rh && offset.y + room.blocks.length > ry;
+
+	}
 }

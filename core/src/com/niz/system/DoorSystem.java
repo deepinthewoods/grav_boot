@@ -93,11 +93,11 @@ public class DoorSystem extends EntitySystem {
 						if (onDoor == null){
 							onDoor = engine.createComponent(OnDoor.class);
 							ce.add(onDoor);							
-							Gdx.app.log(TAG, "NEW DOOR");
+							//Gdx.app.log(TAG, "NEW DOOR");
 						}
 						onDoor.doors.add(e.getId());
 
-						Gdx.app.log(TAG, "ON DOOR");
+						//Gdx.app.log(TAG, "ON DOOR");
 					}
 					
 				}

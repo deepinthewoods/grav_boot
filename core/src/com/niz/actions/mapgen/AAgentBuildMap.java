@@ -27,19 +27,24 @@ import com.niz.system.RoomCatalogSystem;
 
 public class AAgentBuildMap extends ProgressAction {
 
-	private static final int TOTAL_ROOMS_TARGET = 20;
-	private static final int MAIN_PATH_COMPARES = 3;
+	private static final int TOTAL_ROOMS_TARGET = 160;
+	private static final int MAIN_PATH_COMPARES = 5;
 
 	public static final int SECONDARY_ROOM_SEGMENT_SIZE = 4;
 	public static final int SECONDARY_ROOM_TRIES = 10;
 
-	private static final int NUMBER_OF_ROOMS_TO_COMPARE = 3;
+	private static final int NUMBER_OF_ROOMS_TO_COMPARE = 5;
+    private static final int TOTAL_ITERATIONS = 50;
+	private static final int BIG_ROOM_TRIES = 30;
+	private static final int END_ROOM_TRIES = 60;
+	private static final int MEDIUM_ROOMS_AMOUNT = 8;
 	private long startTime;
 	private RoomEntry baseStartRoom;
 	private int baseStartExitIndex;
 	private RoomEntry endRoom;
 	private int shortestDistance;
 	private RoomEntry oldBaseStartRoom;
+	private int slopeAid, slopeBid;
 
 	public enum DistanceType {
 		START_TO_END_DIST
@@ -71,7 +76,7 @@ public class AAgentBuildMap extends ProgressAction {
 	@Override
 	public void update(float dt) {
 		int count = 0;
-		while (count++ < 12 && !isFinished){
+		while (count++ < TOTAL_ITERATIONS && !isFinished){
 			update();
 		}
 	}
@@ -108,7 +113,7 @@ public class AAgentBuildMap extends ProgressAction {
 				break;
 			case 2://make small rooms
 				rooms = smallRooms;
-				boolean done = makeRooms(4 * TOTAL_ROOMS_TARGET, TOTAL_ROOMS_TARGET/3+1, false, false);
+				boolean done = makeRooms(4 * TOTAL_ROOMS_TARGET, TOTAL_ROOMS_TARGET/MEDIUM_ROOMS_AMOUNT+1, false, false);
 				if (done){
 					progress++;
 				}
@@ -125,7 +130,7 @@ public class AAgentBuildMap extends ProgressAction {
 				rooms = bigRooms;
 				done = false;
 
-				done = makeRooms(30, 1, false, false);
+				done = makeRooms(BIG_ROOM_TRIES, 1, false, false);
 				if (done){
 					retries = 0;
 					progress = 0;
@@ -188,7 +193,7 @@ public class AAgentBuildMap extends ProgressAction {
 				main.add(baseStartRoom);
 
 				rooms = endRooms;
-				done = makeRooms(60, 1, false, false);
+				done = makeRooms(END_ROOM_TRIES, 1, false, false);
 				if (done){
 					progress++;
 					RoomEntry end = main.peek();
@@ -443,7 +448,8 @@ public class AAgentBuildMap extends ProgressAction {
 		writeToMap(list, i, false);
 	}
 	private void writeToMap(Array<RoomEntry> list, int i, boolean finalPass) {
-		for (RoomEntry r : list){
+		for (int t = 0; t < list.size; t++){
+			RoomEntry r = list.get(t);
 			writeToMap(r, i, finalPass);
 		}
 	}
@@ -702,11 +708,11 @@ public class AAgentBuildMap extends ProgressAction {
 					}
 					if (entry.teleportOut[exitIndex]){
 
-					} else {
+					} else {//side door/gap
 						map.setLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, 0);
 						map.setLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, 0);
-						if (!entry.room.preserveWalls){
-						    for (int sy = entry.offset.y + exit.y + dy + 1; sy < entry.offset.y + exit.y + dy + entry.room.blocks.length; sy++){
+						if (!shouldPreserveWalls(entry)){
+						    for (int sy = entry.offset.y + exit.y + dy + 1; sy < entry.offset.y + dy + entry.room.blocks.length; sy++){
                                 map.setLocal(entry.offset.x + exit.x + dx, sy, 0);
                             }
                         }
@@ -737,8 +743,16 @@ public class AAgentBuildMap extends ProgressAction {
 						case EXIT:
 							break;
 						case BLOCKA:
-						case BLOCKB:
 							blockID = blockAid + r.nextInt(64);
+							break;
+						case BLOCKB:
+							blockID = blockBid + r.nextInt(64);
+							break;
+						case SLOPEA:
+							blockID = slopeAid + r.nextInt(64);
+							break;
+						case SLOPEB:
+							blockID = slopeBid + r.nextInt(64);
 							break;
 						case EMPTY:
 							blockID = 0;
@@ -769,7 +783,18 @@ public class AAgentBuildMap extends ProgressAction {
 
 	}
 
-	private void makeSpawnMarker(int x, int y, int type) {
+    private boolean shouldPreserveWalls(RoomEntry entry) {
+        for (RoomEntry r : base){
+            if (r.overlaps(entry) && r.room.preserveWalls){
+            	//Gdx.app.log(TAG, "Preserve walls");
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void makeSpawnMarker(int x, int y, int type) {
 		Entity e = parent.engine.createEntity();
 		Position pos = parent.engine.createComponent(Position.class);
 		pos.pos.set(x + .5f, y);
@@ -918,6 +943,8 @@ public class AAgentBuildMap extends ProgressAction {
 		progressSys = parent.engine.getSystem(ProgressBarSystem.class);
 		blockAid = 1024;
 		blockBid = 1024+64;
+		slopeAid = Blocks.SLOPE;
+		slopeBid = Blocks.SLOPE + 64;
 	}
 
 	private class RoomComparator implements Comparator<Room> {
