@@ -212,7 +212,7 @@ public class ItemDisplay extends UIElement {
 		//this.actor = new Actor();
 		//table.setSize(Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()*.82785f);
 		//actor.debug();
-		backTable.setTouchable(Touchable.disabled);
+		if (touchDisabled) backTable.setTouchable(Touchable.disabled);
 	}
 	ButtonGroup group = new ButtonGroup();
 	private Inventory inv;
