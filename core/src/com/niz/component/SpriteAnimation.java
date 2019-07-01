@@ -207,7 +207,7 @@ public String toString(){
 		neck_g = 0;
 		torso_g= 0;
 		tail_tip_g= 0;
-		;
+
 
 	}
 	
