@@ -54,6 +54,7 @@ public class CameraSystem extends RenderSystem implements Observer {
 	public OrthographicCamera mapDrawCamera;
 
 	public static float onePixel;
+	private float menuZoom;
 
 
 	public CameraSystem() {
@@ -112,6 +113,7 @@ Vector2 tmpV = new Vector2();
 		Entity e = entities.get(0);
 		Vector2 pos = posM.get(e).pos;
 		Vector2 playerPos = tmpV;
+
 		if (playerEntities.size() == 0){
 			if (dragEntities.size() == 0)
 				return;
@@ -122,20 +124,29 @@ Vector2 tmpV = new Vector2();
 			camera.unproject(vA);
 			camera.unproject(vB);
 			vA.sub(vB);
-			//camera.zoom = pos2.y;
-			float camHeight = camera.viewportHeight * camera.zoom * Main.PX;
-			camHeight /= 6f;
-			//vA is delta
 			onePixel = -vA.x;
 			onePixel /= Main.PPM;
-			camera.position.set((pos2.x*Main.PPM), (camHeight + 2) * Main.PPM, 0);//*/
-			camera.update();
-			mapDrawCamera.zoom = camera.zoom;
-			mapDrawCamera.position.set((pos2.x*Main.PPM), (camHeight + 2) * Main.PPM, 0);
-			mapDrawCamera.update();
+			//camera.zoom = pos2.y;
+			float camHeight = camera.viewportHeight * camera.zoom * Main.PX;
+			camHeight /= 3f;
+			//vA is delta
+
+            pos.set(pos2);
+
+            //Gdx.app.log(TAG , "zoomed " +zoom + "  " + camera.position);
+            camera.position.set((int)(pos.x*Main.PPM), (Gdx.graphics.getHeight()/4) * menuZoom, 0);//*/
+            camera.zoom = menuZoom;
+            camera.update();
+
+            mapDrawCamera.zoom = camera.zoom;
+            //if (!zoomedOut)
+            mapDrawCamera.zoom = 1f;
+            mapDrawCamera.position.set(camera.position.x, camera.position.y, 0);
+            mapDrawCamera.update();
 			//Gdx.app.log(TAG, "drag controller" + camera.zoom);
 			return;
 		}
+
 		playerPos = posM.get(playerEntities.get(0)).pos;
 		pos.set(playerPos);
 
@@ -149,7 +160,6 @@ Vector2 tmpV = new Vector2();
 			mapDrawCamera.zoom = 1f;
 		mapDrawCamera.position.set((int)(pos.x*Main.PPM), (int)(pos.y*Main.PPM), 0);
 		mapDrawCamera.update();
-
 
 
 	}
@@ -166,7 +176,8 @@ Vector2 tmpV = new Vector2();
 		);
 		adjustedCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		//gameCamera = new OrthographicCamera(10, 10);//Main.PPM*Main.VIEWPORT_SIZE, (int)(Main.PPM*Main.VIEWPORT_SIZE/Main.ar));
-
+		menuZoom = 300f / Gdx.graphics.getHeight();
+		Gdx.app.log(TAG, "menuZ " + menuZoom);
 	}
 
 }
