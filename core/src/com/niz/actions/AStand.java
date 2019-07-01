@@ -47,61 +47,27 @@ public class AStand extends Action {
 	private long debugTick;
 	@Override
 	public void update(float dt) {
+
 		//Gdx.app.log(TAG, "update"+earlyJump);
 		Physics phys = physM.get(parent.e);
 		//if (phys == null) return;
 		Control con = controlM.get(parent.e);
-		if (Gdx.input.isKeyJustPressed(Keys.G) && parent.e.getComponent(Player.class) != null){
-			//AutoGib c = parent.engine.createComponent(AutoGib.class);
-			//parent.e.add(c);
-			if (parent.engine.tick - debugTick > 5000) {
-				debugTick = parent.engine.tick;
-				//Gdx.app.log(TAG, "jdsklkld");
-				//Gdx.app.log(TAG, "" + parent.engine);
-				//Gdx.app.log(TAG, "" + Data.getStringHashes());
-				makeTestEntity(parent.engine);
-			}
-		}
-		if (Gdx.input.isKeyJustPressed(Keys.H)){
-			//posM.get(parent.e).pos.set(128, 228);
-			Gdx.app.log(TAG, "hhh " + posM.get(parent.e).pos);
-			Vector2 pos = posM.get(parent.e).pos;
-
-			for (int x = (int)pos.x - 3; x < pos.x + 3; x++){
-				for (int y = (int)pos.y - 3; x < pos.y + 3; y++){
-					OverworldSystem over = parent.engine.getSystem(OverworldSystem.class);
-					Map chunk = over.getMapFor(x, y);
-
-					chunk.set(x, y, 0);
-				}
-			}
-		}
-		if (Gdx.input.isKeyJustPressed(Keys.H)){
-			parent.e.getComponent(Position.class).pos.y = 255;;
-			//parent.e.getComponent(Inventory.class).addItem(Inventory.defs.get(1), 5);
-			//parent.e.getComponent(Inventory.class).addItem(Inventory.defs.get(0), 1);
-			//parent.engine.getSubject("inventoryRefresh").notify(parent.e, Event.INVENTORY_REFRESH, parent.e.getComponent(Inventory.class));
-			//parent.e.getComponent(Inventory.class).addItem(Inventory.defs.get(0), 5);;
-		}
+		//Gdx.app.log(TAG, "update" + canJump + con.pressed[Input.JUMP]);
 		
 		if (run){
 			if (this.prev instanceof ANotRun){
 				run = false;
 				animM .get(parent.e).start(Data.hash("stand"));
 				//Gdx.app.log(TAG, "switch to STAND");
-
 			}
 		} else {
 			if (this.prev instanceof ARun){
 				run = true;
 				animM .get(parent.e).start(Data.hash("walk"));
 				//Gdx.app.log(TAG, "switch to WALK");
-
 			}
 		}
-		
-		//phys.onWall = phys.onWallLeft || phys.onWallRight;
-		
+
 		if (!phys.onGround && phys.onGroundTime < parent.engine.tick-FALL_DELAY){
 			addBeforeMe(Pools.obtain(AFall.class));
 			//Gdx.app.log(TAG, "switch to fall");
@@ -122,9 +88,7 @@ public class AStand extends Action {
 					//Gdx.app.log(TAG, "switch to jump"+physM.get(parent.e).vel);
 					phys.onGround = false;
 					canJump = false;
-					
 					Inventory inv = invM.get(parent.e);
-					
 				} else {
 					//Gdx.app.log(TAG, "cant ju,p" + canJump);
 				}
@@ -134,10 +98,8 @@ public class AStand extends Action {
 				//Gdx.app.log(TAG, "can jump");
 			}
 			
-		} 
-		
+		}
 		//Gdx.app.log(TAG, "active"+phys.onGround);
-		
 	}
 
 	private void makeTestEntity(EngineNiz engine) {
@@ -156,9 +118,10 @@ public class AStand extends Action {
 
 	@Override
 	public void updateRender(float dt) {
-		
-		
-		
+
+		Physics phys = physM.get(parent.e);
+		Control con = controlM.get(parent.e);
+		if (!con.pressed[Input.JUMP])canJump = true;
 	}
 
 

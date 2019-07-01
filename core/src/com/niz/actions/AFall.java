@@ -36,11 +36,7 @@ public class AFall extends Action {
 	public long heldTime;
 	@Override
 	public void update(float dt) {
-		if (Gdx.input.isKeyJustPressed(Keys.H)){
-			posM.get(parent.e).pos.y = 128;
-			posM.get(parent.e).pos.set(128, 130);
-			physM.get(parent.e).vel.set(0,0);
-		}
+
 		
 		MovementData move = moveM.get(parent.e);
 		Physics phys = physM.get(parent.e);

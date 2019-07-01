@@ -3,6 +3,7 @@ package com.niz.actions;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EngineNiz.PooledEntity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Bresenham2;
 import com.badlogic.gdx.math.GridPoint2;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Pools;
 import com.niz.Data;
+import com.niz.GameInstance;
 import com.niz.Input;
 import com.niz.RayCaster;
 import com.niz.action.LimbAction;
@@ -26,6 +28,7 @@ import com.niz.component.Map;
 import com.niz.component.MovementData;
 import com.niz.component.OnMap;
 import com.niz.component.Physics;
+import com.niz.component.Player;
 import com.niz.component.Position;
 import com.niz.component.Race;
 import com.niz.component.SpriteAnimation;
@@ -44,6 +47,7 @@ public abstract class APlace extends LimbAction {
 	private static ComponentMapper<Inventory> invM = ComponentMapper.getFor(Inventory.class);
 	private static ComponentMapper<Race> raceM = ComponentMapper.getFor(Race.class);
 	private static ComponentMapper<BlockLine> lineBodyM = ComponentMapper.getFor(BlockLine.class);
+	Family playerFamily = Family.all(Player.class).get();
 
 	private static Vector2 tmp = new Vector2(), p1 = new Vector2(), p2 = new Vector2(), p3 = new Vector2(), p4 = new Vector2();
 	int angleIndex;
@@ -81,7 +85,9 @@ public abstract class APlace extends LimbAction {
 			if (valid)
 				started = true;
 		}
-		if (started){		
+		if (started){
+			if (playerFamily.matches(parent.e)) GameInstance.unPause = true;
+
 			AnimationContainer layer = anim.overriddenAnimationLayers[limb_index];
 			if (layer == null || layer.layers.get(0).isAnimationFinished(anim.time[limb_index])){
 				if (cooldown)
@@ -110,25 +116,7 @@ public abstract class APlace extends LimbAction {
 			}
 			
 		} else {//!started
-			float angle = control.rotation.angle();
-			throwAngle = angle;
-			angle += 10;
-			if (angle > 360) angle -= 360;
-			int newIndex = (int)angle/20;
-			if (newIndex != angleIndex){
-				//Gdx.app.log(TAG, "klj  "+newIndex);
-				angleIndex = newIndex;
-				int animID = Data.hash("throw"+angleIndex);
-				AnimationLayer layer = anim.overrideAnimationForLayer(limb_index, animID).layers.get(0);
-				if (guide_layer != -1){
-					anim.overrideGuide(guide_layer, animID);
-				}
-				angle -= 10;
-				if (angle < 0) angle += 360;
-				anim.angles[limb_index] = angle;
-				if (item_layer_index != -1)anim.angles[item_layer_index] = angle;
-
-			}
+			updateAim(cont, anim);
 			OnMap onMap = onMapM.get(parent.e);
 			
 			start.set((int)pos.pos.x, (int)pos.pos.y);
@@ -201,6 +189,45 @@ public abstract class APlace extends LimbAction {
 			
 		}
 	}
+	private void updateAim(Control control, SpriteAnimation anim) {
+		float angle = control.rotation.angle();
+		throwAngle = angle;
+		angle += 10;
+		if (angle > 360) angle -= 360;
+		int newIndex = (int)angle/20;
+
+		if (newIndex != angleIndex){
+			Gdx.app.log(TAG, "update aim " + newIndex);
+			//Gdx.app.log(TAG, "klj  "+newIndex);
+			angleIndex = newIndex;
+			int animID = Data.hash("throw"+angleIndex);
+			AnimationLayer layer = anim.overrideAnimationForLayer(limb_index, animID).layers.get(0);
+			anim.time[item_layer_index] = 0f;
+			anim.frameIndices[item_layer_index] = 0;
+			anim.time[limb_index] = 0f;
+			anim.frameIndices[limb_index] = 0;
+			if (guide_layer != -1){
+				anim.overrideGuide(guide_layer, animID);
+			}
+			angle -= 10;
+			if (angle < 0) angle += 360;
+			anim.angles[limb_index] = angle;
+			//anim.angles[item_layer_index] = angle;
+			if (item_layer_index != -1)anim.angles[item_layer_index] = angle;
+			anim.updateGuides(1, anim.left);
+		}
+	}
+
+	@Override
+	public void updateRender(float dt) {
+		//Gdx.app.log(TAG, "updaterender");
+		/*SpriteAnimation anim = animM .get(parent.e);
+		Control control = controlM.get(parent.e);
+		if (!started)
+			updateAim(control, anim);*/
+		update(0f);
+	}
+
 	static RayCaster cast = new RayCaster();
 	static Bresenham2 ray = new Bresenham2();
 	static GridPoint2 start = new GridPoint2(), end = new GridPoint2();
