@@ -247,7 +247,7 @@ public class MapCollisionSystem extends EntitySystem {
 			
 			if (hasFoundCollision){
 				pos.y += offset - v.y;
-				phys.vel.y = -.01f;
+
 				//Gdx.app.log("collide", "jljklas"+e.getId());
 				phys.onGround = true;
 				phys.onGroundTime = engine.tick;
@@ -257,6 +257,7 @@ public class MapCollisionSystem extends EntitySystem {
 					move.resetDoubleJumps();
 				}
 				if (collisionComponent.onSlope) phys.onSlope = true;
+				else phys.vel.y = -.01f;
 				collideYSlopes(e, map);
 			} else if (!forceDown){
 				phys.onGround = false;
