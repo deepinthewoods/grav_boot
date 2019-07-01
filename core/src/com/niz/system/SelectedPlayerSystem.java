@@ -76,7 +76,7 @@ public class SelectedPlayerSystem extends EntitySystem {
 			SelectedPlayer sel = e.getComponent(SelectedPlayer.class);
 			factory.selected(engine, sel, e);
 			e.remove(SelectedPlayer.class);
-			e.getComponent(Inventory.class).equipAll(e);
+			//e.getComponent(Inventory.class).equipAll(e);
 
 			//start loading next level
 			

@@ -568,7 +568,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		mapE.add(newGameMap);
 		engine.addEntity(mapE);
 		newGameMap.mapSystem = mapSystem;
-		
+
 	}
 	public void stopNewGameScreen(){
 		//Gdx.app.log(TAG, "stop new game screen");
@@ -624,5 +624,9 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 	public Entity generateMob(int z, PlatformerFactory.MobSpawnType type, EngineNiz engine) {
 
 		return factory.generateMob(z, type, engine);
+	}
+
+	public boolean isNewGameScreen() {
+		return newGameScreen;
 	}
 }

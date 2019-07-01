@@ -57,6 +57,8 @@ public class PlatformerFactory extends Factory {
 	public Inventory[] charSelectInventories, pathfindingInventories;
 	//private Map map;
 	public static final int CHAR_SELECT_CHARACTERS = 6, PATHFINDING_COUNT = 32;
+	private PooledEntity[] levelSelectionEntities;
+
 	public PlatformerFactory(){
 		charSelectRaces = new Race[CHAR_SELECT_CHARACTERS];
 		for (int i = 0; i < charSelectRaces.length; i++){
@@ -213,13 +215,15 @@ public class PlatformerFactory extends Factory {
 	public void makeLevelSelection(EngineNiz engine, WorldDefinition worldDef) {
 		WorkerSystem workSys = engine.getSystem(WorkerSystem.class);
 
+		levelSelectionEntities = new PooledEntity[CHAR_SELECT_CHARACTERS];
 		for (int i = 0; i < CHAR_SELECT_CHARACTERS; i++){
 			PooledEntity e = makePlayer(engine);
+			levelSelectionEntities[i] = e;
 			Race race = engine.createComponent(Race.class);
 			for (int r = 0; r < race.raceID.length; r++){
 				race.raceID[r] = charSelectRaces[i].raceID[r];
 			}
-			e.add(race);
+
 			race.dirtyLayers = true;
 			e.getComponent(Position.class).pos.set(i*CHAR_SELECT_SPACING + 16 + CHAR_SELECT_SPACING / 2, 2);
 			ActionList act = e.getComponent(ActionList.class);
@@ -237,10 +241,14 @@ public class PlatformerFactory extends Factory {
 			Inventory inv = engine.createComponent(Inventory.class);
 			inv.copyFrom(charSelectInventories[i]);
 			e.add(inv);
+			e.add(race);
 			inv.equipAll(e);
 			if (i == 0) engine.getSubject("playerselect").notify(e, Subject.Event.CHANGE_SELECTED_CHARACTER, null);
 
 			engine.addEntity(e);
+
+
+
 		}
 		
 		{
@@ -267,6 +275,8 @@ public class PlatformerFactory extends Factory {
 			makePathfinder(engine, i, APathfindingJumpAndHold.WALLJUMP);
 		}
 		//*/
+
+		//postLevelSelection(engine, def);
 	}
 	private void makePathfinder(EngineNiz engine, int i, int type) {
 		PooledEntity e = makePlayer(engine);
@@ -307,7 +317,7 @@ public class PlatformerFactory extends Factory {
 			engine.getSystem(OverworldSystem.class).changeToRoomEditor(sel.def);;
 		} else {
 			engine.getSystem(OverworldSystem.class).stopNewGameScreen();
-			engine.getSystem(OverworldSystem.class).changeZLevel(0);;
+			engine.getSystem(OverworldSystem.class).changeZLevel(0);
 		}
 	}
 	
@@ -341,6 +351,8 @@ public class PlatformerFactory extends Factory {
 		e.add(race);
 		return e;
 	}
+
+
 
 	public Action createEntityGenerationAgent(
 			Map map, WorldDefinition worldDef, int z) {

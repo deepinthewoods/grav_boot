@@ -44,6 +44,7 @@ import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.niz.GameInstance;
 import com.niz.Input;
 import com.niz.Main;
 import com.niz.anim.Animations;
@@ -65,6 +66,7 @@ import com.niz.observer.Subject;
 import com.niz.observer.Subject.Event;
 import com.niz.system.LightRenderSystem;
 import com.niz.system.MapRenderSystem;
+import com.niz.system.OverworldSystem;
 import com.niz.system.SpriteAnimationSystem;
 import com.niz.ui.elements.BackgroundClickDrag;
 import com.niz.ui.elements.BeltTable;
@@ -90,6 +92,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	private final SpriteAnimationSystem spriteRenderer;
 	private final int u_texture;
 	private final int u_index_texture;
+	private final OverworldSystem overworld;
 	public BeltTable belt;
 	private ControllerButton btnPad;
 	private ControllerSliderBoolean slider;
@@ -129,6 +132,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		map = engine.getSystem(MapRenderSystem.class);
 		lights = engine.getSystem(LightRenderSystem.class);
 		spriteRenderer = engine.getSystem(SpriteAnimationSystem.class);
+		overworld = engine.getSystem(OverworldSystem.class);
 		this.skin = skin;
 		
 		doorTable = new Table();
@@ -666,7 +670,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 	private boolean doorButtonsWasOn;
 
 	public void draw(ShapeRenderer rend, SpriteBatchN batch, BitmapFont font) {
-		//if (true) return;
+
 		if (doorButtonsOn){
 			if (!doorButtonsWasOn){
 				doorTable.clear();
@@ -719,6 +723,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		//shader.setUniformi(u_index_texture, 1); //passing first texture!!!
 		SpriteAnimationSystem.atlasTexture.bind(0);
 		//shader.setUniformi(u_texture, 0);
+
 		batch.begin();
 
 		for (InventoryButton b : InventoryButton.itemDrawList){//works with blocks
@@ -734,6 +739,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		InventoryButton.itemDrawList.clear();
 		batch.setShader(null);
 		batch.enableTextureBinding();
+		if (overworld.isNewGameScreen()) return;
 		batch.begin();
 		rend.setColor(Color.DARK_GRAY);
 		rend.begin(ShapeType.Line);
@@ -754,6 +760,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		}
 		drawButton(belt.buttons[belt.group.getCheckedIndex()], batch, rend, true);
 		rend.end();
+
 		rend.setColor(Color.RED);
 		rend.begin(ShapeType.Filled);
 		tmpV.set(0, 0);
@@ -762,6 +769,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 
 		rend.end();
 		batch.end();
+		//
 		batch.begin();
 		if (!sides[0].isHidden()) {
 			for (int i = 0; i < BELT_SLOTS; i++){
@@ -789,7 +797,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		checkedQueue.clear();
 		rend.end();
 		if (showInv) return;
-		
+
 		/*rend.begin(ShapeType.Filled);
 		for (int i = 0; i < toastLabels.size; i++){
 			DoingLabel lab = toastLabels.get(i);
@@ -905,7 +913,7 @@ public class InventoryScreen extends EdgeUI implements Observer{
 		h = Main.prefs.control_button_height;
 		x = Gdx.graphics.getWidth()-w;
 		y = 0;
-		if (!sides[8].isHidden()){
+		if (!sides[8].isHidden()){//jump button
 			//Gdx.app.log(TAG, "cutoffs st"+cutOffJump);
 			MomentaryButton bu = (MomentaryButton) sides[8].min[0].actor;
 			if (cutOffJump){

@@ -67,6 +67,7 @@ public class MainMenuTable extends UIElement {
 		loggerCheckFamily = Family.one(PathfinderPreLog.class).get();
 		changeWorldButton = new TextButton("Change World", skin, "mainmenu");
 		newGameButton = new TextButton("New World", skin, "mainmenu");
+
 		deleteButton = new TextButton("Delete All", skin, "mainmenu");
 		startButton = new TextButton("Start", skin, "mainmenu"){
 
@@ -114,6 +115,10 @@ public class MainMenuTable extends UIElement {
 			
 			
 		};
+		float buttonSize = 150;//Gdx.graphics.getPpiX() * 2;
+
+		startButton.getStyle().up.setMinHeight(buttonSize);
+		startButton.getStyle().up.setMinWidth(buttonSize);
 		buttonPool = new Pool<GameButton>(){
 			@Override
 			protected GameButton newObject() {
@@ -270,7 +275,7 @@ public class MainMenuTable extends UIElement {
 		
 		
 		
-		worldSelectTable.add(startButton);
+		worldSelectTable.add(startButton);//.size(1000, 100).fill().expand();;
 		//worldSelectTable.add(editorButton);
 		worldTable = new Table();
 		worldPane = new ScrollPane(worldTable);
@@ -348,7 +353,9 @@ public class MainMenuTable extends UIElement {
 		
 		
 	}
-	
-	
-	
+
+
+	public Actor getTable() {
+		return mainTable;
+	}
 }

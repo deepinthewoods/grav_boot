@@ -2,6 +2,7 @@ package com.niz.ui.edgeUI;
 
 import com.badlogic.ashley.core.EngineNiz;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.niz.GameInstance;
 import com.niz.component.Inventory;
@@ -17,6 +18,7 @@ import com.niz.ui.elements.UIElement;
 public class MainMenu extends EdgeUI implements Observer {
 
     private final ItemDisplay itemDisplay;
+    private final MainMenuTable menuTable;
 
     public MainMenu(GameInstance game, Skin skin){
         sides[0] = new UITable();
@@ -27,6 +29,7 @@ public class MainMenu extends EdgeUI implements Observer {
         sides[1] = new UITable();
         sides[1].min = new UIElement[1];
         itemDisplay = new ItemDisplay(null, game.engine);
+        itemDisplay.disableTouch();
 
         //sides[1].max = new UIElement[1];
         table.row();
@@ -66,7 +69,13 @@ public class MainMenu extends EdgeUI implements Observer {
 
         sides[7] = new UITable();
         sides[7].min = new UIElement[1];
-        sides[5].min[0] = new MainMenuTable(this, game, skin);
+        //sides[4].min[0]
+
+        menuTable        = new MainMenuTable(this, game, skin);
+        //menuTable.onInit(skin);
+        sides[5].min[0] = menuTable;
+        expandX[5] = true;
+        expandY[5] = true;
        // sides[7].min[0] = new ControllerButton("T", 0);
         table.row();
 
@@ -93,5 +102,12 @@ public class MainMenu extends EdgeUI implements Observer {
     @Override
     public void onNotify(Entity e, Subject.Event event, Object c) {
         itemDisplay.setFor(e.getComponent(Inventory.class), e);
+    }
+
+    @Override
+    public void addTo(Stage stage) {
+        super.addTo(stage);
+        //stage.addActor(menuTable.getTable());
+        //menuTable.getTable().setSize(500, 500);
     }
 }

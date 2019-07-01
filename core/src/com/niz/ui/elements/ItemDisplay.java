@@ -8,6 +8,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.BeltButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
@@ -51,8 +52,9 @@ public class ItemDisplay extends UIElement {
 	public Actor spacer;
 	private Subject invNotifier;
 	private Subject toastNotifier;
-	
-	
+	private boolean touchDisabled = false;
+
+
 	//public InventoryInformationDisplay info;
 	public ItemDisplay(InventoryScreen ed, EngineNiz engine) {
 		//this.info = invDisplay;
@@ -210,6 +212,7 @@ public class ItemDisplay extends UIElement {
 		//this.actor = new Actor();
 		//table.setSize(Gdx.graphics.getWidth()/2f, Gdx.graphics.getHeight()*.82785f);
 		//actor.debug();
+		backTable.setTouchable(Touchable.disabled);
 	}
 	ButtonGroup group = new ButtonGroup();
 	private Inventory inv;
@@ -301,5 +304,9 @@ public class ItemDisplay extends UIElement {
 		
 		scrollPaneTable.invalidate();
 		scrollPaneTable.layout();
+	}
+
+	public void disableTouch() {
+		touchDisabled = true;
 	}
 }
