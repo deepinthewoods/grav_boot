@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.LongArray;
 import com.niz.component.Body;
 import com.niz.component.Door;
 import com.niz.component.OnDoor;
+import com.niz.component.Physics;
 import com.niz.component.Player;
 import com.niz.component.Position;
 
@@ -29,6 +30,7 @@ public class DoorSystem extends EntitySystem {
 	static ComponentMapper<Position>posM = ComponentMapper.getFor(Position.class);
 	static ComponentMapper<Body>bodyM = ComponentMapper.getFor(Body.class);
 	static ComponentMapper<OnDoor>onDoorM = ComponentMapper.getFor(OnDoor.class);
+	static ComponentMapper<Physics>physM = ComponentMapper.getFor(Physics.class);
 	private Family doorCollisionFamily;
 
 	@Override
@@ -56,15 +58,20 @@ public class DoorSystem extends EntitySystem {
 			Entity player = e;
 			Position pPos = player.getComponent(Position.class);
 			Door doorC = door.getComponent(Door.class);
+			Physics phys = physM.get(player);
 			if (doorC.nextZLevel != -1){
 				e.remove(OnDoor.class);
 				engine.getSystem(OverworldSystem.class).changeZLevel(doorC.nextZLevel);
+				//phys.onGround = false;
+
 				continue;
 			}
 			GridPoint2 dPos = doorC.endPoint;
 			Body body = player.getComponent(Body.class);
 			Body dBody = door.getComponent(Body.class);
 			pPos.pos.set(dPos.x + .5f, dPos.y +1);
+
+			phys.onGround = false;
 			e.remove(OnDoor.class);
 
 		}

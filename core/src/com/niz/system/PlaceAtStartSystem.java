@@ -79,6 +79,7 @@ public class PlaceAtStartSystem extends EntitySystem {
 				e.remove(OnDoor.class);
 				//engine.removeEntity(e);
 				posM.get(e).pos.set(startPos.x, startPos.y);
+				physM.get(e).onGround = false;
 				//Gdx.app.log(TAG,  "place " + posM.get(e).pos);
 				Physics phys = physM.get(e);
 				if (phys != null){
