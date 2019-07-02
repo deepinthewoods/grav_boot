@@ -170,7 +170,7 @@ public class GameInstance implements Screen, Observer {
 					}
 					font = new BitmapFont(Gdx.files.internal("font/Pixel-12.fnt"), Gdx.files.internal("font/pixelfonts.png"), false);
 					font.setUseIntegerPositions(false);
-					font.getData().setScale(2f);
+					//font.getData().setScale(2f);
 					viewport = new ScreenViewport(uiCamera);
 					stage = new Stage(viewport, batch);
 					mapBatch = new SpriteBatchN(1000);
@@ -304,6 +304,7 @@ public class GameInstance implements Screen, Observer {
 
 					break;case 17:
 					engine.addSystem(new RaceSystem());
+					engine.addSystem(new RaceRenderSystem());
 					engine.addSystem(new WeaponSensorSystem());
 					break;case 18:
 					engine.addSystem(new SpriteAnimationSystem(rightBatch, lights));
@@ -385,6 +386,7 @@ public class GameInstance implements Screen, Observer {
 							@Override
 							public void onEnd() {
 								parent.engine.getSystem(ProgressBarSystem.class).deregisterProgressBar(progressBarIndex);
+
 							}
 
 							@Override
@@ -395,10 +397,14 @@ public class GameInstance implements Screen, Observer {
 						workSys.addWorker(lvlSelect);
 					}
 					resize();
+
 					break;
+					case 26:
+
+						break;
 					case 30:
 					isFinished = true;
-					
+
 				}
 				float progressDelta = (float)progress / (float)total;
 				//Gdx.app.log(TAG,  "creating engine " + progressDelta);
@@ -575,7 +581,7 @@ public class GameInstance implements Screen, Observer {
 //				String.format("%.2f", player.getComponent(Position.class).pos.x)
 //				+"\ny:" +String.format("%.2f", player.getComponent(Position.class).pos.y);
 				
-				/*String s = "";
+				String s = "";
 				if (player.getComponent(Physics.class) != null){
 					s += "\n"+ (player.getComponent(Physics.class).onGround?"ground":"");
 					s += "\n"+ (player.getComponent(Physics.class).wasOnGround2?"wasGround":"");
@@ -589,9 +595,11 @@ public class GameInstance implements Screen, Observer {
 					//s += "\n"+ (player.getComponent(Physics.class).onSlope?"slope":"");
 					//s += "fps:"+String.format("%.1f",1f/deltaTime);
 					//
-				}*/
+				}//*/
 
-			String s = "fps:"+Gdx.graphics.getFramesPerSecond() ;//+ " " + GLProfiler.calls + " drawc:" + GLProfiler.drawCalls
+			/*String s = "fps:"+Gdx.graphics.getFramesPerSecond() ;//+ " " + GLProfiler.calls + " drawc:" + GLProfiler.drawCalls
+
+			 */
 //					+ "\nbind: " + GLProfiler.textureBindings + "  shad: " + GLProfiler.shaderSwitches
 //					+ " vcount:" + GLProfiler.vertexCount.total
 //					;
