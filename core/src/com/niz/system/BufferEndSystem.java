@@ -40,19 +40,19 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 		map = engine.getSystem(MapRenderSystem.class);
 		startBuffer = engine.getSystem(BufferStartSystem.class);
 		((EngineNiz) engine).getSubject("resize").add(this);
-        ((EngineNiz) engine).getSubject("zoom").add(new Observer(){
-
-			@Override
-			public void onNotify(Entity e, Event event, Object c) {
-				ZoomInput z = (ZoomInput) c;
-				zoom = z.zoom;
-				if (z.zoom > 1.01f){
-					//zoom = Main.PPM;
-				}
-				//zoom = 1f;
-			}
-			
-		});
+//        ((EngineNiz) engine).getSubject("zoom").add(new Observer(){
+//
+//			@Override
+//			public void onNotify(Entity e, Event event, Object c) {
+//				ZoomInput z = (ZoomInput) c;
+//				zoom = z.zoom;
+//				if (z.zoom > 1.01f){
+//					//zoom = Main.PPM;
+//				}
+//				//zoom = 1f;
+//			}
+//
+//		});
         camSys = engine.getSystem(CameraSystem.class);
 		lightSys = engine.getSystem(LightRenderSystem.class);
 		shader = engine.getSystem(ShaderSystem.class).shader;
@@ -79,6 +79,7 @@ public class BufferEndSystem extends RenderSystem implements Observer{
 			Gdx.app.log(TAG , "no buffer " +zoom);
 			return;
 		}
+		zoom = camSys.camera.zoom;
 		batch.setShader(null);
 		//startBuffer.currentBuffer.end();
 		//Gdx.app.log(TAG , "zoomed " +zoom);
