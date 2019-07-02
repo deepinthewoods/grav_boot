@@ -71,7 +71,7 @@ public class MainMenu extends EdgeUI implements Observer {
         sides[7].min = new UIElement[1];
         //sides[4].min[0]
 
-        menuTable        = new MainMenuTable(this, game, skin);
+        menuTable = new MainMenuTable(this, game, skin);
         //menuTable.onInit(skin);
         sides[5].min[0] = menuTable;
         expandX[5] = true;
