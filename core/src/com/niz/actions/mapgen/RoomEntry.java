@@ -115,8 +115,8 @@ public boolean overlaps(RoomEntry entry) {//used for inheriting preserveWalls
 	public boolean overlaps(int x, int y, int h) {
 		int extra = 1;
 
-		aBL.set(offset).sub(extra, extra);
-		aTR.set(offset).add(room.blocks[0].length, room.blocks.length).add(extra, extra);;
+		aBL.set(offset).sub(extra, 0);
+		aTR.set(offset).add(room.blocks[0].length, room.blocks.length).add(extra, 0);;
 		bBL.set(x, y);
 		bTR.set(x, y).add(0, h);
 
