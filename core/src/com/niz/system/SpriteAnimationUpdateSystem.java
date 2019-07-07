@@ -121,11 +121,11 @@ public class SpriteAnimationUpdateSystem extends EntitySystem {
 				AtlasSprite s;// = (AtlasSprite) spriteInstance.getKeyFrame(spr.time, spr.left);
 				//Gdx.app.log(TAG, "drawpre"+spriteInstance.getKeyFrame(0f).getRegionHeight());
 				//if (s == null) continue;
+				//Gdx.app.log(TAG, "frame  " + index);;//Data.getString(spr.guideIDs.get(spr.layerSources[index])));
 				int fr = layer.getKeyFrameIndex(spr.time[index], spr.guides.get(spr.layerSources[index]), container.guides.size);
 
 
 
-				//Gdx.app.log(TAG, "frame error " + spr.currentAnim.guides.size + "  " + fr);// Data.getString(spr.guideIDs.get(index)));
 
 
 

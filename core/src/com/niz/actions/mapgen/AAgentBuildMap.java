@@ -27,7 +27,7 @@ import com.niz.system.RoomCatalogSystem;
 
 public class AAgentBuildMap extends ProgressAction {
 
-	private static final int TOTAL_ROOMS_TARGET = 80;
+	private static final int TOTAL_ROOMS_TARGET = 20;
 	private static final int MAIN_PATH_COMPARES = 15;
 
 	public static final int SECONDARY_ROOM_SEGMENT_SIZE = 6;
@@ -37,7 +37,7 @@ public class AAgentBuildMap extends ProgressAction {
     private static final int TOTAL_ITERATIONS = 50;
 	private static final int BIG_ROOM_TRIES = 30;
 	private static final int END_ROOM_TRIES = 60;
-	private static final int MEDIUM_ROOMS_AMOUNT = 18;
+	private static final int MEDIUM_ROOMS_AMOUNT = 8;
 	private long startTime;
 	private RoomEntry baseStartRoom;
 	private int baseStartExitIndex;
@@ -136,6 +136,7 @@ public class AAgentBuildMap extends ProgressAction {
 					progress = 0;
 					rooms = smallRooms;
 					int dist = getDistance(main, AAgentBuildMap.DistanceType.TOTAL_AREA);
+					//dist = numberOfTeleports(main);
 					boolean greater = false;
 					pathDistance [mainPathIndex] = dist;
 					//mainPathIndex++;
@@ -270,7 +271,8 @@ public class AAgentBuildMap extends ProgressAction {
 				retries = 0;
 				progress = 7;
 				rooms = smallRooms;
-				int dist = roomDistance(endRoom, main.peek());;//getDistance(main, DistanceType.CLOSEST_TO_END_ROOM);
+				int dist = roomDistance(endRoom, main.peek());;//getDistance(main, DistanceType.CLOSEST_TO_END_ROOM);//
+				//dist = numberOfTeleports(main);
 				if (main.size < SECONDARY_ROOM_SEGMENT_SIZE-1) dist = 20000;
 				//Gdx.app.log(TAG, "made sec rooms " + baseStartRoom.offset + roomDistance(endRoom, main.peek()) + main.peek().offset);
 				boolean greater = false;
@@ -279,10 +281,10 @@ public class AAgentBuildMap extends ProgressAction {
 				//mainPathIndex++;
 				if (mainPathDone){
 					baseStartRoom.exitsUsed[baseStartExitIndex] = true;
-					int currentDistance = roomDistance(endRoom, main.peek());
+					//int currentDistance = roomDistance(endRoom, main.peek());
 					progress = 10;
 					//Gdx.app.log(TAG, "side path done" + currentDistance + "  " + main.size);
-					if (shortestDistance != currentDistance) throw new GdxRuntimeException("reproduce with seed error" + (shortestDistance - currentDistance));
+					//if (shortestDistance != currentDistance) throw new GdxRuntimeException("reproduce with seed error" + (shortestDistance - currentDistance));
 					break;
 				}
 				if (mainPathIndex++ >= pathDistance.length-1){
@@ -335,12 +337,12 @@ public class AAgentBuildMap extends ProgressAction {
 				//Gdx.app.log(TAG, "DONEFIFFNIFNIFNFINIFNIFNFINFNIODODODODONDONDONEONDOEOnDONEDOenDONEOEDNEDONEDONENOD");
 				for (int x = 0; x < map.width; x++)
 					for (int y = 0; y < map.height; y++)
-						map.setLocal(x, y, blockAid + r.nextInt(64));
+						map.setLocal(x, y, blockAid + r.nextInt(63));
 
 				writeToMap(base, 1024, true);
 				for (int x = 0; x < map.width; x++)
 					for (int y = 0; y < map.height; y++){
-						map.setBGLocal(x, y, blockAid +r .nextInt(64));
+						map.setBGLocal(x, y, blockAid +r .nextInt(63));
 					}
 				for (int x = 0; x < map.width; x++){
 					//Gdx.app.log(TAG, "finalise " + (int) overworld.getHeight((int) (x + map.offset.x)));
@@ -369,6 +371,15 @@ public class AAgentBuildMap extends ProgressAction {
 		totalIterations++;
 		float progressDelta = (float)base.size / (float)TOTAL_ROOMS_TARGET;
 		progressSys.setProgressBar(progressBarIndex, progressDelta);
+	}
+
+	private int numberOfTeleports(Array<RoomEntry> main) {
+		int total = 0;
+		for (RoomEntry r : main){
+			for (int i = 0; i < r.teleportOut.length; i++)
+				if (r.teleportOut[i]) total++;
+		}
+		return 100 - total+1;
 	}
 
 	private void clear() {

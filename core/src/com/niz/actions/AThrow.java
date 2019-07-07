@@ -107,7 +107,7 @@ public abstract class AThrow extends LimbAction {
 		int newIndex = (int)angle/20;
 
 		if (newIndex != angleIndex){
-			Gdx.app.log(TAG, "update aim " + newIndex);
+			//Gdx.app.log(TAG, "update aim " + newIndex);
 			//Gdx.app.log(TAG, "klj  "+newIndex);
 			angleIndex = newIndex;
 			int animID = Data.hash("throw"+angleIndex);

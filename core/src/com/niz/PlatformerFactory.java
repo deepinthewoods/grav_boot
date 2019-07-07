@@ -242,7 +242,7 @@ public class PlatformerFactory extends Factory {
 			inv.copyFrom(charSelectInventories[i]);
 			e.add(inv);
 			e.add(race);
-			inv.equipAll(e);
+			//inv.equipAll(e);
 			if (i == 0) engine.getSubject("playerselect").notify(e, Subject.Event.CHANGE_SELECTED_CHARACTER, null);
 
 			engine.addEntity(e);
@@ -343,10 +343,10 @@ public class PlatformerFactory extends Factory {
 		Entity e = makePlayer(engine);
 		ActionList action = e.getComponent(ActionList.class);
 		action.addToStart(AEnemy.class);
-		//Race race = engine.createComponent(Race.class);
-		Race race = new Race();
+		Race race = engine.createComponent(Race.class);
+		//Race race = new Race();
 		for (int r = 0; r < race.raceID.length; r++){
-			race.raceID[r] = Race.RPG_1;
+			race.raceID[r] = Race.HUMAN;
 		}
 		e.add(race);
 		return e;

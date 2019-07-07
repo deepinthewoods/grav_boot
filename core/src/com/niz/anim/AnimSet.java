@@ -41,7 +41,7 @@ public class AnimSet {
 		anim.isVelocityDependant = c.velocityDependant;
 		anim.deltaMultiplier = c.deltaMultiplier;
 		container.addLayer(Data.hash(string), anim);
-		//Gdx.app.log(TAG, "add layer " + string + " fr" + frames[0].getV());
+		//Gdx.app.log(TAG, "add layer " + string + " fr" + frames.length);
 	}
 	public void add(String string, AnimationContainer niz){
 		int hash = Data.hash(string);
@@ -60,7 +60,7 @@ public class AnimSet {
 			int bitmask, String string, AnimationContainer container,
 			Vector2[] offsets, float[] angles) {
 
-		//Gdx.app.log("animset ", "guide  add "+string);
+		//Gdx.app.log("animset ", "guide  add "+string + " " );
 
 		Guide guide = new Guide(offsets, angles);
 		container.addGuide(Data.hash(string), guide );

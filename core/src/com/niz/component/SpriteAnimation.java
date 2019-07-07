@@ -173,7 +173,7 @@ public String toString(){
 			overriddenGuideLayers[index] = new Guide();
 		}
 		AnimationContainer other = anims.anims.get(animID).get(0);
-
+		//Gdx.app.log(TAG, "get anim " + Data.getString(animID));
 		overriddenGuideLayers[index].set(other.getGuide(guideIDs.get(index)));;
 		overriddenGuideLayerIDs[index] = animID;
 	}
@@ -219,7 +219,7 @@ public String toString(){
 			//if (){
 			if (overriddenGuides.get(i)){
 				g = overriddenGuideLayers[i];
-				//Gdx.app.log(TAG, "OVERRIDDEN");
+				//Gdx.app.log(TAG, "OVERRIDDEN " + Data.getString(guideIDs.get(i)));
 			} else {
 				g = currentAnim.guides.get(i);
 			}

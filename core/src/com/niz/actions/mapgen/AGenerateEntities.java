@@ -29,7 +29,7 @@ public class AGenerateEntities extends Action {
 	@Override
 	public void update(float dt) {
     	int count = 0;
-    	int targetMobs = 0;//25;
+    	int targetMobs = 0;//25;//
     	int mobCount = 0;
     	mobs.clear();
     	boolean done = false;

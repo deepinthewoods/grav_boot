@@ -263,6 +263,7 @@ public class GameInstance implements Screen, Observer {
 					engine.addSystem(new MapCollisionSystem());
 					engine.addSystem(new ActionSystem());
 					engine.addSystem(new SpriteAnimationUpdateSystem());
+					//engine.addSystem(new SpriteAnimationUpdateRenderSystem());
 
 					engine.addSystem(new Physics2dSystem());
 					engine.addSystem(new LineMapCollisionSystem());
@@ -288,7 +289,7 @@ public class GameInstance implements Screen, Observer {
 					break;case 12:
 					engine.addSystem(new PreRenderSystem());
 					engine.addSystem(new CameraSystem());
-					//engine.addSystem(new ParallaxBackgroundRenderNoBufferSystem());
+					engine.addSystem(new ParallaxBackgroundRenderNoBufferSystem());
 
 					engine.addSystem(new BufferStartSystem());
 					break;case 13:
@@ -298,7 +299,7 @@ public class GameInstance implements Screen, Observer {
 					break;case 15:
 					shapeR = new ShapeRenderer();			
 					engine.addSystem(new ShapeRenderingSystem());
-					//engine.addSystem(new ParallaxBackgroundSystem());
+					engine.addSystem(new ParallaxBackgroundSystem());
 					break;case 16:
 					engine.addSystem(new MapRenderSystem(mapBatch, atlas, lights));
 
@@ -532,7 +533,7 @@ public class GameInstance implements Screen, Observer {
 			    paused = false;
 			    unPause = false;
             }
-			if (paused) deltaTime = 0f;
+			//if (paused) deltaTime = 0f;
 		}
 		if (deltaTime > .1f) deltaTime = .1f;
 		
