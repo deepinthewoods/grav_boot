@@ -52,7 +52,7 @@ public class AJump extends Action{
 		if (phys.onGround){
 			this.addBeforeMe(Pools.obtain(AStand.class));
 			isFinished = true;
-			
+			//Gdx.app.log(TAG, "end: on ground");
 		} else if (mov.hasWallSlide){
 			//Gdx.app.log(TAG, "least ");
 			Map map = onMapM.get(parent.e).map;
@@ -79,7 +79,7 @@ public class AJump extends Action{
 					
 					if (con.pressed[Input.JUMP] && parent.engine.tick - heldTime < AFall.EARLY_JUMP_THRESHOLD){
 						//stand.earlyJump = true;
-						Gdx.app.log(TAG, "early"+parent.engine.tick);
+						//Gdx.app.log(TAG, "early"+parent.engine.tick);
 						float lr = (ws.left? -1f:1f);
 						//phys = physM.get(parent.e);
 						phys.vel.y = 0;
@@ -151,6 +151,7 @@ public class AJump extends Action{
 		jumpForce = moveM.get(parent.e).jump_y_force;
 		SpriteAnimation anim = animM .get(parent.e);
 		anim.start(Data.hash("jump"));
+		//Gdx.app.log(TAG, "start " + physM.get(parent.e).vel);
 	}
 
 }

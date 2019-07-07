@@ -159,7 +159,8 @@ public class MapCollisionSystem extends EntitySystem {
 			
 		}
 		collideY(e, map, false, phys, false);
-		collideY(e, map, false, phys, true);
+		//collideY(e, map, false, phys, true);
+
 		//collideY(e, map);
 			
 			
@@ -180,6 +181,7 @@ public class MapCollisionSystem extends EntitySystem {
 			collisionComponent.onSlope = false;
 		}
 		if (up && !forceDown){
+			//Gdx.app.log(TAG, "up");
 			v.set(pos.x - col.width, pos.y + col.height);
 			if (v.y < 0) v.y += map.height;
 			int y = (int) v.y;
@@ -257,7 +259,8 @@ public class MapCollisionSystem extends EntitySystem {
 					move.resetDoubleJumps();
 				}
 				if (collisionComponent.onSlope) phys.onSlope = true;
-				else phys.vel.y = -.01f;
+
+				phys.vel.y = -.01f;
 				collideYSlopes(e, map);
 			} else if (!forceDown){
 				phys.onGround = false;
@@ -279,6 +282,7 @@ public class MapCollisionSystem extends EntitySystem {
 		
 		
 		if (up){
+			//Gdx.app.log(TAG, "up");
 			v.set(pos.x - col.width, pos.y + col.height);
 			if (v.y < 0) v.y += map.height;
 			int y = (int) v.y;
@@ -307,6 +311,7 @@ public class MapCollisionSystem extends EntitySystem {
 				//Gdx.app.log("collide", "jljklas");
 			}//else phys.onGround = false;
 		} else {
+			//Gdx.app.log(TAG, "down");
 			v.set(pos.x - col.width, pos.y - col.height);
 			if (v.y < 0) v.y += map.height;
 			float vx2 = pos.x + col.width;
@@ -360,7 +365,8 @@ public class MapCollisionSystem extends EntitySystem {
 				}
 				if (collisionComponent.onSlope) phys.onSlope = true;
 			} else {
-				//phys.onGround = wasOnGround;
+				//if (collisionComponent.onSlope) phys.onGround = false;
+				//phys.onGround = false;
 			}
 		}
 		//if (true) return;
