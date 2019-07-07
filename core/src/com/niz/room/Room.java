@@ -32,6 +32,7 @@ public class Room {
 		distributions = r.distributions;
 		tags = r.tags;
 		flipped = true;
+		preserveWalls = r.preserveWalls;
 	}
 	public Room(){
 		
