@@ -82,7 +82,9 @@ public class AStand extends Action {
 					earlyJump = false;
 					MovementData mov = moveM.get(parent.e);
 					//Vector2 pos = posM.get(parent.e).pos;
-					physM.get(parent.e).applyLinearImpulse(0, mov.jump_impulse);
+
+					phys.vel.y = 0f;
+					phys.applyLinearImpulse(0, mov.jump_impulse);
 					addBeforeMe(Pools.obtain(AJump.class));
 					isFinished = true;
 					//Gdx.app.log(TAG, "switch to jump"+physM.get(parent.e).vel);

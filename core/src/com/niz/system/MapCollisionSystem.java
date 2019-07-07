@@ -363,7 +363,10 @@ public class MapCollisionSystem extends EntitySystem {
 					
 					move.resetDoubleJumps();
 				}
-				if (collisionComponent.onSlope) phys.onSlope = true;
+				if (collisionComponent.onSlope) {
+					phys.onSlope = true;
+					phys.vel.y = -10f;
+				}
 			} else {
 				//if (collisionComponent.onSlope) phys.onGround = false;
 				//phys.onGround = false;
