@@ -51,6 +51,7 @@ public class Animations {
 	public static Sprite[][] lightFalloffSprites = new Sprite[LIGHT_FALLOFF_INDICES][LIGHT_HEIGHT_INDICES];
 	private static final int LIGHT_SIZE_PIXELS = 128;
 	public static final float HALF_LIGHT_SIZE = (float)(LIGHT_SIZE_PIXELS )/2f;
+	private static String[] rpgArmLayers;
 
 	public static void init(TextureAtlas atlas, EngineNiz engine, TextureAtlas uiAtlas, TextureAtlas mapAtlas){
 		blank = atlas.createSprite("diff/blank2");
@@ -160,8 +161,8 @@ public class Animations {
 				handTipGuides.add((short) vc.x);
 				handTipGuides.add((short) vc.y);
 			}
-			guides.put(Data.hash("rpghandguide"), handGuides);
-			guides.put(Data.hash("rpghandguidetip"), handTipGuides);
+			guides.put(Data.hash("rpghandthrowguide"), handGuides);
+			guides.put(Data.hash("rpghandthrowguidetip"), handTipGuides);
 
 			handGuides = new ShortArray();
 			handTipGuides = new ShortArray();
@@ -179,8 +180,8 @@ public class Animations {
 				handTipGuides.add((short) vc.x);
 				handTipGuides.add((short) vc.y);
 			}
-			guides.put(Data.hash("rpghandguide"), handGuides);
-			guides.put(Data.hash("rpghandguidetip"), handTipGuides);
+			guides.put(Data.hash("rpghandthrowcooldownguide"), handGuides);
+			guides.put(Data.hash("rpghandthrowcooldownguidetip"), handTipGuides);
 		}
 
 
@@ -343,6 +344,9 @@ public class Animations {
 	public static String[] rpgs;// = {"rpg1", "rpg2"};
 	public static String[] rpgLayers;
 	public static String[] rpgBaseGuideLayers;// = {"legsguide"};
+	public static String[] rpgArmBaseGuideLayers;// = {"legsguide"};
+	public static String[] rpgThrowGuideLayers;// = {"legsguide"};
+	public static String[] rpgThrowCooldownGuideLayers;// = {"legsguide"};
 
 	public static String none = "none";
 
@@ -369,7 +373,7 @@ public class Animations {
 		final AnimSet animSet = new AnimSet();
 		//animSet.add("walk", true, false, true, false, .0512f, frames);
 		//name loop random vel 1f 
-		
+		AtlasSprite blankSprite = new AtlasSprite(new AtlasRegion(atlas.getTextures().first(), 0, 0, 0, 0));
 		rpgSprite = atlas.createSprite("diff/rpg1");
 		float one = 1f/2048f;
 		/*rpgSprite.setRegion(rpgSprite.getU()+one
@@ -381,14 +385,23 @@ public class Animations {
 		TextureRegion[][] rpgSplits = rpgSprite.split(18, 20);
 
 		final AtlasSprite[][] rpgSprites = new AtlasSprite[26 * 2][12 * 3];
+		final AtlasSprite[][] rpgArmSprites = new AtlasSprite[26 * 2][12 * 3];
 		//rpgLayers = new String[]{"torso"};
 		rpgLayers = new String[26 * 2];
+		rpgArmLayers = new String[26 * 2];
 		rpgBaseGuideLayers = new String[26 * 2];
+		rpgArmBaseGuideLayers = new String[26 * 2];
+		rpgThrowGuideLayers = new String[26 * 2];
+		rpgThrowCooldownGuideLayers = new String[26 * 2];
 		//rpgBaseGuideLayers = new String[]{"legsguide"};
 		rpgs = new String[26*2];
 		for (int i = 0; i < rpgLayers.length; i++){
 			rpgLayers[i] = "torso";
+			rpgArmLayers[i] = "armback";
 			rpgBaseGuideLayers[i] = "legsguide";
+			rpgArmBaseGuideLayers[i] = "armsguide";
+			rpgThrowGuideLayers[i] = "handthrowguide";
+			rpgThrowCooldownGuideLayers[i] = "handthrowcooldownguide";
 			rpgs[i] = "rpg" +i+ "n";
 			//rpgs[i] = "rpg8n";
 		}
@@ -424,6 +437,12 @@ public class Animations {
 				split = rpgSplits[y+2][j+12];
 				rpgSprites[i+half][j + 24] = new AtlasSprite(new TextureAtlas.AtlasRegion(split.getTexture(), split.getRegionX(), split.getRegionY(), split.getRegionWidth(), split.getRegionHeight()));
 
+				rpgArmSprites[i][j] = blankSprite;
+				rpgArmSprites[i][j+12] = blankSprite;
+				rpgArmSprites[i][j+24] = blankSprite;
+				rpgArmSprites[i+half][j] = blankSprite;
+				rpgArmSprites[i+half][j+12] = blankSprite;
+				rpgArmSprites[i+half][j+24] = blankSprite;
 				//Gdx.app.log(TAG, "" + s);
 
 //*/
@@ -916,16 +935,25 @@ public class Animations {
                 	//if (true) return;
                     cb.delta = c.delta;
                     cb.deltaMultiplier = c.deltaMultiplier;
+
                     cb.offset = 0;
-                    cb.length = c.length;
+                    cb.length = 12;//c.length;
                     cb.animName = c.animName;
+                   // Gdx.app.log(TAG, "anim " + c.animName);
                     //c.skipFrames = 0;
 					Short[] offsets = new Short[cb.length * 2];
-                    AnimationCommand.make(cb, atlas, animSet, rpgLayers, rpgSprites, rpgBaseGuideLayers, container, rpg, rpgs);
-//                    AnimationCommand.make(cb, atlas, animSet, armLayers, armBaseLayers, container, rpg, rpgs);
 
-                    //AnimationCommand.makeGuideFrames(cb, atlas, animSet, torsoGuideLayers, torsoBaseGuideLayers, container, rpg);
-                    AnimationCommand.makeGuideFrames(cb, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, rpg);
+                    //AnimationCommand.makeGuideFrames(cb, atlas, animSet, rpgThrowGuideLayers, rpgArmBaseGuideLayers, container, rpg);
+
+					//AnimationCommand.make(cb, atlas, animSet, rpgLayers, rpgSprites, rpgBaseGuideLayers, container, rpg, rpgs);
+					//AnimationCommand.make(cb, atlas, animSet, rpgArmLayers, rpgSprites, rpgBaseGuideLayers, container, rpg, rpgs);
+					AnimationCommand.make(cb, atlas, animSet, rpgArmLayers, rpgArmSprites, rpgBaseGuideLayers, container, rpg, rpgs);
+
+					AnimationCommand.makeGuideFrames(cb, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, rpg);
+
+					//cb.length = 6;
+					//cb.animName = "throwcooldown"+index;
+					//AnimationCommand.makeGuideFrames(cb, atlas, animSet, rpgThrowCooldownGuideLayers, rpgBaseGuideLayers, container, rpg);
                 }
             }
 

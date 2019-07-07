@@ -43,19 +43,21 @@ public class AnimationCommand {
 			Vector2[][] offsetArr = new Vector2[layers.length][];
 			makeArrays(
 					c, atlas, layers, baseLayers, prefix, sprPrefix
-					, layersArr, offsetArr
-			);
+					, layersArr, offsetArr,
+					false);
 			makeActual(c, animSet, layersArr, offsetArr, container, prefix, sprPrefix, layers);
 		}
 	}
+
+
 
 	static void make(AnimationCommand c, TextureAtlas atlas, AnimSet animSet, String[] layers, AtlasSprite[][] layersArr, Vector2[][] offsetArr, AnimationContainer container, String prefix, String[] spritePrefixes){
 		for (String sprPrefix : spritePrefixes){
 
 			makeArrays(
 					c, atlas, null, null, prefix, sprPrefix
-					, layersArr, offsetArr
-			);
+					, layersArr, offsetArr,
+					false);
 			makeActual(c, animSet, layersArr, offsetArr, container, prefix, sprPrefix, layers);
 		}
 	}
@@ -69,8 +71,8 @@ public class AnimationCommand {
 		static void make(AnimationCommand c, TextureAtlas atlas, AnimSet animSet, String[] layers, AtlasSprite[][] layersArr, String[] baseLayers, AnimationContainer container, String prefix, String[] spritePrefixes, Vector2[][] offsetArr){
         makeArrays(
                 c, atlas, null, baseLayers, prefix, ""
-                , layersArr, offsetArr
-        );
+                , layersArr, offsetArr,
+				false);
 
 		for (int i = 0; i < layers.length; i++){
 			String sprPrefix = spritePrefixes[i];
@@ -108,7 +110,7 @@ public class AnimationCommand {
 		return arr;
 	}
 
-	static void makeArrays(AnimationCommand c, TextureAtlas atlas, String[] layers, String[] baseLayers, String prefix, String spritePrefix, AtlasSprite[][] layersArr, Vector2[][] offsetArr){
+	static void makeArrays(AnimationCommand c, TextureAtlas atlas, String[] layers, String[] baseLayers, String prefix, String spritePrefix, AtlasSprite[][] layersArr, Vector2[][] offsetArr, boolean insertBlanks){
 		if (layers != null)
 			for (int y = 0; y < layers.length; y++){
 				AtlasSprite[] frames = new AtlasSprite[c.length / (c.skipFrames+1)];
@@ -133,7 +135,13 @@ public class AnimationCommand {
 						Gdx.app.log(TAG, "make blank frame" + fileNamePrefix);
 					}
 						else//*/
-					if (frames[i] == null) throw new GdxRuntimeException("null frame! "+fileNamePrefix +"   "+i+"  "+c.length +"  "+c.offset +"  "+c.animName + "  " + fileNamePrefix);
+					if (frames[i] == null){
+						if (insertBlanks){
+							frames[i] = new AtlasSprite(new TextureAtlas.AtlasRegion(atlas.getTextures().first(), 0, 0, 0, 0));
+							//Gdx.app.log(TAG, "make blank frame" + fileNamePrefix + " " + i);
+						}
+						else throw new GdxRuntimeException("null frame! "+fileNamePrefix +"   "+i+"  "+c.length +"  "+c.offset +"  "+c.animName + "  " + fileNamePrefix);
+					}
 					frames[i] = new AtlasSprite(frames[i]);
 
 					//AtlasRegion baseF =  atlas.findRegion(baseFileName  , ( i+c.offset));
@@ -235,7 +243,7 @@ public class AnimationCommand {
 			boolean hasTip = tip != null;
 			if (main == null){
 				//throw new GdxRuntimeException("jskld! "+fileName +"   "+"  "+y +"  "+c.length );
-				//Gdx.app.log(TAG, "null guide, replacing with empty "+fileName +"   "+"  "+y +"  "+c.length );
+				Gdx.app.log(TAG, "null guide, replacing with empty "+fileName +"   "+"  "+y +"  "+c.length );
 				for (int i = 0; i < c.length / (1+c.skipFrames); i++){
 					offsets[i] = new Vector2(0, 0);
 

@@ -69,7 +69,7 @@ public class AnimationContainer {
 	
 	public Guide getGuide(int i) {
 		int key = guideKeyToIndex.get(i, -1);
-		if (key == -1) return null;//throw new GdxRuntimeException("jfskdl"+i+" !   "+Data.hash("dragonlegsguide"));//
+		if (key == -1) return null;//throw new GdxRuntimeException("guide not found"+i+" !   ");
 		return guides.get(key);
 	}
 	public AnimationLayer getLayer(int i) {
@@ -78,7 +78,7 @@ public class AnimationContainer {
 			//throw new GdxRuntimeException("jkl" + i + "   \n"+keyToIndex);
 		return layers.get(keyToIndex.get(i, -1));
 	}
-	public AnimationContainer(){
+	public AnimationContainer(){//
 		
 		
 	}
