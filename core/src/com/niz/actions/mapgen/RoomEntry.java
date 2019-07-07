@@ -69,12 +69,69 @@ public class RoomEntry implements Poolable{
 
 	}
 
-	public boolean overlaps(RoomEntry entry) {//used for inheriting preserveWalls
-		int rx = entry.offset.x - 3;
-		int ry = entry.offset.y - 3;
-		int rw = entry.room.blocks[0].length+6;
-		int rh = entry.room.blocks.length+6;
-		return offset.x < rx + rw && offset.x + room.blocks[0].length > rx && offset.y < ry + rh && offset.y + room.blocks.length > ry;
+//	public boolean overlaps(RoomEntry entry) {//used for inheriting preserveWalls
+//		int rw = entry.room.blocks[0].length + room.blocks[0].length;
+//		int rh = entry.room.blocks.length + room.blocks.length;
+//		int rx = entry.offset.x - room.blocks[0].length/2;
+//		int ry = entry.offset.y - room.blocks.length/2;
+//		//rx -= 5;
+//		//ry -= 5;
+//		//rw += 10;
+//		//rh += 10;
+//		rw+=2;
+//		rh+=2;
+//		return offset.x < rx + rw && offset.x  >= rx && offset.y < ry + rh && offset.y >= ry;
+//
+//	}
+static GridPoint2
+		aBL = new GridPoint2(),
+		bBL = new GridPoint2(),
+		aTR = new GridPoint2(),
+		bTR = new GridPoint2();
+public boolean overlaps(RoomEntry entry) {//used for inheriting preserveWalls
+	int extra = 1;
 
+	aBL.set(offset).sub(extra, extra);
+	aTR.set(offset).add(room.blocks[0].length, room.blocks.length).add(extra, extra);;
+	bBL.set(entry.offset);
+	bTR.set(entry.offset).add(entry.room.blocks[0].length, entry.room.blocks.length);
+
+
+	if (aTR.x < bBL.x
+			||
+			aBL.x > bTR.x
+			||
+			aTR.y < bBL.y
+			||
+			aBL.y > bTR.y
+
+			) return false;
+
+
+	return true;
+
+}
+
+	public boolean overlaps(int x, int y, int h) {
+		int extra = 1;
+
+		aBL.set(offset).sub(extra, extra);
+		aTR.set(offset).add(room.blocks[0].length, room.blocks.length).add(extra, extra);;
+		bBL.set(x, y);
+		bTR.set(x, y).add(0, h);
+
+
+		if (aTR.x < bBL.x
+				||
+				aBL.x > bTR.x
+				||
+				aTR.y < bBL.y
+				||
+				aBL.y > bTR.y
+
+				) return false;
+
+
+		return true;
 	}
 }

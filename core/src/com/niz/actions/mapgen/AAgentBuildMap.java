@@ -709,11 +709,19 @@ public class AAgentBuildMap extends ProgressAction {
 					if (entry.teleportOut[exitIndex]){
 
 					} else {//side door/gap
-						map.setLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, 0);
+						int doorX = entry.offset.x + exit.x + dx;
+						int doorY = entry.offset.y + exit.y + dy;
+						int top = entry.offset.y + dy + entry.room.blocks.length;
+						RoomEntry nextRoom = entry.next[exitIndex];
+						if (nextRoom != null) top = Math.min(top, nextRoom.offset.y + dy + nextRoom.room.blocks.length);
+						int doorH = top - doorY;
+						map.setLocal(doorX, doorY, 0);
+						map.setLocal(doorX, doorY+1, 0);
 						//map.setLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, 0);
-						if (!shouldPreserveWalls(entry)){
-						    for (int sy = entry.offset.y + exit.y + dy + 1; sy < entry.offset.y + dy + entry.room.blocks.length; sy++){
-                                map.setLocal(entry.offset.x + exit.x + dx, sy, 0);
+//						if (!shouldPreserveWalls(entry)){
+						if (!shouldPreserveWalls(doorX, doorY, doorH)){
+						    for (int sy = doorY + 1; sy < top; sy++){
+                                map.setLocal(doorX, sy, 0);
                             }
                         }
 					}
@@ -783,10 +791,25 @@ public class AAgentBuildMap extends ProgressAction {
 
 	}
 
-    private boolean shouldPreserveWalls(RoomEntry entry) {
+	private boolean shouldPreserveWalls(int doorX, int doorY, int doorH) {
 		//if (entry.room.preserveWalls) return true;
-        for (int i = 0; i < base.size; i++){
-			RoomEntry r = base.get(i);
+		for (RoomEntry r : base){
+
+			if (r.overlaps(doorX, doorY, doorH) && r.room.preserveWalls){
+				//Gdx.app.log(TAG, "Preserve wallds");
+				return true;
+			}
+			//if (r.overlaps(entry) != entry.overlaps(r)) throw new GdxRuntimeException("");
+		}
+
+
+		return false;
+	}
+
+	private boolean shouldPreserveWalls(RoomEntry entry) {
+		//if (entry.room.preserveWalls) return true;
+        for (RoomEntry r : base){
+
 			if (r.overlaps(entry) && r.room.preserveWalls){
             	//Gdx.app.log(TAG, "Preserve wallds");
                 return true;
