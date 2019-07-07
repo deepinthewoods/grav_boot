@@ -27,17 +27,17 @@ import com.niz.system.RoomCatalogSystem;
 
 public class AAgentBuildMap extends ProgressAction {
 
-	private static final int TOTAL_ROOMS_TARGET = 20;
-	private static final int MAIN_PATH_COMPARES = 5;
+	private static final int TOTAL_ROOMS_TARGET = 80;
+	private static final int MAIN_PATH_COMPARES = 15;
 
-	public static final int SECONDARY_ROOM_SEGMENT_SIZE = 4;
-	public static final int SECONDARY_ROOM_TRIES = 10;
+	public static final int SECONDARY_ROOM_SEGMENT_SIZE = 6;
+	public static final int SECONDARY_ROOM_TRIES = 40;
 
-	private static final int NUMBER_OF_ROOMS_TO_COMPARE = 5;
+	private static final int NUMBER_OF_ROOMS_TO_COMPARE = 15;
     private static final int TOTAL_ITERATIONS = 50;
 	private static final int BIG_ROOM_TRIES = 30;
 	private static final int END_ROOM_TRIES = 60;
-	private static final int MEDIUM_ROOMS_AMOUNT = 8;
+	private static final int MEDIUM_ROOMS_AMOUNT = 18;
 	private long startTime;
 	private RoomEntry baseStartRoom;
 	private int baseStartExitIndex;
@@ -335,12 +335,12 @@ public class AAgentBuildMap extends ProgressAction {
 				//Gdx.app.log(TAG, "DONEFIFFNIFNIFNFINIFNIFNFINFNIODODODODONDONDONEONDOEOnDONEDOenDONEOEDNEDONEDONENOD");
 				for (int x = 0; x < map.width; x++)
 					for (int y = 0; y < map.height; y++)
-						map.setLocal(x, y, 1024 + r.nextInt(64));
+						map.setLocal(x, y, blockAid + r.nextInt(64));
 
 				writeToMap(base, 1024, true);
 				for (int x = 0; x < map.width; x++)
 					for (int y = 0; y < map.height; y++){
-						map.setBGLocal(x, y, Blocks.STONE+r.nextInt(64));
+						map.setBGLocal(x, y, blockAid +r .nextInt(64));
 					}
 				for (int x = 0; x < map.width; x++){
 					//Gdx.app.log(TAG, "finalise " + (int) overworld.getHeight((int) (x + map.offset.x)));
@@ -669,7 +669,7 @@ public class AAgentBuildMap extends ProgressAction {
 		}
 		for (int x = 0; x < entry.room.blocks[0].length; x++)
 			for (int y = 0; y < entry.room.blocks.length; y++){
-				map.setLocal(x+entry.offset.x, y + entry.offset.y, i);
+				//map.setLocal(x+entry.offset.x, y + entry.offset.y, i);
 			}
 
 
@@ -710,7 +710,7 @@ public class AAgentBuildMap extends ProgressAction {
 
 					} else {//side door/gap
 						map.setLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy, 0);
-						map.setLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, 0);
+						//map.setLocal(entry.offset.x + exit.x + dx, entry.offset.y + exit.y + dy + 1, 0);
 						if (!shouldPreserveWalls(entry)){
 						    for (int sy = entry.offset.y + exit.y + dy + 1; sy < entry.offset.y + dy + entry.room.blocks.length; sy++){
                                 map.setLocal(entry.offset.x + exit.x + dx, sy, 0);
@@ -784,12 +784,16 @@ public class AAgentBuildMap extends ProgressAction {
 	}
 
     private boolean shouldPreserveWalls(RoomEntry entry) {
-        for (RoomEntry r : base){
-            if (r.overlaps(entry) && r.room.preserveWalls){
-            	//Gdx.app.log(TAG, "Preserve walls");
+		//if (entry.room.preserveWalls) return true;
+        for (int i = 0; i < base.size; i++){
+			RoomEntry r = base.get(i);
+			if (r.overlaps(entry) && r.room.preserveWalls){
+            	//Gdx.app.log(TAG, "Preserve wallds");
                 return true;
             }
+            if (r.overlaps(entry) != entry.overlaps(r)) throw new GdxRuntimeException("");
         }
+
 
         return false;
     }
@@ -941,10 +945,14 @@ public class AAgentBuildMap extends ProgressAction {
 		base.add(re);
 		//re.teleportOut[0] = true;
 		progressSys = parent.engine.getSystem(ProgressBarSystem.class);
-		blockAid = 1024;
-		blockBid = 1024+64;
-		slopeAid = Blocks.SLOPE;
-		slopeBid = Blocks.SLOPE + 64;
+		int a = r.nextInt(7), b = a;
+		while (b == a)
+			b = r.nextInt(7);
+
+		blockAid = 1024+64 * a;
+		blockBid = 1024+64 * a;
+		slopeAid = Blocks.SLOPE + 64 * a;
+		slopeBid = Blocks.SLOPE + 64 * b;
 	}
 
 	private class RoomComparator implements Comparator<Room> {
