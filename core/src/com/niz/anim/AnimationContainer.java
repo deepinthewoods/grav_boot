@@ -102,6 +102,7 @@ public class AnimationContainer {
 			//Gdx.app.log(TAG, "null guide added" + key + " " + Data.getString(key));
 			//throw new GdxRuntimeException("null guide");
 		//}
+		if (guideKeyToIndex.containsKey(key)) throw new GdxRuntimeException("" + Data.getString(key));
 		guideKeyToIndex.put(key, totalGuides++);
 		guides.add(guide);
 		return totalGuides-1;

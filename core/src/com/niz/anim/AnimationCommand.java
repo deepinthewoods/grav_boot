@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasSprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ShortArray;
@@ -226,16 +225,22 @@ public class AnimationCommand {
 	public static void makeGuideFrames(AnimationCommand c, TextureAtlas atlas,
 			AnimSet animSet, String[] layers, String[] baseLayers
 			, AnimationContainer container, String prefix) {
+		makeGuideFrames(c, atlas, animSet, layers, baseLayers, container, prefix, layers);
+	}
+
+	public static void makeGuideFrames(AnimationCommand c, TextureAtlas atlas,
+									   AnimSet animSet, String[] layers, String[] baseLayers
+			, AnimationContainer container, String prefix, String[] sourceLayers) {
 		
 			
-		for (int y = 0; y < layers.length; y++){
+		for (int y = 0; y < sourceLayers.length; y++){
 			if (layers[y] == null)
 				throw new GdxRuntimeException("null layer! "+ prefix+"   "+"  "+y +"  "+c.length );
 			//frames = new AtlasSprite[c.length];
 			//tipFrames = new AtlasSprite[c.length];
 			Vector2[] offsets = new Vector2[c.length];
 			float[] angles = new float[c.length / (1+c.skipFrames)];
-			String fileName = prefix+layers[y];
+			String fileName = prefix+sourceLayers[y];
 			String baseFileName = prefix+baseLayers[y];
 			ShortArray base = Animations.guides.get(Data.hash(baseFileName));
 			ShortArray main = Animations.guides.get(Data.hash(fileName));
@@ -248,7 +253,7 @@ public class AnimationCommand {
 					offsets[i] = new Vector2(0, 0);
 
 				}
-				AnimSet.addGuideToContainer(c.animName, c.loop, c.randomStart, c.velocityDependant, c.delta, c.bitmask, prefix+layers[y], container, offsets, angles);
+				AnimSet.addGuideToContainer(c.animName,  prefix+layers[y], container, offsets, angles);
 
 				continue;
 			}
@@ -269,7 +274,7 @@ public class AnimationCommand {
 				Vector2 offset = new Vector2();
 				offset.set(mainX, mainY);
 				if (base == null && baseLayers[y].length() > 0){ 
-					throw new GdxRuntimeException("jskld! "+layers[y]);
+					throw new GdxRuntimeException("jskld! "+sourceLayers[y]);
 				} else if (baseLayers[y].length() == 0){
 					//Gdx.app.log(TAG, "no length layer"+fileName+c.offset);
 					
@@ -301,7 +306,7 @@ public class AnimationCommand {
 				frameIndex++;
 				frameIndex += c.skipFrames;
 			}
-			AnimSet.addGuideToContainer(c.animName, c.loop, c.randomStart, c.velocityDependant, c.delta, c.bitmask, prefix+layers[y], container, offsets, angles);
+			AnimSet.addGuideToContainer(c.animName, prefix+layers[y], container, offsets, angles);
 		}
 		//animSet.addGuide(c.animName, container);
 	}

@@ -107,7 +107,6 @@ public abstract class AThrow extends LimbAction {
 		int newIndex = (int)angle/20;
 
 		if (newIndex != angleIndex){
-			//Gdx.app.log(TAG, "update aim " + newIndex);
 			//Gdx.app.log(TAG, "klj  "+newIndex);
 			angleIndex = newIndex;
 			int animID = Data.hash("throw"+angleIndex);
@@ -116,6 +115,10 @@ public abstract class AThrow extends LimbAction {
 			anim.frameIndices[item_layer_index] = 0;
             anim.time[limb_index] = 0f;
             anim.frameIndices[limb_index] = 0;
+
+            Gdx.app.log(TAG, "update aim " + Data.getString(anim.guideIDs.get(guide_layer)) + " " +
+				Data.getString(animID)
+			);
 			if (guide_layer != -1){
 				anim.overrideGuide(guide_layer, animID);
 			}

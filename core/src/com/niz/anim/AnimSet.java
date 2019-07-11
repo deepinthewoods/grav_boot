@@ -5,9 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasSprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.badlogic.gdx.utils.IntArray;
-import com.badlogic.gdx.utils.IntIntMap;
 import com.badlogic.gdx.utils.IntMap;
 import com.niz.Data;
 
@@ -41,7 +38,7 @@ public class AnimSet {
 		anim.isVelocityDependant = c.velocityDependant;
 		anim.deltaMultiplier = c.deltaMultiplier;
 		container.addLayer(Data.hash(string), anim);
-		//Gdx.app.log(TAG, "add layer " + string + " fr" + frames.length);
+		//Gdx.app.log(TAG, "add layer " + string + " fr" + frames.length + " src:" + container);
 	}
 	public void add(String string, AnimationContainer niz){
 		int hash = Data.hash(string);
@@ -55,12 +52,11 @@ public class AnimSet {
 	}
 	
 	
-	static void addGuideToContainer(String animName, boolean loop,
-			boolean randomStart, boolean velocityDependant, float delta,
-			int bitmask, String string, AnimationContainer container,
-			Vector2[] offsets, float[] angles) {
+	static void addGuideToContainer(String animName,
+									String string, AnimationContainer container,
+									Vector2[] offsets, float[] angles) {
 
-		//Gdx.app.log("animset ", "guide  add "+string + " " );
+		Gdx.app.log("animset ", "guide  add "+string + " " + animName + " len:" + offsets.length);
 
 		Guide guide = new Guide(offsets, angles);
 		container.addGuide(Data.hash(string), guide );

@@ -8,6 +8,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Bits;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.IntIntMap;
+import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Pool.Poolable;
 import com.niz.Data;
 import com.niz.anim.AnimSet;
@@ -173,8 +175,18 @@ public String toString(){
 			overriddenGuideLayers[index] = new Guide();
 		}
 		AnimationContainer other = anims.anims.get(animID).get(0);
-		//Gdx.app.log(TAG, "get anim " + Data.getString(animID));
-		overriddenGuideLayers[index].set(other.getGuide(guideIDs.get(index)));;
+		Guide otherG = other.getGuide(guideIDs.get(index));
+		if (otherG == null){
+			String entries = "";
+			for ( IntMap.Entry<Array<AnimationContainer>> e : anims.anims.entries()){
+				for (AnimationContainer cont : e.value)
+					;//entries += "\n "+cont.layers;
+			}
+
+			throw new GdxRuntimeException("null guide " + Data.getString(animID) + "  " + Data.getString(guideIDs.get(index)) + "  " + entries);
+		}
+		//Gdx.app.log(TAG, "override guide anim " + Data.getString(animID) + "  " + Data.getString(guideIDs.get(index)));
+		overriddenGuideLayers[index].set(otherG);;
 		overriddenGuideLayerIDs[index] = animID;
 	}
 
@@ -252,7 +264,7 @@ public String toString(){
 				actual.rotation = (540 - g.angles[frame])%360;
 			}
 			else {
-				//Gdx.app.log(TAG, "RRRRRRRRRRR "+Data.getString(guideIDs.get(i)) + " framesrc:"+Data.getString(layerIDs.get(guideFrameSources[i]))+overriddenGuides.get(i)+g.offsets.length);
+				//Gdx.app.log(TAG, "update guides:  "+Data.getString(guideIDs.get(i)) + " framesrc:"+Data.getString(layerIDs.get(guideFrameSources[i]))+overriddenGuides.get(i)+g.offsets.length);
 				/*if (g == null || frame >= g.offsets.length)Gdx.app.log(TAG, "RRRRRRRRRRR "+Data.getString(guideIDs.get(i)) + "  " + frame + " hash:"+guideIDs.get(i)
 						+ Animations.guides.containsKey(guideIDs.get(i)) + (currentAnim.getGuide(i) == null)
 						+ "  guideT "+currentAnim.guides.size + " / " + i + "  "

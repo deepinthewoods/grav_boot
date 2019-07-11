@@ -104,19 +104,7 @@ public class AStand extends Action {
 		//Gdx.app.log(TAG, "active"+phys.onGround);
 	}
 
-	private void makeTestEntity(EngineNiz engine) {
-		Gdx.app.log(TAG, "make test e");
-		Entity e = engine.createEntity();
-		Position pos = engine.createComponent(Position.class);
-		e.add(pos);
-		pos.pos.set(parent.e.getComponent(Position.class).pos);
-		SpriteAnimation spr = engine.createComponent(SpriteAnimation.class);
-		e.add(spr);
-		Race race = engine.createComponent(Race.class);
-		race.raceID[Race.TORSO] = Race.RPG_1;
-		e.add(race);
-		engine.addEntity(e);
-	}
+
 
 	@Override
 	public void updateRender(float dt) {
