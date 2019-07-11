@@ -76,32 +76,16 @@ public class PlatformerFactory extends Factory {
 		charSelectRaces[1].raceID[Race.HEAD] = Race.RED_DRAGON;
 		charSelectRaces[1].raceID[Race.TAIL] = Race.RED_DRAGON;*/
 
-		charSelectRaces[3].raceID[Race.FRONT_ARM] = Race.RPG;
-		charSelectRaces[3].raceID[Race.BACK_ARM] = Race.RPG;
-		charSelectRaces[3].raceID[Race.BACK_LEG] = Race.RPG;
-		charSelectRaces[3].raceID[Race.FRONT_LEG] = Race.RPG;
-		charSelectRaces[3].raceID[Race.NECK] = Race.RPG;
-		charSelectRaces[3].raceID[Race.HEAD] = Race.RPG;
-		charSelectRaces[3].raceID[Race.TAIL] = Race.RPG;//*/
-		charSelectRaces[3].raceID[Race.TORSO] = Race.RPG;
+		charSelectRaces[3].raceID[Race.FRONT_ARM] = Race.GREEN_DRAGON;
+		charSelectRaces[3].raceID[Race.BACK_ARM] = Race.GREEN_DRAGON;
+		charSelectRaces[3].raceID[Race.BACK_LEG] = Race.GREEN_DRAGON;
+		charSelectRaces[3].raceID[Race.FRONT_LEG] = Race.GREEN_DRAGON;
+		charSelectRaces[3].raceID[Race.NECK] = Race.GREEN_DRAGON;
+		charSelectRaces[3].raceID[Race.HEAD] = Race.GREEN_DRAGON;
+		charSelectRaces[3].raceID[Race.TAIL] = Race.GREEN_DRAGON;//*/
+		charSelectRaces[3].raceID[Race.TORSO] = Race.GREEN_DRAGON;
 
-		charSelectRaces[4].raceID[Race.FRONT_ARM] = Race.RPG_0;
-		charSelectRaces[4].raceID[Race.BACK_ARM] = Race.RPG_0;
-		charSelectRaces[4].raceID[Race.BACK_LEG] = Race.RPG_0;
-		charSelectRaces[4].raceID[Race.FRONT_LEG] = Race.RPG_0;
-		charSelectRaces[4].raceID[Race.NECK] = Race.RPG_0;
-		charSelectRaces[4].raceID[Race.HEAD] = Race.RPG_0;
-		charSelectRaces[4].raceID[Race.TAIL] = Race.RPG_0;//*/
-		charSelectRaces[4].raceID[Race.TORSO] = Race.RPG_0;
 
-		charSelectRaces[5].raceID[Race.FRONT_ARM] = Race.RPG_1;
-		charSelectRaces[5].raceID[Race.BACK_ARM] = Race.RPG_1;
-		charSelectRaces[5].raceID[Race.BACK_LEG] = Race.RPG_1;
-		charSelectRaces[5].raceID[Race.FRONT_LEG] = Race.RPG_1;
-		charSelectRaces[5].raceID[Race.NECK] = Race.RPG_1;
-		charSelectRaces[5].raceID[Race.HEAD] = Race.RPG_1;
-		charSelectRaces[5].raceID[Race.TAIL] = Race.RPG_1;//*/
-		charSelectRaces[5].raceID[Race.TORSO] = Race.RPG_1;
 
 
 

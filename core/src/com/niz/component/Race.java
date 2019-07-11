@@ -10,7 +10,7 @@ public class Race implements Component, Poolable {
 			, NECK = 5, BACK_LEG = 6, FRONT_LEG = 7
 			, TOTAL_BODY_PARTS = 8;
 	public static final int[] LIMB_LANES = {Action.LANE_BACK_ARM, Action.LANE_FRONT_ARM, Action.LANE_TAIL, Action.LANE_NECK};
-	public static final int HUMAN = 0, RED_DRAGON = 1, GREEN_DRAGON = 2, WHITE_DRAGON = 3, RPG = 4, NONE = 5, RPG_0 = 7, RPG_1 = 8;
+	public static final int HUMAN = 0, RED_DRAGON = 1, GREEN_DRAGON = 2, WHITE_DRAGON = 3, NONE = 4;
 	/*public static final int[] RPG = {5, 6, 7
 			, 8, 9, 10, 11
 			, 12, 13, 14, 15
