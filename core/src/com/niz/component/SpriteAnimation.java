@@ -264,14 +264,15 @@ public String toString(){
 				actual.rotation = (540 - g.angles[frame])%360;
 			}
 			else {
-				//Gdx.app.log(TAG, "update guides:  "+Data.getString(guideIDs.get(i)) + " framesrc:"+Data.getString(layerIDs.get(guideFrameSources[i]))+overriddenGuides.get(i)+g.offsets.length);
+
+				Gdx.app.log(TAG, "update guides:  "+Data.getString(guideIDs.get(i)) + actual + g  + " frame:" + frame);// + currentAnim.toString());
 				/*if (g == null || frame >= g.offsets.length)Gdx.app.log(TAG, "RRRRRRRRRRR "+Data.getString(guideIDs.get(i)) + "  " + frame + " hash:"+guideIDs.get(i)
 						+ Animations.guides.containsKey(guideIDs.get(i)) + (currentAnim.getGuide(i) == null)
 						+ "  guideT "+currentAnim.guides.size + " / " + i + "  "
 						+ currentAnim
 				);//*/
 				if (frame >= total){
-					//Gdx.app.log(TAG, "frame index too big");
+					//Gdx.app.log(TAG, "frame index too big " + total);
 					//frame %= total;
 					//frameIndices[guideFrameSources[i]] = frame;
 				}

@@ -178,8 +178,8 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		
 		guideSources.clear();
 
-		String[] racePrefixes = {"player", "reddragon", "greendragon", "whitedragon", "none"};
-		String[] guidePrefixes = {"player", "dragon", "dragon", "dragon", "none"};
+		String[] racePrefixes = {"player", "reddragon", "greendragon", "whitedragon", "none", "wolf", "strugio", "raptor"};
+		String[] guidePrefixes = {"player", "dragon", "dragon", "dragon", "none", "wolf",             "strugio", "raptor"};
 		int[] armBack = new int[racePrefixes.length], armFront = new int[racePrefixes.length], legBack = new int[racePrefixes.length], legFront = new int[racePrefixes.length],
 				torso = new int[racePrefixes.length], head = new int[racePrefixes.length], tail = new int[racePrefixes.length], neck = new int[racePrefixes.length]
 						
@@ -258,11 +258,11 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		i++;
 		switch (race.raceID[Race.TAIL]){
 			case Race.NONE:
-			default:
 			case Race.HUMAN:i--;
 				anim.itemLayersByLimbIndex[Race.LIMB_TAIL] = -1;
 
 		break;
+		default:
 		case Race.RED_DRAGON:case Race.GREEN_DRAGON:case Race.WHITE_DRAGON:
 			anim.layerIDs.add(tail[race.raceID[Race.TAIL]]);
 			anim.tail = i;
@@ -296,7 +296,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		i = 0;
 		switch (race.raceID[Race.BACK_LEG]){
 			case Race.NONE:
-			//default:
+			default:
 		case Race.HUMAN:
 			case Race.RED_DRAGON:case Race.GREEN_DRAGON:case Race.WHITE_DRAGON:
 			anim.guideIDs.add(legG[race.raceID[Race.BACK_LEG]]);//
@@ -310,7 +310,6 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		i++;
 		switch (race.raceID[Race.BACK_LEG]){
 			case Race.NONE:
-			//default:
 		case Race.HUMAN:
 			hash = torsoG[race.raceID[Race.BACK_LEG]];
 			anim.guideIDs.add(hash);
@@ -318,6 +317,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 			anim.torso_g = i;
 			guideSources.add(anim.legs_g);
 			break;
+		default:
 		case Race.RED_DRAGON:case Race.GREEN_DRAGON:case Race.WHITE_DRAGON:
 			hash = torsoG[race.raceID[Race.BACK_LEG]];
 			if (race.raceID[Race.TORSO] == Race.HUMAN)
@@ -331,7 +331,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		}
 		i++;
 		switch (race.raceID[Race.TORSO]){
-			default:
+
 			case Race.NONE:
 		case Race.HUMAN:
 			anim.guideIDs.add(neckG[race.raceID[Race.TORSO]]);
@@ -340,6 +340,7 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 			anim.neck_g = i;
 			guideSources.add(anim.torso_g);
 			break;
+		default:
 		case Race.RED_DRAGON:case Race.GREEN_DRAGON:case Race.WHITE_DRAGON:
 			anim.guideIDs.add(neckG[race.raceID[Race.TORSO]]);
 			guideFrameSources.add(anim.torso);
@@ -407,11 +408,12 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		i++;
 		switch (race.raceID[Race.TAIL]){
 			case Race.NONE:
-			default:
+
 		case Race.HUMAN:
 			i--;
 			
 			break;
+		default:
 		case Race.RED_DRAGON:case Race.GREEN_DRAGON:case Race.WHITE_DRAGON:
 			anim.guideIDs.add(tailTipG[race.raceID[Race.TAIL]]);
 			anim.tail_tip_g = i;
@@ -502,9 +504,9 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		switch (race.raceID[Race.TAIL]){
 
 			case Race.NONE:
-			default:
 			case Race.HUMAN:i--;
 			break;
+			default:
 			case Race.RED_DRAGON:case Race.GREEN_DRAGON:case Race.WHITE_DRAGON:
 
 				anim.layerSources[i] = anim.tail_g;
