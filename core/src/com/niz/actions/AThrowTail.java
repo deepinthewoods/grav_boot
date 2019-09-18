@@ -89,6 +89,7 @@ public class AThrowTail extends LimbAction {
 				moveCoarse = 0;
 				moveProgress = 0;
 				moveTotal = (int) (.25f / Main.timeStep);
+
 				//Gdx.app.log(TAG, "aim "+index + "  @ "+targetDelta);
 				anim.time[anim.tail] = targetDelta;
 			};

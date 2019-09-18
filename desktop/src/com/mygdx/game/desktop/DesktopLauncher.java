@@ -43,7 +43,7 @@ public class DesktopLauncher {
 //		TexturePacker.process(BLOCKS_FOLDER + "\\finished", ANDROID_FOLDER + "\\android\\assets", "tiles");
 
 //		try {
-//			Runtime.getRuntime().exec("reduceNormalTextures.bat");
+//			Runtime.getRuntime().exec("reduceNormalColors.bat");
 //		} catch (Exception ex){
 //			throw new GdxRuntimeException("ex " + ex);
 //		}

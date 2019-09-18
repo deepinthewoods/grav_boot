@@ -546,6 +546,33 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 		anim.guideSources = guideSources.toArray();
 			
 		anim.resume();
+
+		///////////
+		switch (race.raceID[Race.TAIL]){
+			case Race.RED_DRAGON:
+			case Race.GREEN_DRAGON:
+			case Race.WHITE_DRAGON:
+			case Race.WOLF:
+			case Race.RAPTOR:
+			case Race.STRUGIO:
+				race.enabledLimb[2] = true;
+			break;
+
+		}
+
+		switch (race.raceID[Race.NECK]){
+			case Race.RED_DRAGON:
+			case Race.GREEN_DRAGON:
+			case Race.WHITE_DRAGON:
+			case Race.RAPTOR:
+			case Race.STRUGIO:
+				race.enabledLimb[3] = true;
+				break;
+
+		}
+
+
+
 		
 		Physics phys = physM.get(e);
 		MovementData mov = moveM.get(e);
@@ -585,6 +612,8 @@ public class RaceSystem extends EntitySystem implements Observer, EntityListener
 			break;
 			
 		}
+
+
 		
 		
 	}
