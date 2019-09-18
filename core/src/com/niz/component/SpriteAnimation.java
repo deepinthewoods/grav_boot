@@ -265,7 +265,7 @@ public String toString(){
 			}
 			else {
 
-				Gdx.app.log(TAG, "update guides:  "+Data.getString(guideIDs.get(i)) + actual + g  + " frame:" + frame);// + currentAnim.toString());
+				//Gdx.app.log(TAG, "update guides:  "+Data.getString(guideIDs.get(i)) + actual + g  + " frame:" + frame);// + currentAnim.toString());
 				/*if (g == null || frame >= g.offsets.length)Gdx.app.log(TAG, "RRRRRRRRRRR "+Data.getString(guideIDs.get(i)) + "  " + frame + " hash:"+guideIDs.get(i)
 						+ Animations.guides.containsKey(guideIDs.get(i)) + (currentAnim.getGuide(i) == null)
 						+ "  guideT "+currentAnim.guides.size + " / " + i + "  "

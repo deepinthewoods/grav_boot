@@ -79,6 +79,9 @@ public class Animations {
 		createGuideSprites("player");
 		createGuideSprites("dragon");
 		createGuideSprites("rpg");
+		createGuideSprites("wolf");
+		createGuideSprites("strugio");
+		createGuideSprites("raptor");
 		createGuideSprites("none");
 		guides.put(Data.hash("centreblockguide"), new ShortArray(new short[]{16, 16}));
 		createRpgThrowGuides();
@@ -352,12 +355,28 @@ public class Animations {
 
 
 	
-	public static String dragon = "dragon", wolf = "wolf", alien = "blorgon";
+	public static String dragon = "dragon", alien = "blorgon";
 	public static String[] dragons = {"reddragon", "greendragon", "whitedragon"}, players = {"player"};
-	public static String[] wolves = {"wolf"}
-	, aliens = {"blorgon"}
+	public static String[]
+	 aliens = {"blorgon"}
 
 	;
+	private static final int GENERIC_LAYER_WOLF = 0;
+	private static final int GENERIC_LAYER_RAPTOR = 1;
+
+	static String[] genericGuideNames = {
+			"wolf"
+			, "raptor"
+			//, "strugio"
+	};
+	static String[][] genericLayerNames = {
+
+			{"wolf"}
+			, {"raptor"}
+			//, {"strugio"}
+
+	};
+
 
 
 	//public static TextureRegion[] doingTypeImages;
@@ -390,7 +409,7 @@ public class Animations {
 				c.velocityDependant = true;
 				c.loop = true;
 				c.bitmask = 2;
-				c.skipFrames = 0;//5;
+				c.skipFrames = 0;//11;
 				AnimationContainer container = new AnimationContainer();
 				//AnimationCommand.make(c, atlas, animSet, layers, baseLayers, container, player, players);
 				//AnimationCommand.makeGuideFrames(c, atlas, animSet, guideLayers, baseGuideLayers, container, player, players);
@@ -433,24 +452,52 @@ public class Animations {
 				c.delta = dragonWalkDelta;
 				AnimationCommand.make(c, atlas, animSet, legLayers, legBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, legGuideLayers, legBaseGuideLayers, container, dragon);
+				for (int i = 0; i < genericGuideNames.length; i++){
+					AnimationCommand.make(c, atlas, animSet, legLayers, legBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, legGuideLayers, legBaseGuideLayers, container, genericGuideNames[i]);
+
+					if (i == GENERIC_LAYER_WOLF){
+						AnimationCommand.make(c, atlas, animSet, armLayers, armBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+						AnimationCommand.makeGuideFrames(c, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, genericGuideNames[i]);
+					}
+
+				}
+
 				c.offset = 50;
 				c.length = 1;
 				AnimationCommand.make(c, atlas, animSet, torsoLayers, torsoBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, torsoGuideLayers, torsoBaseGuideLayers, container, dragon);
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, torsoLayers, torsoBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, torsoGuideLayers, torsoBaseGuideLayers, container, genericGuideNames[i]);
+				}
 
 				c.offset = 55;
 				c.length = 3;
 				c.delta = 3.5f;
+
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					if (i == GENERIC_LAYER_WOLF) continue;
+					AnimationCommand.make(c, atlas, animSet, armLayers, armBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, genericGuideNames[i]);
+				}
+				c.offset = 75;
 				AnimationCommand.make(c, atlas, animSet, armLayers, armBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, dragon);
-				
+
+
 				c.offset = 57;
 				c.length = 1;
 				AnimationCommand.make(c, atlas, animSet, neckLayers, neckBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, neckGuideLayers, neckBaseGuideLayers, container, dragon);
 				AnimationCommand.make(c, atlas, animSet, headLayers, headBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, headGuideLayers, headBaseGuideLayers, container, dragon);
-				
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, neckLayers, neckBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, neckGuideLayers, neckBaseGuideLayers, container, genericGuideNames[i]);
+					AnimationCommand.make(c, atlas, animSet, headLayers, headBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, headGuideLayers, headBaseGuideLayers, container, genericGuideNames[i]);
+				}
 				c.delta = dragonWalkDelta;
 				c.deltaMultiplier = .027f;
 				c.offset = 59;
@@ -459,7 +506,10 @@ public class Animations {
 				
 				AnimationCommand.make(c, atlas, animSet, tailLayers, tailBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, tailGuideLayers, tailBaseGuideLayers, container, dragon);
-				
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, tailLayers, tailBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, tailGuideLayers, tailBaseGuideLayers, container, genericGuideNames[i]);
+				}
 				//AnimationCommand.make(c, atlas, animSet, tailLayers, tailBaseLayers, container, dragon, dragons);
 				//AnimationCommand.makeGuideFrames(c, atlas, animSet, tailGuideLayers, tailBaseGuideLayers, container, dragon, dragons);
 
@@ -525,29 +575,48 @@ public class Animations {
 				c.delta = dragonWalkDelta;
 				AnimationCommand.make(c, atlas, animSet, legLayers, legBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, legGuideLayers, legBaseGuideLayers, container, dragon);
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, legLayers, legBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, legGuideLayers, legBaseGuideLayers, container, genericGuideNames[i]);
+				}
 				c.offset = 50;
 				c.length = 1;
 				AnimationCommand.make(c, atlas, animSet, torsoLayers, torsoBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, torsoGuideLayers, torsoBaseGuideLayers, container, dragon);
-				
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, torsoLayers, torsoBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, torsoGuideLayers, torsoBaseGuideLayers, container, genericGuideNames[i]);
+				}
 				
 				c.offset = 60;
 				c.length = 1;
 				//c.randomStart = true;
 				AnimationCommand.make(c, atlas, animSet, tailLayers, tailBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, tailGuideLayers, tailBaseGuideLayers, container, dragon);
-				
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, tailLayers, tailBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, tailGuideLayers, tailBaseGuideLayers, container, genericGuideNames[i]);
+				}
 				c.offset = 56;
 				c.length = 1;
 				AnimationCommand.make(c, atlas, animSet, armLayers, armBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, dragon);
-				
+				c.offset = 55;
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, armLayers, armBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, genericGuideNames[i]);
+				}
 				c.offset = 57;
 				AnimationCommand.make(c, atlas, animSet, neckLayers, neckBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, neckGuideLayers, neckBaseGuideLayers, container, dragon);
 				AnimationCommand.make(c, atlas, animSet, headLayers, headBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, headGuideLayers, headBaseGuideLayers, container, dragon);
-
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, neckLayers, neckBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, neckGuideLayers, neckBaseGuideLayers, container, genericGuideNames[i]);
+					AnimationCommand.make(c, atlas, animSet, headLayers, headBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, headGuideLayers, headBaseGuideLayers, container, genericGuideNames[i]);
+				}
 
 				isFinished = true;
 			}
@@ -613,27 +682,45 @@ public class Animations {
 				c.delta = dragonWalkDelta;
 				AnimationCommand.make(c, atlas, animSet, legLayers, legBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, legGuideLayers, legBaseGuideLayers, container, dragon);
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, legLayers, legBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, legGuideLayers, legBaseGuideLayers, container, genericGuideNames[i]);
+				}
 				c.offset = 50;
 				c.length = 1;
 				AnimationCommand.make(c, atlas, animSet, torsoLayers, torsoBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, torsoGuideLayers, torsoBaseGuideLayers, container, dragon);
-				
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, torsoLayers, torsoBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, torsoGuideLayers, torsoBaseGuideLayers, container, genericGuideNames[i]);
+				}
 				c.offset = 58;
 				c.length = 2;
 				AnimationCommand.make(c, atlas, animSet, tailLayers, tailBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, tailGuideLayers, tailBaseGuideLayers, container, dragon);
-				
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, tailLayers, tailBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, tailGuideLayers, tailBaseGuideLayers, container, genericGuideNames[i]);
+				}
 				c.offset = 52;
 				c.length = 2;
 				AnimationCommand.make(c, atlas, animSet, armLayers, armBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, dragon);
-				
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, armLayers, armBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, genericGuideNames[i]);
+				}
 				c.offset = 57;
 				AnimationCommand.make(c, atlas, animSet, neckLayers, neckBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, neckGuideLayers, neckBaseGuideLayers, container, dragon);
 				AnimationCommand.make(c, atlas, animSet, headLayers, headBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, headGuideLayers, headBaseGuideLayers, container, dragon);
-
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, neckLayers, neckBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, neckGuideLayers, neckBaseGuideLayers, container, genericGuideNames[i]);
+					AnimationCommand.make(c, atlas, animSet, headLayers, headBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, headGuideLayers, headBaseGuideLayers, container, genericGuideNames[i]);
+				}
 
 				isFinished = true;
 			}
@@ -704,26 +791,45 @@ public class Animations {
 				c.delta = dragonWalkDelta;
 				AnimationCommand.make(c, atlas, animSet, legLayers, legBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, legGuideLayers, legBaseGuideLayers, container, dragon);
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, legLayers, legBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, legGuideLayers, legBaseGuideLayers, container, genericGuideNames[i]);
+				}
 				c.offset = 50;
 				c.length = 1;
 				AnimationCommand.make(c, atlas, animSet, torsoLayers, torsoBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, torsoGuideLayers, torsoBaseGuideLayers, container, dragon);
-				
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, torsoLayers, torsoBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, torsoGuideLayers, torsoBaseGuideLayers, container, genericGuideNames[i]);
+				}
 				c.offset = 56;
 				c.length = 3;
 				AnimationCommand.make(c, atlas, animSet, tailLayers, tailBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, tailGuideLayers, tailBaseGuideLayers, container, dragon);
-				
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, tailLayers, tailBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, tailGuideLayers, tailBaseGuideLayers, container, genericGuideNames[i]);
+				}
 				c.offset = 50;
 				c.length = 1;
 				AnimationCommand.make(c, atlas, animSet, armLayers, armBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, dragon);
-				
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, armLayers, armBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, armGuideLayers, armBaseGuideLayers, container, genericGuideNames[i]);
+				}
 				c.offset = 57;
 				AnimationCommand.make(c, atlas, animSet, neckLayers, neckBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, neckGuideLayers, neckBaseGuideLayers, container, dragon);
 				AnimationCommand.make(c, atlas, animSet, headLayers, headBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, headGuideLayers, headBaseGuideLayers, container, dragon);
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, neckLayers, neckBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, neckGuideLayers, neckBaseGuideLayers, container, genericGuideNames[i]);
+					AnimationCommand.make(c, atlas, animSet, headLayers, headBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, headGuideLayers, headBaseGuideLayers, container, genericGuideNames[i]);
+				}
 
 
 				isFinished = true;
@@ -991,9 +1097,21 @@ public class Animations {
 				AnimationContainer container = new AnimationContainer();
 				AnimationCommand.make(c, atlas, animSet, tailLayers, tailBaseLayers, container, dragon, dragons);
 				AnimationCommand.makeGuideFrames(c, atlas, animSet, tailGuideLayers, tailBaseGuideLayers, container, dragon);
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, tailLayers, tailBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, tailGuideLayers, tailBaseGuideLayers, container, genericGuideNames[i]);
+				}
+
 				int[] dragonTailDirections = AnimationCommand.makeGuideFramesRotated(c, atlas, "tailtipguide", container, dragon, 0, 180);
-				//for (String pre : dragons)
 				directions.put(Data.hash(dragon+"tailtipguide"), new IntArray(dragonTailDirections));
+				for (int i = 0; i < genericGuideNames.length; i++) {
+					AnimationCommand.make(c, atlas, animSet, tailLayers, tailBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
+					AnimationCommand.makeGuideFrames(c, atlas, animSet, tailGuideLayers, tailBaseGuideLayers, container, genericGuideNames[i]);
+					int[] tailDirections = AnimationCommand.makeGuideFramesRotated(c, atlas, "tailtipguide", container, genericGuideNames[i], 0, 180);
+					directions.put(Data.hash(genericGuideNames[i]+"tailtipguide"), new IntArray(tailDirections));
+				}
+
+
 				isFinished = true;
 				//Gdx.app.log(TAG, "last anim" + animSet);
 			}

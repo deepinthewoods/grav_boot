@@ -100,6 +100,7 @@ public class AnimationCommand {
 
 				frameIndex++;
 				frameIndex += c.skipFrames;
+
 				//i += c.skipFrames;
 			}
 			//arr[y] = frames;
@@ -137,7 +138,7 @@ public class AnimationCommand {
 					if (frames[i] == null){
 						if (insertBlanks){
 							frames[i] = new AtlasSprite(new TextureAtlas.AtlasRegion(atlas.getTextures().first(), 0, 0, 0, 0));
-							//Gdx.app.log(TAG, "make blank frame" + fileNamePrefix + " " + i);
+							Gdx.app.log(TAG, "make blank frame" + fileNamePrefix + " " + i);
 						}
 						else throw new GdxRuntimeException("null frame! "+fileNamePrefix +"   "+i+"  "+c.length +"  "+c.offset +"  "+c.animName + "  " + fileNamePrefix);
 					}

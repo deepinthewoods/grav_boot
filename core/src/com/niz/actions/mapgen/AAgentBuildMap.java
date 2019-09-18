@@ -980,6 +980,7 @@ public class AAgentBuildMap extends ProgressAction {
 		//re.teleportOut[0] = true;
 		progressSys = parent.engine.getSystem(ProgressBarSystem.class);
 		int a = r.nextInt(7), b = a;
+		//a = 7;/////////
 		while (b == a)
 			b = r.nextInt(7);
 

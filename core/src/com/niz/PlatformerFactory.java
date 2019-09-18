@@ -75,18 +75,39 @@ public class PlatformerFactory extends Factory {
 		charSelectRaces[1].raceID[Race.NECK] = Race.RED_DRAGON;
 		charSelectRaces[1].raceID[Race.HEAD] = Race.RED_DRAGON;
 		charSelectRaces[1].raceID[Race.TAIL] = Race.RED_DRAGON;*/
-
+		int n = 3;
 		int race = Race.RAPTOR;
-		charSelectRaces[3].raceID[Race.FRONT_ARM] = race;
-		charSelectRaces[3].raceID[Race.BACK_ARM] = race;
-		charSelectRaces[3].raceID[Race.BACK_LEG] = race;
-		charSelectRaces[3].raceID[Race.FRONT_LEG] = race;
-		charSelectRaces[3].raceID[Race.NECK] = race;
-		charSelectRaces[3].raceID[Race.HEAD] = race;
-		charSelectRaces[3].raceID[Race.TORSO] = race;
-		charSelectRaces[3].raceID[Race.TAIL] = race;//*/
 
+		charSelectRaces[n].raceID[Race.FRONT_ARM] = race;
+		charSelectRaces[n].raceID[Race.BACK_ARM] = race;
+		charSelectRaces[n].raceID[Race.BACK_LEG] = race;
+		charSelectRaces[n].raceID[Race.FRONT_LEG] = race;
+		charSelectRaces[n].raceID[Race.NECK] = race;
+		charSelectRaces[n].raceID[Race.HEAD] = race;
+		charSelectRaces[n].raceID[Race.TORSO] = race;
+		charSelectRaces[n].raceID[Race.TAIL] = race;//*/
 
+		race = Race.WOLF;
+		n = 2;
+		charSelectRaces[n].raceID[Race.FRONT_ARM] = race;
+		charSelectRaces[n].raceID[Race.BACK_ARM] = race;
+		charSelectRaces[n].raceID[Race.BACK_LEG] = race;
+		charSelectRaces[n].raceID[Race.FRONT_LEG] = race;
+		charSelectRaces[n].raceID[Race.NECK] = race;
+		charSelectRaces[n].raceID[Race.HEAD] = race;
+		charSelectRaces[n].raceID[Race.TORSO] = race;
+		charSelectRaces[n].raceID[Race.TAIL] = race;//*/
+
+		race = Race.RED_DRAGON;
+		n = 1;
+		charSelectRaces[n].raceID[Race.FRONT_ARM] = race;
+		charSelectRaces[n].raceID[Race.BACK_ARM] = race;
+		charSelectRaces[n].raceID[Race.BACK_LEG] = race;
+		charSelectRaces[n].raceID[Race.FRONT_LEG] = race;
+		charSelectRaces[n].raceID[Race.NECK] = race;
+		charSelectRaces[n].raceID[Race.HEAD] = race;
+		charSelectRaces[n].raceID[Race.TORSO] = race;
+		charSelectRaces[n].raceID[Race.TAIL] = race;//*/
 
 
 

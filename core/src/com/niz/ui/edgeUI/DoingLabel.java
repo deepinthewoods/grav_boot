@@ -80,7 +80,7 @@ public class DoingLabel extends Stack{
 				c.item = b.item;
 				c.butt = b;
 				c.left = left;
-				Gdx.app.log("button", "doingslot after "+c.value);
+				Gdx.app.log("doinglabel", "doingslot after "+c.value);
 				toastNotifier.notify(b.e, Event.CHANGE_DOING_SLOT, c);
 				event.handle();
 				super.clicked(event, x, y);
