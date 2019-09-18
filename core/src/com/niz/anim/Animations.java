@@ -409,7 +409,7 @@ public class Animations {
 				c.velocityDependant = true;
 				c.loop = true;
 				c.bitmask = 2;
-				c.skipFrames = 11;
+				c.skipFrames = 0;//11;
 				AnimationContainer container = new AnimationContainer();
 				//AnimationCommand.make(c, atlas, animSet, layers, baseLayers, container, player, players);
 				//AnimationCommand.makeGuideFrames(c, atlas, animSet, guideLayers, baseGuideLayers, container, player, players);
