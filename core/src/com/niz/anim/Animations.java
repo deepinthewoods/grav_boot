@@ -1104,6 +1104,7 @@ public class Animations {
 
 				int[] dragonTailDirections = AnimationCommand.makeGuideFramesRotated(c, atlas, "tailtipguide", container, dragon, 0, 180);
 				directions.put(Data.hash(dragon+"tailtipguide"), new IntArray(dragonTailDirections));
+
 				for (int i = 0; i < genericGuideNames.length; i++) {
 					AnimationCommand.make(c, atlas, animSet, tailLayers, tailBaseLayers, container, genericGuideNames[i], genericLayerNames[i]);
 					AnimationCommand.makeGuideFrames(c, atlas, animSet, tailGuideLayers, tailBaseGuideLayers, container, genericGuideNames[i]);

@@ -56,7 +56,7 @@ public class AnimSet {
 									String string, AnimationContainer container,
 									Vector2[] offsets, float[] angles) {
 
-		Gdx.app.log("animset ", "guide  add "+string + " " + animName + " len:" + offsets.length);
+		//Gdx.app.log("animset ", "guide  add "+string + " " + animName + " len:" + offsets.length);
 
 		Guide guide = new Guide(offsets, angles);
 		container.addGuide(Data.hash(string), guide );

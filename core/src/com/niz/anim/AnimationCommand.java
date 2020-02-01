@@ -269,7 +269,7 @@ public class AnimationCommand {
 				//frames[i] = (AtlasSprite) atlas.createSprite(fileName  , (frameIndex));
 
 				//AtlasRegion baseF =  atlas.findRegion(baseFileName  , ( i+c.offset));
-				Gdx.app.log(TAG, "guide "+i+ " / "+c.length + " + " + c.offset + " " + fileName);
+				//Gdx.app.log(TAG, "guide "+i+ " / "+c.length + " + " + c.offset + " " + fileName);
 				short mainX = main.get(frameIndex*2);
 				short mainY = main.get(frameIndex*2+1);
 				Vector2 offset = new Vector2();
@@ -491,7 +491,7 @@ public class AnimationCommand {
 		for (int i = 0; i < total; i++){
 			
 			int frameIndex =  i;
-			Gdx.app.log(TAG, "guide base "+fileNamePrefix);
+			//Gdx.app.log(TAG, "guide base "+fileNamePrefix);
 			frames[i] = (AtlasSprite) atlas.createSprite(fileNamePrefix, blockIndex);
 			frames[i] = new AtlasSprite(frames[i]);
 			frames[i].setTexture(processedPlayerTexture);

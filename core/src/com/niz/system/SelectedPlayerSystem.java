@@ -19,6 +19,7 @@ import com.niz.component.Inventory;
 import com.niz.component.Light;
 import com.niz.component.Player;
 import com.niz.component.SelectedPlayer;
+import com.niz.ui.edgeUI.InventoryScreen;
 
 public class SelectedPlayerSystem extends EntitySystem {
 	ComponentMapper<SelectedPlayer> playerM = ComponentMapper.getFor(SelectedPlayer.class);
@@ -29,7 +30,11 @@ public class SelectedPlayerSystem extends EntitySystem {
 	private EngineNiz engine;
 	private ImmutableArray<Entity> dragEntities;
 	private Factory factory;
-	public SelectedPlayerSystem(Factory factory) {
+	private InventoryScreen invScreen;
+
+	public SelectedPlayerSystem(Factory factory, InventoryScreen invS) {
+		invScreen = invS;
+
 		this.factory = factory;
 	}
 	@Override
@@ -39,8 +44,10 @@ public class SelectedPlayerSystem extends EntitySystem {
 		super.addedToEngine(engine);
 		this.engine = (EngineNiz) engine;
 		dragEntities = engine.getEntitiesFor(Family.all(DragOption.class).exclude(Player.class).get());
-		
+
 	}
+
+
 
 	@Override
 	public void removedFromEngine(Engine engine) {
@@ -74,7 +81,7 @@ public class SelectedPlayerSystem extends EntitySystem {
 			con.pressed[Input.JUMP] = false;
 			//e.remove(Physics.class);
 			SelectedPlayer sel = e.getComponent(SelectedPlayer.class);
-			factory.selected(engine, sel, e);
+			factory.selected(engine, sel, e, invScreen);
 			e.remove(SelectedPlayer.class);
 			//e.getComponent(Inventory.class).equipAll(e);
 
