@@ -75,7 +75,7 @@ public class SpawnSystem extends EntitySystem implements Observer {
             Entity e = entities.get(i);
             MonsterSpawn spawn = spawnM.get(e);
             spawn.valid = true;
-            Gdx.app.log(TAG, "mark spawn valid");
+            //Gdx.app.log(TAG, "mark spawn valid");
         }
     }
 }

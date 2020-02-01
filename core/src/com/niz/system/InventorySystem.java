@@ -84,7 +84,7 @@ public class InventorySystem extends EntitySystem implements Observer {
 		int slot = 0;
 		while (iter.hasNext() && slot < InventoryScreen.BELT_SLOTS -1){
 			Item item = iter.next();
-			Gdx.app.log(TAG, "button" + invScr.belt);
+			//Gdx.app.log(TAG, "button " + invScr.belt);
             BeltButton butt =  invScr.belt.buttons[slot++];
             //butt.setChecked(true);
             //int index = beltIndexOF(act2.item.hash, act2.index);
