@@ -40,6 +40,7 @@ import com.badlogic.gdx.utils.ReflectionPool;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.niz.Data;
+import com.niz.Factory;
 import com.niz.component.PathfinderPreLog;
 import com.niz.observer.Subject;
 
@@ -63,6 +64,7 @@ public class EngineNiz extends Engine{
 	private static final String TAG = "engine";
 
 	private static SystemComparator comparator = new SystemComparator();
+	public final Factory factory;
 
 	private Array<Entity> entities;
 	private ImmutableArray<Entity> immutableEntities;
@@ -103,11 +105,12 @@ public class EngineNiz extends Engine{
 	
 	public boolean simulating = true;
 
- 	public EngineNiz(){
- 		this(10,100,10,100);
+ 	public EngineNiz(Factory factory
+	){
+ 		this(factory, 10,100,10,100);
  	}
 	
-	public EngineNiz(int entityPoolInitialSize, int entityPoolMaxSize, int componentPoolInitialSize, int componentPoolMaxSize){
+	public EngineNiz(Factory factory, int entityPoolInitialSize, int entityPoolMaxSize, int componentPoolInitialSize, int componentPoolMaxSize){
 		entityPool = new EntityPool(entityPoolInitialSize, entityPoolMaxSize, this);
 		componentPools = new ComponentPools(componentPoolInitialSize, componentPoolMaxSize);
 		entities = new Array<Entity>(false, 16);
@@ -132,6 +135,7 @@ public class EngineNiz extends Engine{
 		componentOperationsPool = new ComponentOperationPool();
 		componentOperations = new Array<ComponentOperation>();
 		componentOperationHandler = new com.badlogic.ashley.core.Engine.ComponentOperationHandler(this);
+		this.factory = factory;
 	}
 
 	private long obtainEntityId() {

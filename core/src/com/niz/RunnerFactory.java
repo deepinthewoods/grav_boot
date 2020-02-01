@@ -44,6 +44,7 @@ import com.niz.component.TransientComponent;
 import com.niz.item.ItemDef;
 import com.niz.system.OverworldSystem;
 import com.niz.system.WorkerSystem;
+import com.niz.ui.edgeUI.InventoryScreen;
 
 public class RunnerFactory extends Factory {
 
@@ -218,7 +219,7 @@ public class RunnerFactory extends Factory {
 	
 	
 	@Override
-	public void selected(EngineNiz engine, SelectedPlayer sel, Entity e) {
+	public void selected(EngineNiz engine, SelectedPlayer sel, Entity e, InventoryScreen invScr) {
 		if (sel.def.isRoomEditor){
 			Inventory inv = e.getComponent(Inventory.class);
 			Values<ItemDef> ie = Inventory.defs.values();

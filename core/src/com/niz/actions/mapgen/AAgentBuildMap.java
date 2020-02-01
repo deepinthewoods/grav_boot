@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Pools;
 import com.niz.Blocks;
+import com.niz.PlatformerFactory;
 import com.niz.action.Action;
 import com.niz.action.ProgressAction;
 import com.niz.anim.Animations;
@@ -787,13 +788,13 @@ public class AAgentBuildMap extends ProgressAction {
 					for (BlockDistribution dd : srcDist.val){
 						switch (dd.value){
 							case SPAWN_SMALL:
-								makeSpawnMarker(x+entry.offset.x, y + entry.offset.y, MonsterSpawn.SMALL);
+								makeSpawnMarker(x+entry.offset.x, y + entry.offset.y, PlatformerFactory.MobSpawnType.SMALL);
 								break;
 							case SPAWN_MEDIUM:
-								makeSpawnMarker(x+entry.offset.x, y + entry.offset.y, MonsterSpawn.MEDIUM);
+								makeSpawnMarker(x+entry.offset.x, y + entry.offset.y, PlatformerFactory.MobSpawnType.MEDIUM);
 								break;
 							case SPAWN_MINOR_BOSS:
-								makeSpawnMarker(x+entry.offset.x, y + entry.offset.y, MonsterSpawn.MINOR_BOSS);
+								makeSpawnMarker(x+entry.offset.x, y + entry.offset.y, PlatformerFactory.MobSpawnType.MINOR_BOSS);
 								break;
 						}
 					}
@@ -832,7 +833,7 @@ public class AAgentBuildMap extends ProgressAction {
         return false;
     }
 
-    private void makeSpawnMarker(int x, int y, int type) {
+    private void makeSpawnMarker(int x, int y, PlatformerFactory.MobSpawnType type) {
 		Entity e = parent.engine.createEntity();
 		Position pos = parent.engine.createComponent(Position.class);
 		pos.pos.set(x + .5f, y);
@@ -918,6 +919,7 @@ public class AAgentBuildMap extends ProgressAction {
 	private ProgressBarSystem progressSys;
 	private int blockAid;
 	private int blockBid;
+
 
 	@Override
 	public void onEnd() {

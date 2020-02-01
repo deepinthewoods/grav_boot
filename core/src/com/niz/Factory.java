@@ -10,6 +10,7 @@ import com.niz.component.SelectedPlayer;
 import com.niz.system.EntitySerializationSystem;
 import com.niz.system.OverworldSystem;
 import com.niz.system.WorkerSystem;
+import com.niz.ui.edgeUI.InventoryScreen;
 import com.niz.ui.elements.BeltTable;
 
 public abstract class Factory {
@@ -45,7 +46,7 @@ public abstract class Factory {
 
 
 
-	public abstract void selected(EngineNiz engine, SelectedPlayer sel, Entity e);
+	public abstract void selected(EngineNiz engine, SelectedPlayer sel, Entity e, InventoryScreen invScr);
 
 
 	public abstract void createMapGenerationAgent(PooledEntity e, EngineNiz engine, Map map, int bit, int z) ;

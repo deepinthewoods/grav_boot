@@ -127,7 +127,8 @@ public class GameInstance implements Screen, Observer {
 		this.headless = headless;
 		batch = new SpriteBatchN(50);
 		uiCamera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		engine = new EngineNiz();
+		factory =  new PlatformerFactory();//new RunnerFactory();//
+		engine = new EngineNiz(factory);
 		logo = new Texture(Gdx.files.internal("logo.png"));
 		final WorkerSystem workSys = new WorkerSystem();
 		engine.addSystem(workSys);
@@ -149,7 +150,6 @@ public class GameInstance implements Screen, Observer {
 			public void update(float dt) {
 				switch (progress++){
 				case 1:
-					factory =  new PlatformerFactory();//new RunnerFactory();//
 					uiAtlas = new TextureAtlas(Gdx.files.internal("ui.atlas"));
 					break;case 2:
 					playerAtlas = new TextureAtlas(Gdx.files.internal("player.atlas"));
@@ -255,9 +255,9 @@ public class GameInstance implements Screen, Observer {
 					engine.addSystem(new RoomSystem());
 					engine.addSystem(new RoomCatalogSystem());
 					engine.addSystem(new DragControllerSystem());
-					engine.addSystem(new SelectedPlayerSystem(factory));
+
 					engine.addSystem(new PlaceAtStartSystem());
-					engine.addSystem(new SpawnSystem());
+					engine.addSystem(new SpawnSystem(factory));
 
 					engine.addSystem(new OnMapSystem(atlas));
 					engine.addSystem(new MapCollisionSystem());
@@ -344,7 +344,9 @@ public class GameInstance implements Screen, Observer {
 
 					charScreen.invScreen = invScreen;
 					settingsScreen.invScreen = invScreen;
-					break;case 24:
+					engine.addSystem(new SelectedPlayerSystem(factory, invScreen));
+
+						break;case 24:
 
 					mainMenuScreen = new MainMenu(inst, skin);
 					mainMenuScreen.create(skin, stage, engine);

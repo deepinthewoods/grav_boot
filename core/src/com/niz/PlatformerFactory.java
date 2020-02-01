@@ -45,8 +45,10 @@ import com.niz.component.SpriteAnimation;
 import com.niz.component.TransientComponent;
 import com.niz.item.ItemDef;
 import com.niz.observer.Subject;
+import com.niz.system.InventorySystem;
 import com.niz.system.OverworldSystem;
 import com.niz.system.WorkerSystem;
+import com.niz.ui.edgeUI.InventoryScreen;
 
 public class PlatformerFactory extends Factory {
 
@@ -311,7 +313,7 @@ public class PlatformerFactory extends Factory {
 	}
 	
 	@Override
-	public void selected(EngineNiz engine, SelectedPlayer sel, Entity e) {
+	public void selected(EngineNiz engine, SelectedPlayer sel, Entity e, InventoryScreen invScr) {
 		if (sel.def.isRoomEditor){
 			Inventory inv = e.getComponent(Inventory.class);
 			Values<ItemDef> ie = Inventory.defs.values();
@@ -324,6 +326,7 @@ public class PlatformerFactory extends Factory {
 		} else {
 			engine.getSystem(OverworldSystem.class).stopNewGameScreen();
 			engine.getSystem(OverworldSystem.class).changeZLevel(0);
+			engine.getSystem(InventorySystem.class).equipStartItems(e, invScr);
 		}
 	}
 	
@@ -370,5 +373,5 @@ public class PlatformerFactory extends Factory {
 	}
 
 	public enum
-	MobSpawnType {REGULAR, MINOR_BOSS, BOSS, SIDE_BOSS}
+	MobSpawnType {SMALL, MEDIUM, MINOR_BOSS, BOSS, SIDE_BOSS}
 }

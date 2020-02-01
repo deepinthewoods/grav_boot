@@ -1,21 +1,27 @@
 package com.niz.actions.mapgen;
 
+import com.badlogic.ashley.core.EngineNiz;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pools;
 import com.niz.BlockDefinition;
 import com.niz.Blocks;
+import com.niz.Factory;
 import com.niz.PlatformerFactory;
 import com.niz.WorldDefinition;
 import com.niz.action.Action;
 import com.niz.component.Map;
+import com.niz.component.MonsterSpawn;
 import com.niz.component.Position;
 import com.niz.system.OverworldSystem;
+import com.niz.system.SpawnSystem;
 
 public class AGenerateEntities extends Action {
 
+	public static final String TAG = "gen ent agent";
 	public int x, y, w, h;
 	public Map map;
 	public WorldDefinition def;
@@ -24,31 +30,39 @@ public class AGenerateEntities extends Action {
 	private GridPoint2 pt = new GridPoint2();
 	public int z;
 	public Array<GridPoint2> mobs = new Array<GridPoint2>();
-	private OverworldSystem overworld;
+	private Factory factory;
 
 	@Override
 	public void update(float dt) {
+		//Gdx.app.log(TAG, "UPDATE SPAWN ENT");
     	int count = 0;
-    	int targetMobs = 0;//25;//
+    	int targetMobs = 25;//
     	int mobCount = 0;
     	mobs.clear();
     	boolean done = false;
-    	while (0 < 10000 && mobCount < targetMobs){
+    	while (count < 10000 && mobCount < targetMobs){
 			pt.set(MathUtils.random(map.width-1), MathUtils.random(map.height-AAgentBuildMap.TOP_FREE_SPACE-2));
 			if (isValidBlock(map, pt)){
 				GridPoint2 n = Pools.obtain(GridPoint2.class);
 				n.set(pt);
 				mobs.add(n);
 				mobCount++;
-				Entity mob = overworld.generateMob(z, PlatformerFactory.MobSpawnType.REGULAR, parent.engine);
-				mob.getComponent(Position.class).pos.set(pt.x+ .5f, pt.y + .25f);
-				parent.engine.addEntity(mob);
+				//Gdx.app.log(TAG, "UPDATE SPAWN ENT");
+
+				MonsterSpawn spawn = parent.engine.createComponent(MonsterSpawn.class);
+				spawn.z = z;
+				//spawn.valid = true;
+				Position pos = parent.engine.createComponent(Position.class);
+				pos.pos.set(pt.x+ .5f, pt.y + .25f);
+				EngineNiz.PooledEntity e = parent.engine.createEntity();
+				e.add(spawn);
+				e.add(pos);
+				parent.engine.addEntity(e);
 			}
 			count++;
 		}
-		//TODO spawn points from room definitions
 
-
+		parent.engine.getSystem(SpawnSystem.class).markAllValid();
 
 
 		//if (++progress >= progressTarget)
@@ -82,8 +96,8 @@ public class AGenerateEntities extends Action {
 	@Override
 	public void onStart() {
 		progress = 0;
-
-		overworld = parent.engine.getSystem(OverworldSystem.class);
+		//Gdx.app.log(TAG, "START GENERATE ENTITIES");
+		factory = parent.engine.factory;
 	}
 
 }

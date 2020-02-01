@@ -621,10 +621,7 @@ public class OverworldSystem extends RenderSystem implements EntityListener {
 		
 	}
 
-	public Entity generateMob(int z, PlatformerFactory.MobSpawnType type, EngineNiz engine) {
 
-		return factory.generateMob(z, type, engine);
-	}
 
 	public boolean isNewGameScreen() {
 		return newGameScreen;
