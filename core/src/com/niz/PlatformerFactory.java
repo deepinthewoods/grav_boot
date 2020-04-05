@@ -22,6 +22,8 @@ import com.niz.actions.ATailControl;
 import com.niz.actions.AUseInventory;
 import com.niz.actions.mapgen.AAgentBuildMap;
 import com.niz.actions.mapgen.AGenerateEntities;
+import com.niz.actions.path.AFollowPath;
+import com.niz.actions.path.AWaitForPath;
 import com.niz.anim.Animations;
 import com.niz.component.BitmaskedCollisions;
 import com.niz.component.Body;
@@ -58,7 +60,8 @@ public class PlatformerFactory extends Factory {
 	public Race[] charSelectRaces, pathfindingRaces;
 	public Inventory[] charSelectInventories, pathfindingInventories;
 	//private Map map;
-	public static final int CHAR_SELECT_CHARACTERS = 6, PATHFINDING_COUNT = 32;
+	public static final int CHAR_SELECT_CHARACTERS = 6
+			, PATHFINDING_COUNT = 32;
 	private PooledEntity[] levelSelectionEntities;
 
 	public PlatformerFactory(){
@@ -165,7 +168,7 @@ public class PlatformerFactory extends Factory {
 		e.add(sprite.set(Animations.PLAYER));
 		ActionList act = Pools.obtain(ActionList.class);
 		//act.addToStart(new AAutoBuild());
-		//act.addToStart(new ARandomRun());;
+		act.addToStart(new AWaitForPath());;
 		act.addToStart(new AUseInventory());
 		act.addToStart(new AHold());
 		act.addToStart(new ANotRun());
@@ -273,14 +276,15 @@ public class PlatformerFactory extends Factory {
 		
 
 		for (int i = 0; i < 4; i++){
-			//makePathfinder(engine, i, APathfindingJumpAndHold.NORMAL_JUMP);
-			makePathfinder(engine, i, APathfindingJumpAndHold.STANDING_JUMP);
+			makePathfinder(engine, i, APathfindingJumpAndHold.NORMAL_JUMP);
+			//makePathfinder(engine, i, APathfindingJumpAndHold.STANDING_JUMP);
 			
 		}
 		for (int i = 0; i < 4; i++){
 			//makePathfinder(engine, i, APathfindingJumpAndHold.STANDING_DELAYED_RUN_JUMP);
 			//makePathfinder(engine, i, APathfindingJumpAndHold.DELAYED_REVERSE_JUMP);
-			makePathfinder(engine, i, APathfindingJumpAndHold.WALLJUMP);
+			//makePathfinder(engine, i, APathfindingJumpAndHold.WALLJUMP);
+			makePathfinder(engine, i, APathfindingJumpAndHold.WALLJUMP_FORWARD);
 		}
 		//*/
 
@@ -294,7 +298,7 @@ public class PlatformerFactory extends Factory {
 		}
 		e.add(race);
 		race.dirtyLayers = true;
-		e.getComponent(Position.class).pos.set(1.5f, AStar.PATHFINDING_INITIAL_Y_OFFSET+2);
+		e.getComponent(Position.class).pos.set(1.5f, AStar.PATHFINDING_INITIAL_Y_OFFSET+4);
 		ActionList act = e.getComponent(ActionList.class);
 		
 		APathfindingPreRun preRun = Pools.obtain(APathfindingPreRun.class);
@@ -351,6 +355,7 @@ public class PlatformerFactory extends Factory {
 	public Entity generateMob(int z, MobSpawnType type, EngineNiz engine) {
 		Entity e = makePlayer(engine);
 		ActionList action = e.getComponent(ActionList.class);
+		action.addToStart(AFollowPath.class);
 		action.addToStart(AEnemy.class);
 		Race race = engine.createComponent(Race.class);
 		//Race race = new Race();
@@ -358,6 +363,7 @@ public class PlatformerFactory extends Factory {
 			race.raceID[r] = Race.HUMAN;
 		}
 		e.add(race);
+
 		return e;
 	}
 

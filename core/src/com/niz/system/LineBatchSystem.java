@@ -348,15 +348,15 @@ public void drawLast(float deltaTime) {
 		//Body body = bodyM.get(e);
 		Position pos = posM.get(e);
 		//Gdx.app.log(TAG,  "render block outline "+pos.pos);
-		float w = .5f * Main.PPM;
-		float h = .5f * Main.PPM;
+		float w = .15f * Main.PPM;
+		float h = .15f * Main.PPM;
 		AFollowPath act = e.getComponent(ActionList.class).getAction(AFollowPath.class);
 		if (act == null) break;
 		Iterator<Connection<PathNode>> it = act.path.path.iterator();
 		while (it.hasNext()){
 			Connection<PathNode> con = it.next();
 			PathNode node = con.getFromNode();
-			float x =  (node.x * Main.PPM), y = (node.y * Main.PPM);
+			float x =  (node.x * Main.PPM + Main.PPM / 2), y = (node.y * Main.PPM + Main.PPM/2);
 			batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);
 			batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x+(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f);
 			batch.drawLine( (int)x-(int)w+Main.PX/2f, (int)y+(int)h+Main.PX/2f, (int)x-(int)w+Main.PX/2f, (int)y-(int)h+Main.PX/2f);

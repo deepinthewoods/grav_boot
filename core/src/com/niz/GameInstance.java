@@ -211,12 +211,12 @@ public class GameInstance implements Screen, Observer {
 							Pathfind pathC = engine.createComponent(Pathfind.class);
 							Vector2 plpos = player.getComponent(Position.class).pos;
 							tmpV.set(screenX, screenY, 0);
-							engine.getSystem(CameraSystem.class).adjustedCamera.unproject(tmpV);
+							engine.getSystem(CameraSystem.class).mapDrawCamera.unproject(tmpV);
 							pathC.targetX = (int) tmpV.x / Main.PPM;
 							pathC.targetY = (int) tmpV.y / Main.PPM;
 							
-							//player.add(pathC);
-							//Gdx.app.log(TAG,  "path");
+							player.add(pathC);
+							Gdx.app.log(TAG,  "path");
 							return false;				}
 						@Override
 						public boolean touchUp(int screenX, int screenY, int pointer, int button) {return false;				}

@@ -21,7 +21,7 @@ public class AEnemy extends Action {
     public long targetId;
     @Override
     public void update(float dt) {
-        if (true) return;
+        //if (true) return;
         Control con = controlM.get(parent.e);
         Vector2 pos = posM.get(parent.e).pos;
         if (pos.x < target.x){

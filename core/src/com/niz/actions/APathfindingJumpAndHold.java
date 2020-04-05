@@ -12,14 +12,13 @@ import com.niz.component.Position;
 
 public class APathfindingJumpAndHold extends Action {
 	//public static final float[] THRESHOLD = {2f, 1f, .5f, .25f, .1f};
-	public static final float[] HEIGHT_GOAL = 		{6f, 3f,       5f,   4f,   6f,    5f, 4f, 2f};
+	public static final float[] HEIGHT_GOAL = 		{6f, 3f,       5f,   4f,   6f,    5f, 4f, 2f};//only first 4 used
 	public static final float[] MOVE_HEIGHT_GOAL = 	{4.5f, 2.75f,   4.2f, 3.3f, 3.5f,  2f, 2f, 1f};
 
 	private static final String TAG = "jump and hold path a";
-	public static final int NORMAL_JUMP = 1<<4, WALLJUMP = 1<<5;
+	public static final int NORMAL_JUMP = 1<<4, WALLJUMP = 1<<5, WALLJUMP_FORWARD = 1<<9;
 
 	public static final int STANDING_JUMP = 1<<6;
-
 	public static final int STANDING_DELAYED_RUN_JUMP = 1<<7;
 	public static final int DELAYED_REVERSE_JUMP = 1<<8;
 	
@@ -61,6 +60,15 @@ public class APathfindingJumpAndHold extends Action {
 			}
 			con.pressed[Input.JUMP] = false;
 			if (time > .1f) con.pressed[Input.JUMP] = true;	
+		} else if (typeIndex == WALLJUMP_FORWARD){
+
+			con.pressed[Input.JUMP] = false;
+			if (time > .1f){
+				con.pressed[Input.JUMP] = true;
+				con.pressed[Input.WALK_RIGHT] = true;
+				con.pressed[Input.WALK_LEFT] = false;
+				//if (parent.containsAction(AStand.class)) isFinished = true;
+			}
 		} else if (typeIndex == STANDING_DELAYED_RUN_JUMP){
 			con.pressed[Input.WALK_LEFT] = false;
 			con.pressed[Input.WALK_RIGHT] = false;
@@ -106,16 +114,22 @@ public class APathfindingJumpAndHold extends Action {
 				)){
 			if (pos.y < AStar.PATHFINDING_INITIAL_Y_OFFSET - AStar.PATHFINDING_DOWN_Y_OFFSET - 1 
 					||
-					pos.x > AStar.PATHFINDING_X_START + AStar.PATHFINDING_WIDTH-1) {
+                pos.x > AStar.PATHFINDING_X_START + AStar.PATHFINDING_WIDTH-1) {
 				//Gdx.app.log(TAG,  "outside of border" + pos + parent.getAction(APathfindingLogBlocks.class).blocks.size);
 				parent.engine.removeEntity(parent.e);
 			}			
-		} else if (typeIndex == WALLJUMP){
+		} else if (typeIndex == WALLJUMP ){
+
 			if (phys.vel.y < 0 && time > .11f){
-				//Gdx.app.log(TAG,  "apex" + pos.pos);
+			    Gdx.app.log(TAG,  "apex" + pos);
 				parent.engine.removeEntity(parent.e);
 			}
 		}//*/
+		else if (typeIndex == WALLJUMP_FORWARD){
+			if (pos.y < startHeight){
+				parent.engine.removeEntity(parent.e);
+			}
+		}
 		else {
 			//Gdx.app.log(TAG,  "no cat" + pos);
 		}
@@ -137,6 +151,11 @@ public class APathfindingJumpAndHold extends Action {
 		startHeight = pos.y;
 		moveHeightGoal = MOVE_HEIGHT_GOAL[aindex] + pos.y;
 		hasStartedMoving = false;
+
+		int typeIndex = index & AStar.TYPE_MASK;
+		if (typeIndex == WALLJUMP_FORWARD ){
+			Gdx.app.log(TAG, "start pos " + pos.y);
+		}
 	}
 
 }

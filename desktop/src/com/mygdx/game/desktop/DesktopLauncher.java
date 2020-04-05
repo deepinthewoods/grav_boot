@@ -19,8 +19,8 @@ public class DesktopLauncher {
 		pack();
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 640;
-		config.height = 480;
+		config.width = 1200;
+		config.height = 600;
 		config.vSyncEnabled = false;
 		config.useGL30 = true;
 		config.title = "Grav Boot";

@@ -64,10 +64,16 @@ public class AFollowPath extends Action {
 			if (dx < 0f){
 				if (con.pressed[Input.WALK_RIGHT]){
 					//Gdx.app.log(TAG, "INIT JUMP " + from.x + " , " + from.y + "  " + pos + conn);
-					AFollowJump act = Pools.obtain(AFollowJump.class);
-					//act.index = jconn.key;
-					act.conn = jconn;
-					addBeforeMe(act);
+					if (jconn.isWallJump){
+						AFollowWallJump act = Pools.obtain(AFollowWallJump.class);
+						act.conn = jconn;
+						addBeforeMe(act);
+					} else {
+						AFollowJump act = Pools.obtain(AFollowJump.class);
+						act.conn = jconn;
+						addBeforeMe(act);
+					}
+
 					if (jconn.stand){
 						AStopRunning stop = Pools.obtain(AStopRunning.class);
 						addBeforeMe(stop);
@@ -83,10 +89,15 @@ public class AFollowPath extends Action {
 				if (dx < 0f){
 					if (con.pressed[Input.WALK_RIGHT]){
 						//Gdx.app.log(TAG, "INIT JUMP " + from.x + " , " + from.y + "  " + pos + conn);
-						AFollowJump act = Pools.obtain(AFollowJump.class);
-						//act.index = jconn.key;
-						act.conn = jconn;
-						addBeforeMe(act);
+						if (jconn.isWallJump){
+							AFollowWallJump act = Pools.obtain(AFollowWallJump.class);
+							act.conn = jconn;
+							addBeforeMe(act);
+						} else {
+							AFollowJump act = Pools.obtain(AFollowJump.class);
+							act.conn = jconn;
+							addBeforeMe(act);
+						}
 						if (jconn.stand){
 							AStopRunning stop = Pools.obtain(AStopRunning.class);
 							addBeforeMe(stop);
@@ -112,13 +123,8 @@ public class AFollowPath extends Action {
 			
 		} else if (conn instanceof FallPathConnection){
 			float toX = Math.abs(to.x + .5f - pos.x), toY = Math.abs(to.y + .5f - pos.y );
-			
 			FallPathConnection jconn = (FallPathConnection) conn;
-			//lr
-			
-				
 			AFollowFall act = Pools.obtain(AFollowFall.class);
-					
 			act.conn = jconn;
 			addBeforeMe(act);
 			currentIndex++;

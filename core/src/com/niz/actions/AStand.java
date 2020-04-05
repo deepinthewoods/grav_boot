@@ -48,7 +48,7 @@ public class AStand extends Action {
 	@Override
 	public void update(float dt) {
 
-		//Gdx.app.log(TAG, "update"+earlyJump);
+		//if (parent.containsAction(APathfindingPreRun.class) || parent.containsAction(APathfindingJumpAndHold.class))Gdx.app.log(TAG, "update"+earlyJump);
 		Physics phys = physM.get(parent.e);
 		//if (phys == null) return;
 		Control con = controlM.get(parent.e);

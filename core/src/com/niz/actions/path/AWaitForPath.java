@@ -20,9 +20,9 @@ public class AWaitForPath extends Action{
 			if (path.path.getCount() == 0){
 				//isFinished = true;
 				parent.e.remove(PathResult.class);
-				//Gdx.app.log(TAG,  "NO PATH");
+				Gdx.app.log(TAG,  "NO PATH");
 			} else {
-				//Gdx.app.log(TAG,  "FOUND" + path);
+				Gdx.app.log(TAG,  "FOUND" + path);
 				AFollowPath follower = Pools.obtain(AFollowPath.class);
 				follower.path = path;
 				addBeforeMe(follower);

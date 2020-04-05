@@ -64,7 +64,7 @@ public class PathfindingSystem extends EntitySystem {
 			Body body = bodyM.get(e);
 			int x = (int) pos.x;
 			int y = (int)(pos.y - body.height + .5f);
-			//Gdx.app.log(TAG, "path " +  " from " + x + "," + y + "  to " + path.targetX + "," + path.targetY);
+			Gdx.app.log(TAG, "path " +  " from " + x + "," + y + "  to " + path.targetX + "," + path.targetY);
 			PathNode startNode = graph.getNode(x, y);
 			PathNode endNode = graph.getNode(path.targetX, path.targetY);
 			
@@ -74,6 +74,7 @@ public class PathfindingSystem extends EntitySystem {
 			int mask = 0xffffffff;
 			boolean madePath = finder.searchConnectionPath(startNode, endNode, heuristic, outPath, mask);
 			if (madePath) Gdx.app.log(TAG, "made path");
+			else Gdx.app.log(TAG, "failed made path");
 			e.remove(Pathfind.class);
 			if (madePath){
 				PathResult result = engine.createComponent(PathResult.class);

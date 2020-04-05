@@ -56,11 +56,12 @@ public class APathfindingPreRun extends Action {
 			}
 			break;
 		case APathfindingJumpAndHold.WALLJUMP:
+		case APathfindingJumpAndHold.WALLJUMP_FORWARD:
 			phys = physM.get(parent.e);
 			con.pressed[Input.WALK_LEFT] = true;
 			con.pressed[Input.WALK_RIGHT] = false;
-			con.pressed[Input.JUMP] = true;
-			if (pos.pos.y < AStar.PATHFINDING_INITIAL_Y_OFFSET+AStar.PATHFINDING_WALL_HEIGHT){
+			//con.pressed[Input.JUMP] = true;
+			if (pos.pos.y < AStar.PATHFINDING_INITIAL_Y_OFFSET+ 1.5f){
 				//Gdx.app.log(TAG,  "apex" + pos.pos);
 				APathfindingJumpAndHold pathfindingJumpAndHold = Pools.obtain(APathfindingJumpAndHold.class);
 				pathfindingJumpAndHold.index = index;

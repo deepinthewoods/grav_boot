@@ -92,7 +92,7 @@ public class AFall extends Action {
 					jump.xLimit = phys.limit.x;
 					jump.resetXLimit = true;
 					phys.limit.x = mov.walljump_x_impulse;
-					//Gdx.app.log("tha", "walljump "+phys.limit.x*lr + "  ,  " + mov.walljump_y_impulse);
+					Gdx.app.log(TAG, "walljump "+phys.limit.x*lr + "  ,  " + mov.walljump_y_impulse);
 					isFinished = true;
 					//if (parent.containsAction(AAutoRun.class))parent.actions.get(AAutoRun.class).flip();
 				} else if (move.hasDoubleJump()){//double jump

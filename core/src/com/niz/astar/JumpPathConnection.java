@@ -7,4 +7,5 @@ public class JumpPathConnection extends PathConnection<PathNode> {
 	public boolean isLeft;
 	public boolean stand;
 
+	public boolean isWallJump;
 }
