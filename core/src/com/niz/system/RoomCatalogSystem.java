@@ -78,10 +78,8 @@ public class RoomCatalogSystem extends EntitySystem {
 				String s = "";
 				for (FileHandle f : roomEF.list()){
 					if (f.isDirectory()){
-						for (FileHandle f2 : f.list()){
-							s += "rooms\\"+ f2.name() + "\\" + f.name();
-							s += "\n";
-						}
+						// Skip disabled/backup directories
+						continue;
 					}
 					s += "rooms\\"+f.name();
 					s += "\n";
@@ -135,7 +133,10 @@ public class RoomCatalogSystem extends EntitySystem {
 	public Array<Room> getRoomsForTags(Array<Room> returnArr, String... tags){
 		returnArr.clear();
 		Array<Room> arr = roomsByTag.get(Data.hash(tags[0]));
-		//if (arr == null) return returnArr;
+		if (arr == null) {
+			Gdx.app.error("RoomCatalog", "No rooms found for tag: " + tags[0]);
+			return returnArr;
+		}
 		for (Room r : arr){
 			boolean found = true;
 			for (int i = 0; i < tags.length; i++){

@@ -15,7 +15,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntArray;
 
-import org.omg.IOP.TAG_ALTERNATE_IIOP_ADDRESS;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

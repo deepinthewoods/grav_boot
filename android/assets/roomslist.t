@@ -1,4 +1,3 @@
-rooms\endroom.json
 rooms\med5x5.json
 rooms\med64x16.json
 rooms\medbig15x15.json
@@ -11,14 +10,12 @@ rooms\room5x5down.json
 rooms\room5x5up.json
 rooms\room64x16.json
 rooms\room8x5.json
-rooms\room8x8defork.json.no
+rooms\room8x8doublejumpfilter.json
 rooms\room8x8fork.json
+rooms\room8x8fork2.json
+rooms\room8x8fork3.json
 rooms\startroom.json
 rooms\talldown.json
 rooms\talldowncrossDJ.json
 rooms\tallup.json
 rooms\tallupcrossDJ.json
-rooms\tallupcrossdouble.json.no
-rooms\TESTTEST.TEST
-rooms\upcross.json.no
-rooms\upsame.json.no

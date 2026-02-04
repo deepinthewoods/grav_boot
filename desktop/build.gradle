@@ -1,13 +1,14 @@
 apply plugin: "java"
 
-sourceCompatibility = 1.8
+sourceCompatibility = 17
+targetCompatibility = 17
 sourceSets.main.java.srcDirs = [ "src/" ]
 
 project.ext.mainClassName = "com.mygdx.game.desktop.DesktopLauncher"
-project.ext.assetsDir = new File("../android/assets");
+project.ext.assetsDir = new File("../android/assets")
 
 task run(dependsOn: classes, type: JavaExec) {
-    main = project.mainClassName
+    mainClass = project.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
     workingDir = project.assetsDir
@@ -15,11 +16,12 @@ task run(dependsOn: classes, type: JavaExec) {
 }
 
 task dist(type: Jar) {
-    from files(sourceSets.main.output.classesDir)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from files(sourceSets.main.output.classesDirs)
     from files(sourceSets.main.output.resourcesDir)
-    from {configurations.compile.collect {zipTree(it)}}
-    from files(project.assetsDir);
- 
+    from {configurations.runtimeClasspath.collect {zipTree(it)}}
+    from files(project.assetsDir)
+
     manifest {
         attributes 'Main-Class': project.mainClassName
     }
@@ -37,7 +39,7 @@ eclipse {
 task afterEclipseImport(description: "Post processing after project generation", group: "IDE") {
   doLast {
     def classpath = new XmlParser().parse(file(".classpath"))
-    new Node(classpath, "classpathentry", [ kind: 'src', path: 'assets' ]);
+    new Node(classpath, "classpathentry", [ kind: 'src', path: 'assets' ])
     def writer = new FileWriter(file(".classpath"))
     def printer = new XmlNodePrinter(new PrintWriter(writer))
     printer.setPreserveWhitespace(true)
